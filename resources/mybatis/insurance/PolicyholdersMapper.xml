@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="policyholdersMapper">
+
+	<sql id="Base_Column_List">
+    id,user_id ,transNo ,productId ,productName ,companyName ,planId ,planName ,insureNum ,order_id ,caseCode ,applicationDate ,startDate ,endDate ,priceTotal ,insurantCount ,cName ,eName ,cardTypeId ,cardCode ,sex ,birthday ,mobile ,email ,jobInfo ,country ,order_type ,resultCode ,errorInfo ,totalnum ,issueState ,isPolicyDownload ,create_time ,update_time 
+    </sql>
+
+    <resultMap type="com.op.entity.insurance.Policyholders" id="PolicyholdersReturnMap">
+		<!-- id -->
+      <id column="id" property="id"/>
+		<!-- 购买用户ID -->
+      <result column="user_id" property="user_id"/>
+		<!-- 保险交易流水号，每次请求不能相同 -->
+      <result column="transNo" property="transNo"/>
+		<!-- 投保产品ID -->
+      <result column="productId" property="productId"/>
+		<!-- 投保产品名称 -->
+      <result column="productName" property="productName"/>
+		<!-- 投保保险公司名称 -->
+      <result column="companyName" property="companyName"/>
+		<!-- 投保计划ID -->
+      <result column="planId" property="planId"/>
+		<!-- 投保计划名称 -->
+      <result column="planName" property="planName"/>
+		<!-- 投保单号 -->
+      <result column="insureNum" property="insureNum"/>
+		<!-- 活动订单号 -->
+      <result column="order_id" property="order_id"/>
+		<!-- 方案代码，每一款保险公司产品的方案代码都不相同，由慧择分配 -->
+      <result column="caseCode" property="caseCode"/>
+		<!-- 投保时间 格式：yyyy-MM-dd HH:mm:ss -->
+      <result column="applicationDate" property="applicationDate"/>
+		<!-- 起保时间 格式：yyyy-MM-dd -->
+      <result column="startDate" property="startDate"/>
+		<!-- 终保时间 格式：yyyy-MM-dd -->
+      <result column="endDate" property="endDate"/>
+		<!-- 该投保单总价格（单位：元） -->
+      <result column="priceTotal" property="priceTotal"/>
+		<!-- 被保人数量 -->
+      <result column="insurantCount" property="insurantCount"/>
+		<!-- 投保人姓名 -->
+      <result column="cName" property="cName"/>
+		<!-- 投保人姓名拼音，境外旅游险必填 -->
+      <result column="eName" property="eName"/>
+		<!-- 投保人证件类型 -->
+      <result column="cardTypeId" property="cardTypeId"/>
+		<!-- 投保人证件号 -->
+      <result column="cardCode" property="cardCode"/>
+		<!-- 投保人性别 0：女 1：男 -->
+      <result column="sex" property="sex"/>
+		<!-- 投保人出生日期 格式：yyyy-MM-dd -->
+      <result column="birthday" property="birthday"/>
+		<!-- 投保人移动电话 -->
+      <result column="mobile" property="mobile"/>
+		<!-- 投保人邮箱 -->
+      <result column="email" property="email"/>
+		<!-- 投保人职业信息（职业代码、职业名称、职业等级，以 | 分割，如“100401|电子业-工程师|2”） ，部分产品必填 -->
+      <result column="jobInfo" property="jobInfo"/>
+		<!-- 国籍，部分产品必填 -->
+      <result column="country" property="country"/>
+		<!-- 订单类型（1：活动订单保险） -->
+      <result column="order_type" property="order_type"/>
+		<!-- 同步出单状态 0：出单成功，1：出单失败 -->
+      <result column="resultCode" property="resultCode"/>
+		<!-- 返回出单失败原因 -->
+      <result column="errorInfo" property="errorInfo"/>
+		<!-- 总份数 -->
+      <result column="totalnum" property="totalnum"/>
+		<!-- 异步出单状态 -1：出单失败 1：未支付 10：待出单 20：已出单 30：已过期 40：退保中 50：已退保 -->
+      <result column="issueState" property="issueState"/>
+		<!-- 保单是否已下载（0：已下载；1：未下载） -->
+      <result column="isPolicyDownload" property="isPolicyDownload"/>
+		<!-- 创建时间 -->
+      <result column="create_time" property="create_time"/>
+		<!-- 更新时间 -->
+      <result column="update_time" property="update_time"/>
+   </resultMap>
+   
+       <!-- 保存投保人信息 -->
+   <insert id="savePolicyholders" parameterType="java.util.HashMap" >
+   		insert into Policyholders 
+	   		(id,transNo ,order_id ,caseCode ,applicationDate ,startDate ,endDate ,insureNum ,priceTotal ,insurantCount 
+	   		,cName ,eName ,cardTypeId ,cardCode ,sex ,birthday ,mobile ,email ,jobInfo 
+	   		,country ,order_type ,resultCode ,errorInfo ,totalnum ,issueState
+	   		,planName,planId,productId,productName,companyName,create_time,user_id,isPolicyDownload
+	   		)
+   		values 
+	   		(#{policyholders.id},#{policyholders.transNo},#{policyholders.order_id},#{policyholders.caseCode},#{policyholders.applicationDate}
+	   		,#{policyholders.startDate},#{policyholders.endDate},#{insureNum},#{policyholders.priceTotal},#{policyholders.insurantCount},
+	   		#{policyholders.cName},#{policyholders.eName},#{policyholders.cardTypeId},#{policyholders.cardCode},#{policyholders.sex},
+	   		#{policyholders.birthday},#{policyholders.mobile},#{policyholders.email},#{policyholders.jobInfo}
+	   		,#{policyholders.country},#{policyholders.order_type},#{policyholders.resultCode},#{policyholders.errorInfo},#{policyholders.totalnum}
+	   		,#{policyholders.issueState}
+	   		,#{policyholders.planName},#{policyholders.planId},#{policyholders.productId},#{policyholders.productName},#{policyholders.companyName}
+	   		,now(),#{user_id},1
+	   		)
+   </insert>
+	
+	
+   <!-- 更新异步通知收到的保险信息  根据保险异步回调信息处理保险订单信息 -->
+	<update id="updateCallbackInfo" parameterType="com.op.entity.insurance.AsyncOrderInfo">
+	   		update Policyholders set 
+   			resultCode=#{resultCode}
+   			,errorInfo=#{errorInfo} 
+   			<if test="resultCode == 0">
+   			    ,totalnum = #{policyList[0].totalnum}
+   			 	,issueState = #{policyList[0].issueState}
+   			</if>
+   			,update_time = now()
+   		where 
+   			insureNum=#{insureNum}
+	</update>
+	
+	
+   <!-- 更新保单下载信息 -->
+	<update id="updatepolicyDownloadStatus" parameterType="String">
+	   		update Policyholders set 
+   			isPolicyDownload = 0
+   			,update_time = now()
+   		where 
+   			insureNum=#{insureNum}
+	</update>
+	
+	<!-- 更新保单退单信息 -->
+	<update id="updateInsuredState" parameterType="java.util.Map">                         
+		update Policyholders set
+		refundmsg = #{msg},
+		refundstatus = #{status}
+		where order_id = #{order_id} and linkman_id = #{linkman_id} and resultCode = 0
+	</update>
+	
+	<!-- 获取订单购买保险总金额 -->
+	<select id="getPriceTotal" parameterType="String" resultMap="PolicyholdersReturnMap">
+		select SUM(priceTotal) priceTotal,startDate,SUM(insurantCount) insurantCount,refundstatus from Policyholders
+		where order_id = #{order_id} and resultCode = 0
+	</select>
+
+</mapper>

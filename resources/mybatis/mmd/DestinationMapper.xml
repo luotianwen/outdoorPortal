@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+	<!-- 旅游目的地(destination)Mapper -->
+<mapper namespace="destinationMapper">
+    <!--mybatis ehcache缓存配置 -->
+    <!-- 以下两个<cache>标签二选一,第一个可以输出日志,第二个不输出日志 不使用缓存加入useCache="false" -->
+    <!-- <cache type="org.mybatis.caches.ehcache.LoggingEhcache" /> -->
+    <!-- <cache type="org.mybatis.caches.ehcache.EhcacheCache"/>  -->
+
+	<sql id="Base_Column_List">
+    id,country_id ,province_id ,zh_name ,en_name ,img ,briefing ,edit_user ,edit_time 
+    </sql>
+
+    <resultMap type="com.op.entity.mmd.Destination" id="DestinationReturnMap">
+		<!-- id -->
+      <id column="id" property="id"/>
+		<!-- 所属国家 -->
+      <result column="country_id" property="country_id"/>
+		<!-- 所属省（国内目的地使用） -->
+      <result column="province_id" property="province_id"/>
+		<!-- 目的地中文名称 -->
+      <result column="zh_name" property="zh_name"/>
+		<!-- 目的地英文名称 -->
+      <result column="en_name" property="en_name"/>
+		<!-- 代表性景点图片 -->
+      <result column="img" property="img"/>
+		<!-- 目的地描述(概况) -->
+      <result column="briefing" property="briefing"/>
+		<!-- 编辑人（最后一次） -->
+      <result column="edit_user" property="edit_user"/>
+		<!-- 编辑时间（最后一次） -->
+      <result column="edit_time" property="edit_time"/>
+   </resultMap>
+   
+   <select id="getProvinceId" parameterType="String" resultType="String">
+   	  select code from provinces where name like CONCAT(CONCAT('%', #{name}),'%')
+   </select>
+  
+  <!-- 添加目的地 -->
+  <insert id="insertDestination" parameterType="com.op.entity.mmd.Destination" keyColumn="id" keyProperty="id" useGeneratedKeys="true">
+  		insert into Destination( country_id ,province_id ,zh_name ,en_name ,img ,briefing ,edit_user ,edit_time)
+  		values
+  		( #{country_id },#{province_id },#{zh_name },#{en_name },#{img },#{briefing },#{edit_user },#{edit_time} )
+  </insert>
+  
+  <update id="updateDestination" parameterType="com.op.entity.mmd.Destination">
+  	update Destination set
+  	briefing = #{briefing}
+  	where
+  	id = #{id}
+  </update>
+  
+	
+</mapper>

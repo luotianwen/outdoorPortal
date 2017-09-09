@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<base href="/" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>玩嘛</title>
+
+<#include "/view/usercenter/base.css.html">
+<style>
+body {
+	background: #f1f1f1;
+}
+</style>
+</head>
+<body>
+	<#include "/view/usercenter/header.html">
+	<div class="boxw clearfix">
+		<#include "/view/usercenter/housekeeper/menu_left.html">
+		<div class="main-box">
+			<h1>申请退款</h1>
+			<div class="refund-info clearfix">
+				<a href="pointServiceOrder/orderInfo.html?id=${orderRefundDTO.pso_id}" class="refund-btn-1 edit-info" target="_blank">订单详情</a>
+				<dl>
+					<dt>商户名称：</dt>
+					<dd>${orderRefundDTO.pso_zh_name}${orderRefundDTO.pso_project_name}</dd>
+				</dl>
+				<dl>
+					<dt>退款方式：</dt>
+					<dd>
+						原路返回<span class="style-1">（1—7个工作日内退还于您的账户内，无手续费）</span>
+					</dd>
+				</dl>
+				<dl>
+					<dt>退款金额：</dt>
+					<dd>
+						<span class="style-2" id="price"></span><span class="style-3">元</span>
+					</dd>
+				</dl>
+			</div>
+			<div class="refund-reason">
+				<dl>
+                	<dt>密码：</dt>
+                	<dd>每个商品都有唯一密码，请牢记！<span id="uerror"></span></dd>
+                </dl>               
+                <dl>
+                	<dd>
+                		<ul class="reason-list clearfix" id="uniqueness">
+                			<#assign num=0>
+                			<#list orderRefundDTO.pointServiceUniquenessList as item>
+                				<#if item.psu_state==0&&item.pso_refund_state==0>
+                					<#assign num=num+1>
+                					<li><a data="${item.psu_id}" class="selected">${item.psu_uniqueness}</a></li>
+                				</#if>
+                			</#list>
+                		</ul>
+                	</dd>
+                </dl>
+			
+				<dl>
+					<dt>退款原因：</dt>
+					<dd>
+						您的选择有利于我们做的更好，请提交您的退款原因<span class="style-4" id="rerror">（至少一项）</span>
+					</dd>
+				</dl>
+				<dl>
+					<dd>
+						<ul id="reason" class="reason-list clearfix">
+							<li><a>买多了 / 买错了</a></li>
+							<li><a>商家营业但不接待</a></li>
+							<li><a>商家停业 / 装修 / 转让</a></li>
+							<li><a>计划有变没时间消费</a></li>
+							<li><a>预约不上</a></li>
+							<li><a>去过了，不太满意</a></li>
+							<li><a>朋友 / 网上评价不好</a></li>
+							<li><a>后悔了，不想要了</a></li>
+							<li><a>商业活动（收费）</a></li>
+							<li><a>其他</a></li>
+						</ul>
+						<div class="style-5">说明：退款成功后将会扣除送给您本次购买所获得的积分。</div>
+					</dd>
+				</dl>
+			</div>
+			<div class="venue-refund-btns">
+				<a href="pointServiceOrder/MyOrder.html" class="refund-btn-1">取 消</a>
+				<a href="javascript:void(0)" id="refund" class="refund-btn-2">申请退款</a>
+			</div>
+		</div>
+	</div>
+	<!-- main end -->
+</body>
+<#include "/view/usercenter/base.js.html">
+<script type="text/javascript">
+	var price = ${orderRefundDTO.pso_discount_price?number};
+	var pso_id = ${orderRefundDTO.pso_id};
+	
+	$(function(){
+		$("#price").html(price*${num});
+		$("ul#reason").on("click","li a",function(){
+			var $this = $(this);
+			if($this.hasClass("selected")){
+				$this.removeClass("selected");
+			}else{
+				$this.addClass("selected");
+			}
+		})
+		
+		$("ul#uniqueness").on("click","li a",function(){
+			var $this = $(this);
+			var num = Number($("#price").html());
+			if($this.hasClass("selected")){
+				$this.removeClass("selected");
+				$("#price").html(num-price);
+			}else{
+				$this.addClass("selected");
+				$("#price").html(num+price);
+			}
+		})
+		
+		$("#refund").on("click",function(){
+			var unum = 0;
+			var rnum = 0;
+			var uniqueness = "";
+			var reason = "";
+			$("ul#uniqueness li a").each(function(index,element){
+				if($(this).hasClass("selected")){
+					unum++;
+					if(uniqueness==""){
+						uniqueness += $(this).attr("data");
+					}else{
+						uniqueness += ","+$(this).attr("data");
+					}
+				}
+			})
+			
+			$("ul#reason li a").each(function(index,element){
+				if($(this).hasClass("selected")){
+					rnum++;
+					if(reason==""){
+						reason += $(this).html();
+					}else{
+						reason += ","+$(this).html();
+					}
+				}
+			})
+			
+			var bool = true;
+			
+			if(unum==0){
+				layer.tips("请至少选择一个密码",$("#uerror"),{tipsMore: true});
+				bool = false;
+			}
+			
+			if(rnum==0){
+				layer.tips("请至少选择一个退款原因",$("#rerror"),{tipsMore: true});
+				bool = false;
+			}
+			
+			if(bool){
+				$.post("pointServiceOrder/updateOrderRefund.json",{uniqueness:uniqueness,reason:reason,id:pso_id},function(data){
+					if(data.RESPONSE_STATE=="200"){
+						layer.msg("申请退款成功。",{icon:1,time:1*1000,shade:0.3},function(){
+							window.location.href="pointServiceOrder/MyOrder.html";
+						})
+					}else if(data.RESPONSE_STATE=="500"){
+						layer.alert("退款失败，请稍后再试！",{title:"错误信息",icon:0});
+					}
+				})
+			}
+			
+		})
+	})
+	
+	
+</script>
+
+</html>

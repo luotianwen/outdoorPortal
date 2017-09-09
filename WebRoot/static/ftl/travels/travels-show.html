@@ -1,0 +1,398 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head lang="en">
+<base href="/" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>${travels.title}</title>
+<#include "/view/base.css.html">
+<link rel="stylesheet" type="text/css" href="static/css/hw_css/augment.css"/>
+<link rel="stylesheet" type="text/css" href="static/css/hw_css/travels-title.css" />
+<link rel="stylesheet" type="text/css" href="static/css/emoji/emoji.css" />
+<style>
+
+#bank img {
+	background-image: url(static/css/bank/bank-logo.png);
+	width: 125px;
+	height: 28px;
+	background-repeat: no-repeat;
+}
+.laypageskin_molv a {
+    background-color: #fff !important;
+}
+</style>
+
+</head>
+<body>
+	<#include "/view/header.html">
+    <div class="w10 pT-5 mo-top">
+        <!--第一张大图  -->
+        <div class="h7 mo-top1 position-r" <#if !travels.show_image?exists>style="background-color:#ff8a01;"</#if>>
+			<#if travels.show_image?exists>
+	            <img src="${travels.show_image}" style="width: 100%;"/>
+	            <#else>
+	            <span class="no_pic">还没有添加游记头图</span>
+            </#if>
+            <div class="colorFFF fontS3 " >
+                <p class=" w7 overF position-a mo-top2">${travels.title?if_exists}</p>
+            </div>
+        </div>
+        <!-- 目录栏  -->
+        <div class="w10 h4 backFFF box1" id="scroll">
+            <div class="boxw borf position-r">
+                <a id="user-head" href="javascript:void(0)" target="_blank" class="mo-top3  position-a <#if travels.music?exists>user-head</#if>" <#if travels.uHeadImg?exists>style="background: url(${travels.uHeadImg}) no-repeat;background-size: cover;"</#if>></a>
+                <!-- <span class="mo-top4 border-R position-a"></span> -->
+                <#if travels.music?exists>
+                	<audio id="music" src="${travels.music}" preload="none" loop></audio>
+                </#if>
+                <div>
+                    <div class="mo-top5 mT-6 ">
+                        <a href="users/center.html?id=${travels.usersId}" target="_blank" class="mo-top6 position-r color6">${travels.uName}</a>
+                        <span class="color9 mo-top7">等级：<em class="mo-top8">${travels.grade_name}</em></span>
+                        <div class="float-r fontS2 mo-top9 sele1">
+                            <#if travels.user_id==travels.usersId>
+                            	<a id="edit-travels" href="travels/travelsdraft.html?id=${travels.id}" style="display:none;"><span class=" backf colorFFF button1-1">编辑</span></a>
+                            	<a id="delete" style="display:none;"><span class=" backf colorFFF button1-1 marR">删除</span></a>
+                            </#if>
+                            <span class=" backf colorFFF mo-one7 float-r" id="title1">目录</span>
+                            
+                           	<div class="bshare-custom hrea" >
+                                <span class="color3 lH-3 ma">分享到
+									<a class="bshare-sinaminiblog bshare" href="javascript:void(0)"></a>
+									<a class="bshare-qzone bshare2" href="javascript:void(0)"></a>
+									<a class="bshare-weixin bshare3" href="javascript:void(0)"></a>
+                            	</span>
+							</div>
+							
+							
+                            <div class="zH">
+                            	<span class="color6">
+	                            	<span class="mo-one1" id="travlesFollow"></span>
+	                            	<span>0</span>
+	                            </span>
+	                            <span class="color6">
+	                            	<span class="mo-one2" id="travelsPraise"></span>
+	                            	<span>0</span>
+								</span>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="boxw position-r" id="show">
+	    	<!-- 时间 几人出行  -->
+	        <div class="w8 backFFF box" id="show-perfect" style="display:none;">
+	            <div style="padding-top: 15px;height: 100px;">
+		            <span class=" a6 index position-r" id="show_departure_time"></span>
+		            <span class=" a7 index position-r" id="show_travel_days"></span>
+		            <span class=" a8 index position-r" id="show_travel_person"></span>
+		            <span class=" a9 index position-r" id="show_per_capita_cost"></span>
+		            <span class="backf colorFFF button1-1 float-r mR-4" id="edit" style="display:none;">编辑</span>
+	            </div>
+	        </div>
+	        <div class="w8 backFFF position-r mT-5" id="edit-perfect" style="display:none;">
+			    <div class="w8 h3 pT-7 pB-6 lH-4 borderB">
+			        <span class="taD mL-6"><span class="edit-ico taD lH-4 textA3"></span></span>
+			        <p class="taD textA3 mL-4 fontS2 color6">请填写游记基本信息，写完后更加容易搜到你的游记哦！</p>
+			        <a href="javascript:void(0)" id="perfect" class="float-r mR-4 colorf mT-2">立即填写<span class="a2 taD textA3"></span></a>
+			    </div>
+			</div>
+        
+        <!-- 导航栏  -->
+        <div class="right-all box" id="blockR">
+            <div class="one">
+				<#assign x=0 />
+				<#list travels.travelsContentList as item>
+					<#if item.parent_id=="0">
+						<#if item.content_type=="4" || item.content_type=="5">
+							<#assign x=x+1 />
+						</#if>
+					</#if>
+				</#list>
+				<#if (x>0)>
+                <div class="right-font mT-4"><span class="right-icon"></span>游记目录</div>
+                <#assign count=1>
+                <#list travels.travelsContentList as item>
+					<#if item.parent_id=="0">
+						<#if item.content_type=="4">
+			                <ul>
+			                    <li class="fontSize"><span id="title" data-target="${item.travelsTitle.id}"><a class="color6" href="javascript:void(0)">${item.travelsTitle.title!''}</a></span></li>
+			                </ul>
+						<#elseif item.content_type=="5">
+			                <ul>
+			                    <li class="fontSize">
+			                        <span class="curP" id="title" data-target="${item.travelsTitle.id}"><a class="color6" href="javascript:void(0)">Day${count}.&nbsp;&nbsp;${item.travelsTitle.title!''}</a><i class="triangle up"></i></span>
+			                        <#assign count=count+1>
+									<#assign index=1>
+									<#list travels.travelsContentList as children>
+										<#if children.content_type=="4">
+										<#if children.parent_id==item.id>
+											<ul>
+					                            <li class="fontSize"><p id="children-title" class="branch">${index}.&nbsp;&nbsp;<a class="color6" href="javascript:$('html,body').animate({scrollTop:$('#${children.travelsTitle.id}').offset().top},1000)">${children.travelsTitle.title!''}</a></p></li>
+					                        	<#assign index=index+1>
+					                        </ul>
+										</#if>
+										</#if>
+									</#list>
+			                    </li>
+			                </ul>
+						</#if>
+					</#if>
+				</#list>
+				<div style="height:30px;"></div>
+            </div>
+			</#if>
+
+        </div>
+	</div>
+	
+	<div class="mT-5"></div>
+	
+	<#assign index=1>
+	<#list travels.travelsContentList as item>
+		<#if item.content_type=="1">
+			<div class="boxw">
+		        <!--  游记内容  -->
+		        <div class="w8 fontS1 ta">
+		            <p class="pad">
+		            	${item.content }
+		            </p>
+		        </div>
+			</div>
+		<#elseif item.content_type=="2">
+			<div class="boxw">
+		        <!--  定位  -->
+		        <div class=" w8 hov img">
+		        
+		        
+		        	<!-- 分享、点赞、点评 -->
+		            <!-- <div class="mo-middle2" style="width:${item.travelsPhotos.width}px;margin-left:${(880-item.travelsPhotos.width?number)/2}px">
+		                <div class=" fontS1 mo-middle3 colorFFF mR">
+		                    <span class="colorFFF"><span class="mo-one1"></span>12</span>
+		                    <span class="colorFFF"><span class="mo-two1"></span>点评</span>
+                            
+                           	<div class="bshare-custom hrea mrT" pic="${item.travelsPhotos.src}" >
+                                <span class=" lH-3 colorFFF">分享到
+									<a class="bshare-sinaminiblog bshare" href="javascript:void(0)"></a>
+									<a class="bshare-qzone bshare2" href="javascript:void(0)"></a>
+									<a class="bshare-weixin bshare3" href="javascript:void(0)"></a>
+                            	</span>
+							</div>
+		                </div>
+		            </div> -->
+		            
+		            
+		            
+		            <!-- 图片和定位 -->
+		            <img class="lazy-img pad db" data-original="${item.travelsPhotos.src}${TravelDetailsPictureStyle}" width="${item.travelsPhotos.width}px"/>
+		            <#if item.travelsPhotos.tagName??>
+						<a href="javascript:void(0)" class="mo-one8">${item.travelsPhotos.tagName}</a>
+					</#if>
+		        </div>
+		    </div>
+		<#elseif item.content_type=="4">
+			<div class="boxw">
+				<div class="article-title ta">
+					<a id="${item.travelsTitle.id }"></a>
+					<p class="${item.travelsTitle.style_id}">
+						<i></i><span>${item.travelsTitle.title}</span>
+					</p>
+				</div>
+			</div>
+			
+		<#elseif item.content_type=="5">
+			<a id="${item.travelsTitle.id }"></a>
+			<div class="w10" style="<#if !item.travelsPhotos??>#ff8a01;</#if>">
+				<#if item.travelsPhotos??><img  class="lazy-img" data-original="${item.travelsPhotos.src}@!yjxq" style="width: 880px;margin-left: 352px;"/></#if>
+		        <div class="colorFFF fontS3 " >
+	                <p class="w7 overF position-a mo-topDay">Day${index}、${item.travelsTitle.title}</p>
+	            </div>
+		    </div>
+			<#assign index=index+1>
+		</#if>
+	</#list>
+	
+    <div class="boxw">
+        <!-- 统计栏  -->
+        <div class="w8 mT-5 mo-middle4 colorf">
+        	<span class="mo-middle5">${travels.photo_count!'0'}张图</span>
+            <span class="mo-middle6">${travels.word_count!'0'}个字</span>
+            <span class="mo-middle7" id="readNum">累计被查看0次</span>
+        </div>
+        <!-- 选择内容栏  -->
+        <div class="w8 mT-5 mo-middle8  colorf" id="travelsComment" >
+            <span class="float-l fontS2 mT-7">游记评论</span>
+            <!-- <span class="float-r fontS1 mo-middle9 mT-7">只看带图评论</span> -->
+        </div>
+        
+        <!-- 评论区 -->
+        <div id="showCommentDiv">
+        </div>
+        
+        <!-- 上下翻页 -->
+        <div id="travelsCommentPage" class="travels-comment-page"></div>
+        <!-- 评价游记区  -->
+        <div class="w8 mT-5">
+            <span class="mo-buttom1 colorf fontS2">评价游记</span>
+            <div class="fontS2 color6 backFFF comment-travels">
+                <div>
+                <img id="comment-current-uHeadImg" src="" class="before1"/>
+                <span id="comment-current-uName" class="mo-buttom2"></span>
+                </div>
+                <textarea id="comment-content" placeholder="评价游记" class="mo-buttom3 edit-txtarea" maxlength="5000"></textarea>
+                <div class="mo-buttom3 emoji-container" id="travels-comment">
+                    <span class="mo-buttom4" id='expression'>添加表情</span>
+                    <span class="w1 h3 backf mo-buttom5" id="comment-travels-btn">发表评论</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--固定区域 -->
+	<div class="w10 top-top box1" id="top">
+        <div class="boxw position-r">
+            <a id="user-head" href="javascript:void(0)" target="_blank" class="top-top1 position-a <#if travels.music?exists>user-head</#if>" <#if travels.uHeadImg?exists>style="background: url(${travels.uHeadImg}) no-repeat;background-size:cover"</#if>></a>
+            <!-- <span class="top-top2 border-R position-a"></span> -->
+            <div>
+                <div class="mo-top5 aba">
+                    <p class=" overF position-a top-top3" id="mo11" style="max-width: 288px;">${travels.title}</p>
+                   	<div class="float-r fontS2 mo-top9 sele1">
+                        <#if travels.user_id==travels.usersId>
+                        	<a id="edit-travels" href="travels/travelsdraft.html?id=${travels.id}" style="display:none;"><span class=" backf colorFFF button1-1">编辑</span></a>
+                        	<a id="delete" style="display:none;"><span class=" backf colorFFF button1-1 marR">删除</span></a>
+                        </#if>
+                        <span class=" backf colorFFF mo-one7 float-r" id="title2">目录</span>
+                       	<div class="bshare-custom hrea-top" pic="${travels.show_image?if_exists}" >
+                            <span class="lH-3 colorFFF">分享到
+								<a class="bshare-sinaminiblog bshare" href="javascript:void(0)"></a>
+								<a class="bshare-qzone bshare2" href="javascript:void(0)"></a>
+								<a class="bshare-weixin bshare3" href="javascript:void(0)"></a>
+                        	</span>
+						</div>
+						
+						<div class="zH">
+							<span class="color6">
+								<span class="mo-one1" id="travlesFollow"></span>
+								<span>0</span>
+							</span>
+							<span class="color6">
+                           		<span class="mo-one2" id="travelsPraise"></span>
+                           		<span>0</span>
+							</span>
+						</div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+	
+	<div id="perfect-box" class="pop-box" style="width:540px;display:none;">
+		<form id="myform">
+			<div class="mt">
+				<h1>游记基本信息</h1>
+				<a href="javasrcipt:void(0)" id="perfect-close" class="close" title="关闭"></a>
+			</div>
+			<div class="note-info-box">
+				<dl class="clearfix">
+					<dt>
+						<span>*</span>出发日期：
+					</dt>
+					<dd>
+						<input type="text" class="laydate-icon" name="departure_time" id="departure_time" placeholder="出发日期" value="<#if travels.departure_time?exists>${travels.departure_time?string('yyyy-MM-dd')}</#if>"/>
+					</dd>
+				</dl>
+				<dl class="clearfix">
+					<dt>
+						<span>*</span>出行天数：
+					</dt>
+					<dd>
+						<input type="text" name="travel_days" id="travel_days" value="${travels.travel_days!''}"/> 天
+					</dd>
+				</dl>
+				<dl class="clearfix">
+					<dt>
+						<span>*</span>人物：
+					</dt>
+					<dd>
+						<select name="travel_person" id="travel_person" value="${travels.travel_person!''}">
+							<option value="0">请选择出行人物</option>
+							<option value="一个人">一个人</option>
+							<option value="小两口">小两口</option>
+						</select>
+					</dd>
+				</dl>
+				<dl class="clearfix">
+					<dt><span>*</span>人均费用：</dt>
+					<dd>
+						<input type="text" name="per_capita_cost" id="per_capita_cost" value="${travels.per_capita_cost!''}" onkeyup="this.value=this.value.replace(/\D/g,'')"  onafterpaste="this.value=this.value.replace(/\D/g,'')"> RMB
+					</dd>
+				</dl>
+	
+				<div class="btns">
+					<a id="perfect-box-btn" class="btn-complete" title="确定">确定</a>
+				</div>
+			</div>
+		</form>
+	</div>
+	
+	<#include "/view/base.js.html">
+	<!-- 上传音乐 -->
+	<script type="text/javascript" src="static/js/travels/show/musicplay.js" ></script>
+	<!-- 滚动条 -->
+	<script type="text/javascript" src="static/js/travels/show/jquery.nicescroll.js" ></script>
+	<script type="text/javascript" src="static/js/travels/show/travels-view.js" ></script>
+	<!-- 段落添加图片	end -->
+	<script type="text/javascript" src="static/js/travels/emoji/underscore-min.js"></script>
+    <script type="text/javascript" src="static/js/travels/emoji/emojis.js"></script>
+	<!-- 图片延迟加载 -->
+	<script type="text/javascript" src="static/js/plugins/lazy-load-img/jquery.lazyload.min.js" ></script>
+	<script type="text/javascript" src="static/js/plugins/layer/laydate/laydate.js"></script>
+	<script type="text/javascript">
+	laydate.skin('cheng');
+	laydate({
+	    elem: '#departure_time',
+	    format: 'YYYY-MM-DD', // 分隔符可以任意定义，该例子表示只显示年月
+	    festival: true, //显示节日
+	    choose: function(datas){ //选择日期完毕的回调
+	        
+	    }
+	});
+	
+	var travelsId='${travels.id}',
+		address='${travels.address}',
+		title='${travels.title}',
+		travelsUserId='${travels.user_id}';
+	$(function(){
+		// 初始化lazyload并设置图片显示方式
+		$("img.lazy-img").lazyload({
+			effect: "show", // 载入使用何种效果
+			threshold: 3000, // 提前开始加载
+			failurelimit : 10 // 图片排序混乱时
+		});
+	})
+	function txtarea_this(obj){
+		return obj.closest("#travels-comment").prev().get(0);
+    }
+	</script>
+	<!-- praise or follow -->
+	<script type="text/javascript" src="static/js/travels/show/travels.praise.follow.js" ></script>
+	<!-- update -->
+	<script type="text/javascript" src="static/js/travels/show/travels.update.js" ></script>
+	<!-- 分页 -->
+	<script type="text/javascript" src="static/js/plugins/layer/laypage/laypage.js"></script>
+	<!-- comment -->
+	<script type="text/javascript" src="static/js/travels/show/travels.comment.js" ></script>
+
+	<script type="text/javascript" charset="utf-8" src="http://static.bshare.cn/b/buttonLite.js#style=-1&uuid=&pophcol=2&lang=zh"></script>
+	<script type="text/javascript" charset="utf-8" src="http://static.bshare.cn/b/bshareC2.js"></script>
+	<!-- share -->
+	<script type="text/javascript" src="static/js/travels/show/travels.share.js" ></script>
+	<!-- delete -->
+	<script type="text/javascript" src="static/js/travels/show/travels.delete.js" ></script>
+	<!-- perfect -->
+	<script type="text/javascript" src="static/js/travels/show/travels.perfect.js" ></script>
+</body>
+</html>

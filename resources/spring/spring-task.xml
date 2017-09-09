@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	 xmlns:task="http://www.springframework.org/schema/task"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+    http://www.springframework.org/schema/beans/spring-beans.xsd
+    http://www.springframework.org/schema/task
+    http://www.springframework.org/schema/task/spring-task.xsd"> 
+	 
+	<!-- 定时任务处理类  -->
+	<bean id="timedTask" class="com.op.task.TimedTask" />
+	
+	<!-- 阿里云文件上传定时任务处理类  -->
+	<bean id="aliyunFileUpload" class="com.op.task.AliyunFileUpload" />
+	
+	<!-- 取消未付款订单定时任务处理类  -->
+	<bean id="activeSignupPayClose" class="com.op.task.ActiveSignupPayClose" />
+	
+	<!-- 更改过期活动状态任务处理类  -->
+	<bean id="updateActivityState" class="com.op.task.UpdateActivityState" />
+	
+		<!-- 取消景点超时未支付的订单  -->
+	<bean id="spotOrderTask" class="com.op.task.SpotOrderTask" />
+	 
+	<task:scheduled-tasks>  
+		<!-- 保存用户浏览器信息任务  saveUserBrowser 每天凌晨1点10分执行-->
+        <task:scheduled ref="timedTask" method="saveUserBrowser" cron="0 10 01 ? * * " />
+        
+		<!-- 阿里云文件上传定时任  UploadLinesImages 每30分钟执行一次-->
+        <!-- <task:scheduled ref="aliyunFileUpload" method="UploadLinesImages" cron="0 0/30 *  * * ? " /> -->
+        
+        <!-- 取消未付款订单定时任务 UpdateActiveSignup 每分钟执行一次 -->
+        <task:scheduled ref="activeSignupPayClose" method="UpdateActiveSignup" cron="0 0/01 *  * * ? "/>
+        
+        <!-- 更改过期活动状态任务处理类 每分钟执行一次 -->
+        <task:scheduled ref="updateActivityState" method="updateActivity" cron="0 0/01 *  * * ? "/>
+        
+        <!-- 取消景点超时未支付的订单(0 0 */2 * * ?) -->
+        <task:scheduled ref="spotOrderTask"  method="timeoutCancel" cron="0 0 */2 * * ?" />
+        
+        <!-- 检测订单出票状态(0 */2 * * * ?) -->
+        <task:scheduled ref="spotOrderTask"  method="checkTicketStatus" cron="0 */2 * * * ?" />
+        
+    </task:scheduled-tasks>  
+ 
+<!--  字段   允许值   允许的特殊字符
+秒    0-59    , - * /
+分    0-59    , - * /
+小时    0-23    , - * /
+日期    1-31    , - * ? / L W C
+月份    1-12 或者 JAN-DEC    , - * /
+星期    1-7 或者 SUN-SAT    , - * ? / L C #
+年（可选）    留空, 1970-2099    , - * / 
+- 区间  
+* 通配符  
+? 你不想设置那个字段
+下面只例出几个式子
+ 
+CRON表达式    含义 
+"0 0 12 * * ?"    每天中午十二点触发 
+"0 15 10 ? * *"    每天早上10：15触发 
+"0 15 10 * * ?"    每天早上10：15触发 
+"0 15 10 * * ? *"    每天早上10：15触发 
+"0 15 10 * * ? 2005"    2005年的每天早上10：15触发 
+"0 * 14 * * ?"    每天从下午2点开始到2点59分每分钟一次触发 
+"0 0/5 14 * * ?"    每天从下午2点开始到2：55分结束每5分钟一次触发 
+"0 0/5 14,18 * * ?"    每天的下午2点至2：55和6点至6点55分两个时间段内每5分钟一次触发 
+"0 0-5 14 * * ?"    每天14:00至14:05每分钟一次触发 
+"0 10,44 14 ? 3 WED"    三月的每周三的14：10和14：44触发 
+"0 15 10 ? * MON-FRI"    每个周一、周二、周三、周四、周五的10：15触发  -->
+	 
+</beans>

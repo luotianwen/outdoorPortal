@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+		"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="spotcommentMapper">
+    <select id="getSpotcommentList" parameterType="int" resultType="com.op.spot.entity.Spotcomment">
+		  SELECT
+        stc.id ,userid ,username ,userpho ,sdate ,content ,stc.status ,sid ,num ,sp.name sname
+		  FROM s_spotcomment stc
+		　
+		WHERE stc.sid=#{id}
+				and stc.status =2
+		　
+		ORDER BY 　stc.sdate desc desc
+	</select>
+	
+	<resultMap type="com.op.spot.entity.Spotcomment" id="SpotcommentResultMap">
+	 	<id column="id" property="id"/>
+	 	
+	 	<!-- 点评小类 -->
+		<collection property="commentPho" ofType="com.op.splot.entity.CommentPho" column="id" select="commentPhoMapper.findCommentPhoByCid" ></collection>
+   		<!-- 点评图片 -->
+		<collection property="commentProject" ofType="com.op.splot.entity.CommentProject" column="id" select="commentProjectMapper.findCommentProjectByCid" ></collection>
+	</resultMap>
+	
+	<select id="findAllSpotCommentPage" parameterType="Page" resultMap="SpotcommentResultMap">
+		SELECT
+		 <![CDATA[
+        spc.id ,userid ,username ,userpho ,sdate ,content ,spc.status ,sid ,num ,sp.name sname
+	    
+	        FROM s_spotcomment spc
+	        left join s_spot sp on sp.id = spc.sid
+	        WHERE 
+			spc.sid = #{t.id } and spc.status=2
+	    ]]>
+	</select>
+	
+	<!-- 新增点评 -->
+	<insert id="saveComment" parameterType="com.op.spot.entity.Spotcomment" useGeneratedKeys="true" keyProperty="id">
+		insert into s_spotcomment 
+    	(
+	 		userid,username,userpho,sdate,content,status,sid,num
+	 	) 
+	 	values
+	 	(
+	 		#{userid},#{username},#{userpho},now(),#{content},1,#{sid},#{num}
+	 	)
+	</insert>
+	
+	
+</mapper>

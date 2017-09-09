@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 游记图片(travelsPhotos)Mapper -->
+<mapper namespace="travelsPhotosMapper">
+	<!--mybatis ehcache缓存配置 -->
+	<!-- 以下两个<cache>标签二选一,第一个可以输出日志,第二个不输出日志 不使用缓存加入useCache="false" -->
+	<!-- <cache type="org.mybatis.caches.ehcache.LoggingEhcache" /> -->
+	<!-- <cache type="org.mybatis.caches.ehcache.EhcacheCache"/> -->
+
+	<sql id="Base_Column_List">
+		id,content_id ,src ,tag ,like_count ,tag_id ,tag_type ,travels_id ,
+		templateimage ,parent_id ,user_id ,width 
+	</sql>
+
+	<resultMap type="com.op.entity.travels.TravelsPhotos" id="TravelsPhotosReturnMap">
+		<!-- id -->
+		<id column="id" property="id" />
+		<!-- 游记内容ID -->
+		<result column="content_id" property="content_id" />
+		<!-- 图片src -->
+		<result column="src" property="src" />
+		<!-- 图片标签 -->
+		<result column="tag" property="tag" />
+		<!-- 点赞次数（顶） -->
+		<result column="like_count" property="like_count" />
+		<!-- 地点、酒店、景点 ID -->
+		<result column="tag_id" property="tag_id" />
+		<!-- 关联id类型（1：地点；2：酒店；3：景点） -->
+		<result column="tag_type" property="tag_type" />
+		<!-- 游记ID -->
+		<result column="travels_id" property="travels_id" />
+		<!-- 父内容ID（默认0为一级） -->
+		<result column="parent_id" property="parent_id" />
+		<!-- 模板原图片 -->
+		<result column="templateimage" property="templateimage" />
+		<!-- 图片宽度 -->
+		<result column="width" property="width" />
+		<!-- 创建用户 -->
+		<result column="user_id" property="user_id" />
+		<!-- 景点标签类型(scenic：景点  city：城市   country：国家) -->
+		<result column="tt_scenic_type" property="tt_scenic_type" />
+		
+	</resultMap>
+
+	<!-- 新增游记图片 -->
+	<insert id="addPhotos" parameterType="com.op.entity.travels.TravelsPhotos" useGeneratedKeys="true" keyProperty="id">
+
+		insert into TravelsPhotos
+		(
+			 content_id ,src ,travels_id,parent_id,templateimage,width,user_id
+		)
+		values
+		(
+			 #{content_id},#{src},#{travels_id},#{parent_id},#{templateimage},#{width},#{user_id}
+		)
+	</insert>
+
+	<!-- 更新游记图片 -->
+	<update id="updateTravelsPhotos" parameterType="com.op.dto.travels.TravelsModifyDTO">
+		update travelsphotos tp set
+		<if test="data.o=='dayphotos'.toString()">
+			tp.src = #{data.s},
+			tp.templateimage = #{data.c}
+		</if>
+		<if test="data.o=='2'.toString()">
+		
+		</if>
+		where content_id = #{content_id} and user_id = #{user_id}
+	</update>
+
+	<!-- 删除所有该游记图片 -->
+	<delete id="deleteTravels" parameterType="com.op.entity.travels.Travels">
+		delete from travels
+		where travels_id = #{id} and user_id = #{user_id}
+	</delete>
+
+	<!-- 删除内容照片 -->
+	<delete id="deleteTravelsPhotos" parameterType="com.op.dto.travels.TravelsModifyDTO">
+		delete from travelsphotos
+		where content_id = #{content_id} and user_id = #{user_id}
+	</delete>
+
+	<!-- 删除day模板所有子图片 -->
+	<delete id="deleteTravelsPhotosByDay" parameterType="com.op.dto.travels.TravelsModifyDTO">
+		delete from travelsphotos
+		where (content_id = #{content_id} or parent_id = #{content_id})
+	</delete>
+	
+	<!-- 通过内容ID查询图片 -->
+	<select id="findTraelsPhotosByTravelsContentId" parameterType="String" resultMap="TravelsPhotosReturnMap">
+		select tp.id,tp.content_id ,tp.src ,tp.tag ,tp.like_count ,tp.tag_id ,tp.tag_type ,tp.travels_id,tp.parent_id,tp.templateimage,tp.width
+		,if(if(ss.zh_name is null,dt.zh_name,ss.zh_name) is null,ct.zh_name,if(ss.zh_name is null,dt.zh_name,ss.zh_name)) fj,tt_scenic_type
+		from travelsphotos tp
+		left join scenicSpot ss on tp.tag_id = ss.id and tp.tag_type=3 and tp.TT_SCENIC_TYPE = 'scenic'
+		left join destination dt on tp.tag_id = dt.id and tp.tag_type=3 and tp.TT_SCENIC_TYPE = 'city'
+		left join country ct on tp.tag_id = ct.id and tp.tag_type=3 and tp.TT_SCENIC_TYPE = 'country'
+		where content_id = #{id}
+		
+		<!-- 暂时只有风景的表结构，餐厅和酒店后期添加 -->
+		<!-- 
+		,ct.name ct
+		,jd.name jd
+		left join ct on tp.tag_id = ss.id and tp.tag_type=1
+		left join jd on tp.tag_id = ss.id and tp.tag_type=2
+		 -->
+	</select>
+	
+	<!-- 批量修改图片标签 -->
+	<update id="batchUpdateImgTag" parameterType="java.util.Map" >
+		<foreach collection="imgs" item="item" index="index" separator=";">
+		update travelsPhotos 
+		set 
+		tag_id=#{imgs[${index}].tag_id},
+		tag_type=#{imgs[${index}].tag_type},
+		tt_scenic_type=#{imgs[${index}].scenicType}
+		where content_id=#{imgs[${index}].content_id}
+		and user_id=#{user_id}
+		</foreach>
+	</update>
+	
+	<!-- 查询所有关联地点的图片数量 -->
+	<select id="findTravelsPhotosCountByTagId" parameterType="String" resultType="int">
+		select count(0) from travelsphotos
+		where TAG_ID is not null and travels_id = #{travelsId}
+	</select>
+	
+</mapper>

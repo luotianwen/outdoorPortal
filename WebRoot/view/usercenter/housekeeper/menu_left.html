@@ -1,0 +1,55 @@
+<div class="sidebar">
+	<ul>
+		<h2> 我的项目</h2>
+		<li>
+			<a href="huodong/myActive.html" <#if map.left='我的活动'>class="now"</#if> > 我的活动 </a>
+		</li>
+	</ul>
+	<ul>
+		<h2>我的收藏</h2>
+		<li>
+			<a href="follow/myActive.html" <#if map.left='活动收藏'>class="now"</#if> > 活动收藏 </a>
+		</li>
+		<li>
+			<a href="travels/myCollection.html" <#if map.left='游记收藏'>class="now"</#if> > 游记收藏 </a>
+		</li>
+	</ul>
+	<ul>
+		<h2>我的订单</h2>
+		<li>
+			<a href="activeSignup/MySignUp.html" <#if map.left='活动订单'>class="now"</#if>> 活动订单 </a>
+		</li>
+		<li>
+			<a href="pointServiceOrder/MyOrder.html" <#if map.left='场馆订单'>class="now"</#if>> 场馆订单 </a>
+		</li>
+		<li>
+			<a href="ticket/MyOrder.html" <#if map.left='景点订单'>class="now"</#if>> 景点订单 </a>
+		</li>
+	</ul>
+	<ul>
+		<h2>我的草稿</h2>
+		<li>
+			<a href="travels/draft.html" <#if map.left='游记草稿'>class="now"</#if>> 游记草稿 </a>
+		</li>
+		<#if SESSION_USER.uType !='3'>
+		<li>
+			<a href="huodong/uCenterDrafts.html" <#if map.left='活动草稿'>class="now"</#if>> 活动草稿 </a>
+		</li>
+		<li>
+			<a href="huodong/template.html" <#if map.left='活动模板'>class="now"</#if>> 活动模板 </a>
+		</li>
+		</#if>
+	</ul>
+	
+	<!-- <ul>
+		<h2>我的优惠券</h2>
+		<li><a> 路线订单 </a>
+		</li>
+		<li><a> 场馆订单 </a>
+		</li>
+		<li><a> 酒店订单 </a>
+		</li>
+		<li><a> 自由行订单 </a>
+		</li>
+	</ul> -->
+</div>

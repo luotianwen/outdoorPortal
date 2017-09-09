@@ -1,0 +1,61 @@
+<#include "/view/header.html">
+<!-- main begin -->
+<#if map.center = '我的管家'>
+	<#assign users=SESSION_USER>
+	<#assign usex="我">
+</#if>
+
+<div class="my-banner">
+	<div class="boxw my-name-box">
+		<div class="my-name">
+			<img src="<#if users.uHeadImg??>${users.uHeadImg}<#else>static/portrait/default.jpg</#if>" class="my-img" /> 
+			
+			<#if map.center != '我的玩嘛'>
+			${users.uName}
+			<span class="c-red"> ${users.grade_name} </span>
+			</#if>
+		</div>
+	</div>
+</div>
+<div class="my-tabs-box">
+	<div class="boxw clearfix">
+		<div class="my-tabs">
+			<ul class="my-tabs-ul" id="my-tabs">
+				<li><a href="users/center.html?id=${users.uId}" <#if map.center = '我的玩嘛'>class="now"</#if>> ${usex}的玩嘛 </a></li>
+				<li><a href="travels/travelsNote.html?id=${users.uId}" <#if map.center = '我的游记'>class="now"</#if>> ${usex}的游记 </a></li>
+				<#if users.uType!="50">
+					<li><a href="activeConsultation/consultation.html?id=${users.uId}" <#if map.center = '我的问答'>class="now"</#if>> ${usex}的问答 </a></li>
+					<#else>
+					<li><a href="pointService/home.html?id=${users.uId}"<#if map.center = '我的场馆'>class="now"</#if>> ${usex}的场馆 </a></li>
+				</#if>
+				<!-- <li><a href="javascript:void(0)" <#if map.center = '我的足迹'>class="now"</#if>> ${usex}的足迹 </a></li> -->
+				<#if users.uId=SESSION_USER.uId><li class="my-hk"><a href="huodong/myActive.html" <#if map.center = '我的管家'>class="now"</#if>> 我的管家 </a></li><#else><li><a></a></li></#if>
+			</ul>
+			<div id="my-tab-buoy"></div>
+			<#if users.uId=SESSION_USER.uId>
+			<ul class="gj-into">
+				<li>
+					<a href="huodong/myActive.html" target="_blank">
+						<i class="p"></i>我的项目
+					</a>
+				</li>
+				<li>
+					<a href="follow/myActive.html" target="_blank">
+						<i class="c"></i>我的收藏
+					</a>
+				</li>
+				<li>
+					<a href="activeSignup/MySignUp.html" target="_blank">
+						<i class="o"></i>我的订单
+					</a>
+				</li>
+				<li>
+					<a href="travels/draft.html" target="_blank">
+						<i class="d"></i>我的草稿
+					</a>
+				</li>
+			</ul>
+			</#if>
+		</div>
+	</div>
+</div>

@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>提示信息</title>
+    <base href="/">
+	
+    <meta http-equiv="keywords" content="发布活动提示">
+    <meta http-equiv="description" content="发布活动提示">
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  </head>
+
+
+  <body>
+  <div style="width: 700px;margin: 0 auto;overflow: hidden;text-align: center;margin-top: 100px;">
+    <span style="color: red;font-size: 25px;">抱歉，您目前尚不具备添加活动资质，请申请相应的资质!</span>
+    <br>
+    <br>
+    <button type="button" apply="leader" >申请领队</button>
+    &nbsp;&nbsp;
+    <button type="button" apply="group" >申请企业</button>
+  </div>
+  </body>
+    
+<script type="text/javascript" src="static/js/jquery-2.1.1.min.js"></script>
+<script type="text/javascript" src="static/js/plugins/layer/layer.min.js"></script>
+  
+	<script type="text/javascript">
+	$(function(){
+		$("a#apply_leader").next().removeAttr("href").on("click",function(){
+			$("a#apply_leader").trigger("click");
+		});
+		$("button[apply]").on("click",function(){
+			var _apply_type = $(this).attr("apply");
+			layer.msg("跳转中...",{icon:16,shade:0.3,time:5*1000});
+			location.href="uCheck/reply.html?type="+_apply_type;
+		});
+	})
+	</script>
+  
+</html>

@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="userFollowMapper">
+	<sql id="Base_Column_List">
+    	uf_id,uf_fans ,uf_follow ,uf_time 
+    </sql>
+
+	<resultMap type="com.op.entity.userFollow.UserFollow" id="UserFollowReturnMap">
+		<id column="uf_id" property="uf_id"/>
+		<result column="uf_fans" property="uf_fans"/>
+		<result column="uf_follow" property="uf_follow"/>
+		<result column="uf_time" property="uf_time"/>
+	</resultMap>
+   
+	<!-- 查询关注的用户 -->
+	<select id="findFollowForCenterPage" parameterType="Page" resultType="com.op.dto.usercenter.usercenter.UserCenterInfo">
+		select users.u_id,users.uName,users.uHeadImg from userfollow
+		left join users on u_id = uf_follow
+		where uf_fans = #{t}
+		order by uf_time desc
+	</select>
+	
+	<!-- 查询用户粉丝 -->
+	<select id="findFansForCenterPage" parameterType="Page" resultType="com.op.dto.usercenter.usercenter.UserCenterInfo">
+		select users.u_id,users.uName,users.uHeadImg from userfollow
+		left join users on u_id = uf_fans
+		where uf_follow = #{t}
+		order by uf_time desc
+	</select>
+	
+	<!-- 删除-->
+	<delete id="deleteFollow" parameterType="java.util.HashMap">
+		delete from userfollow
+		where 
+       	uf_fans =  #{login} and uf_follow = #{userId}
+	</delete>
+	
+	<!-- 新增 -->
+	<insert id="saveFollow" parameterType="com.op.entity.userFollow.UserFollow">
+		insert into userfollow (uf_fans ,uf_follow ,uf_time) 
+		values (
+			#{uf_fans},#{uf_follow},#{uf_time}
+	 	)
+	</insert> 
+	
+	<!-- 是否关注 -->
+	<select id="isFollow" parameterType="java.util.HashMap" resultType="int">
+		select count(uf_id) from userfollow where 
+		uf_fans =  #{login} and uf_follow = #{userId}
+	</select>
+	
+</mapper>

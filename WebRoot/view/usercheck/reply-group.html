@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>玩嘛</title>
+
+<base href="/">
+<#include "/view/base.css.html">
+<link rel="stylesheet" type="text/css" href="static/css/hw_css/form.css" />
+<link rel="stylesheet" type="text/css" href="static/css/reply/reply.leader.css" />
+</head>
+<body>
+
+<#include "/view/header.html">
+<form action="" id="replyGroupForm">
+<input name="type" type="hidden" value="group" class="type" />
+	<div class="boxw clearfix" style="margin-top: 20px;">
+		<div class="reply-form">
+			<div class="mt">
+				<h3>申请领队（企业）</h3>
+			</div>
+			<div class="mc">
+				<div id="page1">
+					<dl class="clearfix">
+						<dt>
+							<em>*</em>企业注册名称：
+						</dt>
+						<dd>
+							<input type="text" name="enterpriseName" placeholder="请输入企业注册名称" maxlength="50" />
+						</dd>
+					</dl>
+					<dl class="clearfix">
+						<dt>
+							<em>*</em>企业地址：
+						</dt>
+						<dd>
+							<select name="provinceId"> 
+								<#list provinces as item>
+								<option value="${item.code}">${item.name }</option> 
+								</#list>
+							</select> 
+							<select name="cityId">
+							</select>
+							<select name="countyId">
+							</select>
+						</dd>
+					</dl>
+					<dl class="clearfix">
+						<dt>
+							<em>*</em>所在地详细地址：
+						</dt>
+						<dd>
+							<input type="text" name="address" placeholder="请输入企业所在地的详细地址" maxlength="100" />
+						</dd>
+					</dl>
+					<dl class="clearfix">
+						<dt>
+							<em>*</em>企业固定电话：
+						</dt>
+						<dd>
+							<input type="text" name="telephone" placeholder="请输入企业固定电话" />
+						</dd>
+					</dl>
+					<dl class="clearfix">
+						<dt>
+							<em>*</em>企业邮箱：
+						</dt>
+						<dd>
+							<input type="text" name="email" placeholder="请输入企业邮箱" maxlength="50"/>
+						</dd>
+					</dl>
+					<dl class="clearfix">
+						<dt>
+							<em>*</em>企业网址：
+						</dt>
+						<dd>
+							<input type="text" name="enterpriseHomepage" placeholder="请输入企业首页(以http://开头)" maxlength="50" />
+						</dd>
+					</dl>
+					<dl class="clearfix">
+						<dt>
+							<em>*</em>营业执照号码：
+						</dt>
+						<dd>
+							<input type="text" name="licenseNum" placeholder="请输入营业执照号码" maxlength="50" />
+						</dd>
+					</dl>
+					<dl class="clearfix">
+						<dt>
+							<em>*</em>营业执照：
+						</dt>
+						<dd>
+							<input type="hidden" file name="licensePictureUrl">
+							<a href="javascript:void(0)" id="licensePictureUrl" class="btn-img" upload-a>上传图片</a>
+						</dd>
+					</dl>
+					<dl class="clearfix">
+						<dt>示例展示：</dt>
+						<dd>
+							<img src="static/images/hw_img/yyzz-img.jpg" />
+						</dd>
+					</dl>
+				</div>
+				<div id="page2" class="ignore" style="display: none;">
+					<dl class="clearfix">
+						<dt>
+							<em>*</em>申请人：
+						</dt>
+						<dd>
+							<label>
+								<span class="cssradio"> 
+									<input type="radio" value="1" name="proposer" checked> 
+									<span>
+									</span>
+								</span>
+								企业法人代表
+							</label> 
+							<label>
+								<span class="cssradio"> 
+									<input type="radio" value="2" name="proposer" > 
+									<span>
+									</span>
+								</span>
+								非企业法人代表
+							</label>
+						</dd>
+					</dl>
+					<dl class="clearfix">
+						<dt>
+							<em>*</em>
+							<span id="legal">法人代表姓名：</span>
+							<span id="un-legal" style="display: none;">企业联系人姓名：</span>
+						</dt>
+						<dd>
+							<input type="text" class="ignore" name="realName" placeholder="请输入法人代表姓名" maxlength="50" />
+						</dd>
+					</dl>
+					<dl class="clearfix">
+						<dt>
+							<em>*</em>
+							<span id="legal">法人代表手机：</span>
+							<span id="un-legal" style="display: none;">企业联系人手机：</span>
+						</dt>
+						<dd>
+							<input type="text" class="ignore" name="mobile" placeholder="请输入法人代表手机" />
+						</dd>
+					</dl>
+					<dl class="clearfix">
+						<dt>
+							<em>*</em>
+							<span id="legal">法人代表QQ：</span>
+							<span id="un-legal" style="display: none;">企业联系人QQ：</span>
+						</dt>
+						<dd>
+							<input type="text" class="ignore" name="qq" placeholder="请输入法人代表QQ" maxlength="15" />
+						</dd>
+					</dl>
+					<dl class="clearfix">
+						<dt>
+							<em>*</em>
+							<span id="legal">法人代表身份证号：</span>
+							<span id="un-legal" style="display: none;">联系人身份证号：</span>
+						</dt>
+						<dd>
+							<input type="text" class="ignore" name="idcardNum" placeholder="请输入法人代表身份证号" />
+						</dd>
+					</dl>
+					<dl class="clearfix">
+						<dt>
+							<em>*</em>
+							<span id="legal">法人代表身份证（正面）：</span>
+							<span id="un-legal" style="display: none;">联系人身份证（正面）：</span>
+						</dt>
+						<dd>
+							<input type="hidden" file class="ignore" name="idcartFrontUrl">
+							<a href="javascript:void(0)" class="btn-img" id="idcartFrontUrl" upload-a>上传证件照（正面）</a>
+						</dd>
+					</dl>
+					<dl class="clearfix">
+						<dt>
+							<em>*</em>
+							<span id="legal">法人代表身份证（反面）：</span>
+							<span id="un-legal" style="display: none;">联系人身份证（反面）：</span>
+						</dt>
+						<dd>
+							<input type="hidden" file class="ignore" name="idcartBackUrl">
+							<a href="javascript:void(0)" class="btn-img" id="idcartBackUrl" upload-a>上传证件照（反面）</a>
+						</dd>
+					</dl>
+					<dl class="clearfix">
+						<dt>
+							<em>*</em>手持证件照：
+						</dt>
+						<dd>
+							<input type="hidden" file class="ignore" name="idcartHandUrl">
+							<a href="javascript:void(0)" class="btn-img" id="idcartHandUrl" upload-a>上传手持证件照</a>
+						</dd>
+					</dl>
+					<dl class="clearfix">
+						<dt>示例展示：</dt>
+						<dd>
+							<img src="static/images/hw_img/sfz-img.jpg" width="625" height="130" />
+						</dd>
+					</dl>
+				</div>
+				<div id="page3" class="ignore" style="display: none;">
+					<dl class="clearfix">
+						<dt>
+							<em>*</em>俱乐部名称：
+						</dt>
+						<dd>
+							<input type="text" class="ignore" name="clubName" placeholder="请输入俱乐部名称" maxlength="50" />
+						</dd>
+					</dl>
+					<dl class="clearfix">
+						<dt>
+							<em>*</em>俱乐部LOGO：
+						</dt>
+						<dd>
+							<input type="hidden" file class="ignore" name="clubLogo">
+							<a href="javascript:void(0)" class="btn-img" id="clubLogo" upload-a>上传图片</a>
+						</dd>
+					</dl>
+					<dl class="clearfix">
+						<dt>示例展示：</dt>
+						<dd>
+							<img src="static/images/hw_img/qylogo-img.jpg" />
+						</dd>
+					</dl>
+					<dl class="clearfix">
+						<dt>
+							<em>*</em>俱乐部介绍：
+						</dt>
+						<dd>
+							<textarea maxlength="100" class="ignore" name="clubIntro" placeholder="请输入俱乐部介绍" maxlength="1500"></textarea>
+							<div class="error-area">
+							</div>
+						</dd>
+					</dl>
+					<dl class="clearfix">
+						<dt>
+							<em>*</em>经营范围：
+						</dt>
+						<dd>
+							<textarea maxlength="100" class="ignore" name="enterpriseIntro" placeholder="请输入经营范围" maxlength="100"></textarea>
+							<div class="error-area">
+							</div>
+						</dd>
+					</dl>
+				</div>
+			</div>
+			<div class="btns">
+				<a href="javascript:void(0)" class="btn-sub" id="prev" style="display: none;">上一步</a>
+				<a href="javascript:void(0)" class="btn-sub" id="next">下一步</a>
+				<a href="javascript:void(0)" class="btn-sub" id="submit" style="display: none;">提交申请</a>
+				<a href="javascript:void(0)" class="btn-sub" id="reset" >重置</a>
+			</div>
+		</div>
+	</div>
+</form>
+
+<div id="container" style="display: none;">
+	<a id="selectfiles" href="javascript:void(0);" class='btn'>选择文件</a>
+	<a id="postfiles" href="javascript:void(0);" class='btn'>开始上传</a>
+</div>
+
+	<#include "/view/base.js.html">
+	<script type="text/javascript">
+	// 记录当前上传文件ID
+	var currentUploadFileId=null,
+		currentValidateForm = null;// 校验对象
+	</script>
+	<!-- 上传文件插件 -->
+	<script type="text/javascript" src="static/upload/plupload-2.1.8/js/plupload.full.min.js"></script>
+	<script type="text/javascript" src="static/js/reply/reply.file.upload.js"></script>
+	
+	<script type="text/javascript" src="static/js/plugins/validate/jquery.validate.min.js"></script>
+	<script type="text/javascript" src="static/js/plugins/layer/layer.min.js"></script>
+	<!-- 身份证 -->
+	<script type="text/javascript" src="static/js/IDValidator/GB2260.js"></script>
+	<script type="text/javascript" src="static/js/IDValidator/IDValidator.js"></script>
+	
+	<script type="text/javascript" src="static/js/reply/reply.group.js"></script>
+	
+</body>
+</html>

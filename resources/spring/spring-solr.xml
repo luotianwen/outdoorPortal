@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-4.0.xsd
+        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+	
+  
+	
+	<!--定义活动搜索solr的server-->
+	<bean id="activitySolrServer" class="com.op.solr.HttpSolrClient">
+		<constructor-arg index="0" value="${solr.activityUrl}"/>
+		<constructor-arg index="1" value="${solr.timeout}"/>
+		<constructor-arg index="2" value="${solr.connectionTimeout}"/>
+		<constructor-arg index="3" value="${solr.defaultMaxConnectionsPerHost}"/>
+		<constructor-arg index="4" value="${solr.maxTotal}"/>
+		<constructor-arg index="5" value="${solr.followRedirects}"/>
+		<constructor-arg index="6" value="${solr.allowCompression}"/>
+		<!-- 设置响应解析器 -->	
+		<property name="parser">
+			<bean class="org.apache.solr.client.solrj.impl.XMLResponseParser"/>
+		</property>
+		<!-- 设置重试次数-->
+		<property name="maxRetries" value="${solr.maxRetries}"/>
+	</bean>	
+	
+	<!--定义活动咨询属性solr的server-->
+	<bean id="consultSolrServer" class="com.op.solr.HttpSolrClient">
+		<constructor-arg index="0" value="${solr.consultUrl}"/>
+		<constructor-arg index="1" value="${solr.timeout}"/>
+		<constructor-arg index="2" value="${solr.connectionTimeout}"/>
+		<constructor-arg index="3" value="${solr.defaultMaxConnectionsPerHost}"/>
+		<constructor-arg index="4" value="${solr.maxTotal}"/>
+		<constructor-arg index="5" value="${solr.followRedirects}"/>
+		<constructor-arg index="6" value="${solr.allowCompression}"/>
+		<!-- 设置响应解析器 -->	
+		<property name="parser">
+			<bean class="org.apache.solr.client.solrj.impl.XMLResponseParser"/>
+		</property>
+		<!-- 设置重试次数-->
+		<property name="maxRetries" value="${solr.maxRetries}"/>
+	</bean>	
+	
+	<!--定义景点搜索solr的server-->
+	<bean id="jingdianSolrServer" class="com.op.solr.HttpSolrClient">
+		<constructor-arg index="0" value="${solr.jingdianUrl}"/>
+		<constructor-arg index="1" value="${solr.timeout}"/>
+		<constructor-arg index="2" value="${solr.connectionTimeout}"/>
+		<constructor-arg index="3" value="${solr.defaultMaxConnectionsPerHost}"/>
+		<constructor-arg index="4" value="${solr.maxTotal}"/>
+		<constructor-arg index="5" value="${solr.followRedirects}"/>
+		<constructor-arg index="6" value="${solr.allowCompression}"/>
+		<!-- 设置响应解析器 -->	
+		<property name="parser">
+			<bean class="org.apache.solr.client.solrj.impl.XMLResponseParser"/>
+		</property>
+		<!-- 设置重试次数-->
+		<property name="maxRetries" value="${solr.maxRetries}"/>
+	</bean>
+	
+	<!--定义游记搜索solr的server-->
+	<bean id="travelsSolrServer" class="com.op.solr.HttpSolrClient">
+		<constructor-arg index="0" value="${solr.travelsUrl}"/>
+		<constructor-arg index="1" value="${solr.timeout}"/>
+		<constructor-arg index="2" value="${solr.connectionTimeout}"/>
+		<constructor-arg index="3" value="${solr.defaultMaxConnectionsPerHost}"/>
+		<constructor-arg index="4" value="${solr.maxTotal}"/>
+		<constructor-arg index="5" value="${solr.followRedirects}"/>
+		<constructor-arg index="6" value="${solr.allowCompression}"/>
+		<!-- 设置响应解析器 -->	
+		<property name="parser">
+			<bean class="org.apache.solr.client.solrj.impl.XMLResponseParser"/>
+		</property>
+		<!-- 设置重试次数-->
+		<property name="maxRetries" value="${solr.maxRetries}"/>
+	</bean>
+	
+	<!--定义景点搜索solr的server-->
+	<bean id="spotSolrServer" class="com.op.solr.HttpSolrClient">
+		<constructor-arg index="0" value="${solr.spotUrl}"/>
+		<constructor-arg index="1" value="${solr.timeout}"/>
+		<constructor-arg index="2" value="${solr.connectionTimeout}"/>
+		<constructor-arg index="3" value="${solr.defaultMaxConnectionsPerHost}"/>
+		<constructor-arg index="4" value="${solr.maxTotal}"/>
+		<constructor-arg index="5" value="${solr.followRedirects}"/>
+		<constructor-arg index="6" value="${solr.allowCompression}"/>
+		<!-- 设置响应解析器 -->	
+		<property name="parser">
+			<bean class="org.apache.solr.client.solrj.impl.XMLResponseParser"/>
+		</property>
+		<!-- 设置重试次数-->
+		<property name="maxRetries" value="${solr.maxRetries}"/>
+	</bean>
+
+	 
+
+</beans>

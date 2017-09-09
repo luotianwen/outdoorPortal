@@ -1,0 +1,196 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+
+<base href="/" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>保险选择</title>
+<link rel="stylesheet" type="text/css" href="static/css/hw_css/base.css" />
+<!-- 保险 -->
+<link rel="stylesheet" type="text/css" href="static/css/hw_css/insure.css" />
+</head>
+<body>
+
+<div class="insure">
+  <div class="insure-title"><span>保险信息</span></div>
+  <div class="insure-main">
+    <div class="insure-select">
+      <label>选择保险</label>
+      <select id="product">
+        <option value="0">选择保险</option>
+      </select>
+      <!-- <select id="deadline">
+        <option value="0">选择保险期限</option>
+      </select> -->
+      <select id="plan">
+        <option value="0">选择保险计划</option>
+      </select>
+    </div>
+    <div class="insure-age">
+    	承保年龄：<label id="age">*</label>&nbsp;周岁
+    	<a href="#" id="view"  target="_blank" class="c1" style="margin-left:30px;">查看详情</a>
+    	&nbsp;&nbsp;*起保时间 、终保时间 为活动开始、结束时间
+    </div>
+    <table width="100%" border="0">
+	  <tr>
+	    <th width="100">选择</th>
+	    <th>保险计划名称</th>
+	    <th width="200">保险期限</th>
+	    <th width="200">保费价格</th>
+	  </tr>
+	</table>
+  <div class="insure-list">
+  <table width="100%" border="0" id="details">
+ 	 <tr><td colspan="4"><label class="c1">请选择保险!</label></td></tr>
+  </table>
+  </div>
+	<div class="insure-btns">
+		<a class="btn-cancel" href="javascript:cancel()">取消</a>
+		<a class="btn-ok" href="javascript:sure()">确定</a>
+	</div>
+  </div>
+</div>
+<script type="text/javascript" src="static/js/jquery-2.1.1.min.js"></script>
+<script type="text/javascript" src="static/js/plugins/layer/layer.min.js"></script>
+<script type="text/javascript">
+	view = $("#view");
+	$(function(){
+	
+	 	// 获取窗口索引
+		var _layer_index = parent.layer.getFrameIndex(window.name);
+		// 让层自适应iframe
+		parent.layer.iframeAuto(_layer_index);
+	
+	
+		$.post("insurances/list.json",function(data){
+			product = $("#product");
+			$.each(data, function(i, item) {
+				product.append("<option startAge='"+item.startAge+"' endAge='"+item.endAge+"' value='"+item.productId+"'>"+item.productName+"</option>");
+			});
+			view.hide();
+		});
+		
+		$("table#details").on("click","span.radio",function(){
+			var spans = $("span.radio"),
+				$this=$(this),
+				$radio = $this.find("input[type=radio]");
+			spans.each(function(index){
+				$(this).removeClass("now");
+				$(this).find("input[type=radio]").prop("checked",false);
+				
+				if(index == spans.length-1){
+		    		$this.addClass("now"); 
+		    		$radio.prop("checked",true);
+				}
+			})
+		})
+		sure=function(){
+			if($("input[name=id]:checked").length == 0){
+				layer.alert("请选择保险再确定!",{icon:6,btn:['好的']})
+				return;
+			}
+			
+			layer.confirm("是否选择该保险？",{icon:3},function(index){
+				layer.close(index);
+				setParentInsurance();
+				parent.layer.close(_layer_index);
+			})
+			
+		}
+		
+		setParentInsurance=function(){
+			var $checked = $("input[name=id]:checked"),
+				$unit=$checked.attr("unit"),
+				$min=$checked.attr("min"),
+				$max=$checked.attr("max"),
+				$val=$checked.val(),
+				$price=$checked.attr("price"),
+				$planname=$checked.attr("planname"),
+				$chanpin = $("select#product option:checked").text(),
+				$qixian = $min+($max==0?"":"-"+$max)+($unit==1?"天":"年"),
+				bean={
+					id : $val,
+					chanpin : $chanpin,
+					jihua : $planname,
+					qixian : $qixian,
+					jiage : $price,
+					str : "产品名称："+$chanpin+"<br>计划名称："+$planname+"<br>保险期限："+$qixian+"<br>价&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;格："+$price,
+				};
+
+			parent.$("a#listtener_insurance").trigger("click",bean);
+		}
+		
+		cancel=function(){
+			parent.layer.close(_layer_index);
+			
+		}
+	});
+	
+	function details(){
+		$.post("insurances/details.json",{
+			productId:$("#product").val(),planId:$("#plan").val(),activityId:parent.activityId
+		},function(data){
+			tbody = $("#details");
+			tbody.html("");
+			if(data.RESPONSE_STATE=="200"){
+				$.each(data.list, function(i, item) {
+					tbody.append('<tr>'
+							+'<td width="100">'
+							+'<span class="radio"><i class="icon-select"></i>'
+							+'<input type="radio" planname="'+item.planname+'" price='+item.price+' min="'+item.minDeadline+'" max="'+item.maxDeadline+'" unit="'+item.unit+'" style="position: absolute; opacity: 0;" name="id" value="'+item.planId+'"/>'
+							+'</span>'
+							+'</td>'
+							+'<td>'+item.planname+'</td>'
+							+'<td width="200">'+item.term+'</td>'
+							+'<td width="200">'+item.price+'</td>'
+							+'</tr>');
+				});
+			}else{
+				tbody.html('<tr><td colspan="4"><label class="c1">'+data.ERROR_INFO+'</label></td></tr>');
+			}
+		});
+	}
+
+	 $("#product").change(function() {
+		$this = $(this);
+		var id = $this.val();
+		product = $("#plan");
+		product.empty();
+		product.append("<option value=\"0\">选择保险计划</option>");
+		//deadline = $("#deadline");
+		//deadline.empty();
+		age = $("#age");
+		//deadline.append("<option value=\"0\">选择保险期限</option>");
+		if(id == 0){
+			$("#details").html('<tr><td colspan="4"><label class="c1">请选择保险!</label></td></tr>');
+			age.html("*"); 
+			view.hide();
+		}else{
+			view.show();
+			view.attr("href","http://cps.hzins.com/wanrma/product/detail-"+id+".html");
+			age.html($this.find("option:selected").attr("startAge")+"-"+$this.find("option:selected").attr("endAge")); 
+			$.post("insurances/plan/"+id+".json",function(data){
+				$.each(data, function(i, item) {
+					product.append("<option value='"+item.planId+"'>"+item.planName+"</option>");
+				});
+			});
+			/* $.post("insurances/deadline/"+id+".json",function(data){
+				$.each(data, function(i, item) {
+					deadline.append("<option value='"+item.id+"'>"+item.deadline+"</option>");
+				});
+			}); */
+			details();
+		}
+	}); 
+	
+	 $("#plan").change(function() {
+		details();
+	 }); 
+	 /* $("#deadline").change(function() {
+		details();
+	 }); */
+	
+	
+</script>
+</body>
+</html>

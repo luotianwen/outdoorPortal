@@ -1,0 +1,80 @@
+@charset "utf-8";
+/* CSS Document */
+.login-popup-box{width:260px;background: #fff;position: relative;padding:0 70px;margin:0 auto;padding-bottom: 70px;border-radius: 30px;}
+.login-popup-box .close-btn{position: absolute;right:10px;top:10px;cursor: pointer;}
+.login-popup-box .close-btn i{width:26px;height:26px;display: block;background: url(../../images/hw_img/icons-login.png) no-repeat; background-position: 0 0;}
+.login-popup-box .close-btn:hover i{background-position: 0 -26px;}
+.login-logo{height:106px;text-align:center;}
+.login-logo img{margin-top:20px;}
+.login-input input[type="text"], .login-input input[type="password"], .login-input input[type="number"] {border: 1px solid #ccc;color: #333; font-size: 12px; height: 38px; line-height: 38px;
+	outline: medium none; padding: 0px 8px;width: 302px;}
+.login-input input.w1{width:142px;margin-right: 10px;}
+.login-input input.w2{width:182px;margin-right: 10px;}
+.login-input input:focus{border: 1px solid #ff8a01;}
+.login-input .jym{width:86px;height:40px;vertical-align: -14px;cursor: pointer;}
+.login-input .yzm{width:110px;height:40px;background:#ff8a01;font-size:14px;color:#fff;display: inline-block;line-height: 40px;text-align: center;}
+.login-error{height:32px !important;line-height:28px !important;font-size:12px;color:#ff8a01;}
+.login-error i{width:18px;height: 18px;display: inline-block;background: url(../../images/hw_img/icons-login.png) no-repeat 0 -58px;margin-right: 6px;vertical-align: -4px}
+.login-link{height:30px;font-size:12px;line-height:30px;color: #949494;margin-top: 10px;}
+.login-link a{color:#ff8a01;}
+.login-link a:hover{color:#ff8a01;}
+.login-btn{height:40px;}
+.login-btn button{width:100%;height: 40px; display: inline-block; line-height: 36px;background-color: #ff8a01;text-align: center; font-size: 14px; color: #fff; border: none; cursor: pointer;}
+.bg-line{background:url(../../images/hw_img/bg-line.png) no-repeat;position: relative;height:20px;margin-top:8px;}
+.bg-line h3{font-size:14px;color: #949494;font-weight: normal;position: absolute;top:0px;left:71px;padding:0 10px;}
+.connect-box{padding:10px 0 20px;text-align: center;}
+.connect-box p{overflow: hidden;}
+.connect-box a{margin:10px 10px;}
+.connect-box a.qq{width:38px;height:38px;display: inline-block;background: url(../../images/hw_img/icons-login.png) no-repeat; background-position: -30px -8px;}
+.connect-box a.qq:hover{background-position: -30px -56px;}
+.connect-box a.wechat{width:38px;height:38px;display: inline-block;background: url(../../images/hw_img/icons-login.png) no-repeat; background-position: -101px -8px;}
+.connect-box a.wechat:hover{background-position: -102px -57px;}
+.connect-box a.weibo{width:38px;height:38px;display: inline-block;background: url(../../images/hw_img/icons-login.png) no-repeat; background-position: -173px -8px;}
+.connect-box a.weibo:hover{background-position: -174px -57px;}
+
+::-moz-placeholder { color: #999; }
+::-webkit-input-placeholder { color:999; }
+:-ms-input-placeholder { color:#999; }
+
+/* .fullscreen-bg{background:url(../../images/hw_img/img-big.jpg);background-size:cover;background-position: 50% 50%;position: fixed;top:0;right:0;bottom:0;left:0;} */
+.login-box{width:320px;background: url(../../images/hw_img/bg-login.png);padding:0 70px;left: 50%; margin: -245px 0 0 130px; position: absolute; top: 50%; z-index: 2;border-radius:10px;}
+.box-name{font-size:18px;color:#ff8a01;margin-bottom:-10px;padding-top:20px;position: relative;}
+.box-name .login-link{font-size:12px;color:#949494;line-height:40px;position: absolute;right:0;bottom:3px;}
+.box-name .login-link a{color:#ff8a01;}
+
+/* reg */
+.reg-box{width:320px;background: url(../../images/hw_img/bg-login.png);padding:0 90px;left: 50%; margin: -300px 0 0 130px; position: absolute; top: 50%; z-index: 2;border-radius:10px;}
+
+
+.btn-disabled{background:#e4e4e4 !important;color:#888 !important;}
+.no-error{height:20px;line-height:20px;font-size:12px;}
+
+
+/* 默认图片  */
+.box-f {
+	width: 16px;
+	height: 16px;
+	display: inline-block;
+	background: url("../../images/piuter-img/piuter-img.png") no-repeat -245px -42px;
+	vertical-align: text-top;
+	margin-right: 6px;
+	cursor: pointer;
+}
+/* 点击之后图片定位 */
+.box-y {
+	background-position: -222px -43px;
+}
+/* 字体颜色 */
+.colorf {
+	color: #ff8a01;
+}
+/* 开始时字体  */
+.color5 {
+	color: #999;
+	cursor: pointer;
+}
+
+.float-r {
+	float: right;
+}
+.error-tips{font-size:14px;color:#F00821;}

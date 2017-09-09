@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="InsurancePlanMapper">
+    <!--mybatis ehcache缓存配置 -->
+    <!-- 以下两个<cache>标签二选一,第一个可以输出日志,第二个不输出日志  不使用缓存加入useCache="false" -->
+    <cache type="org.mybatis.caches.ehcache.LoggingEhcache" /> 
+    <!-- <cache type="org.mybatis.caches.ehcache.EhcacheCache"/>  -->
+    
+	<sql id="Base_Column_List">
+    planId,productId ,caseCode ,planName ,planDetails 
+    </sql>
+
+    <resultMap type="com.op.entity.insurance.InsurancePlan" id="InsurancePlanReturnMap">
+		<!-- 保险计划ID -->
+      <id column="planId" property="planId"/>
+		<!-- 保险产品ID -->
+      <result column="productId" property="productId"/>
+		<!-- 方案代码，每一款保险公司产品的方案代码都不相同，由慧择分配 -->
+      <result column="caseCode" property="caseCode"/>
+		<!-- 计划名称 -->
+      <result column="planName" property="planName"/>
+		<!-- 保障计划列表 -->
+      <result column="planDetails" property="planDetails"/>
+   </resultMap>
+   
+   
+   <!-- 根据保险ID获取保险计划  List 列表 -->
+   <select id="listByProductId" parameterType="string" resultType="com.op.dto.insurance.InsurancePlanDTO" >
+	   	SELECT 
+	   	<include refid="Base_Column_List" />
+	   	FROM InsurancePlan
+	   	WHERE productId = #{productId}
+   </select>
+  
+   <!-- 根据保险价格ID获取保险方案代码及价格-->
+   <select id="findByPiceId" parameterType="java.util.Map" resultType="com.op.dto.insurance.InsurancePlanPriceDTO" >
+	   <!-- select 
+		pl.caseCode,ip.price,pl.planName,pl.planId,i.productId,i.productName,i.companyName
+		from insuranceprice ip
+		left join insuranceplan pl on pl.planid = ip.planid
+   	    left join insurances i on i.productid = ip.productid
+		where  ip.id = #{id} -->
+		SELECT planId,caseCode,planName,ip.productId,i.productName,i.companyName,acc.acp_cost price
+		FROM insuranceplan ip
+		LEFT JOIN insurances i ON i.productId = ip.productId
+		JOIN activeCorrelationCost acc ON acc.acp_activity_id = ${aId} AND acc.acp_order=0
+		
+		WHERE ip.planId = ${planId}
+   </select>   
+	
+</mapper>

@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  	<base href="/">
+    <title>规划活动路线</title>
+	
+    <meta http-equiv="pragma" content="no-cache">
+	<meta http-equiv="cache-control" content="no-cache">
+	<meta http-equiv="expires" content="0">    
+	<meta http-equiv="keywords" content="keyword1,keyword2,keyword3">
+	<meta http-equiv="description" content="This is my page">
+
+	<link href="static/css/bootstrap.min.css" rel="stylesheet">
+	<link href="static/css/style.min.css" rel="stylesheet">
+	<link href="static/css/font-awesome.min.css" rel="stylesheet">
+	
+	<style type="text/css">
+	
+	#container_lxt {
+		width: 100%;
+		margin-top: 20px;
+	}
+	
+	/* 起点标记 */
+	.amap-marker .marker-route {
+	    position: absolute;
+	    width: 40px;
+	    height: 44px;
+	    color: #e90000;
+	    background: url(static/img/index/active/poi-1.png) no-repeat;
+	    cursor: pointer;
+	}
+	.amap-marker .marker-marker-bus-from {
+	    background-position: -334px -180px;
+	}
+	.amap-marker .marker-marker-bus-from-end {
+	    background-position: -334px -135px;
+	}
+	 #panel {
+          position: absolute;
+          background-color: white;
+          max-height: 80%;
+          overflow-y: auto;
+          right:0;
+          width: 280px;
+          display: none;
+      }
+	</style>
+  </head>
+  
+  <body>
+    <input type="hidden" value="${showLineAddressId}" id="parentAddressId" >
+    <input type="hidden" value="${start}" id="start" >
+    <input type="hidden" value="${end}" id="end" >
+    <div style="padding: 20px;width: 95%;margin: 0 auto;overflow: hidden;position: relative;">
+         <div class="form-group">
+             <div class="row">
+              	<div class="col-sm-6">
+	              	<input class="form-control" id="keyword" >
+              	</div>
+              	<div class="col-sm-3">
+           			<button class="btn btn-primary" onclick="search()">搜索</button>
+	              	<button class="btn btn-primary" id="lbs_start_marker" onclick="start_marker()">标注起点</button>
+	              	<button class="btn btn-primary" onclick="get_markers()">确定路线</button>
+	              	<button class="btn btn-primary" onclick="reduction_markers()">还原</button>
+              	</div>
+             </div>
+             <div id="container_lxt">
+			 <div id="panel" style="z-index: 9999999999999999;"></div></div>
+         </div>
+    </div>
+    
+    
+	
+    <!-- 地图 -->
+	<#include "/view/webapi.js.html">
+	
+    <script type="text/javascript" src="static/js/jquery-2.1.1.min.js"></script>
+	<script type="text/javascript" src="static/js/plugins/layer/layer.min.js"></script>
+    
+	<!-- 线路图js -->
+    <script type="text/javascript" src="static/js/index/active/lbs-active-lxt/lbs.lxt.js"></script>
+    
+    <!-- 地图工具控件 -->
+	<script type="text/javascript" src="static/js/index/active/lbs-active-show/lbs.config.js"></script>
+    
+    <script type="text/javascript">
+    $(function(){
+	    $("div#container_lxt").css({"height":$(window).height()*0.8})
+	    $(window).resize(function(){
+	    	 $("div#container_lxt").css({
+		    	 "height":$(window).height()*0.8
+	    	 })
+	    })
+	    
+	    //回车搜索
+		$("#keyword").keypress(function(e) {
+			if (e.which == 13){
+				search();
+			}
+		})
+    })
+    </script>
+  </body>
+</html>

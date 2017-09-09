@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="InsuredMapper">
+	<sql id="Base_Column_List">
+    id,insurantId ,insureNum ,policyNum ,cName ,eName ,sex ,cardTypeId ,cardCode ,birthday ,relationId ,count ,singlePrice ,fltNo ,fltDate ,city ,tripPurposeId ,destination ,visaCity ,jobInfo ,mobile ,country ,productId ,productName ,planId ,planName ,applicant 
+    </sql>
+
+    <resultMap type="com.op.entity.insurance.Insured" id="InsuredReturnMap">
+		<!-- id -->
+      <id column="id" property="id"/>
+		<!-- 被保人ID，由渠道商传递（同一单此字段不能重复，只能为Int范围内的数字） -->
+      <result column="insurantId" property="insurantId"/>
+		<!-- 投保单号 -->
+      <result column="insureNum" property="insureNum"/>
+		<!-- 保险公司保单号 -->
+      <result column="policyNum" property="policyNum"/>
+		<!-- 被保人姓名 -->
+      <result column="cName" property="cName"/>
+		<!-- 被保险人姓名拼音，境外旅游险必填 -->
+      <result column="eName" property="eName"/>
+		<!-- 被保险人性别 0：女 1：男 -->
+      <result column="sex" property="sex"/>
+		<!-- 被保险人证件类型 -->
+      <result column="cardTypeId" property="cardTypeId"/>
+		<!-- 被保人证件号码 -->
+      <result column="cardCode" property="cardCode"/>
+		<!-- 被保险人出生日期 格式：yyyy-MM-dd -->
+      <result column="birthday" property="birthday"/>
+		<!-- 与投保人关系 -->
+      <result column="relationId" property="relationId"/>
+		<!-- 被保险人购买份数 -->
+      <result column="count" property="count"/>
+		<!-- 产品结算价（单位：元） -->
+      <result column="singlePrice" property="singlePrice"/>
+		<!-- 航班号，航意险必填 -->
+      <result column="fltNo" property="fltNo"/>
+		<!-- 起飞时间，航意险必填 -->
+      <result column="fltDate" property="fltDate"/>
+		<!-- 所在地区，特定产品必填 -->
+      <result column="city" property="city"/>
+		<!-- 出行目的 -->
+      <result column="tripPurposeId" property="tripPurposeId"/>
+		<!-- 出行目的地 -->
+      <result column="destination" property="destination"/>
+		<!-- 签证办理城市 -->
+      <result column="visaCity" property="visaCity"/>
+		<!-- 被保人职业信息（职业代码、职业名称、职业等级，以 | 分割，如“100401|电子业-工程师|2”），部分产品必填 -->
+      <result column="jobInfo" property="jobInfo"/>
+		<!-- 手机号码 -->
+      <result column="mobile" property="mobile"/>
+		<!-- 国籍，部分产品必填 -->
+      <result column="country" property="country"/>
+		<!-- 保险产品ID -->
+      <result column="productId" property="productId"/>
+		<!-- 保险产品名称 -->
+      <result column="productName" property="productName"/>
+		<!-- 计划ID -->
+      <result column="planId" property="planId"/>
+      <result column="planName" property="planName"/>
+		<!-- 投保人姓名 -->
+      <result column="applicant" property="applicant"/>
+   </resultMap>
+   
+     <!-- 保存被保人信息 -->
+   <insert id="saveInsured" parameterType="java.util.HashMap" >
+   	insert into Insured 
+	   	(id,insurantId ,insureNum ,policyNum ,cName ,eName ,sex ,cardTypeId ,cardCode ,birthday ,relationId 
+	   	,count ,singlePrice ,fltNo ,fltDate ,city ,tripPurposeId ,destination ,visaCity ,jobInfo ,mobile 
+	   	,country ,productId ,productName ,planId ,planName ,applicant ,order_id ,linkman_id )values
+	  <foreach collection="insuredList" item="item"   separator=" ,">
+          (
+	     #{item.id},#{item.insurantId},#{insureNum},#{item.policyNum},#{item.cName},#{item.eName}
+		,#{item.sex},#{item.cardTypeId},#{item.cardCode},#{item.birthday},#{item.relationId}
+		,#{item.count},#{item.singlePrice},#{item.fltNo},#{item.fltDate},#{item.city}
+		,#{item.tripPurposeId},#{item.destination},#{item.visaCity},#{item.jobInfo}
+		,#{item.mobile},#{item.country},#{item.productId},#{item.productName},#{item.planId},#{item.planName}
+		,#{item.applicant},#{item.order_id},#{item.linkman_id}
+          )
+	  </foreach>
+   </insert>
+	
+	
+		
+   <!-- 更新异步通知收到的保险信息  根据保险异步回调信息处理保险订单信息 -->
+	<update id="updateCallbackInfo" parameterType="com.op.entity.insurance.AsyncOrderInfo">
+	      <foreach collection="policyList" item="item" index="index" separator=";">
+            update Insured set 
+	   			 policyNum=#{item.policyNum} 
+   		    where 
+	   			insureNum=#{insureNum}
+       </foreach>
+	</update>
+	
+	<!-- 获取保险单号 -->
+	<select id="getInsureNum" parameterType="java.util.Map" resultType="String">
+		select insureNum from insured where order_id = #{order_id} and linkman_id = #{linkman_id} AND insureNum > 0
+	</select>
+	
+	
+</mapper>

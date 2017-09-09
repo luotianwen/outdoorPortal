@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="DialogMapper">
+	<sql id="Base_Column_List">
+    id,creater ,created ,friend 
+    </sql>
+
+    <resultMap type="com.op.entity.dialog.Dialog" id="DialogReturnMap">
+		<!-- id -->
+      <id column="id" property="id"/>
+		<!-- 创建人 -->
+      <result column="creater" property="creater"/>
+		<!-- 创建时间 -->
+      <result column="created" property="created"/>
+		<!-- 被邀请好友 -->
+      <result column="friend" property="friend"/>
+      <!-- 登录用户 -->
+      <result column="login" property="login"/>
+      
+      <!-- 用户信息 -->
+      <association property="user" javaType="com.op.dto.usercenter.usercenter.UserCenterInfo" column="{friend=friend,login=login,creater=creater}" select="UsersMapper.findUserCenterInfoForDialog"></association>
+   </resultMap>
+   
+    <!-- 新增对话 -->
+    <insert id="saveDialog" parameterType="com.op.entity.dialog.Dialog" useGeneratedKeys="true" keyProperty="id">
+    	insert into dialog 
+    	(
+	 		creater ,created ,friend 
+	 	) 
+	 	values 
+	 	(
+	 		#{creater},#{created },#{friend }
+	 	)
+    </insert>
+    <!-- 查询所有对话 -->
+	<select id="findDialogByUserId" parameterType="java.util.Map" resultMap="DialogReturnMap">
+		select id,creater ,created ,friend,#{addresser} as login from dialog
+		left join GROUP_DIALOG_SENDTIME gds on gds.dialogid = dialog.id
+		where ((creater = #{addresser} and ISCREATEDELETE=0) or (friend = #{addresser} and ISFRIENDDELETE=0))
+		<if test="id!=null and id!=''">
+			and friend!=#{id} and creater!=#{id}
+		</if>
+		order by gds.sendtime desc
+		limit ${count},${count+10}
+	</select>
+	<!-- 查询当前对话 -->
+	<select id="findDialog" parameterType="java.util.Map" resultMap="DialogReturnMap">
+		select id,creater ,created ,friend,#{addresser} as login from dialog 
+		where 
+		(creater = #{addresser} and friend = #{addressee})
+		or (creater = #{addressee} and friend = #{addresser})
+		
+	</select>
+	
+	<delete id="deleteDialog" parameterType="java.lang.String">
+		delete from dialog where id = #{dialogId}
+	</delete>
+	
+	<!-- 修改删除状态 -->
+	<update id="deleteDialogByCreate" parameterType="java.util.Map">
+		update dialog set
+		ISCREATEDELETE = 1
+		where creater = #{userId} and id = #{dialogId}
+	</update>
+	
+	<update id="deleteDialogByFriend" parameterType="java.util.Map">
+		update dialog set
+		ISFRIENDDELETE = 1
+		where FRIEND = #{userId} and id = #{dialogId}
+	</update>
+	
+</mapper>

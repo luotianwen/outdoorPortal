@@ -1,0 +1,205 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<base href="/" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>玩嘛</title>
+
+<#include "/view/usercenter/base.css.html">
+<link href="static/css/page.css" rel="stylesheet">
+<link href="static/js/plugins/layer/skin/moon/style.css" rel="stylesheet">
+<style>
+body {
+	background: #f1f1f1;
+}
+a {
+	cursor:pointer;
+}
+</style>
+
+</head>
+<body>
+<#include "/view/usercenter/header.html">
+	<div class="boxw clearfix">
+		<#include "/view/usercenter/housekeeper/menu_left.html">
+		<div class="main-box">
+			<h1>订单详情</h1>
+			<div class="scenic-btns">
+				<div class="fl order-num">订单编号：${dto.orderId}</div>
+				<div class="fr">
+					<#if dto.status==0>
+						<a href="javascropt:(0)" id="cancel" data-id="${dto.orderId}" class="btns-01">取消订单</a>
+						<a href="ticket/payInfo?orderId=${dto.orderId}" class="btns-02">立即支付</a>
+						<#else>
+						<#if dto.p_isRefund==1 && dto.status != 10  && dto.status != 11  && dto.status != 12 >
+							<a href="ticket/apply.html?id=${dto.orderId}" class="btns-01">申请退票</a>
+						</#if>
+					</#if>
+				</div>
+			</div>
+			<div class="venue-order-list">
+				<h3>系统信息及个人信息</h3>
+				<dl>
+					<dt>下单时间：</dt>
+					<dd>${dto.create_time?string('yyyy-MM-dd HH:mm:ss')}</dd>
+				</dl>
+				<#if dto.status != 0 && dto.status != 10 >
+				<dl>
+					<dt>付款方式：</dt>
+					<dd>在线</dd>
+				</dl>
+					<dl>
+						<dt>付款时间：</dt>
+						<dd>${dto.pay_time?string('yyyy-MM-dd HH:mm:ss')}</dd>
+					</dl>
+				</#if>
+			</div>
+			<div class="linkman-list">
+				<h3>系统信息及个人信息</h3>
+				<table>
+					<tr>
+						<th>序号</th>
+						<th>联系人</th>
+						<th>证件类型</th>
+						<th>证件号码</th>
+						<th>联系人手机</th>
+						<th>辅助码</th>
+						<th></th>
+					</tr>
+					<#list dto.travelPeople as item>
+						<tr <#if item_index gte 5>id="allpeople" style="display: none;"</#if>>
+							<td>${item_index+1}</td>
+							<td>${item.visitorName}</td>
+							<td>
+								<#if item.cardType==1>
+									身份证
+									<#else>
+									其他
+								</#if>
+							</td>
+							<td>
+								<#if dto.isRealName==1>
+									${item.cardNum[0..5]}************
+								</#if>
+							</td>
+							<td>${item.visitorPhone[0..2]}****${item.visitorPhone[7..]}</td>
+							<td>${item.codeNumber}</td>
+							<td>
+								<#if item.status==1>
+									已付款
+									<#elseif item.status==2>
+									等待出票
+									<#elseif item.status==3>
+									已出票
+									<#elseif item.status==4>
+									申请退票
+									<#elseif item.status==6>
+									退票成功
+									<#elseif item.status==8>
+									拒绝退票
+									<#elseif item.status==9>
+									交易完成
+									<#elseif item.status==10>
+									已关闭
+									<#elseif item.status==11>
+									退票中
+									<#elseif item.status==12>
+									退票失败
+									<#elseif item.status==13>
+									出票失败
+								</#if>
+							</td>
+						</tr>
+					</#list>
+				</table>
+				<#if dto.travelPeople?size gt 5>
+					<div class="more">
+						<a id="showAll" href="javascript:void(0)">查看更多<i class="down"></i></a>
+					</div>
+				</#if>
+			</div>
+			<div class="venue-order-list">
+				<h3>景区信息</h3>
+				<dl>
+					<dt>景区名称：</dt>
+					<dd class="f-s">${dto.productName}</dd>
+				</dl>
+				<#if dto.validTimeBegin??>
+					<dl>
+						<dt>门票有效期：</dt>
+						<dd>${dto.validTimeBegin}至 ${dto.validTimeEnd}</dd>
+					</dl>
+				</#if>
+				<dl>
+					<dt>使用日期：</dt>
+					<dd>${dto.inDate}</dd>
+				</dl>
+				<dl>
+					<dt>门票单价：</dt>
+					<dd>${dto.retailPrice/100}元/人</dd>
+				</dl>
+				<dl>
+					<dt>数量：</dt>
+					<dd>${dto.count}</dd>
+				</dl>
+				<dl>
+					<dt>总价：</dt>
+					<dd>
+						<em class="f-s">${dto.order_total_price}</em><em class="f-orange">元</em>
+					</dd>
+				</dl>
+			</div>
+			<div class="venue-order-btns">
+				<a href="ticket/MyOrder.html">返 回</a>
+			</div>
+		</div>
+	</div>
+	<!-- main end -->
+	<#include "/view/usercenter/base.js.html">
+	<script type="text/javascript">
+		$(function(){
+			$("#showAll").on("click",function(){
+				var $this = $(this);
+				if($this.find("i").hasClass("down")){
+					$this.find("i").removeClass();
+					$this.find("i").addClass("up");
+					$("table").find("tr#allpeople").css("display","");
+				}else{
+					$this.find("i").removeClass();
+					$this.find("i").addClass("down");
+					$("table").find("tr#allpeople").css("display","none");
+				}
+			})
+			//取消订单
+			$("#cancel").on("click" , function(){
+				id = $(this).attr("data-id");
+            	layer.confirm("确定取消订单吗？", {
+            	    btn: ["确定", "取消"]
+            	}, function(){
+					$.ajax({
+						type:"POST",
+						url:"ticket/cancel.html",
+						data:{orderId:id},
+						datatype: "json",
+						success:function(data){
+							if(data.RESPONSE_STATE == "200"){
+								location.replace("/ticket/payInfo?orderId="+data.orderId)
+		
+							}else{
+								layer.alert(data.ERROR_INFO, {icon: 0});
+							}
+						},
+						error: function(){
+							layer.alert("未知错误！", {icon: 0});
+						}
+					});
+            	}, function(){
+            		return;
+            	});
+				
+
+			});
+		})
+	</script>
+</body>
+</html>

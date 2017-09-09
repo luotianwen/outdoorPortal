@@ -1,0 +1,54 @@
+<!DOCTYPE HTML>
+<html lang="zh-cn">
+<head>
+	<base href="/" />
+	<meta charset="UTF-8">
+	<title>玩嘛 - 门票订单</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+	<#include "/view/base.css.html">
+	<link rel="stylesheet" href="static/css/hw_css/base.css">
+	<link rel="stylesheet" href="static/css/hw_css/succed.css">
+</head>
+<body>
+
+	<#include "/view/header.html">
+
+	
+		<div class="header">
+		<div class="san">
+			1.填写订单
+		</div>
+		<div class="san">
+			2.在线支付
+		</div>
+		<div class="san">
+			3.成功提交订单
+		</div>
+	</div>
+	<div class="content">
+		<div class="lose">
+			<div class="loleft">
+				<img src="static/images/hw_img/succed.png" alt="">
+			</div>
+			<div class="lright">
+				<p class="tp">
+					恭喜您，订单成功付款！
+				</p>
+				<p class="rp">
+					订单号：${order.orderId}  <a href="ticket/orderInfo.html?id=${order.orderId}">查看详情</a>
+				</p>
+				<p class="rp">
+					付款金额：<span>￥${order.order_total_price}</span>
+				</p>
+				<p class="lp">
+					系统已向 ${order.fetchPhone[0..2]}****${order.fetchPhone[7..]} 发送了凭证短信，请您妥善保管，祝您玩的愉快！
+				</p>
+			</div>
+		</div>
+		<div class="maybe">
+			出游归来后您可发表游记记录一下途中的各种趣闻，还有积分拿哦~
+		</div>
+	</div>
+	<#include "/view/base.js.html">
+</body>
+</html>

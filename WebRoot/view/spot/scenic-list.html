@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<base href="/" />
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<title>景点景区</title>
+	<#include "/view/base.css.html">
+	<link rel="stylesheet" type="text/css" href="static/js/plugins/search/list.css"/>
+	<link rel="stylesheet" type="text/css" href="static/css/hw_css/search.css" />
+	<link rel="stylesheet" type="text/css" href="static/css/hw_css/spotmap.css" />
+	
+	<style type="text/css">
+		body{background:#f1f1f1 !important;}
+
+
+		 .add,.countyss,.cityss{
+			display: inline-block;
+			padding: 0 10px;
+			cursor: pointer;
+			margin-left: 5px;
+			color: #333333;
+		}
+		.active{
+			display: inline-block;
+			padding: 0 10px;
+			cursor: pointer;
+			margin-left: 5px;
+			background: #ff8a01;
+			color: #fff;
+		}
+		.hideprovince,.hidecitys,.hidecountys{
+			width: 1040px;
+			padding: 5px 5px 5px 100px;
+			display: none;
+		}
+		.hideprovince span{
+			display: inline-block;
+			padding: 10px 10px;
+			cursor: pointer;
+			margin-left: 5px;
+			color: #333333;
+		}
+		.hidecitys span{
+			display: inline-block;
+			padding: 10px 10px;
+			cursor: pointer;
+			margin-left: 5px;
+			color: #333333;
+		}
+		.hidecountys span{
+			display: inline-block;
+			padding: 10px 10px;
+			cursor: pointer;
+			margin-left: 5px;
+			color: #333333;
+		}
+
+		.hide{
+			display: none;
+		}
+		.current{
+			display: inline-block;
+			height: 22px;
+			line-height: 22px;
+			cursor: pointer;
+			border-radius: 2px;
+			padding: 0 10px 0 10px !important;
+			background:#ff8a01;color:#fff !important;
+		}
+	</style>
+</head>
+<body>
+	<#include "/view/header.html">
+	
+	<div class="search-area clearfix">
+		<div class="search-main">
+			<div class="solr clearfix">
+				<div class="solr-item">
+					<input type="text" is-load-data="0"  show-search show-type="lequ_div_id" placeholder="去哪儿" name="in_keyword" id="index_where" />
+				</div>
+				<div class="solr-item-btn">
+					<button type="button" class="active-search-btn" id="search"><i class="fa fa-search"></i>&nbsp;搜索附近景点</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	<div class="list-screen" id="search-shaixuan">
+		<input type="hidden" id="bl"/>
+		<input type="hidden" id="northEast"/>
+		<div style="margin:0 50px;">
+			
+			<div class="screen-term">
+				<div class="selectNumberScreen">
+					<div id="selectList" class="screenBox screenBackground">
+						<input type="hidden" id="history" value="history">
+						<dl class="listIndex" >
+							<dt><strong >游玩主题：</strong></dt>
+                            <dd>
+								<label class="buxian"><a href="javascript:;" class="selected" attrval="不限">不限</a></label>
+                            </dd>
+                            <div>
+								<#list playtheme as item>
+			                        <dl class="listIndex <#if item_index==0>multiple</#if>" <#if !item_has_next>style="border-bottom: 0px solid #eee;"</#if>>
+			                        	<a herf="javascript:void(0)" style="width:76px;float:left;padding-top: 7px;">${item.name}</a>
+										<dd class="filter-list-checkbox">
+											<#list item.playthemes as play>
+												<label class="w1">
+													<input search-key="t" type="checkbox" value="${play.id}" style="display:none;"/>
+													<a href="javascript:;" search-key="t">${play.name}</a>
+												</label>
+											</#list>
+										</dd>
+			                        </dl>
+		                        </#list>
+		                    </div>
+						</dl>
+						
+						<dl class="listIndex" >
+							<dt ><strong >区域位置：</strong></dt>
+							<dd>
+								<label class="buxian"><a href="javascript:;" class="selected" attrval="不限" id="qybuxian">不限</a></label>
+                            </dd>
+                            <dd class="zdy">
+								<span class="add" id="provincess">省份</span>&nbsp;&nbsp;&nbsp;
+								<input type="hidden" id="provinces">
+                            </dd>
+                            <dd class="zdy">
+								 <span class="cityss" id="cityss" >市区</span> &nbsp;&nbsp;&nbsp;
+								<input type="hidden" id="citys">
+                            </dd>
+                            <dd class="zdy">
+								<span class="countyss" id="countyss" >县/镇</span>
+								<input type="hidden" id="countys">
+                            </dd>
+                            
+ 						</dl>
+					<p class="hideprovince">
+						<#list provinces as item>
+						      <span id="${item.code}" onclick="cprovinces(${item.code})">${item.name}</span>
+						</#list>
+					</p>
+
+					<p class="hidecitys" style="display: none" id="hidecitys">
+
+					</p>
+					<p class="hidecountys" style="display: none" id="hidecountys">
+
+					</p>
+
+						<dl class="listIndex" >
+							<dt><strong >适用人群：</strong></dt>
+							<dd>
+								<label class="buxian"><a href="javascript:;" class="selected" attrval="不限">不限</a></label>
+                            </dd>
+                          	<dd class="filter-list-checkbox">
+								<#list suitablecrowd as item>
+									<label class="w1">
+										<input search-key="sc" type="checkbox" value="${item.id}" style="display:none;"/>
+										<a href="javascript:;" search-key="sc">${item.name}</a>
+									</label>
+								</#list>
+							</dd>
+						</dl>
+						
+						<dl class="listIndex" >
+							<dt><strong >景点级别：</strong></dt>
+							<dd>
+								<label class="buxian"><a href="javascript:;" class="selected" attrval="不限">不限</a></label>
+                            </dd>
+                          	<dd class="filter-list-checkbox">
+								<#list spotlevel as item>
+									<label class="w1">
+										<input search-key="level" type="checkbox" value="${item.id}" style="display:none;"/>
+										<a href="javascript:;" search-key="level">${item.name}级</a>
+									</label>
+								</#list>
+							</dd>
+						</dl>
+						
+						<dl class="listIndex" >
+							<dt><strong >门票价格：</strong></dt>
+							<dd>
+								<label class="buxian"><a href="javascript:;" class="selected" attrval="不限">不限</a></label>
+                            </dd>
+                          	<dd class="filter-list-checkbox">
+								<#list ticketprice as item>
+									<label class="w1">
+										<input search-key="tp" type="checkbox" value="${item.id}" star="${item.bmoney}" end="${item.emoney}" style="display:none;"/>
+										<a href="javascript:;" star="${item.bmoney}" end="${item.emoney}" search-key="tp">${item.name}</a>
+									</label>
+								</#list>
+							</dd>
+						</dl>
+					</div>
+				</div>   
+			</div>
+		</div>
+		<div class="hasBeenSelected clearfix">
+			<span class="data-num">
+				<font id="data_num">0</font>条数据
+			</span>
+			<div style="float:right;" class="eliminateCriteria">【清空全部】</div>
+			<dl>
+				<dt>已选条件：</dt>
+				<dd class="clearDd">
+					<div class="clearList"></div>
+				</dd>
+			</dl>
+		</div>
+		
+	</div>
+	
+	<div id="check_map_height"></div>
+	<div class="boxw active-main clearfix">
+		<div class="scenic-list" id="scenic-list">
+			
+		</div>
+		<div class="active-map" id="spotMap">
+			<div class="map-big" id="map-big">
+				<a href="javascript:void(0)">展示大图</a>
+			</div>
+			<div class="map-content" id="container">
+			</div>
+		</div>
+		<div id="page" page="1" style="margin:25px 0; text-align:left;text-align: center;width: 720px;"></div>
+	</div>
+	
+	<#include "/view/base.js.html">
+	<!-- 高德地图API -->
+	<#include "/view/webapi.js.html">
+	<!-- 分页 -->
+	<script type="text/javascript" src="static/js/plugins/layer/laypage/laypage.js"></script>
+	<!-- 筛选条件 -->
+	<script type="text/javascript" src="static/js/spot/shaixuan.js"></script>
+	<!-- 地图 -->
+	<script type="text/javascript" src="static/js/spot/spotMap.js"></script>
+	
+	<script type="text/javascript" src="static/js/spot/spotList.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,146 @@
+body{
+	background: #f4f4f4;
+}
+.header{
+	width: 1200px;
+	line-height: 50px;
+	margin: 0 auto;
+	height: 50px;
+	margin-top: 10px;
+	background: url(../../images/hw_img/bj2.png) no-repeat;
+}
+.san,.san2{
+	width: 400px;
+	text-align: center;
+	float: left;
+}
+.san{
+	color: #fff;
+}
+.san2{
+	color: #333333;
+}
+.content{
+	width: 1140px;
+	background: #fff;
+	margin:0 auto;
+	padding: 20px 30px;
+	overflow: hidden;
+}
+.gopay{
+	color: #333333;
+	width: 1080px;
+	padding: 0 30px 20px 30px;
+	border:1px solid #e4e4e4;
+}
+.gopay p:nth-child(1){
+	line-height: 70px;
+}
+hr{
+	height: 1px;
+	border: 1px solid #e4e4e4;
+}
+.gole{
+	font-size: 16px;
+}
+.gole span{
+	font-size: 24px;
+	color: #ff8a01;
+	font-weight: bold;
+}
+.gori{
+	float: right;
+}
+.gori span{
+	color: #ff8a01;
+	font-size: 18px;
+}
+.bp{
+	line-height: 25px;
+}
+.tit{
+	font-size: 16px;
+	color: #999999;
+	line-height: 50px;
+	margin-top: 10px;
+}
+.zffs{
+	width: 1140px;
+	margin: 20px auto;
+	border: 1px solid #e4e4e4;
+	padding-bottom: 20px;
+}
+.zftop{
+	width: 1140px;
+	height: 60px;
+}
+.zffs1{
+	width: 200px;
+	line-height: 60px;
+	float: left;
+	color: #666666;
+	text-align: center;
+	border-right:1px solid #e4e4e4;
+	cursor: pointer; 
+	border-bottom: 1px solid #e4e4e4;
+}
+.zffs2{
+	width: 537px;
+	height: 60px;
+	float: left;
+	border-bottom: 1px solid #e4e4e4;
+}
+.active{
+	color: #333333;
+	border-bottom:none; 
+}
+.zfpt,.bank,.bank2{
+	width: 1140px;
+	margin-top: 20px;
+	overflow: hidden;
+}
+.pt{
+	width: 276px;
+	float: left;
+	height: 60px;
+	margin-left: 9px;
+	background: url(../../images/hw_img/yuan1.png) no-repeat 5px 22px;
+	text-indent: 35px;
+	cursor: pointer;
+	margin-top: 20px;
+}
+.pt1{
+	width: 276px;
+	float: left;
+	height: 60px;
+	margin-left: 9px;
+	background: url(../../images/hw_img/yuan2.png) no-repeat 4px 3px;
+	text-indent: 35px;
+	cursor: pointer;
+	margin-top: 20px;
+}
+.pt img{
+	width: 220px;
+	height: 60px;
+}
+.pt1 img{
+	width: 218px;
+	height: 58px;
+	border: 1px solid #ff8a01;
+}
+.bp{
+	width: 1168px;
+	margin: 0 auto;
+	line-height: 40px;
+	color: #666666;
+}
+.next{
+	display: inline-block;
+	float: right;
+	width: 120px;
+	line-height: 40px;
+	text-align: center;
+	background: #ff8a01;
+	color: #fff;
+	margin-right: 70px;
+}

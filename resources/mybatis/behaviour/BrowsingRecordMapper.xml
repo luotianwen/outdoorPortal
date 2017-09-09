@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="browsingRecordMapper">
+	<sql id="Base_Column_List">
+    br_id,userId,recordId,recordType,careteTime
+    </sql>
+
+    <resultMap type="com.op.entity.behaviour.BrowsingRecord" id="browsingRecordReturnMap">
+      <id column="br_id" property="br_id"/>
+      <result column="userId" property="userId"/>
+      <result column="recordId" property="recordId"/>
+      <result column="recordType" property="recordType"/>
+      <result column="careteTime" property="careteTime"/>
+   </resultMap>
+   
+   
+	<!-- 删除旧的相同的浏览记录-->
+	<delete id="deleteSameOldBrowsingRecord" parameterType="java.lang.String">
+		delete from Browsingrecord a where ( a.USERID,a.RECORDID,a.RECORDTYPE) in (
+		select  USERID,RECORDID,RECORDTYPE from Browsingrecord
+		where userId = #{userId}
+		group by USERID,RECORDID,RECORDTYPE  having count(*) > 1
+		) 
+		and rowid not in (select max(rowid) from Browsingrecord
+		where userId = #{userId}
+		group by  USERID,RECORDID,RECORDTYPE having count(*)>1)
+	</delete>
+	
+	<!-- 保留最新的99条记录，其余删除 -->
+		<!--<delete id="deleteSurplusBrowsingRecord" parameterType="java.lang.String">
+			delete from BrowsingRecord where br_id in(
+				select Br_Id from (
+					Select Br.Br_Id From Browsingrecord Br,(
+					Select Count(*) Rowcount From Browsingrecord Where Userid= #{userId}
+					) Brc
+					Where 
+					Rownum &lt;= Rowcount-99
+					Order By Br.Caretetime Asc
+				)
+			)
+		</delete>	
+	 -->
+	
+	
+	<!-- 保存新数据 -->
+	<insert id="saveBrowsingRecord" parameterType="java.util.List" useGeneratedKeys="false" >
+	  INSERT INTO BrowsingRecord(userId,recordId,recordType,careteTime)
+		values
+	  <foreach collection="list" item="item" index="index" separator=",">
+		  (
+	   #{item.userId},#{item.recordId},#{item.recordType},#{item.careteTime}
+		  )
+	  </foreach>
+	</insert>
+	
+ 
+</mapper>

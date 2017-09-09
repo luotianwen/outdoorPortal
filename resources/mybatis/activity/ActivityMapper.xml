@@ -1,0 +1,816 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="activityMapper">
+
+    <!--mybatis ehcache缓存配置 -->
+    <!-- 以下两个<cache>标签二选一,第一个可以输出日志,第二个不输出日志   （useCache="false" 不使用 ）   -->
+    <cache type="org.mybatis.caches.ehcache.LoggingEhcache" />
+    <!-- <cache type="org.mybatis.caches.ehcache.EhcacheCache"/>  -->
+
+	
+	<sql id="Base_Column_List">
+	ch_id,cl_id ,title ,province ,city ,district ,address ,activityTime
+	,activityWeek ,id ,endTime ,isCharge ,price ,in_id ,isInsurance
+	,coordinates ,longitude ,latitude ,altitudes ,l_coordinates ,l_province
+	,l_city ,l_district ,sc_id ,duration ,isDrawingLine ,l_id
+	,refundCondition ,state ,publishesTime ,lastUpdateTime ,eventCount
+	,highlights ,createUser ,needUserNum ,alreadyInNum ,confirmUserNum
+	,a_careful ,a_price_deatil_on ,a_price_deatil_off ,a_enroll_end_time
+	,a_schedule ,a_difficulty_type ,a_date_length ,a_children_age ,auditor
+	,auditTime ,auditNotes ,a_active_add_user_type ,a_reserve_price
+	,a_phone ,a_active_img ,a_start_location ,a_end_location ,a_gather_time
+	,a_gather_location ,details ,characteristic ,tripWatchFocus ,equipment
+	,payType 
+    </sql>
+    
+    <sql id="AC_Base_Column_List">
+    ac.ch_id,ac.cl_id ,ac.title ,ac.province ,ac.city ,ac.district ,ac.address ,ac.activityTime ,ac.activityWeek 
+    ,ac.id ,ac.endTime ,ac.isCharge ,ac.price ,ac.in_id ,ac.isInsurance ,ac.coordinates ,ac.longitude ,ac.latitude 
+    ,ac.altitudes ,ac.l_coordinates ,ac.l_province ,ac.l_city ,ac.l_district ,ac.sc_id ,ac.duration ,ac.isDrawingLine 
+    ,ac.l_id ,ac.refundCondition ,ac.state ,ac.publishesTime ,ac.lastUpdateTime ,ac.eventCount ,ac.highlights ,ac.createUser 
+    ,ac.needUserNum ,ac.alreadyInNum ,ac.confirmUserNum ,ac.a_careful ,ac.a_price_deatil_on ,ac.a_price_deatil_off 
+    ,ac.a_enroll_end_time ,ac.a_schedule ,ac.a_difficulty_type ,ac.a_date_length ,ac.a_children_age ,ac.auditor ,ac.auditTime 
+    ,ac.auditNotes ,ac.a_active_add_user_type ,ac.a_reserve_price ,ac.a_phone ,ac.a_active_img ,ac.a_start_location 
+    ,ac.a_end_location ,ac.a_gather_time ,ac.a_gather_location ,ac.details ,ac.characteristic ,ac.tripWatchFocus ,ac.equipment 
+    </sql>
+
+   <resultMap type="com.op.dto.activity.queryActivity.QueryActivity" id="QueryActivityMap" >
+		<id column="id" property="id"/>
+		
+		<!-- 根据活动查询所有该活动对应的类型 集合-->
+		<collection property="activeTypes" ofType="com.op.entity.activity.ActiveTypes" column="id" select="activeTypesMapper.findTypesByActiveId" ></collection>
+   		<!-- 根据活动查询所有活动景点 集合-->
+   		<collection property="activeScenic" ofType="com.op.entity.activity.ActiveScenic" column="id" select="activeScenicMapper.findScenicByActiveId" ></collection>
+   		<!-- 根据活动ID查询该活动使用的所有交通方式 -->
+   		<collection property="activeTraffic" ofType="com.op.entity.activity.ActiveTraffic" column="id" select="activeTrafficMapper.findTrafficByActiveId" ></collection>
+   		<!-- 根据活动ID查询所有包括费用 -->
+   		<collection property="contain" ofType="com.op.entity.activity.ActiveCorrelationCost" column="id" select="activeCorrelationCostMapper.findContainByActiveId" ></collection>
+   		<!-- 根据活动ID查询所有可选费用 -->
+   		<collection property="optional" ofType="com.op.entity.activity.ActiveCorrelationCost" column="id" select="activeCorrelationCostMapper.findOptionalByActiveId" ></collection>
+   
+   </resultMap>
+	
+	<select id="findOrderActivity" parameterType="String" resultMap="QueryActivityMap" useCache="false" >
+		select title,id,activityTime,endTime,a_start_location,a_end_location,a_phone,
+		price,a_reserve_price,needUserNum,alreadyInNum,confirmUserNum,a_enroll_end_time,
+		a_gather_time,a_gather_location,isinsurance,sc.sc_name,adt.ADT_DESCRIPTION,
+		ac.paytype,ac.state,ac.createUser
+		from activity ac
+		left join suitableCrowd sc on sc.sc_id = ac.sc_id
+		left join ACTIVEDIFFICULTYTYPE adt on adt.adt_id = ac.a_difficulty_type
+		where ac.id=#{id}
+	</select>
+	
+   <resultMap type="com.op.entity.activity.Activity" id="ActivityReturnMap">
+      <id column="id" property="id"/>
+   </resultMap>
+   
+   <!-- 根据ID查询活动Map -->
+   <resultMap type="com.op.entity.activity.Activity" id="ActivityCollections">
+      <id column="ch_id" property="ch_id"/>
+      <result column="cl_id" property="cl_id"/>
+      <result column="title" property="title"/>
+      <result column="province" property="province"/>
+      <result column="city" property="city"/>
+      <result column="district" property="district"/>
+      <result column="address" property="address"/>
+      <result column="activityTime" property="activityTime"/>
+      <result column="activityWeek" property="activityWeek"/>
+      <result column="id" property="id"/>
+      <result column="endTime" property="endTime"/>
+      <result column="isCharge" property="isCharge"/>
+      <result column="price" property="price"/>
+      <result column="in_id" property="in_id"/>
+      <result column="isInsurance" property="isInsurance"/>
+      <result column="coordinates" property="coordinates"/>
+      <result column="longitude" property="longitude"/>
+      <result column="latitude" property="latitude"/>
+      <result column="altitudes" property="altitudes"/>
+      <result column="l_coordinates" property="l_coordinates"/>
+      <result column="l_province" property="l_province"/>
+      <result column="l_city" property="l_city"/>
+      <result column="l_district" property="l_district"/>
+      <result column="sc_id" property="sc_id"/>
+      <result column="duration" property="duration"/>
+      <result column="isDrawingLine" property="isDrawingLine"/>
+      <result column="l_id" property="l_id"/>
+      <result column="refundCondition" property="refundCondition"/>
+      <result column="state" property="state"/>
+      <result column="publishesTime" property="publishesTime"/>
+      <result column="lastUpdateTime" property="lastUpdateTime"/>
+      <result column="eventCount" property="eventCount"/>
+      <result column="highlights" property="highlights"/>
+      <result column="createUser" property="createUser"/>
+      <result column="needUserNum" property="needUserNum"/>
+      <result column="alreadyInNum" property="alreadyInNum"/>
+      <result column="confirmUserNum" property="confirmUserNum"/>
+      <result column="a_careful" property="a_careful"/>
+      <result column="a_price_deatil_on" property="a_price_deatil_on"/>
+      <result column="a_price_deatil_off" property="a_price_deatil_off"/>
+      <result column="a_enroll_end_time" property="a_enroll_end_time"/>
+      <result column="a_schedule" property="a_schedule"/>
+      <result column="a_difficulty_type" property="a_difficulty_type"/>
+      <result column="a_date_length" property="a_date_length"/>
+      <result column="a_children_age" property="a_children_age"/>
+      <result column="auditor" property="auditor"/>
+      <result column="auditTime" property="auditTime"/>
+      <result column="auditNotes" property="auditNotes"/>
+      <result column="a_active_add_user_type" property="a_active_add_user_type"/>
+      <result column="a_reserve_price" property="a_reserve_price"/>
+      <result column="a_phone" property="a_phone"/>
+      <result column="a_active_img" property="a_active_img"/>
+      <result column="a_start_location" property="a_start_location"/>
+      <result column="a_end_location" property="a_end_location"/>
+      <result column="a_gather_time" property="a_gather_time"/>
+      <result column="a_gather_location" property="a_gather_location"/>
+      <result column="details" property="details"/>
+      <result column="characteristic" property="characteristic"/>
+      <result column="tripWatchFocus" property="tripWatchFocus"/>
+      <result column="equipment" property="equipment"/>
+      <result column="commentNums" property="commentNums" />
+      <result column="consultationNum" property="consultationNum" />
+      
+      
+      
+      <!-- 根据活动创建用户查询领队信息 -->
+      <association property="user" javaType="com.op.entity.users.Users" column="createUser" select="UsersMapper.findUserById"></association>
+      
+      <!-- 活动总体线路信息 -->
+      <!-- <association property="al" javaType="com.op.entity.lines.ActiveLines" column="id" select="activeLinesMapper.selectByActiveId"></association> -->
+      
+      <!-- 儿童年龄信息 -->
+      <association property="aca" javaType="com.op.entity.zd.ActiveChildrenAge" column="a_children_age" select="activeChildrenAgeMapper.selectById"></association>
+      
+      <!-- 活动保险信息 -->
+      <!-- <association property="insurance" javaType="com.op.dto.activity.insurances.ActivityInsuranceResultDTO" column="ai_insurance_id" select="InsurancePriceMapper.selectById"></association> -->
+      
+      <!-- 活动景点 -->
+      <collection property="as" ofType="com.op.entity.activity.ActiveScenic" column="id" select="activeScenicMapper.findScenicByActiveId"></collection>
+      
+      <!-- 活动景点 -->
+      <collection property="at" ofType="com.op.entity.activity.ActiveTraffic" column="id" select="activeTrafficMapper.findTrafficByActiveId"></collection>
+      
+      <!-- 查询活动类型集合 -->
+      <collection property="activeTypes" ofType="com.op.entity.activity.ActiveTypes" column="id" select="activeTypesMapper.findTypesByActiveId"></collection>
+      
+      <!-- 查询该活动所有线路信息 -->
+      <collection property="lines" ofType="com.op.entity.lines.SubsectionLines" column="id" select="linesMapper.selectListBylAlId" ></collection>
+      
+      <!-- 查询该活动的相关费用 -->
+      <collection property="costs" ofType="com.op.entity.activity.cost.ActiveCorrelationCost" column="id" select="activeCorrelationCostMapper.findByActiveId"></collection>
+      
+      <!-- 查询该活动的装备需求 -->
+      <collection property="aes" ofType="com.op.entity.activity.equipment.ActiveEquipment" column="id" select="activeEquipmentMapper.findByActiveId"></collection>
+      
+      <!-- 根据活动创建用户查询领队身份信息 -->
+      <!-- <association property="uc" javaType="com.op.entity.user_check.User_Check" column="createUser" select="User_CheckMapper.findUserInfoById"></association> -->
+      
+      <!-- 查询该活动所有咨询回答信息 -->
+      <!-- <collection property="acs" ofType="com.op.entity.activity.ActiveConsultation" column="id" select="activeConsultationMapper.findActiveConsulationsByActiveId" ></collection> -->
+      
+      <!-- 查询该活动的评价信息 -->
+      <!-- <collection property="evaluate" ofType="com.op.entity.comments.ActiveComments" column="id" select="activeCommentsMapper.findCommentsByActiveId" ></collection> -->
+      
+   </resultMap>
+   
+	<!-- 根据活动ID查询活动详情 -->
+   <select id="detailById" parameterType="String" resultMap="ActivityCollections" useCache="false" >
+   	select 
+    ac.ch_id,ac.cl_id ,ac.title ,ac.province ,ac.city ,ac.district ,ac.address ,ac.activityTime ,ac.activityWeek 
+    ,ac.id ,ac.endTime ,ac.isCharge ,ac.price ,ac.in_id ,ac.isInsurance ,ac.coordinates ,ac.longitude ,ac.latitude 
+    ,ac.altitudes ,ac.l_coordinates ,ac.l_province ,ac.l_city ,ac.l_district ,ac.sc_id ,ac.duration ,ac.isDrawingLine 
+    ,ac.l_id ,ac.refundCondition ,ac.state ,ac.publishesTime ,ac.lastUpdateTime ,ac.eventCount ,ac.highlights ,ac.createUser 
+    ,ac.needUserNum ,ac.alreadyInNum ,ac.confirmUserNum ,ac.a_careful ,ac.a_price_deatil_on ,ac.a_price_deatil_off 
+    ,ac.a_enroll_end_time ,ac.a_schedule ,ac.a_difficulty_type ,ac.a_date_length ,ac.a_children_age ,ac.auditor ,ac.auditTime 
+    ,ac.auditNotes ,ac.a_active_add_user_type ,ac.a_reserve_price ,ac.a_phone ,ac.a_active_img ,ac.a_start_location 
+    ,ac.a_end_location ,ac.a_gather_time ,ac.a_gather_location ,ac.details ,ac.characteristic ,ac.tripWatchFocus ,ac.equipment 
+    ,sc.sc_name
+  	,ai.ai_insurance_id
+   	from activity ac
+   	<!-- LEFT JOIN GROUP_COMMENT gac ON ac.id= gac.comment_activity_id
+   	LEFT JOIN GROUP_CONSULTATION gc on ac.id=gc.con_active_id -->
+    LEFT JOIN suitableCrowd sc on ac.sc_id=sc.sc_id
+    LEFT JOIN activityInsurance ai on ac.id=ai.ai_activity_id
+   	where ac.id=#{id} 
+   </select>
+   
+   <!-- 活动报名校验：需要人数，已报名人数，报名截止时间，活动状态，活动收费价格(元),活动预付款 -->
+   <select id="signUpFindActiveById" parameterType="int" resultType="com.op.entity.activity.Activity" useCache="false" >
+   select id,needUserNum,alreadyInNum,a_enroll_end_time,state,price,a_reserve_price
+   from activity
+   where id=#{id}
+   </select>
+   
+	<select id="getActivitylist" resultMap="ActivityReturnMap">
+		SELECT
+		<include refid="Base_Column_List" />
+		 from activity
+	</select>
+	
+	<!-- 根据登录用户查询出自己发布的活动ID-->
+	<select id="selectId" parameterType="string" resultType="string">
+		select id from Activity where createuser=#{createuser}
+	</select>
+	 
+	<!-- 新增 -->
+	<insert id="saveActivity" parameterType="com.op.entity.activity.Activity">
+     insert into Activity 
+     (title,address,coordinates,details) 
+      VALUES(#{title},#{address},#{coordinates},#{details} )
+	</insert>
+	
+
+	<sql id="insert_base_list">
+		 ch_id ,cl_id ,title ,province ,city ,district ,address ,activityTime  ,details ,isCharge
+        ,price ,coordinates ,longitude ,latitude ,altitudes ,sc_id ,duration ,isDrawingLine 
+        ,l_id ,refundCondition
+        ,l_coordinates ,l_province ,l_city ,l_district,characteristic ,highlights ,createUser ,needUserNum ,endTime,
+        activityWeek,a_careful,a_price_deatil_on,a_price_deatil_off,a_enroll_end_time,a_schedule
+	</sql>
+	
+	<!-- 新增 -->
+	<insert id="insertActivity" parameterType="com.op.entity.activity.Activity" >
+		insert into Activity(
+		<include refid="insert_base_list"></include>
+        )
+		 values( #{ch_id},#{cl_id},#{title},#{province},#{city},#{district},#{address},#{activityTime},#{details}
+		 ,#{isCharge},#{price},#{coordinates},#{longitude},#{latitude},#{altitudes}
+		 ,#{sc_id},#{duration},#{isDrawingLine},#{l_id},#{refundCondition}
+		 <choose>
+		 	<when test="isDrawingLine==1">,#{l_coordinates},#{l_province},#{l_city},#{l_district}</when>
+		 	<otherwise>,null,null,null,null</otherwise>
+		 </choose>
+		 ,#{characteristic},#{highlights},#{createUser}
+		 ,#{needUserNum},#{endTime},#{activityWeek},#{a_careful},#{a_price_deatil_on},#{a_price_deatil_off},#{a_enroll_end_time},#{a_schedule}
+		 )
+	</insert>
+	 
+	
+	<!-- 获取待审活动列表 -->
+	<select id="getActivityByStateListPage" parameterType="Page" resultType="com.op.entity.activity.ActivityInfo" useCache="false">
+		SELECT
+		ac.id,ch_name ,cl_name,title,publishesTime,state    ,u.uName AS userName,us.uName AS auditor,auditTime,auditNotes
+		from activity ac
+    	left join users u on u.u_id = createUser
+    	left join users us on us.u_id = auditor
+    	left join channels ch on ch.ch_id =  ac.ch_id
+     	left join classification cl on cl.cl_id=ac.cl_id   
+		where 
+		<!-- 根据活动发布状态查询数据 -->
+		state in 
+		<foreach item="item" index="index" collection="t.states" open="(" separator="," close=")">
+        	  #{t.states[${index}]}  
+        </foreach>
+		<!-- 按ID查询 -->
+		<if test="t.id!=0">
+			AND id = #{t.id} 
+		</if>
+		<!-- 按活动名称查询 -->
+		<if test="t.title != null and t.title != '' ">
+			AND title LIKE CONCAT(CONCAT('%', #{t.title}),'%')
+		</if>
+		<!-- 按频道查询 -->
+		<if test="t.ch_id!=0">
+			AND ac.ch_id = #{t.ch_id} 
+		</if>
+		<!-- 按分类查询 -->
+		<if test="t.cl_id!=0">
+			AND ac.cl_id = #{t.cl_id} 
+		</if>
+		<!-- 按发布者身份查询 -->
+		<if test="t.uType!=0">
+			AND users.uType = #{t.uType} 
+		</if>
+		order by publishesTime desc
+	</select>
+	
+	<!-- 活动审核 -->
+   <update id="updateActivityState" parameterType="java.util.HashMap" >
+	   update activity set  state = #{state} , auditor = #{auditor}
+	    , auditTime = #{auditTime} , auditNotes = #{auditNotes}
+	   where id = #{id}
+   </update>
+	
+   <!-- 修改已报名人数或确认人数 -->
+   <update id="updateAlreadyNum" parameterType="java.util.Map" >
+   update Activity set id=#{id}
+   <if test="alreadyInNum!=null and alreadyInNum!=''">,alreadyInNum=#{alreadyInNum}</if>
+   <if test="confirmUserNum!=null and confirmUserNum!=''">,confirmUserNum=#{confirmUserNum}</if>
+    where id=#{id}
+   </update>
+	
+	<!-- 减去已报名人数 -->
+	<update id="updateSubtractConfirmUserNum" parameterType="java.util.Map">
+		update activity set 
+		confirmUserNum = confirmUserNum-#{num}
+		where id=#{id}
+	</update>
+	
+	
+	<!--  查询领队所发布的活动列表 -->
+	<resultMap type="com.op.dto.usercenter.leader.activeManager.LeaderActivesDTO" id="findByUserIdResultMap">
+		
+		<id column="id" property="activeId" />
+		
+		<!-- 1:n活动类型 -->
+		<collection property="ats" ofType="com.op.entity.activity.ActiveTypes" column="id" select="activeTypesMapper.findTypesByActiveId">
+      	</collection>
+	</resultMap>
+	
+	<select id="findByUserIdPage" parameterType="page" resultMap="findByUserIdResultMap" useCache="false" >
+	
+	SELECT ac.id,
+	  ac.title,
+	  ac.price,
+	  ac.alreadyInNum,
+	  ac.needUserNum,
+	  ac.confirmUserNum,
+	  ac.activityTime,
+	  ac.endTime,
+	  ac.a_enroll_end_time,
+	  ac.state
+	FROM activity ac
+	WHERE ac.createUser=#{t.createUserId}
+	<!-- 活动标题 -->
+	<if test="t.title != null and t.title != '' ">
+	AND title LIKE concat(concat('%',#{t.title}),'%')
+	</if>
+	<!-- 开始时间 -->
+	<if test="t.activityTime != null">
+	AND activityTime >= #{t.activityTime}
+	</if>
+	<!-- 开始时间 _to -->
+	<if test="t.activityTimeTo != null">
+	AND activityTime &lt;= #{t.activityTimeTo}
+	</if>
+	<!-- 结束时间 -->
+	<if test="t.a_enroll_end_time != null">
+	AND a_enroll_end_time >= #{t.a_enroll_end_time}
+	</if>
+	<!-- 结束时间 _to -->
+	<if test="t.a_enroll_end_time_to != null">
+	AND a_enroll_end_time &lt;= #{t.a_enroll_end_time_to}
+	</if>
+	<!-- 状态 -->
+	<if test="t.de_state != 0 ">
+	AND state = #{t.de_state}
+	</if>
+	<!-- 金额 _st -->
+	<if test="t.price_start != null ">
+	AND price >= #{t.price_start}
+	</if>
+	<!-- 金额 _to -->
+	<if test="t.price_to != null ">
+	AND price &lt;= #{t.price_to}
+	</if>
+	
+	</select>
+	
+	<!-- 根据活动ID查询用户ID -->
+	<select id="findUserIdByActiveId" parameterType="int" resultType="java.lang.String" >
+	select createUser from activity
+	where id=#{id}
+	</select>
+	
+	<!-- 根据活动ID查询用户ID及报名人数 -->
+	<select id="findUserOrSignUpUserNumIdByActiveId" parameterType="int" resultType="com.op.entity.activity.Activity" >
+	select id,createUser,confirmUserNum,alreadyInNum from activity
+	where id=#{id}
+	</select>
+	
+	<!-- 取消已经确认的报名人数，更新人数数量 -->
+	<update id="cancelSignUpUpdateAlreadyInNumOrConfirmUserNum" parameterType="com.op.entity.activity.Activity" >
+	update activity set alreadyInNum=#{alreadyInNum},confirmUserNum=#{confirmUserNum}
+	where id=#{id}
+	</update>
+	
+	<!-- 保存活动基本信息	2016年3月12日 -->
+	<insert id="saveActiveBaseInfo" parameterType="com.op.dto.activity.insertActivity.ActivityBaseInfoDTO" useGeneratedKeys="true" keyProperty="activityId" keyColumn="id" >
+	insert into Activity 
+	(title,activityTime,endTime,a_enroll_end_time,a_phone,a_start_location,a_end_location,sc_id,a_children_age,a_difficulty_type,
+	a_gather_time,ch_id,needUserNum,price,a_gather_location,createUser,a_active_img,state,isCharge) 
+	VALUES
+	(
+	#{title},#{activityTime},#{endTime},#{a_enroll_end_time},#{a_phone},#{a_start_location},#{a_end_location},
+	#{sc_id},#{a_children_age},#{a_difficulty_type},#{a_gather_time},#{ch_id},#{needUserNum},#{price},#{a_gather_location}
+	,#{userId},#{a_active_img},'1',#{isCharge})
+	</insert>
+	
+	<!-- 活动其他信息保存（描述、介绍、特色、费用、退款
+	说明、活动须知...）		2016年3月14日 -->
+	<insert id="saveActiveRestsInfo" parameterType="com.op.dto.activity.insertActivity.ActivityRestsInfoDTO" useGeneratedKeys="true" keyProperty="activityId" keyColumn="id" >
+	insert into Activity
+	(
+	details,characteristic,tripWatchFocus,equipment,a_price_deatil_off,refundCondition,a_careful,createUser,state,payType,a_reserve_price
+	)
+	values
+	(
+	#{details},#{characteristic},#{tripWatchFocus},#{equipment},#{a_price_deatil_off},
+	#{refundCondition},#{a_careful},#{uId},'1',#{payType},#{a_reserve_price}
+	)
+	</insert>
+	
+	<!-- 更改活动基本信息 	2016年3月12日-->
+	<update id="updateActiveBaseInfo" parameterType="com.op.dto.activity.insertActivity.ActivityBaseInfoDTO" >
+	update Activity set title=#{title},activityTime=#{activityTime},endTime=#{endTime},a_enroll_end_time=#{a_enroll_end_time},
+	a_phone=#{a_phone},a_start_location=#{a_start_location},a_end_location=#{a_end_location},sc_id=#{sc_id},a_children_age=#{a_children_age},
+	a_difficulty_type=#{a_difficulty_type},a_gather_time=#{a_gather_time},ch_id=#{ch_id},needUserNum=#{needUserNum},
+	price=#{price},a_gather_location=#{a_gather_location},a_active_img=#{a_active_img},a_finish_num=a_finish_num+10,isCharge=#{isCharge}
+	where id=#{activityId} 
+	AND createUser=#{userId}
+	AND state='1'
+	</update>
+	
+	<!-- 更改活动其他信息	2016年3月15日 -->
+	<update id="updateActiveRestsInfo" parameterType="com.op.dto.activity.insertActivity.ActivityRestsInfoDTO">
+	update Activity set
+	<if test="details != null and details != ''">
+	details=#{details}
+	</if>
+	<if test="characteristic != null and characteristic != ''">
+	characteristic=#{characteristic}
+	</if>
+	<if test="tripWatchFocus != null and tripWatchFocus != ''">
+	tripWatchFocus=#{tripWatchFocus}
+	</if>
+	<if test="equipment != null and equipment != ''">
+	equipment=#{equipment}
+	</if>
+	<if test="a_price_deatil_off != null and a_price_deatil_off != ''">
+	a_price_deatil_off=#{a_price_deatil_off}
+	</if>
+	<if test="refundCondition != null and refundCondition != ''">
+	refundCondition=#{refundCondition}
+	</if>
+	<if test="a_careful != null and a_careful != ''">
+	a_careful=#{a_careful}
+	</if>
+	<if test="payType != null">
+	payType=#{payType}
+	,a_reserve_price=#{a_reserve_price}
+	</if>
+	where 
+	id=#{activityId} 
+	AND createUser=#{uId} 
+	AND state='1'
+	</update>
+	
+	<!-- 添加草稿状态的订单(废弃) -->
+	<insert id="insertCaoGaoStateActiveByLine" parameterType="com.op.dto.activity.insertActivity.line.InsertLineDTO" >
+	insert into activity (id,state,createUser)values(#{activityId},1,#{l_create_user})
+	</insert>
+	
+	<!-- 添加草稿状态的订单(废弃) -->
+	<insert id="insertCaoGaoStateActiveByCost" parameterType="com.op.dto.activity.insertActivity.cost.ActivityCostDTO" >
+	insert into activity (id,state,createUser)values(#{activityId},1,#{acp_create_user})
+	</insert>
+	
+	<!-- 添加草稿状态的订单(废弃) -->
+	<insert id="insertCaoGaoStateActiveByInsurance" parameterType="com.op.dto.activity.baoxian.BaoxianDTO" >
+	insert into activity (id,state,createUser,IN_ID,isInsurance)values(#{activityId},1,#{userId},#{insuranceId},1)
+	</insert>
+	
+	<!-- 添加草稿状态的订单(废弃)-->
+	<insert id="insertCaoGaoStateActiveByEquipment" parameterType="com.op.dto.activity.equipment.InsertEquipmentDTO" >
+	insert into activity (id,state,createUser)values(#{activityId},1,#{userId})
+	</insert>
+	
+	<!-- 根据用户ID查询活动草稿数量 -->
+	<select id="draft" parameterType="String" resultType="int" useCache="false">
+	select count(id) from activity where createUser=#{id} and state='1'
+	</select>
+	
+	<!-- 提交审核 -->
+	<update id="submitAudit" parameterType="java.util.Map">
+	update activity set state='2',coordinates=#{coordinates},a_active_add_user_type=#{uType} where id=#{id} and createUser=#{userId}
+	</update>
+	
+	
+	<!-- 动态获取列名进行修改  2016年3月29日 -->
+	<update id="updateColumn" parameterType="com.op.dto.activity.insertActivity.ActivityRestsInfoDTO" statementType="STATEMENT">
+	update activity set ${dc}='' where id='${activityId}' and createUser='${uId}' and state = '1'
+	</update>
+	
+	<!-- &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& -->
+	<!-- 		个人中心  →  我的管家→  我的活动		begin	 -->
+	<!-- &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& -->
+	
+	<!-- 个人中心→我的管家→我的活动，查询普通用户的三种状态（参加过的、进行中的、待进行的）活动的数量 -->
+	<select id="findMyActiveNumForUser" parameterType="String" resultType="com.op.dto.usercenter.keeper.MyActiveResultDTO" useCache="false">
+	SELECT
+	  (SELECT vd.NUM FROM v_donesignupnum vd WHERE vd.USERID=#{userId}
+	  ) STOP ,
+	  (SELECT vi.NUM FROM v_ingsignupnum vi WHERE vi.USERID=#{userId}
+	  ) ing ,
+	  (SELECT vw.NUM FROM v_waitsignupnum vw WHERE vw.USERID=#{userId}
+	  ) wait
+	FROM dual
+	</select>
+	
+	<!-- 个人中心→我的管家→我的活动，查询领队或者俱乐部的三种状态（举行过的、进行中的、待进行的）活动的数量 -->
+	<select id="findMyActiveNumForLeader" parameterType="String" resultType="com.op.dto.usercenter.keeper.MyActiveResultDTO" useCache="false">
+
+	SELECT
+	  (SELECT vd.NUM FROM V_DONEACTIVENUM vd WHERE vd.createUser=#{userId}
+	  ) STOP ,
+	  (SELECT vi.NUM FROM V_INGACTIVENUM vi WHERE vi.createUser=#{userId}
+	  ) ing,
+	  (SELECT vw.NUM FROM V_WAITACTIVENUM vw WHERE vw.createUser=#{userId}
+	  ) wait
+	FROM dual
+	</select>
+	
+	<resultMap type="com.op.dto.usercenter.keeper.MyActiveInfoDTO" id="myActiveResultMap">
+		<id column="id" property="id" />
+		<result column="title" property="title" />
+		<result column="price" property="price" />
+		<result column="a_active_img" property="a_active_img" />
+			
+		<!-- 景点 -->
+		<collection property="jds" ofType="java.lang.String" column="id" select="activeScenicMapper.findNameByActiveId"></collection>
+	</resultMap>
+	
+	<!-- 个人中心→我的管家→我的活动，用户参加过的活动 -->
+	<select id="userDoneActivePage" parameterType="Page" resultMap="myActiveResultMap" useCache="false">
+	SELECT ac.id,ac.title,ac.price,a_active_img,a_close,template
+	FROM activity ac
+	INNER JOIN V_USERDONEACTIVE au
+	ON ac.id     =au.activeId
+	AND au.userId=#{t}
+	</select>
+	
+	<!-- 个人中心→我的管家→我的活动，用户进行中的活动 -->
+	<select id="userIngActivePage" parameterType="Page" resultMap="myActiveResultMap" useCache="false">
+		SELECT ac.id,
+		  ac.title,
+		  ac.price,a_active_img,a_close,template
+		FROM activity ac
+		INNER JOIN V_USERINGACTIVE au
+		ON ac.id           =au.activeId
+		AND userId         =#{t}
+		AND ac.activityTime &lt; now()
+		AND ac.endTime     &gt; now()
+	</select>
+	
+	<!-- 个人中心→我的管家→我的活动，等待进行的活动 -->
+	<select id="userWaitActivePage" parameterType="Page" resultMap="myActiveResultMap" useCache="false">
+		SELECT ac.id,
+		  ac.title,
+		  ac.price,a_active_img,a_close,template
+		FROM activity ac
+		INNER JOIN V_USERINGACTIVE au
+		ON ac.id           =au.activeId
+		AND userId         =#{t}
+		AND ac.activityTime &gt; now()
+	</select>
+	
+	
+	
+	<!-- 个人中心→我的管家→我的活动，领队参加过的活动 -->
+	<select id="leaderDoneActivePage" parameterType="Page" resultMap="myActiveResultMap" useCache="false">
+		select id,title,price,a_active_img,a_close,template
+		from activity
+		where state='15'<!-- 状态为活动已经结束 -->
+		and createUser=#{t}
+	</select>
+	
+	<!-- 个人中心→我的管家→我的活动，领队进行中的活动 -->
+	<select id="leaderIngActivePage" parameterType="Page" resultMap="myActiveResultMap" useCache="false">
+		select id,title,price,a_active_img,a_close,template
+		from activity
+		where state='5'<!-- 状态为发布中 -->
+		and activityTime &lt; now() <!-- 开始时间小于当前时间 -->
+		and endTime &gt; now() <!-- 结束时间大于当前时间 -->
+		and createUser=#{t}
+	</select>
+	
+	<!-- 个人中心→我的管家→我的活动，领队进行的活动 -->
+	<select id="leaderWaitActivePage" parameterType="Page" resultMap="myActiveResultMap" useCache="false">
+		select id,title,price,a_active_img,state,a_close,template
+		from activity
+		where  
+		((state='4' or state='3' or state='2')
+		or (activityTime > now() and state='5'))<!-- 2:待审核；3：审核中；4：审核失败；5：审核成功 -->
+		and createUser=#{t}
+	</select>
+	
+	<!-- &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& -->
+	<!-- 		个人中心  →  我的管家→  我的活动		end	 -->
+	<!-- &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& -->
+	
+	
+	
+	<!-- &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& -->
+	<!-- 		个人中心  →  我的管家→  我的问答	 查询待回答活动及关联的问题 		start	-->
+	<!-- &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& -->
+	
+	<!-- 发布者		start	 -->
+	<select id="selectNoReplyDataPage" parameterType="Page" resultType="com.op.dto.activity.reply.ReplyActiveDTO" useCache="false" >
+	SELECT 
+	ac.title ,ac.id ,ac.activityTime,COUNT(act.AC_ID) num
+	FROM activity ac
+	INNER JOIN V_ACTIVENOREPLY va ON ac.id = va.id AND va.USERID=#{t.userId}
+    LEFT JOIN activeConsultation act on act.AC_ACTIVE_ID = ac.id and va.ISREPLY=act.AC_IS_REPLY
+    GROUP BY ac.title, ac.id, ac.activityTime
+	</select>
+	
+	<select id="selectYesReplyDataPage" parameterType="Page"  resultType="com.op.dto.activity.reply.ReplyActiveDTO" useCache="false" >
+	SELECT 
+	ac.title ,ac.id ,ac.activityTime,count(act.AC_ID) num
+	FROM activity ac
+	INNER JOIN V_ACTIVEYESREPLY va ON ac.id = va.id AND va.USERID=#{t.userId}
+    left join activeConsultation act on act.AC_ACTIVE_ID = ac.id and va.ISREPLY=act.AC_IS_REPLY and va.userid=act.AC_REPLY_USER_ID
+    group by ac.title, ac.id, ac.activityTime
+	</select>
+	<!-- 发布者		end	 -->
+	
+	<!-- 用户	start -->
+	<select id="selectUserQAPage" parameterType="Page"  resultType="com.op.dto.activity.reply.ReplyActiveDTO" useCache="false" >
+	select ac.id,ac.title,ac.activityTime,count(act.AC_ID) num
+	from activity ac
+	inner join v_userqa qa on ac.id=qa.ac_active_id and qa.ac_create_user_id=#{t.userId}
+	
+	<if test="t.uct != null and t.uct != ''">
+		<choose>
+			<when test="t.uct == 0">
+			and qa.AC_IS_REPLY in (0,2)
+			</when>
+			<otherwise>
+			and qa.AC_IS_REPLY =1
+			</otherwise>
+		</choose>
+	</if>
+	
+    left join activeConsultation act on act.AC_ACTIVE_ID = ac.id and qa.AC_IS_REPLY=act.AC_IS_REPLY and act.AC_CREATE_USER_ID=qa.AC_CREATE_USER_ID
+    group by ac.title, ac.id, ac.activityTime
+	</select>
+	
+	<!-- 用户		end	 -->
+	
+	<!-- &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& -->
+	<!-- 		个人中心  →  我的管家→  我的问答	 查询待回答活动及关联的问题 	end	-->
+	<!-- &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& -->
+	
+	<!-- 根据活动ID查询价格 -->
+	<select id="selectPriceById" parameterType="String" resultType="java.lang.Double">
+	select price from activity where id=#{id}
+	</select>
+	
+	<!-- 活动草稿箱列表 -->
+	<select id="showDraftActivityListPage" parameterType="Page" resultType="com.op.dto.activity.draft.DraftResultsDTO" useCache="false">
+	select id,title,publishesTime from activity where createUser=#{t} and state='1'
+	</select>
+	
+	<!-- 个人中心活动草稿箱列表 -->
+	<select id="uCenterDraftActivitys" parameterType="java.lang.String" resultType="com.op.dto.usercenter.keeper.MyActiveInfoDTO" useCache="false">
+	select id,title,publishesTime,price,a_active_img from activity where createUser=#{uId} and state='1'
+	</select>
+	
+	<!-- 删除草稿箱 -->
+	<delete id="deleteDraft" parameterType="java.util.Map">
+	delete from activity where id=#{id} and createUser=#{userId} and state='1'
+	</delete>
+	
+	
+	<!-- &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&   -->
+	<!-- 		活动发布	→	编写活动草稿信息 	start	-->
+	<!-- &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&   -->
+	<resultMap type="com.op.dto.activity.edit.ActivityDraftDTO" id="editDraftResultMap">
+		<id column="id" property="activityId" />
+      <!-- 查询活动关联的保险 -->
+      <association property="insurance" javaType="com.op.dto.activity.insurances.ActivityInsuranceResultDTO" column="{planid=in_id,id=id}" select="activityInsuranceMapper.selectInsuranceInfoByActiveId"></association>
+      	
+	  <!-- 查询该活动对应的类型信息 -->
+      <collection property="types" ofType="String" column="id" select="activeTypesMapper.selectTypeIdsByActiveId" />
+      
+	  <!-- 查询该活动对应的交通方式 -->
+      <collection property="a_traffic_id" ofType="String" column="id" select="activeTrafficMapper.selectTrafficIdsByActiveId" />
+      
+	  <!-- 查询该活动对应的活动标签 -->
+      <collection property="activeTag" ofType="String" column="id" select="activeTagMapper.selectTagsByActiveId" />
+      
+	  <!-- 查询该活动对应的类型信息:TODO -->
+      <collection property="activeScenic" ofType="String" column="id" select="activeScenicMapper.findNameByActiveId" />
+      
+      <!-- 费用集合 -->
+      <collection property="accs" ofType="com.op.entity.activity.cost.ActiveCorrelationCost" column="id" select="activeCorrelationCostMapper.editActiveFindByActiveId" />
+      
+      <!-- 装备 -->
+      <collection property="aes" ofType="com.op.entity.activity.equipment.ActiveEquipment" column="id" select="activeEquipmentMapper.findByActiveId"></collection>
+      
+      <!-- 线路 -->
+      <collection property="lines" ofType="com.op.dto.activity.edit.InsertLineDTO" column="id" select="linesMapper.editDraftSelectListBylAlId" ></collection>
+      
+	</resultMap>
+	
+	<!-- 编辑草稿 -->
+	<select id="editDraft" parameterType="java.util.Map" resultMap="editDraftResultMap" useCache="false">
+		select <include refid="Base_Column_List"/>
+		from activity
+		where id=#{activityId}
+		and createUser=#{userId}
+		and state='1'
+	</select>
+	
+	<!-- 再次发布活动 -->
+	<select id="againRelease" parameterType="java.util.Map" resultMap="editDraftResultMap" useCache="false">
+		select <include refid="Base_Column_List"/>
+		from activity
+		where id=#{activityId}
+		and createUser=#{userId}
+	</select>
+	
+	<!-- &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&   -->
+	<!-- 		活动发布	→	编写活动草稿信息 	end	-->
+	<!-- &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&   -->
+	
+	
+	<!-- 查询活动数据（更新活动的最新数据） -->
+	<select id="updateActivityData" parameterType="java.lang.String" resultType="com.op.dto.activity.update.UpdateActiveDTO" useCache="false" >
+	select 
+	ac.activityTime,
+	ac.endTime,
+	ac.needUserNum,
+	ac.a_enroll_end_time enrollTime,
+	ac.ALREADYINNUM signUpNum,
+	ac.confirmUserNum,
+	ac.state,
+   	gac.comment_num commentNum,
+   	gc.con_num consultationNum
+   	from activity ac
+   	LEFT JOIN GROUP_COMMENT gac ON ac.id= gac.comment_activity_id
+   	LEFT JOIN GROUP_CONSULTATION gc on ac.id=gc.con_active_id
+   	where id=#{id}
+	</select>
+	
+	<!-- 更改过期的活动状态 update activity ac set state = 15 where id in (select id from v_pastactivity)-->
+	<update id="updatePastActivity" >
+		update activity as ac , v_pastactivity as a set ac.state = 15 where ac.id =a.id
+
+	</update>
+	
+	<!-- 查询活动价格 -->
+	<select id="findActivityPrice" parameterType="java.lang.String" resultType="java.lang.Double">
+	select price from activity where id=#{id}
+	</select>
+	
+	<update id="updateInsureId" parameterType="com.op.dto.activity.baoxian.BaoxianDTO">
+	update activity set in_id=#{insuranceId},isInsurance=1 where id=#{activityId}
+	</update>
+	
+	<update id="delInsureId" parameterType="java.util.Map">
+	update activity set in_id=null,isInsurance=2 where id=#{ai_activity_id}
+	</update>
+	
+	<!-- 新增空内容活动数据 -->
+	<insert id="saveNullActivity" parameterType="com.op.entity.activity.Activity" useGeneratedKeys="true" keyProperty="id">
+		insert into activity (state,createUser)values(1,#{createUser})
+	</insert>
+	
+	<!-- 查询活动状态 -->
+	<select id="findActiveState" parameterType="String" resultType="java.util.Map">
+		select state, createUser from activity
+		where id = #{id}
+	</select>
+	
+	<!-- 查询活动模板 -->
+	<select id="findActiveTemplate" parameterType="Page" resultMap="myActiveResultMap">
+		select id,title,price,a_active_img
+		from activity
+		where template = 1
+		and createUser=#{t}
+	</select>
+	
+	<!-- 添加活动模板 -->
+	<update id="saveTemplate" parameterType="java.util.Map">
+		update activity
+		set template = 1
+		where id = #{id}
+		and createUser = #{userId}
+	</update>
+	
+	<!-- 删除活动模板 -->
+	<update id="deleteTemplate" parameterType="java.util.Map">
+		update activity
+		set template = 0
+		where id = #{id}
+		and createUser = #{userId}
+	</update>
+	
+	<!-- 关闭活动 -->
+	<update id="closeActive" parameterType="java.util.Map">
+		update activity
+		set a_close = 1
+		where id = #{id}
+		and createUser = #{userId}
+	</update>
+	
+	<!-- 获取活动开始/结束时间 -->
+	<select id="findActivityTime" parameterType="String" resultType="java.util.Map">
+		select activityTime,endTime
+		from activity
+		where id = #{id}
+	</select>
+	
+</mapper>

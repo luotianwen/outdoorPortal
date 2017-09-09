@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="activeConsultationReplyMapper">
+	<sql id="Base_Column_List">
+    acr_id,acr_ac_id ,acr_create_time ,acr_comment ,acr_create_user_id ,acr_ac_user_id 
+    </sql>
+
+    <resultMap type="com.op.entity.activity.ActiveConsultationReply" id="ActiveConsultationReplyReturnMap">
+      <id column="acr_id" property="acr_id"/>
+      <result column="acr_ac_id" property="acr_ac_id"/>
+      <result column="acr_create_time" property="acr_create_time"/>
+      <result column="acr_comment" property="acr_comment"/>
+      <result column="acr_create_user_id" property="acr_create_user_id"/>
+      <result column="acr_ac_user_id" property="acr_ac_user_id"/>
+   </resultMap>
+   
+	
+	<!-- 查询该评论的所有回复信息 -->
+	<select id="findActiveConsulationReplyByAcrAcId" parameterType="String" resultType="com.op.entity.activity.ActiveConsultationReply">
+		SELECT <include refid="Base_Column_List"/>,
+		  us.uname acr_create_user_name,us.uheadimg acr_create_user_header_img,
+		  us2.uname acr_ac_user_name
+		FROM activeConsultationReply acr
+		LEFT JOIN users us ON acr.acr_create_user_id = us.u_id
+		LEFT JOIN users us2 ON acr.acr_ac_user_id = us2.u_id
+		WHERE acr_ac_id  = #{acr_ac_id}
+		ORDER BY acr_create_time
+	</select>
+   
+	
+	<!-- 查询该评论的所有回复信息2 -->
+	<select id="activeConsulationReplyByAcrAcId" parameterType="String" resultType="com.op.entity.activity.ActiveConsultationReply">
+		SELECT acr_create_time ,acr_comment ,acr_create_user_id
+		FROM activeConsultationReply acr
+		WHERE acr_ac_id  = #{acr_ac_id}
+	</select>
+	
+	<!-- 保存评论回复 -->
+	<insert id="inserintoReply" parameterType="com.op.entity.activity.ActiveConsultationReply">
+		insert into activeConsultationReply
+		(
+			acr_ac_id ,acr_create_time ,acr_comment ,acr_create_user_id ,acr_ac_user_id 
+		)
+		values
+		(
+			#{acr_ac_id },#{acr_create_time },#{acr_comment },#{acr_create_user_id },#{acr_ac_user_id}
+		)
+	</insert>
+	
+	<!-- 保存发布者回复信息 -->
+	<insert id="saveReplyInfo" parameterType="com.op.dto.activity.consultation.ReplyDTO">
+	insert into activeConsultationReply 
+	(
+		acr_ac_id ,acr_create_time ,acr_comment ,acr_create_user_id ,acr_ac_user_id 
+	) 
+	values
+	(
+		#{ac_id},#{time},#{comment},#{replyUserId},#{userId}
+	)
+	</insert>
+	
+	
+</mapper>

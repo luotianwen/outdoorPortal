@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="lineAddressMapper">
+	<sql id="Base_Column_List">
+    la_id,la_address_name ,la_line_id 
+    </sql>
+
+    <resultMap type="com.op.entity.lines.address.LineAddress" id="LineAddressReturnMap">
+      <id column="la_id" property="la_id"/>
+      <result column="la_address_name" property="la_address_name"/>
+      <result column="la_line_id" property="la_line_id"/>
+   </resultMap>
+   
+   <!-- 保存该线路地点集合 -->
+   <insert id="saveLineAddress" parameterType="java.util.List" useGeneratedKeys="false">
+   insert into lineAddress( la_address_name ,la_line_id )
+	  values
+	  
+	  <foreach collection="list" item="item" index="index" separator=",">
+          (
+	   #{item.la_address_name},#{item.la_line_id}
+          )
+	  </foreach>
+	  
+
+   </insert>
+   
+   <!-- 根据线路ID删除线路地点信息 -->
+   <delete id="deleteInfoByLineID" parameterType="String">
+   delete from lineAddress where la_line_id=#{la_line_id}
+   </delete>
+   
+   <!-- 根据线路ID查询地点集合 -->
+   <select id="selectByLineId" parameterType="String" resultType="com.op.entity.lines.address.LineAddress">
+   select <include refid="Base_Column_List"></include>
+   from lineAddress where la_line_id=#{la_line_id}
+   </select>
+</mapper>

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="travelsLikeUserMapper">
+	<sql id="Base_Column_List">
+    id,user_id ,travels_id ,create_time 
+    </sql>
+
+    <resultMap type="com.op.entity.travels.TravelsLikeUser" id="TravelsLikeUserReturnMap">
+      <id column="id" property="id"/>
+      <result column="user_id" property="user_id"/>
+      <result column="travels_id" property="travels_id"/>
+      <result column="create_time" property="create_time"/>
+   </resultMap>
+   
+	
+</mapper>

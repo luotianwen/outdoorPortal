@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+  <head>
+	<base href="/" />
+    <title>test$Each.html</title>
+	
+    <meta http-equiv="keywords" content="keyword1,keyword2,keyword3">
+    <meta http-equiv="description" content="this is my page">
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    
+    <!--<link rel="stylesheet" type="text/css" href="./styles.css">-->
+	<script type="text/javascript" src="static/js/jquery-2.1.1.min.js"></script>
+
+  </head>
+  <body>
+    <script type="text/javascript">
+    var array1 = [{"name":"yx","age":"23"},{"name":"zc","age":"23"}];
+    $.each(array1,function(i,item){
+    	//alert(item.name);
+    })
+    
+    var array2 = ["yx","zc"];
+    $.each(array2,function(i,item){
+    	//alert(item);
+    })
+    
+    var array3 = {"name":"yx","age":"23"};
+    $.each(array3,function(key,value){
+    	//alert(key+":"+value);
+    })
+    
+    var ss = "projects[0].imgs[1].ppi_url";
+   var start = ss.indexOf("gs[")+3;
+   var end = ss.indexOf("].ppi_url");
+    alert(ss.substring(start, end))
+    </script>
+  </body>
+</html>

@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="productMapper">
+    <!--mybatis ehcache缓存配置 -->
+    <!-- 以下两个<cache>标签二选一,第一个可以输出日志,第二个不输出日志 不使用缓存加入useCache="false" -->
+    <!-- <cache type="org.mybatis.caches.ehcache.LoggingEhcache" /> -->
+    <!-- <cache type="org.mybatis.caches.ehcache.EhcacheCache"/>  -->
+
+	<sql id="Base_Column_List">
+    id,productSn ,productName ,productUnit ,payType ,channel ,suppliersId ,catId ,tagId ,productType ,ticketType ,saleStatus ,isShipping ,isTrue ,limitNumber ,limitType ,limitTime ,limitOrderTime ,calendarRange ,isRefund ,refundDay ,refundTime ,refundRule ,productValidTime ,ticketTimeType ,ticketTimeInfo ,priceType ,salesPrice ,retailPrice ,settlementPrice ,exceptDate ,exceptWeek ,specialDate ,pfnerInfo ,productDesc ,costIncludes ,confirmInfo ,importInfo ,usedInfo ,openTime ,enterTime ,joinInfo ,refundInfo ,additionInfo ,picUrl ,last_update ,feature 
+    </sql>
+
+    <resultMap type="com.op.spot.entity.Product" id="ProductReturnMap">
+		<!-- id -->
+      <id column="id" property="id"/>
+		<!-- 产品编号 -->
+      <result column="productSn" property="productSn"/>
+		<!-- 渠道id -->
+      <result column="channel" property="channel"/>
+		<!-- 产品名称 -->
+      <result column="productName" property="productName"/>
+		<!-- 计量单位（张、套） -->
+      <result column="productUnit" property="productUnit"/>
+		<!-- 支付类型（0预付  1到付） -->
+      <result column="payType" property="payType"/>
+		<!-- 资源ID -->
+      <result column="suppliersId" property="suppliersId"/>
+		<!-- 分类ID -->
+      <result column="catId" property="catId"/>
+		<!-- 标签ID -->
+      <result column="tagId" property="tagId"/>
+		<!-- 产品种类 默认为1 -->
+      <result column="productType" property="productType"/>
+		<!-- 门票类型（0为儿童票、1为成人票 、2为老人票、3学生票、4家庭套票、5情侣套票） -->
+      <result column="ticketType" property="ticketType"/>
+		<!-- 上架状态（0下架 1上架） -->
+      <result column="saleStatus" property="saleStatus"/>
+		<!-- 是否免运费（0免 1是） -->
+      <result column="isShipping" property="isShipping"/>
+		<!-- 是否实名（0否 1是） -->
+      <result column="isTrue" property="isTrue"/>
+		<!-- 是否限购（0不限购 大于0限购，规则限购类型） -->
+      <result column="limitNumber" property="limitNumber"/>
+		<!-- 限购类型（空为不限购 0按身份证限购 1按手机号 每天每个产品限制 ） -->
+      <result column="limitType" property="limitType"/>
+		<!-- 限购时间（1按天、2 按周、3 按月） -->
+      <result column="limitTime" property="limitTime"/>
+		<!-- 预定时间限制（默认值就0|0 0|0表示无限制 9:00|16:00表示只能9点至16点下单） -->
+      <result column="limitOrderTime" property="limitOrderTime"/>
+		<!-- 可以预定天数 -->
+      <result column="calendarRange" property="calendarRange"/>
+		<!-- 是否支持退票（1：是、2否） -->
+      <result column="isRefund" property="isRefund"/>
+		<!-- 提前退票天数 -->
+      <result column="refundDay" property="refundDay"/>
+		<!-- 提前退票时间 -->
+      <result column="refundTime" property="refundTime"/>
+		<!-- 退票限制 -->
+      <result column="refundRule" property="refundRule"/>
+		<!-- 产品有效期 -->
+      <result column="productValidTime" property="productValidTime"/>
+		<!-- 电子票有效期类型 -->
+      <result column="ticketTimeType" property="ticketTimeType"/>
+		<!-- 电子票有效期 -->
+      <result column="ticketTimeInfo" property="ticketTimeInfo"/>
+		<!-- 是否是价格日历（1是0否 1是获取价格日历） -->
+      <result column="priceType" property="priceType"/>
+		<!-- 市场价格 -->
+      <result column="salesPrice" property="salesPrice"/>
+		<!-- 建议售价 -->
+      <result column="retailPrice" property="retailPrice"/>
+		<!-- 结算价格 -->
+      <result column="settlementPrice" property="settlementPrice"/>
+		<!-- 屏蔽日期 -->
+      <result column="exceptDate" property="exceptDate"/>
+		<!-- 屏蔽星期 -->
+      <result column="exceptWeek" property="exceptWeek"/>
+		<!-- 特例日期 -->
+      <result column="specialDate" property="specialDate"/>
+		<!-- 优惠信息 -->
+      <result column="pfnerInfo" property="pfnerInfo"/>
+		<!-- 产品介绍 -->
+      <result column="productDesc" property="productDesc"/>
+		<!-- 费用包含 -->
+      <result column="costIncludes" property="costIncludes"/>
+		<!-- 验证窗口 -->
+      <result column="confirmInfo" property="confirmInfo"/>
+		<!-- 重要提示 -->
+      <result column="importInfo" property="importInfo"/>
+		<!-- 使用须知 -->
+      <result column="usedInfo" property="usedInfo"/>
+		<!-- 开放时间 -->
+      <result column="openTime" property="openTime"/>
+		<!-- 入园时间 -->
+      <result column="enterTime" property="enterTime"/>
+		<!-- 参团须知 -->
+      <result column="joinInfo" property="joinInfo"/>
+		<!-- 退款介绍 -->
+      <result column="refundInfo" property="refundInfo"/>
+		<!-- 补充内容 -->
+      <result column="additionInfo" property="additionInfo"/>
+		<!-- 产品图片 -->
+      <result column="picUrl" property="picUrl"/>
+		<!-- 修改时间 -->
+      <result column="last_update" property="last_update"/>
+		<!-- 扩展字段,备用 -->
+      <result column="feature" property="feature"/>
+      
+      
+
+      <!-- 查询价格 -->
+      <collection property="producPriceList" fetchType="lazy" ofType="com.op.spot.entity.PriceInfo" column="productSn" select="s_priceInfoMapper.getProductPriceList"></collection>
+      
+      
+   </resultMap>
+
+    <select id="getproductListBySpotId" parameterType="int" resultType="com.op.spot.entity.Product">
+		select p.id,p.ticketType,p.productName,p.limitOrderTime,  convert(IFNULL(p.salesPrice,0)/100,DECIMAL(10,2)) salesPrice, convert(IFNULL(p.retailPrice,0)/100,DECIMAL(10,2)) retailPrice,p.payType,p.importInfo,p.usedInfo,p.openTime,p.refundInfo
+			from
+		s_product p
+		,s_spot s
+		where s.resourceId =p.suppliersId
+		and p.saleStatus=1
+		and s.id = #{id}
+
+	</select>
+	
+	
+	<!-- 根据产品id获取门票信息 -->
+	<select id="getTicketInfo" parameterType="int" resultMap="ProductReturnMap" >
+		select 
+			id,productSn,productName,productUnit,productType,channel,ticketType,limitNumber,limitType,limitTime,limitOrderTime,calendarRange,isRefund,refundDay,refundTime
+			,refundRule,productValidTime,ticketTimeType,ticketTimeInfo,priceType,salesPrice,retailPrice,settlementPrice,exceptDate
+			,exceptWeek,specialDate,pfnerInfo,productDesc,costIncludes,confirmInfo,importInfo,usedInfo,openTime,enterTime,refundInfo
+			,picUrl,isTrue
+		from
+			s_product
+		where
+			saleStatus = 1	
+			and id = #{id}
+	</select>
+	
+	
+
+</mapper>

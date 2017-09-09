@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<base href="/" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>玩嘛</title> 
+<#include "/view/base.css.html">
+
+<link rel="stylesheet" type="text/css" href="static/css/hw_css/venue.css" />
+</head>
+<body>
+	<#include "/view/header.html">
+	
+	<div class="boxw clearfix">
+		<div class="venue-tit">
+			<h1>${pointServiceProjectShowDTO.psp_item_name}</h1>
+		</div>
+
+		<div class="venue-box clearfix">
+			<!--  轮播图部分 -->
+			<div class="venue-pic" style="position: relative;">
+				<div class="top-one">
+					<div id="banner">
+						<ul class="thumbnail">
+							<#list pointServiceProjectShowDTO.pointProjectsImgList as item>
+								<li class="tuo${item.index+1}<#if item.index==0> on</#if>" style="background: url('${item.ppi_url}') no-repeat;background-size:cover;" text="${item.index+1}";></li>
+							</#list>
+						</ul>
+						<div id="banner_list" style="width: 740px;height: 500px;">
+							<#list pointServiceProjectShowDTO.pointProjectsImgList as item>
+								<a href="javascript:void(0)">
+									<img src="${item.ppi_url}" width="740px" height="500px"	/>
+								</a>
+							</#list>
+						</div>
+					</div>
+				</div>
+			</div>
+			<!--    -->
+			<div class="venue-message">
+				<div class="v-price">
+					<strong>${pointServiceProjectShowDTO.psp_discount_price}</strong><span>元</span>
+					<del>原价 ${pointServiceProjectShowDTO.psp_item_price}元</del>
+				</div>
+				<div class="v-qt">
+					<ul id="data">
+						<li>0人已购买</li>
+						<li>0人收藏</li>
+						<li>0分</li>
+						<li>0人评论</li>
+					</ul>
+				</div>
+				<dl class="v-package clearfix">
+					<dt>套餐：</dt>
+					<dd id="project">
+						<!-- <a role="button" class="selected">套餐一凑够十个字了吧</a> -->
+					</dd>
+				</dl>
+				<dl class="v-tags clearfix">
+					<dt>特色标签：</dt>
+					<dd>
+						<#list pointServiceProjectShowDTO.pointServiceFeatureList as item>
+							<span>${item.psf_name}</span>
+						</#list>
+					</dd>
+				</dl>
+				<dl class="v-ages clearfix">
+					<dt>适合人群：</dt>
+					<dd>
+						<span><#list pointServiceProjectShowDTO.pointComboCrowdTypeList as item>${item.pcct_describe}<#if (item_has_next)>、</#if></#list></span>
+					</dd>
+				</dl>
+				<dl class="v-count clearfix">
+					<dt>数量：</dt>
+					<dd>
+						<span class="wrap-input">
+							<span class="sub-count"></span>
+							<span class="input-area">
+								<input type="text" maxlength="2" value="1" name="txtCount" id="txtCount" title="">
+							</span>
+							<span class="add-count"></span>
+						</span>
+					</dd>
+				</dl>
+				<div class="v-btns">
+					<a href="javascript:void(0)" id="buy" class="btn-order">立即购买</a>
+					<a href="javascript:void(0)" id="collection" class="btn-star"><i></i>收藏</a>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- tab begin -->
+	<div class="boxw clearfix" id="tab">
+		<div class="venue-tabs-box clearfix ">
+			<a data-scroll="projectState" href="javascript:void(0)" class="selected">套餐情况</a>
+			<a data-scroll="provideService" href="javascript:void(0)">提供服务</a>
+			<a data-scroll="positiontraffic" href="javascript:void(0)">位置交通</a>
+			<a data-scroll="purchaseNotice" href="javascript:void(0)">购买须知</a>
+			<a data-scroll="venuedesc" href="javascript:void(0)">场馆介绍</a>
+			<a data-scroll="comment" href="javascript:void(0)">评价分析<sapn id="commentCount"></sapn></a>
+		</div>
+	</div>
+	<div class="boxw clearfix" id="tab-top" style="display: none;position: fixed;top: -20px;height: 80px;z-index: 12;left: 50%;margin-left: -600px;box-shadow: 0 7px 10px -3px rgba(0,0,0,0.3);">
+		<div class="venue-tabs-box clearfix ">
+			<a data-scroll="projectState" href="javascript:void(0)" class="selected">套餐情况</a>
+			<a data-scroll="provideService" href="javascript:void(0)">提供服务</a>
+			<a data-scroll="positiontraffic" href="javascript:void(0)">位置交通</a>
+			<a data-scroll="purchaseNotice" href="javascript:void(0)">购买须知</a>
+			<a data-scroll="venuedesc" href="javascript:void(0)">场馆介绍</a>
+			<a data-scroll="comment" href="javascript:void(0)">评价分析</a>
+		</div>
+	</div>
+	<!-- tab end -->
+	<!--main begin -->
+	<div class="venue-main boxw clearfix">
+		<div class="venue-content fl">
+			<div class="v-item">
+				<div class="v-tit" id="projectState">套餐情况</div>
+				<div class="other-content">
+					<p>${pointServiceProjectShowDTO.psp_item_comment}</p>
+				</div>
+			</div>
+			<div class="v-item">
+				<div class="v-tit" id="provideService">提供服务</div>
+				<div class="other-content">
+					<p>${pointServiceProjectShowDTO.psi_service}</p>
+				</div>
+			</div>
+			<div class="v-item">
+				<div class="v-tit" id="positiontraffic">地图交通</div>
+				<div class="map-detail">
+					<div id="container" style="width:760px; height: 465px;"></div>
+					<p>场馆：<a href="pointService/detail/${pointServiceProjectShowDTO.ps_id}.html" target="_blank" style="color:#555;">${pointServiceProjectShowDTO.ps_zh_name}</a></p>
+					<p>地址：${pointServiceProjectShowDTO.ps_province_id?if_exists}${pointServiceProjectShowDTO.ps_city_id?if_exists}${pointServiceProjectShowDTO.ps_countys_id?if_exists}${pointServiceProjectShowDTO.ps_address?if_exists}</p>
+					<#if pointServiceProjectShowDTO.ps_traffic?exists><p>交通方式：${pointServiceProjectShowDTO.ps_traffic?if_exists}</p></#if>
+					<p>联系电话：<#list pointServiceProjectShowDTO.pointServiceContactList as item>${item.psc_number}<#if (item_has_next)>、</#if></#list></p>
+				</div>
+			</div>
+			<div class="v-item">
+				<div class="v-tit" id="purchaseNotice">购买须知</div>
+				<div class="other-content">
+					<p>有效期：${pointServiceProjectShowDTO.psp_validity_date_start?string('yyyy-MM-dd')} 至 ${pointServiceProjectShowDTO.psp_validity_date_end?string('yyyy-MM-dd')}</p>
+					<p>预约提醒：${pointServiceProjectShowDTO.psp_appointment}</p>
+					<p>温馨提示：${pointServiceProjectShowDTO.psp_reminder}</p>
+					<#if pointServiceProjectShowDTO.psp_not_time><p>不可用日期：${pointServiceProjectShowDTO.psp_not_time}</p></#if>
+					<#if pointServiceProjectShowDTO.psp_limit><p>限购限用提醒：${pointServiceProjectShowDTO.psp_limit}</p></#if>
+					<#if pointServiceProjectShowDTO.psp_rule><p>规则提醒：${pointServiceProjectShowDTO.psp_rule}</p></#if>
+					<#if pointServiceProjectShowDTO.psp_people_number><p>适用人数：${pointServiceProjectShowDTO.psp_people_number}</p></#if>
+				</div>
+			</div>
+			<div class="v-item">
+				<div class="v-tit" id="venuedesc">商家介绍</div>
+				<div class="other-content">
+					<p>${pointServiceProjectShowDTO.psi_introduce}<p>
+				</div>
+			</div>
+			<div class="comment-list">
+				<div class="comment-order-title">
+					<div class="left-title" id="comment">
+						<h3 class="comment-name">热门评价</h3>
+					</div>
+					<div class="right-title" id="imgComment">
+						<i class="iconsfont">√</i>只显示带图评价
+					</div>
+				</div>
+				<ul class="comment-box-list" id="projectComment">
+				</ul>
+				<div style="margin-top: 50px;border-top: 1px solid #e0e0e0;"></div>
+				<div id="projectCommentPage" style="margin-top: 30px;text-align: center;height: 50px;"></div>
+				<!-- <div class="comment-more">
+					<a href="#">查看更多评论</a>
+				</div> -->
+			</div>
+		</div>
+		<div class="venue-right fl" id="fl-info">
+			<div class="v-price">
+				<strong>${pointServiceProjectShowDTO.psp_discount_price}</strong><span>元</span>
+				<del>原价  ${pointServiceProjectShowDTO.psp_item_price}元</del>
+			</div>
+			<div class="v-qt">
+				<ul id="data">
+					<li>0人已购买</li>
+					<li>0人收藏</li>
+					<li>0分</li>
+					<li>0人评论</li>
+				</ul>
+			</div>
+			<dl class="v-package clearfix">
+				<dt>套餐：</dt>
+				<dd style="width:260px;" id="project">
+				</dd>
+			</dl>
+			<dl class="v-tags clearfix">
+				<dt>特色标签：</dt>
+				<dd style="width:260px;">
+					<#list pointServiceProjectShowDTO.pointServiceFeatureList as item>
+						<span>${item.psf_name}</span>
+					</#list>
+				</dd>
+			</dl>
+			<dl class="v-ages clearfix">
+				<dt>适合人群：</dt>
+				<dd>
+					<span><#list pointServiceProjectShowDTO.pointComboCrowdTypeList as item>${item.pcct_describe}<#if (item_has_next)>、</#if></#list></span>
+				</dd>
+			</dl>
+			<dl class="v-count clearfix">
+				<dt>数量：</dt>
+				<dd>
+					<span class="wrap-input">
+						<span class="sub-count"></span>
+						<span class="input-area">
+							<input type="text" maxlength="2" value="1" name="txtCount" id="txtCount" title="">
+						</span>
+						<span class="add-count"></span>
+					</span>
+				</dd>
+			</dl>
+			<div class="v-btns">
+				<a href="javascript:void(0)" id="buy" class="btn-order" style="width:210px;">立即购买</a>
+				<a href="javascript:void(0)" id="collection" class="btn-star"><i></i>收藏</a>
+			</div>
+		</div>
+
+	</div>
+	<!--main end -->
+</body>
+<#include "/view/base.js.html">
+
+<!-- 地图 -->
+<#include "/view/webapi.js.html">
+<script>
+	var pspId = ${pointServiceProjectShowDTO.psp_id};
+	var psId = ${pointServiceProjectShowDTO.ps_id};
+	var t = n = 0, count;
+	$(function() {
+
+		count = $("#banner_list a").length;
+		$("#banner_list a:not(:first-child)").hide();
+		$("#banner_info").html(
+				$("#banner_list a:first-child").find("img").attr('alt'));
+		$("#banner_info").click(function() {
+			window.open($("#banner_list a:first-child").attr('href'), "_blank")
+		});
+		$("#banner li").click(
+				function() {
+					var i = $(this).index();//获取Li元素内的值，即1，2，3，4
+					n = i;
+					if (i >= count)
+						return;
+					$("#banner_info").html(
+							$("#banner_list a").eq(i).find("img").attr('alt'));
+					$("#banner_info").unbind().click(
+							function() {
+								window.open($("#banner_list a").eq(i).attr('href'), "_blank")
+							})
+					$("#banner_list a").filter(":visible").fadeOut(500)
+							.parent().children().eq(i).fadeIn(500);
+					$("#banner").css("background", "none");
+					$(this).toggleClass("on");
+					$(this).siblings().removeAttr("class");
+				});
+		t = setInterval("showAuto()", 3.5 * 1000);
+		$("#banner").hover(function() {
+			clearInterval(t)
+		}, function() {
+			t = setInterval("showAuto()", 3.5 * 1000);
+		});
+
+		var map = new AMap.Map('container',{
+	        zoom: 15,
+	        center: [<#if pointServiceProjectShowDTO.ps_coordinates?exists>${pointServiceProjectShowDTO.ps_coordinates}<#else>116.39748037,39.90871575</#if>]
+	    });
+
+		var marker = new AMap.Marker({
+	        position: [<#if pointServiceProjectShowDTO.ps_coordinates?exists>${pointServiceProjectShowDTO.ps_coordinates}<#else>116.39748037,39.90871575</#if>],
+	        map:map
+	    });
+		
+	});
+
+	function showAuto() {
+		n = n >= (count - 1) ? 0 : ++n;
+		$("#banner li").eq(n).trigger('click', 'auto');
+	}
+	
+</script>
+
+<!-- 分页 -->
+<script type="text/javascript" src="static/js/plugins/layer/laypage/laypage.js"></script>
+<script type="text/javascript" src="static/js/pointService/zhanshi/projectShow.js"></script>
+
+</html>

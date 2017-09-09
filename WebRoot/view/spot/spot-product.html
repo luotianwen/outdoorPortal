@@ -1,0 +1,79 @@
+            <table border="0">
+                <tr>
+                    <th style="width: 79px">门票类型</th>
+                    <th >门票名称</th>
+                    <th>提前预定时间</th>
+                    <th>市场价</th>
+                    <th>玩嘛价</th>
+                    <th>支付方式</th>
+                    <th>&nbsp;</th>
+                </tr>
+                <#list products as item>
+                    <tr class="noborder">
+                        <td>
+                            <#switch item.ticketType>
+                                <#case 0>
+                                    儿童票
+                                    <#break>
+                                <#case 1>
+                                    成人票
+                                    <#break>
+                                <#case 2>
+                                    老人票
+                                    <#break>
+                                <#case 3>
+                                    学生票
+                                    <#break>
+                                <#case 4>
+                                    家庭套票
+                                 <#break>
+                               <#case 5>
+                                   情侣套票
+                                 <#break>
+                             <#default>
+                                     成人票
+                            </#switch>
+                        </td>
+                        <td><a class="t-name" onclick='$("#tick${item.id}").toggle();'>${item.productName}</a>
+                        </td>
+                        <td>
+                            <#assign limitOrderTimearr=(item.limitOrderTime?split("|"))>
+                            <#if limitOrderTimearr[0]=0&&limitOrderTimearr[1]=0> 无限制
+                                <#else >
+                                    ${limitOrderTimearr[0]}-${limitOrderTimearr[1]}
+                            </#if>
+
+                        </td>
+                        <td>¥ ${item.salesPrice}</td>
+                        <td><span class="c-orange">¥ ${item.retailPrice}</span></td>
+                        <td>在线支付</td>
+                        <td><a href="ticket/orderInput?productId=${item.id}" target="_blank" class="btn-yd">立即预定</a></td>
+                    </tr>
+                    <tr id="tick${item.id}" style="display: none">
+                        <td></td>
+                        <td colspan="6">
+                            <div class="tiptext">
+                                <span class="arrow"></span>
+                                <dl class="clearfix">
+                                    <dt>重要提示：</dt>
+                                    <dd>${item.importInfo}</dd>
+                                </dl>
+                                <dl class="clearfix">
+                                    <dt>使用须知：</dt>
+                                    <dd>${item.usedInfo}</dd>
+                                </dl>
+                                <dl class="clearfix">
+                                    <dt>开放时间：</dt>
+                                    <dd>${item.openTime}</dd>
+                                </dl>
+                                <dl class="clearfix">
+                                    <dt>退款介绍：</dt>
+                                    <dd>${item.refundInfo}</dd>
+                                </dl>
+                                <div class="view-details" onclick='$("#tick${item.id}").hide()'><a >收起详情<i></i></a></div>
+                            </div>
+                        </td>
+                    </tr>
+                    </#list>
+            </table>
+

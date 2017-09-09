@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="orderLogMapper">
+	<sql id="Base_Column_List">
+    ol_id,ol_create_time ,ol_info ,ol_create_user_id ,ol_create_user_name 
+    </sql>
+    
+   <resultMap type="com.op.entity.log.order.ActiveOrderLog" id="OrderLogReturnMap">
+      <id column="ol_id" property="ol_id"/>
+      <result column="ol_create_time" property="ol_create_time"/>
+      <result column="ol_info" property="ol_info"/>
+      <result column="ol_create_user_id" property="ol_create_user_id"/>
+      <result column="ol_create_user_name" property="ol_create_user_name"/>
+      <result column="ol_order_id" property="ol_order_id"/>
+   </resultMap>
+</mapper>

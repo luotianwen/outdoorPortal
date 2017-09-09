@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+	<!-- 国家(country)Mapper -->
+<mapper namespace="countryMapper">
+    <!--mybatis ehcache缓存配置 -->
+    <!-- 以下两个<cache>标签二选一,第一个可以输出日志,第二个不输出日志 不使用缓存加入useCache="false" -->
+    <!-- <cache type="org.mybatis.caches.ehcache.LoggingEhcache" /> -->
+    <!-- <cache type="org.mybatis.caches.ehcache.EhcacheCache"/>  -->
+
+	<sql id="Base_Column_List">
+    id,zh_name ,en_name ,continent ,edit_user ,edit_time 
+    </sql>
+
+    <resultMap type="com.op.entity.mmd.Country" id="CountryReturnMap">
+		<!-- id -->
+      <id column="id" property="id"/>
+		<!-- 中文名称 -->
+      <result column="zh_name" property="zh_name"/>
+		<!-- 英文名称 -->
+      <result column="en_name" property="en_name"/>
+		<!-- 所属州（1：亚洲；2：北美洲；；3：南美洲；4：欧洲；5：非洲；6：大洋洲） -->
+      <result column="continent_id" property="continent_id"/>
+		<!-- 编辑人（最后一次） -->
+      <result column="edit_user" property="edit_user"/>
+		<!-- 编辑时间（最后一次） -->
+      <result column="edit_time" property="edit_time"/>
+   </resultMap>
+   
+  
+  
+   
+   <select id="getCountryId" parameterType="String" resultType="String">
+   	  select id from Country where  zh_name = #{name} 
+   </select>
+  
+  <insert id="insertCountry" parameterType="com.op.entity.mmd.Country">
+  	insert into COUNTRY( zh_name ,en_name ,continent_id ,edit_user ,edit_time )
+  	values
+  	( #{zh_name} ,#{en_name} ,#{continent_id} ,#{edit_user} ,now() )
+  </insert>
+	
+</mapper>

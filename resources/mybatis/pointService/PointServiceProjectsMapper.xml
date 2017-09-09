@@ -1,0 +1,258 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="pointServiceProjectsMapper">
+	<sql id="Base_Column_List">
+		psp_id,psp_venue_id ,psp_item_name ,psp_item_price ,psp_discount_price ,psp_item_comment ,
+		psp_is_group ,psp_validity_date_start ,psp_validity_date_end ,psp_update_id ,
+		psp_is_efficacy ,psp_is_refund ,psp_is_yuyue ,psp_yuyue_time ,psp_is_delete ,
+		psp_appointment ,psp_reminder ,psp_not_time ,psp_limit ,psp_rule ,psp_people_number ,
+		psp_create ,psp_create_time ,psp_state ,auditor_id ,auditor_time ,auditNotes ,
+		psp_update,psp_update_time
+	</sql>
+
+	<resultMap type="com.op.entity.pointService.project.PointServiceProjects" id="PointServiceProjectsReturnMap">
+		<!-- id -->
+		<id column="psp_id" property="psp_id" />
+		<!-- 场馆表id -->
+		<result column="psp_venue_id" property="psp_venue_id" />
+		<!-- 项目名称 -->
+		<result column="psp_item_name" property="psp_item_name" />
+		<!-- 项目原价 -->
+		<result column="psp_item_price" property="psp_item_price" />
+		<!-- 项目打折价 -->
+		<result column="psp_discount_price" property="psp_discount_price" />
+		<!-- 项目内容 -->
+		<result column="psp_item_comment" property="psp_item_comment" />
+		<!-- 是否参与用户组合(0：否；1：是) -->
+		<result column="psp_is_group" property="psp_is_group" />
+		<!-- 有效期start -->
+		<result column="psp_validity_date_start" property="psp_validity_date_start" />
+		<!-- 有效期end -->
+		<result column="psp_validity_date_end" property="psp_validity_date_end" />
+		<!-- 修改关联ID（标识多条数据为历史备份数据） -->
+		<result column="psp_update_id" property="psp_update_id" />
+		<!-- 是否已经过期（0：否；1：是） -->
+		<result column="psp_is_efficacy" property="psp_is_efficacy" />
+		<!-- 能否退款（0：是；1：否） -->
+		<result column="psp_is_refund" property="psp_is_refund" />
+		<!-- 是否支持预约（0：否；1：是） -->
+		<result column="psp_is_yuyue" property="psp_is_yuyue" />
+		<!-- 预约时间 -->
+		<result column="psp_yuyue_time" property="psp_yuyue_time" />
+		<!-- 是否删除（0：否；1：是） -->
+		<result column="psp_is_delete" property="psp_is_delete" />
+		<!-- 预约提醒(必填) -->
+		<result column="psp_appointment" property="psp_appointment" />
+		<!-- 温馨提示(必填) -->
+		<result column="psp_reminder" property="psp_reminder" />
+		<!-- 不可用日期 -->
+		<result column="psp_not_time" property="psp_not_time" />
+		<!-- 限购限用提醒 -->
+		<result column="psp_limit" property="psp_limit" />
+		<!-- 规则提醒 -->
+		<result column="psp_rule" property="psp_rule" />
+		<!-- 适用人数 -->
+		<result column="psp_people_number" property="psp_people_number" />
+		<!-- 创建人 -->
+		<result column="psp_create" property="psp_create" />
+		<!-- 创建时间 -->
+		<result column="psp_create_time" property="psp_create_time" />
+		<!-- 项目状态(0:待审核;1:审核成功;2:审核失败) -->
+		<result column="psp_state" property="psp_state"/>
+		<!-- 审核人 -->
+		<result column="auditor_id" property="auditor_id"/>
+		<!-- 审核时间 -->
+    	<result column="auditor_time" property="auditor_time"/>
+		<!-- 审核意见 -->
+		<result column="auditNotes" property="auditNotes"/>
+		<!-- 最后修改人 -->
+		<result column="psp_update" property="psp_update"/>
+		<!-- 最后修改时间 -->
+		<result column="psp_update_time" property="psp_update_time"/>
+		
+	</resultMap>
+
+
+	<insert id="saveProjects" parameterType="com.op.dto.pointService.insert.fabu.PointServiceProjectsDTO" useGeneratedKeys="true" keyColumn="psp_id" keyProperty="psp_id">
+		insert into pointServiceProjects
+		(
+			 psp_venue_id ,psp_item_name ,psp_item_price ,psp_discount_price ,psp_item_comment ,
+			psp_validity_date_start ,psp_validity_date_end ,psp_update_id ,psp_is_refund ,psp_is_yuyue ,
+			psp_yuyue_time ,psp_appointment ,psp_reminder ,psp_not_time ,psp_limit ,psp_rule ,
+			psp_people_number ,psp_create
+		)
+		values
+		(
+			 #{psp_venue_id },#{psp_item_name },#{psp_item_price },
+			#{psp_discount_price },#{psp_item_comment },#{psp_validity_date_start },
+			#{psp_validity_date_end },#{psp_update_id },#{psp_is_refund },#{psp_is_yuyue },
+			#{psp_yuyue_time },#{psp_appointment },#{psp_reminder },#{psp_not_time },#{psp_limit },
+			#{psp_rule },#{psp_people_number },#{psp_create}
+		)
+	</insert>
+
+	<resultMap type="com.op.dto.pointService.show.PointServiceProjectShowDTO" id="PointServiceProjectShowDTOReturnMap">
+		<!-- 场馆ID -->
+		<result column="ps_id" property="ps_id" />
+		<!-- 项目id -->
+		<result column="psp_id" property="psp_id" />
+
+		<!-- 场馆标签 -->
+		<collection property="pointServiceFeatureList" ofType="com.op.entity.pointService.PointServiceFeature" column="ps_id" select="pointServiceFeatureMapper.findPointServiceFeatureByPsId"></collection>
+
+		<!-- 联系方式 -->
+		<collection property="pointServiceContactList" ofType="com.op.entity.pointService.PointServiceContact" column="ps_id" select="pointServiceContactMapper.findPointServiceContactByPsId"></collection>
+
+		<!-- 项目图片 -->
+		<collection property="pointProjectsImgList" ofType="com.op.entity.pointService.project.PointProjectsImg" column="psp_id" select="pointProjectsImgMapper.findPointProjectsImgByPspId"></collection>
+
+		<!-- 适合人群 -->
+		<collection property="pointComboCrowdTypeList" ofType="com.op.entity.pointService.PointComboCrowdType" column="psp_id" select="pointComboCrowdTypeMapper.findPointComboCrowdTypeByPspId"></collection>
+
+		<!-- 营业时间 -->
+		<collection property="businessTimeDTOList" ofType="com.op.dto.pointService.show.BusinessTimeDTO" column="ps_id" select="businessTimeMapper.findBusinessTimeByPsId"></collection>
+
+	</resultMap>
+
+	<!-- 项目详情 -->
+	<select id="pointServiceProjectShow" parameterType="String" resultMap="PointServiceProjectShowDTOReturnMap">
+		select
+		ps.ps_id,ps.ps_zh_name,ps.ps_address,ps.ps_coordinates,ps.ps_state
+		<!-- 项目信息 -->
+		,psp.psp_id,psp.psp_item_name,psp.psp_item_price,psp.psp_discount_price,psp.psp_item_comment,
+		psp.psp_validity_date_start,psp_validity_date_end,psp.psp_is_efficacy,psp.psp_is_refund,
+		psp.psp_appointment,psp.psp_reminder,psp.psp_not_time,psp.psp_limit,psp.psp_rule,psp.psp_people_number
+		<!-- 场馆描述 -->
+		,psi.psi_pay_info,psi.psi_service,psi.psi_venue_type_column_value,psi.psi_introduce
+		<!-- 省、市、县 -->
+		,provinces.name as ps_province_id,citys.name as ps_city_id,countys.name as ps_countys_id
+		from pointServiceProjects psp
+		left join pointService ps on ps.ps_id = psp.psp_venue_id
+		left join pointServiceInfo psi on psi.ps_id = psp.psp_venue_id
+		left join provinces on ps.ps_province_id = provinces.code
+		left join citys on ps.ps_city_id = citys.code
+		left join countys on ps.ps_countys_id = countys.code
+		where psp.psp_id = #{id} and psp_state = 1
+	</select>
+
+	<!-- 商家所有项目 -->
+	<select id="findProjectByVenueId" parameterType="java.util.Map" resultType="com.op.entity.pointService.project.PointServiceProjects">
+		select
+		psp_id,psp_item_name,psp_item_price,psp_discount_price,psp_item_comment,
+		psp_validity_date_start,psp_validity_date_end,psp_is_efficacy,psp_is_refund
+		from pointServiceProjects
+		where psp_venue_id = #{venueId} and psp_state = 1
+	</select>
+
+	<!-- 商家查看所有项目 -->
+	<select id="findProjectByUserIdPage" parameterType="Page" resultType="com.op.entity.pointService.project.PointServiceProjects">
+		select
+		psp_id,psp_item_name,psp_item_price,psp_discount_price,psp_item_comment,
+		psp_validity_date_start,psp_validity_date_end,psp_is_efficacy,psp_is_refund
+		from pointServiceProjects psp
+		left join pointService ps on ps.ps_id = psp.psp_venue_id
+
+		where ps.ps_create_user_id = #{t}
+	</select>
+
+
+	<!-- 场馆所有项目 -->
+	<select id="findPointServiceProjectDTOByPsIdPage" parameterType="Page" resultType="com.op.dto.pointService.show.PointServiceProjectDTO">
+		select
+		psp.psp_id,psp.psp_item_name,psp.psp_item_price,psp.psp_discount_price,
+		psp.psp_validity_date_start,psp.psp_validity_date_end,psp.psp_not_time,psp.psp_limit,
+		psp.psp_rule,ppi.ppi_url as pointProjectsImg,gpp.num as
+		purchaseNumber,gpc.num as commentNumber
+		from pointServiceProjects psp
+		left join pointProjectsImg ppi on ppi.ppi_venue_project_id = psp.psp_id
+		left join GROUP_PROJECT_IMG_ORDER gpio on gpio.PPI_VENUE_PROJECT_ID = psp.psp_id
+		left join GROUP_PROJECT_PURCHASE gpp on gpp.pso_project_id = psp.psp_id
+		left join GROUP_PROJECT_COMMENT gpc on gpc.pse_project_id = psp.psp_id
+		where psp.psp_venue_id = #{t} and ppi.PPI_ORDER = gpio.num and psp_state = 1
+	</select>
+	
+	<resultMap type="com.op.dto.pointService.order.BuyProjectDTO" id="BuyProjectDTOResultMap">
+		<result column="ps_id" property="ps_id" />
+
+		<!-- 联系方式 -->
+		<collection property="pointServiceContactList" ofType="com.op.entity.pointService.PointServiceContact" column="ps_id" select="pointServiceContactMapper.findPointServiceContactByPsId"></collection>
+
+		<!-- 营业时间 -->
+		<collection property="businessTimeDTOList" ofType="com.op.dto.pointService.show.BusinessTimeDTO" column="ps_id" select="businessTimeMapper.findBusinessTimeByPsId"></collection>
+
+	</resultMap>
+
+	<!-- 购买项目 -->
+	<select id="buyProject" parameterType="String" resultMap="BuyProjectDTOResultMap">
+		select
+		psp.psp_id,psp.psp_item_name,psp.psp_item_price,psp.psp_discount_price,psp.psp_validity_date_start,
+		psp.psp_validity_date_end,psp.psp_not_time,
+
+		ps.ps_id,ps.ps_zh_name,ps.ps_en_name,ps.ps_province_id,ps.ps_city_id,ps.ps_countys_id,ps.ps_address
+		from pointServiceProjects psp
+		left join pointService ps on ps.ps_id = psp.psp_venue_id
+		where psp.psp_id = #{id} and psp_state = 1
+	</select>
+
+	<!-- 订单场馆项目信息 -->
+	<select id="buyProjectDTOInfo" parameterType="String" resultType="com.op.dto.pointService.order.BuyProjectDTO">
+		select
+		psp.psp_id,psp.psp_item_name,psp.psp_item_price,psp.psp_discount_price,psp.psp_validity_date_start,
+		psp.psp_validity_date_end,psp.psp_not_time,psp.psp_venue_id ps_id
+		from
+		pointServiceProjects psp
+		where psp.psp_id = #{id} and psp_state = 1
+	</select>
+
+	<resultMap type="com.op.dto.pointService.update.project.ProjectUpdateDTO" id="ProjectUpdateDTOResultMap">
+		<!-- id -->
+		<result column="psp_id" property="psp_id"/>
+		<result column="psp_venue_id" property="psp_venue_id"/>
+	
+		<!-- 项目适合人群 -->
+	
+		<!-- 项目图片集合 -->
+		<collection property="imgs" ofType="com.op.entity.pointService.project.PointProjectsImg" column="psp_venue_id" select="pointProjectsImgMapper.findPointProjectsImgByPspId"></collection>
+		
+		<!-- 标签集合 -->
+		<collection property="tabs" ofType="com.op.entity.pointService.PointServiceFeature" column="psp_venue_id" select="pointServiceFeatureMapper.findPointServiceFeatureByPsId"></collection>
+		
+	</resultMap>
+
+	<!-- 修改项目页面显示信息 -->
+	<select id="findProjectUpdateDTOByPspId" parameterType="java.util.Map" resultMap="ProjectUpdateDTOResultMap">
+		select 
+		psp_id,psp_venue_id,psp_item_name,psp_item_price,psp_discount_price,
+		psp_item_comment,psp_validity_date_start,psp_validity_date_end,psp_update_id,
+		psp_is_refund,psp_is_yuyue,psp_yuyue_time,psp_appointment,psp_reminder,
+		psp_not_time,psp_limit,psp_rule,psp_people_number,psp_create,
+		psi_pay_info,psi_service,psi_introduce
+		from pointServiceProjects psp
+		left join pointServiceInfo psi on psi.ps_id = psp.psp_venue_id
+		where psp.psp_id = #{id}
+	</select>
+	
+	<!--                                  商家个人中心                                                                                        -->
+	
+	<!-- 个人中心场馆所有项目 -->
+	<select id="findPointServiceProjectDTOPage" parameterType="Page" resultType="com.op.dto.pointService.show.PointServiceProjectDTO">
+		select
+		psp.psp_id,psp.psp_item_name,psp.psp_item_price,psp.psp_discount_price,
+		psp.psp_validity_date_start,psp.psp_validity_date_end,psp.psp_not_time,psp.psp_limit,
+		psp.psp_rule,psp.psp_state,ppi.ppi_url as pointProjectsImg,gpp.num as purchaseNumber,gpc.num as commentNumber
+		from pointServiceProjects psp
+		left join pointProjectsImg ppi on ppi.ppi_venue_project_id = psp.psp_id
+		left join GROUP_PROJECT_IMG_ORDER gpio on gpio.PPI_VENUE_PROJECT_ID = psp.psp_id
+		left join GROUP_PROJECT_PURCHASE gpp on gpp.pso_project_id = psp.psp_id
+		left join GROUP_PROJECT_COMMENT gpc on gpc.pse_project_id = psp.psp_id
+		where ppi.PPI_ORDER = gpio.num and psp_create = #{t.userId}
+		<if test="t.type=='qt'">
+			 and psp_state = 1
+		</if>
+		
+	</select>
+	
+	
+	
+</mapper>

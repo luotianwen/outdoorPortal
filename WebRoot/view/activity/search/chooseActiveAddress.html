@@ -1,0 +1,93 @@
+<!DOCTYPE HTML >
+<html>
+<head>
+<base href="/">
+
+<title>选择活动地点</title>
+
+<meta http-equiv="keywords" content="活动起点">
+<meta http-equiv="description" content="this is my page">
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+
+<link href="static/css/bootstrap.min.css" rel="stylesheet">
+<link href="static/css/style.min.css" rel="stylesheet">
+<link href="static/css/font-awesome.min.css" rel="stylesheet">
+<link href="static/css/xx/xx.css" rel="stylesheet">
+
+		<style type="text/css">
+		#panel {
+			position: absolute;
+			background-color: white;
+			max-height: 660px;
+			overflow-y: auto;
+			right: 20px;
+			width: 280px;
+			top:112px;
+		}
+		
+		.amap-marker .marker-route {
+            position: absolute;
+            width: 40px;
+            height: 44px;
+            color: #e90000;
+            background: url(http://webapi.amap.com/theme/v1.3/images/newpc/poi-1.png) no-repeat;
+            cursor: pointer;
+        }
+        .amap-marker .marker-marker-bus-from {
+            background-position: -334px -180px;
+        }
+        
+        .span-red{
+        	color: red;
+        }
+		</style>
+</head>
+<body>
+	<div style="padding: 20px;width: 1300px;height: 700px;margin: 0 auto;position: relative;">
+		<div class="form-group" style="border-bottom: 1px dashed #e7eaec;overflow: hidden;padding-bottom: 15px;">
+            <p style="color: red;">操作提示：手动标记活动起点后，可对其进行拖拽到您想标记的起点</p>
+			<div class="col-sm-5" style="padding-left: 0;">
+				<input type="text" class="form-control" name="address" id="address_in" placeholder="填写发布活动起点" style="padding-right: 40px;" />
+				<a id="remove_in" class="remove-in">X</a>
+			</div>
+			<div class="col-sm-5">
+				<button type="button" class="btn btn-primary btn-sm" onclick="chooseAddress()" style="padding: 7px;" id="choose_address_id">
+				<i class="fa fa-map-pin"></i>&nbsp;标记活动起点</button>
+			</div>
+		</div>
+		<div id="container" style="width: 100%;height: 100%;">
+			<!-- info window -->
+			<div id="panel_search_result"></div>
+		</div>
+		<!-- results list -->
+		<div id="panel" style="display: none;">
+			<div class="amap_lib_placeSearch">
+				<div class="amap_lib_placeSearch_list">
+					<ul id="search_result_list">
+					</ul>
+				</div>
+				<div class="amap_lib_placeSearch_page">
+					<div>
+						<p id="result_page_id"></p>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+		
+<script type="text/javascript" src="static/js/jquery-2.1.1.min.js"></script>
+<script type="text/javascript" src="static/admin/js/plugins/layer/layer.min.js"></script>
+
+<!-- 地图 -->
+<#include "/view/webapi.js.html">
+<!-- 工具条 -->
+<script type="text/javascript" src="http://cache.amap.com/lbs/static/addToolbar.js"></script>
+
+<!-- 搜索marker -->
+<script type="text/javascript" src="static/js/index/active/chooseActive/search-marker.js"></script>
+
+<!-- 手动操作marker -->
+<script type="text/javascript" src="static/js/index/active/chooseActive/handle-marker.js"></script>	
+		
+</body>
+</html>

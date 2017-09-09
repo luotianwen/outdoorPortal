@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="recentVisitMapper">
+	<sql id="Base_Column_List">
+		rv_id,rv_visit ,rv_user ,rv_time 
+	</sql>
+
+	<!-- 查询最近访问的用户 -->
+	<select id="findRecentVisitForCenterPage" parameterType="Page" resultType="com.op.dto.usercenter.usercenter.UserCenterInfo">
+		select users.u_id,users.uName,users.uHeadImg from recentVisit
+		left join users on u_id = rv_visit
+		where rv_user = #{t}
+		order by rv_time desc
+	</select>
+	
+	<!-- 再次访问该用户 -->
+	<update id="updateRecentVisit" parameterType="com.op.entity.recentVisit.RecentVisit">
+		update recentvisit set 
+		rv_time = now()
+		where rv_visit = #{rv_visit} and rv_user = #{rv_user}
+	</update>
+	
+	<!-- 新增最近访问用户 -->
+	<insert id="saveRecentVisit" parameterType="com.op.entity.recentVisit.RecentVisit">
+		insert into recentVisit 
+		(
+			rv_visit ,rv_user
+		)
+		values
+		(
+			#{rv_visit} ,#{rv_user}
+		)
+	</insert>
+	
+</mapper>

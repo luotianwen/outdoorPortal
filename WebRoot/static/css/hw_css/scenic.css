@@ -1,0 +1,149 @@
+@charset "utf-8";
+/* CSS Document */
+.scenic-name{heigth:80px;line-height:80px;}
+.scenic-name h1{font-size:30px;color:#333;font-weight:normal;float:left;margin-right:30px;}
+.scenic-name span{font-size:14px;color:555;margin-right:15px;}
+.scenic-banner img{width:1200px;height:500px;}
+.scenic-tabs{width:100%;height:60px;line-height:60px;box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);margin-bottom:10px;background:#fff;}
+.scenic-tabs-top{position: fixed;top: 0px;z-index: 999999}
+.scenic-tabs a{font-size:20px;color:#333;display:inline-block;margin-right:55px;}
+.scenic-tabs a:hover{color:#ff8a01;}
+.scenic-tabs a.selected{color:#ff8a01;}
+.scenic-tabs .btn-buy{width:120px;height:40px;background:#ff8a01;font-size:16px;color:#fff;line-height:38px;text-align:center;display:inline-block;float:right;margin-right:0;margin-top:10px; border-radius:5px;}
+.scenic-tabs .btn-buy:hover{color:#fff;}
+.scenic-intro{padding:80px 60px 80px 240px;font-size:14px;line-height:24px;background:#fff;color:#555;position:relative;min-height:72px;margin-top:10px;}
+.scenic-intro a{color:#ff8a01;margin-left:10px;}
+.scenic-intro .tit{position:absolute;left:74px;top:54px;text-align:center;}
+.scenic-intro .tit p{font-size:24px;color:#aaa;padding-top:20px;}
+.scenic-intro .tit .icons-01{width:74px;height:64px;background:url(/static/images/hw_img/icons-sc.png) no-repeat -22px -18px;display:inline-block;}
+.scenic-item{margin-top:10px;}
+.scenic-item ul{margin-left:-12px;}
+.scenic-item li{float:left;margin-left:12px;width:270px;height:150px;background:#fff;padding:30px;}
+.scenic-item .mt{font-size:24px;color:#ff8a01;text-align:center;height:45px;line-height:45px;}
+.num-1,.num-2,.num-3{background:url(/static/images/hw_img/icons-sc.png) no-repeat;}
+.scenic-item .mt .num-1{width:53px;height:45px;background-position:-22px -86px;display:inline-block;margin-right:30px; vertical-align:-6px;}
+.scenic-item .mt .num-2{width:61px;height:45px;background-position:-22px -134px;display:inline-block;margin-right:30px; vertical-align:-6px;}
+.scenic-item .mt .num-3{width:61px;height:45px;background-position:-22px -184px;display:inline-block;margin-right:30px; vertical-align:-6px;}
+.scenic-item .mc{font-size:14px;color:#333;line-height:24px;padding-top:30px;}
+.scenic-item .mc a{color:#ff8a01;margin-left:10px;}
+.scenic-item li.more{width:174px;text-align:center;padding:30px 0;line-height:150px;}
+.scenic-item li.more a{font-size:18px;color:#333;}
+.scenic-item li.more a:hover{color:#ff8a01;}
+.travel-tips{padding:30px 60px 30px 240px;font-size:14px;line-height:24px;background:#fff;color:#555;position:relative;margin-top:10px;min-height:172px;}
+.travel-tips .tit{position:absolute;left:74px;top:54px;text-align:center;}
+.travel-tips .tit p{font-size:24px;color:#aaa;padding-top:20px;}
+.travel-tips .tit .icons-02{width:70px;height:70px;background:url(/static/images/hw_img/icons-sc.png) no-repeat -112px -18px;display:inline-block;}
+.btn-edit{position:absolute;right:60px;bottom:30px;}
+.btn-edit a{font-size:14px;color:#ff8a01;}
+.btn-edit i{width:20px;height:20px;background:url(/static/images/hw_img/icons-sc.png) no-repeat -22px -240px;display:inline-block; vertical-align:-4px;margin-right:6px;}
+.travel-tips dl{width:430px;overflow:hidden;font-size:14px;color:#333;padding:5px 0;}
+.travel-tips dt{float:left;}
+.travel-tips dd{float:left;line-height:24px;}
+.ticket{padding:30px 60px 30px 240px;font-size:14px;line-height:24px;background:#fff;color:#555;position:relative;margin-top:10px;min-height:172px;}
+.ticket .tit{position:absolute;left:74px;top:54px;text-align:center;}
+.ticket .tit p{font-size:24px;color:#aaa;padding-top:20px;}
+.ticket .tit .icons-03{width:70px;height:52px;background:url(/static/images/hw_img/icons-sc.png) no-repeat -203px -18px;display:inline-block;}
+.ticket dl{width:430px;overflow:hidden;font-size:14px;color:#333;padding:5px 0;}
+.ticket dt{float:left;}
+.ticket dd{float:left;line-height:24px;}
+
+.scenic-img{margin-top:10px;position:relative;height:220px;padding:20px 0;background:#fff;}
+.bar-left,.bar-right{width:21px;height:38px;background:url(/static/images/hw_img/icons-sc.png) no-repeat;display:block;}
+.bar-left{background-position:-112px -109px;position:absolute;top:111px;left:28px;cursor:pointer;}
+.bar-right{background-position:-141px -109px;position:absolute;top:111px;right:28px;cursor:pointer;}
+.scenic-img .v-content{height: 220px; margin: 0 77px;position: relative;width: 1046px;overflow:hidden;}
+.scenic-img .v-content .v-content-list{left: 0;position: absolute;top: 0; width: 6000px;margin-left:-13px;}
+.scenic-img .v-content .v-content-list img{width:340px;height:220px;float:left;margin-left:13px;}
+
+.scenic-hd{margin-top:10px;background:#fff;}
+.scenic-hd ul{margin:30px;}
+.scenic-hd li{padding:20px 0;border-bottom:1px dashed #e2e2e2;}
+.scenic-hd .hd-img{width:380px;height:215px;float:left;}
+.scenic-hd .hd-img img{width:380px;height:215px;}
+.scenic-hd .hd-info{float:left;padding-left:30px;width:730px;position:relative;height:215px;}
+.scenic-hd .hd-info .tit{font-size:18px;color:#333;line-height:30px;}
+.scenic-hd .hd-info .tit a{color:#333;}
+.scenic-hd .hd-info .tit .date{font-size:12px;color:#999;float:right;margin-right:20px;}
+.scenic-hd .hd-info .txt{font-size:14px;color:#666;line-height:24px;margin-top:20px;height:113px;padding-bottom:20px;}
+.scenic-hd .hd-info .txt a{color:#666;}
+.scenic-hd .hd-info .extra{height:30px;}
+.scenic-hd .hd-info .extra .user{font-size:14px;color:#666;line-height:30px;}
+.scenic-hd .hd-info .extra .user img{border-radius: 50%; height: 30px; margin-right: 10px; width: 30px;}
+.scenic-hd .hd-info .extra .view{font-size:12px;color:#999;margin-left:120px;}
+.scenic-hd .hd-info .extra .view i{background: url(/static/images/hw_img/icons-home.png) no-repeat;background-position: -190px -8px; display: inline-block; height: 14px;margin-right: 4px;vertical-align: -2px; width: 20px;}
+.scenic-hd .hd-info .extra .good{color: #ff8a01; font-size: 12px; float:right;}
+.scenic-hd .hd-info .extra .good i{background:url(/static/images/hw_img/icons-home.png) no-repeat 0 -29px;display: inline-block;height: 28px; margin-left: 4px; vertical-align: -5px; width: 28px;}
+.scenic-hd .hd-info .extra .good.on i{background-position: -38px -29px;}
+.scenic-hd .btns-more{padding-bottom:25px;text-align:center;}
+.scenic-hd .btns-more a{border:1px solid #ddd;width:398px;height:38px;background:#fff;display:inline-block;font-size:14px;color:#555;text-align:center;line-height:38px;}
+.scenic-hd .btns-more a:hover{border:1px solid #888;background:#888;color:#fff;}
+
+.scenic-map{width:1200px;margin-top:10px;}
+.scenic-traffic{padding:30px 60px 30px 240px;font-size:14px;line-height:24px;background:#fff;color:#555;position:relative;min-height:172px;}
+.scenic-traffic .m10{margin-bottom:10px;}
+.scenic-traffic .tit{position:absolute;left:74px;top:54px;text-align:center;}
+.scenic-traffic .tit p{font-size:24px;color:#aaa;padding-top:20px;}
+.scenic-traffic .tit .icons-01{width:70px;height:48px;background:url(/static/images/hw_img/icons-sc.png) no-repeat -302px -20px;display:inline-block;}
+
+.tuijian{margin-top:10px;position:relative;height:250px;padding:20px 0;background:#fff;}
+.tuijian .v-content{height: 250px; margin: 0 77px;position: relative;width: 1046px;overflow:hidden;}
+.tuijian .v-content .v-content-list{left: 0;position: absolute;top: 0; width: 6000px;}
+.tuijian .v-content .v-content-list ul{margin-left:-13px;}
+.tuijian .v-content .v-content-list li{float:left;margin-left:13px;}
+.tuijian .v-content .v-content-list img{width:340px;height:220px;}
+.tuijian .v-content .v-content-list p{font-size:14px;color:#555;height:30px;line-height:30px;text-align:center;}
+
+.scenic-comment{margin-top:10px;background:#fff;padding-bottom:45px;}
+.scenic-comment li{padding-left: 90px; padding-top: 45px;padding-right:120px; position: relative;border-bottom:1px dashed #e2e2e2;margin:0 30px;}
+.scenic-comment .user-image {height: 50px; left: 10px; position: absolute; top: 50px; width: 50px;}
+.scenic-comment .user-image img{border-radius: 50%; height: 50px; width: 50px;}
+.scenic-comment .dianzan{position:absolute;right:32px;top:160px;font-size:16px;color:#555;text-align:center;}
+.scenic-comment .dianzan i{width:40px;height:39px;background:url(/static/images/hw_img/icons-sc.png) no-repeat -20px -268px;display:block;margin-bottom:5px;cursor:pointer;}
+.scenic-comment .dianzan.on i{background-position:-20px -316px;}
+.scenic-comment .user-name{font-size:18px;color:#666;}
+.scenic-comment .user-name .date{font-size:12px;color:#999;margin-left:50px;}
+.scenic-comment .content-detail{font-size:16px;color:#555;line-height: 26px;padding-top:20px;}
+.scenic-comment .content-img {height: 180px; margin-top: 22px; overflow: hidden; padding-left: 0; }
+.scenic-comment .content-img img{float:left;display:inline-block;width:150px;height:150px;border:0;margin-right:12px;}
+
+.scenic-comment-input{margin-top:10px;background:#fff;padding-left: 120px; padding-top: 45px;position: relative;}
+.scenic-comment-input .user-image {height: 50px; left: 40px; position: absolute; top: 50px; width: 50px;}
+.scenic-comment-input .user-image img{border-radius: 50%; height: 50px; width: 50px;}
+.scenic-comment-input .user-name{font-size:18px;color:#666;}
+.scenic-comment-input dl{padding:10px 0;}
+.scenic-comment-input dt{float:left;font-size:16px;color:#555;width:80px;text-align:right;padding-right:20px;}
+.scenic-comment-input dd.star{padding-top:3px;}
+.scenic-comment-input dd.star img{float:left;margin-right:5px;}
+.scenic-comment-input textarea {border: 1px solid #aaa;color: #999; font-size: 14px; height: 182px; line-height: 1.6em; outline: medium none; padding: 6px 8px; resize: none; width: 800px;border-radius: 10px;margin:10px 0;}
+.scenic-comment-input .add-img{font-size:16px;color:#ff8a01;display:block;}
+.scenic-comment-input .add-img i{width:24px;height:22px;background:url(/static/images/hw_img/icons-sc.png) no-repeat -112px -167px;display:inline-block;margin-right:4px; vertical-align:-4px;}
+.scenic-comment-input .btns-submit{padding:30px 0;padding-left:350px;}
+.scenic-comment-input .btns-submit a{width:100px;height:40px;background:#ff8a01;font-size:18px;color:#fff;line-height:40px;text-align:center;display:inline-block;}
+
+.scenic-detail{background:#fff;padding:30px;margin-top:10px;}
+.scenic-detail .tit{font-size:24px;color:#333;text-align:center;}
+.scenic-detail .date{font-size:14px;color:#999;padding:40px 0 5px;}
+.scenic-detail .date span{color:#555;margin-left:30px;}
+.scenic-detail .date em{color:#ff8a01;margin:0 4px;}
+.scenic-detail .tips{color:#aaa;font-size:14px;}
+.scenic-detail .content{padding:30px 0;}
+
+/* 门票 */
+.ticket-list{background:#fff;margin-top:10px;padding:0 30px;}
+.ticket-list table{width:100%;margin-bottom:30px;}
+.ticket-list th{border-bottom:1px solid #eee;height:50px;line-height:50px;font-size:14px;color:#888;text-align:left;padding:0 10px;}
+.ticket-list td{border-bottom:1px dashed #ddd;font-size:14px;color:#555;padding:10px 10px;}
+.ticket-list .noborder td{border-bottom:0;}
+.ticket-list .t-name{color:#ff8a01;margin-left:10px;cursor:pointer;}
+.ticket-list .c-orange{color:#ff8a01;}
+.ticket-list .btn-yd{width:90px;height:30px;background:#ff8a01;font-size:14px;color:#fff;text-align:center;line-height:28px;display:inline-block; border-radius:5px;}
+.ticket-list .arrow-down{width:12px;height:10px;background:url(/static/images/hw_img/icons-sc.png) no-repeat -112px -204px;display:inline-block; vertical-align:-1px;margin-left:6px;}
+.ticket-list .arrow-up{width:12px;height:10px;background:url(/static/images/hw_img/icons-sc.png) no-repeat -112px -220px;display:inline-block; vertical-align:-1px;margin-left:6px;}
+.ticket-list .tiptext{background:#f5f5f5;width:990px;paddint-top:20px;position:relative;margin-top:-5px;}
+.ticket-list .tiptext dl{padding:5px 20px;}
+.ticket-list .tiptext dt{float:left;width:80px;font-size:14px;color:#555;padding-right:10px;text-align:right;font-weight:bold;}
+.ticket-list .tiptext dd{float:left;font-size:14px;color:#555;width:860px;line-height:24px;}
+.ticket-list .tiptext .arrow{position: absolute;width: 0px;	height: 0px;line-height: 0px;border-bottom: 12px solid #f5f5f5;border-left: 12px solid #fff;border-right: 12px solid #fff;left: 76px;top: -12px;}
+.ticket-list .tiptext .view-details{height:30px;line-height:30px;background:#eee;text-align:center;}
+.ticket-list .tiptext .view-details a{font-size:14px;color:#ff8a01;cursor:pointer;}
+.ticket-list .tiptext .view-details i{width:15px;height:9px;background:url(/static/images/hw_img/icons-sc.png) no-repeat -112px -239px;display:inline-block;vertical-align:1px;margin-left:6px;}

@@ -1,0 +1,182 @@
+<!-- search start -->
+<div class="list-screen" id="search-shaixuan">
+	<div style="margin:0 50px;">
+		
+		<div class="screen-term">
+			<div class="selectNumberScreen">
+				<div id="selectList" class="screenBox screenBackground">
+					<#list screeningList as item>
+						<dl class="listIndex" >
+							<dt>${item.sc_name}</dt>
+                            <#if item.subScreening?size gt 0 || item.sc_type==5 || item.sc_type==6>
+                            	<#if item.sc_type==1>
+                            		<dd>
+										<label class="buxian"><a href="javascript:;" class="selected" attrval="不限">不限</a></label>
+		                            </dd>
+                            		<dd class="filter-list-checkbox">
+										<#list item.subScreening as sub>
+											<label class="w1">
+												<input search-key="${sub.sc_name}" type="checkbox" value="${sub.sc_name}" style="display:none;"/>
+												<a href="javascript:;" search-key="${sub.sc_name}">${sub.sc_name}</a>
+											</label>
+										</#list>
+									</dd>
+									<#elseif item.sc_type==2>
+									<dd>
+										<label class="buxian"><a href="javascript:;" class="selected" attrval="不限">不限</a></label>
+		                            </dd>
+									<dd class="filter-list-radio">
+										<#list item.subScreening as sub>
+											<label class="w3">
+												<input type="radio" style="display:none;" search-key="${sub.sc_name}"/>
+												<a href="javascript:;" search-key="${sub.sc_name}" attrval="${sub.sc_name}">${sub.sc_name}</a>
+											</label>
+										</#list>
+									</dd>
+									<#elseif item.sc_type==3>
+									<dd>
+											<label class="buxian"><a href="javascript:;" class="selected" attrval="不限">不限</a></label>
+			                            </dd>
+		                            <div>
+										<#list item.subScreening as sub>
+					                        <dl class="listIndex <#if sub_index==0>multiple</#if>" <#if !sub_has_next>style="border-bottom: 0px solid #eee;"</#if>>
+					                        	<dd>
+					                        		<a herf="javascript:void(0)" style="width:76px;float:left;">${sub.sc_name}</a>
+					                        	</dd>
+												<dd class="filter-list-radio">
+													<#list sub.subScreening as subtwo>
+														<label class="w3">
+															<input type="radio" style="display:none;" search-key="${subtwo.sc_name}"/>
+															<a href="javascript:;" search-key="${subtwo.sc_name}" attrval="${subtwo.sc_name}">${subtwo.sc_name}</a>
+														</label>
+													</#list>
+												</dd>
+					                        </dl>
+				                        </#list>
+				                    </div>
+		                            
+		                            <#elseif item.sc_type==4>
+		                            <dd>
+										<label class="buxian"><a href="javascript:;" class="selected" attrval="不限">不限</a></label>
+		                            </dd>
+		                            <div>
+										<#list item.subScreening as sub>
+					                        <dl class="listIndex <#if sub_index==0>multiple</#if>" <#if !sub_has_next>style="border-bottom: 0px solid #eee;"</#if>>
+					                        	<a herf="javascript:void(0)" style="width:76px;float:left;padding-top: 7px;">${sub.sc_name}</a>
+												<dd class="filter-list-checkbox">
+													<#list sub.subScreening as subtwo>
+														<label class="w1">
+															<input search-key="${subtwo.sc_name}" type="checkbox" value="${subtwo.sc_name}" style="display:none;"/>
+															<a href="javascript:;" search-key="${subtwo.sc_name}">${subtwo.sc_name}</a>
+														</label>
+													</#list>
+												</dd>
+					                        </dl>
+				                        </#list>
+				                    </div>
+		                            <#elseif item.sc_type==5>
+									<div class="ui-tab-container">
+										<ul class="clearfix ui-tab-list">
+											<li class="ui-tab-active">北京</li>
+										</ul>
+										<div>
+											<div class="ui-tab-content3 clearfix">
+												<div class="screenBox screenBackground">
+													<dl class="listIndex" >
+														<dd>
+															<label class="buxian"><a href="javascript:;" class="selected" attrval="不限">不限</a></label>
+							                            </dd>
+														<dd class="filter-list-radio">
+															<label class="w3">
+																<input type="radio" style="display:none;" search-key="东城区"/>
+																<a href="javascript:;" search-key="东城区" attrval="东城区">东城区</a>
+															</label>
+															<label class="w3">
+																<input type="radio" style="display:none;" search-key="东城区2"/>
+																<a href="javascript:;" search-key="东城区2" attrval="东城区2">东城区2</a>
+															</label>
+															<label class="w3">
+																<input type="radio" style="display:none;" search-key="东城区3"/>
+																<a href="javascript:;" search-key="东城区3" attrval="东城区3">东城区3</a>
+															</label>
+															<label class="w3">
+																<input type="radio" style="display:none;" search-key="东城区4"/>
+																<a href="javascript:;" search-key="东城区4" attrval="东城区4">东城区4</a>
+															</label>
+															<label class="w3">
+																<input type="radio" style="display:none;" search-key="东城区5"/>
+																<a href="javascript:;" search-key="东城区5" attrval="东城区5">东城区5</a>
+															</label>
+														</dd>
+													</dl>
+												</div>
+											</div>
+										</div>
+									</div>
+									<#elseif item.sc_type==6>
+									<div class="ui-tab-container">
+										<ul class="clearfix ui-tab-list">
+											<li class="ui-tab-active">北京</li>
+										</ul>
+										<div>
+											<div class="ui-tab-content3 clearfix">
+												<div class="screenBox screenBackground">
+													<dl class="listIndex" >
+														<dd>
+															<label class="buxian"><a href="javascript:;" class="selected" attrval="不限">不限</a></label>
+							                            </dd>
+														<dd class="filter-list-checkbox">
+															<label class="w1">
+																<input search-key="东城区" type="checkbox" value="东城区" style="display:none;"/>
+																<a href="javascript:;" search-key="东城区">东城区</a>
+															</label>
+															<label class="w1">
+																<input search-key="东城区1" type="checkbox" value="东城区1" style="display:none;"/>
+																<a href="javascript:;" search-key="东城区1">东城区1</a>
+															</label>
+															<label class="w1">
+																<input search-key="东城区2" type="checkbox" value="东城区2" style="display:none;"/>
+																<a href="javascript:;" search-key="东城区2">东城区2</a>
+															</label>
+															<label class="w1">
+																<input search-key="东城区3" type="checkbox" value="东城区3" style="display:none;"/>
+																<a href="javascript:;" search-key="东城区3">东城区3</a>
+															</label>
+															<label class="w1">
+																<input search-key="东城区4" type="checkbox" value="东城区4" style="display:none;"/>
+																<a href="javascript:;" search-key="东城区4">东城区4</a>
+															</label>
+															<label class="w1">
+																<input search-key="东城区5" type="checkbox" value="东城区5" style="display:none;"/>
+																<a href="javascript:;" search-key="东城区5">东城区5</a>
+															</label>
+														</dd>
+													</dl>
+												</div>
+											</div>
+										</div>
+									</div>
+                            	</#if>
+                            </#if>
+						</dl>
+					</#list>
+				</div>
+			</div>   
+		</div>
+	</div>
+	<div class="hasBeenSelected clearfix">
+		<span class="data-num">
+			<font id="data_num">0</font>条数据
+		</span>
+		<div style="float:right;" class="eliminateCriteria">【清空全部】</div>
+		<dl>
+			<dt>已选条件：</dt>
+			<dd class="clearDd">
+				<div class="clearList"></div>
+			</dd>
+		</dl>
+	</div>
+	
+</div>
+<!-- search end -->
+

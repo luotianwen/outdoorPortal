@@ -1,0 +1,65 @@
+<div class="fl msg-sidebar">
+	<ul class="onelevel clearfix">
+		<li>
+			<a href="javascript:void(0)" class="link currented">系统消息<i></i></a>
+			<span class="all-num" style="display: inline;"><span>${messageTypeCount.sysAll}</span></span>
+			<ul class="twolevel clearfix">
+				<li>
+					<a href="messagePrivate/receive.html?type=11" <#if messageType.id=="11">class="on"</#if>>系统消息 (<span>${messageTypeCount.system}</span>)</a>
+				</li>
+			</ul>
+		</li>
+		
+		<#if SESSION_USER.uType=='1'>
+			<li>
+				<a href="javascript:void(0)" class="link currented">活动消息<i></i></a>
+				<span class="all-num" style="display: inline;"><span>${messageTypeCount.acAll}</span></span>
+				<ul class="twolevel clearfix">
+					<li><a href="messagePrivate/receive.html?type=21" <#if messageType.id=="21">class="on"</#if>>报名消息 (<span>${messageTypeCount.acSignup}</span>)</a></li>
+					<li><a href="messagePrivate/receive.html?type=22" <#if messageType.id=="22">class="on"</#if>>付款消息 (<span>${messageTypeCount.acPay}</span>)</a></li>
+					<li><a href="messagePrivate/receive.html?type=23" <#if messageType.id=="23">class="on"</#if>>退款消息 (<span>${messageTypeCount.acRefund}</span>)</a></li>
+					<li><a href="messagePrivate/receive.html?type=24" <#if messageType.id=="24">class="on"</#if>>评价消息 (<span>${messageTypeCount.acComment}</span>)</a></li>
+				</ul>
+			</li>
+			<#else>
+			<li>
+			
+				<a href="javascript:void(0)" class="link currented">订单消息<i></i></a>
+				<span class="all-num" style="display: inline;"><span>${messageTypeCount.orderAll}</span></span>
+				<ul class="twolevel clearfix">
+					<li><a href="messagePrivate/receive.html?type=31" <#if messageType.id=="31">class="on"</#if>>活动订单消息 (<span>${messageTypeCount.acOrder}</span>)</a></li>
+					<li><a href="messagePrivate/receive.html?type=32" <#if messageType.id=="32">class="on"</#if>>场馆订单消息 (<span>${messageTypeCount.pointOrder}</span>)</a></li>
+				</ul>
+			</li>
+		</#if>
+		
+		<li>
+			<a href="javascript:void(0)" class="link">问答消息<i></i></a>
+			<span class="all-num" style="display: inline;"><span>${messageTypeCount.askAll}</span></span>
+			<ul class="twolevel clearfix" >
+				<li><a href="messagePrivate/receive.html?type=41" <#if messageType.id=="41">class="on"</#if>>问答消息 (<span>${messageTypeCount.ask}</span>)</a></li>
+			</ul>
+		</li>
+		
+		<li>
+			<a href="javascript:void(0)" class="link">游记消息<i></i></a>
+			<span class="all-num" style="display: inline;"><span>${messageTypeCount.travelAll}</span></span>
+			<ul class="twolevel clearfix" >
+				<li><a href="messagePrivate/receive.html?type=51" <#if messageType.id=="51">class="on"</#if>>审核消息 (<span>${messageTypeCount.travelAudit}</span>)</a></li>
+				<li><a href="messagePrivate/receive.html?type=52" <#if messageType.id=="52">class="on"</#if>>操作消息 (<span>${messageTypeCount.travelOperation}</span>)</a></li>
+				<li><a href="messagePrivate/receive.html?type=53" <#if messageType.id=="53">class="on"</#if>>评价消息 (<span>${messageTypeCount.travelComment}</span>)</a></li>
+			</ul>
+		</li>
+		
+		<li><a href="javascript:void(0)" class="link">钱包消息<i></i></a>
+			<span class="all-num" style="display: inline;">${messageTypeCount.walletAll}</span>
+			<ul class="twolevel clearfix" >
+				<li><a href="messagePrivate/receive.html?type=61" <#if messageType.id=="61">class="on"</#if>>支付消息 (<span>${messageTypeCount.walletPay}</span>)</a></li>
+				<li><a href="messagePrivate/receive.html?type=62" <#if messageType.id=="62">class="on"</#if>>充值消息 (<span>${messageTypeCount.recharge}</span>)</a></li>
+				<li><a href="messagePrivate/receive.html?type=63" <#if messageType.id=="63">class="on"</#if>>提现消息 (<span>${messageTypeCount.withdrawals}</span>)</a></li>
+				<li><a href="messagePrivate/receive.html?type=64" <#if messageType.id=="64">class="on"</#if>>退款消息 (<span>${messageTypeCount.refund}</span>)</a></li>
+			</ul>
+		</li>
+		
+	</ul>
+</div>

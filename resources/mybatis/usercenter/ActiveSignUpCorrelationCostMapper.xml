@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="activeSignUpCorrelationCostMapper">
+	<sql id="Base_Column_List">
+		asp_id,asp_cost_name ,asp_cost ,asp_comment ,asp_create_user ,asp_create_time ,asp_asu_id
+	</sql>
+
+	<resultMap type="com.op.entity.usercenter.ActiveSignUpCorrelationCost" id="ActiveSignUpCorrelationCostReturnMap">
+		<id column="asp_id" property="asp_id" />
+		<result column="asp_cost_name" property="asp_cost_name" />
+		<result column="asp_cost" property="asp_cost" />
+		<result column="asp_comment" property="asp_comment" />
+		<result column="asp_create_user" property="asp_create_user" />
+		<result column="asp_create_time" property="asp_create_time" />
+		<result column="asp_asu_id" property="asp_asu_id" />
+	</resultMap>
+	
+	<!-- 新增费用明细 -->
+	<insert id="saveActiveSignUpCorrelationCost" parameterType="com.op.entity.usercenter.ActiveSignUpCorrelationCost">
+		insert into ActiveSignUpCorrelationCost
+		(asp_cost_name ,asp_cost ,asp_comment ,asp_create_user ,asp_create_time ,asp_asu_id)
+		values
+		(
+			#{asp_cost_name},#{asp_cost },#{asp_comment },#{asp_create_user },#{asp_create_time },#{asp_asu_id}
+		)
+	</insert>
+	
+	<!-- 根据订单ID查询费用明细 -->
+	<select id="findAllByActiveSignUpId" parameterType="java.util.Map" resultMap="ActiveSignUpCorrelationCostReturnMap">
+		select <include refid="Base_Column_List"/> 
+		from ActiveSignUpCorrelationCost
+		where asp_create_user=#{asp_create_user} and asp_asu_id=#{asp_asu_id}
+	</select>
+	
+</mapper>

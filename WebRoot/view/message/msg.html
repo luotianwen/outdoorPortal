@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<base href="/" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>玩嘛</title> 
+
+<#include "/view/base.css.html">
+
+<link rel="stylesheet" type="text/css" href="static/css/hw_css/msg.css" />
+</head>
+<body>
+	<#include "/view/header.html">
+	
+	<div class="boxw clearfix">
+		<#include "/view/message/msg_left.html">
+	
+		<div class="fr msg-list clearfix">
+			<h2>${messageType.type}</h2>
+			
+			<#list messageList as item>
+				<div class="msg-item">
+					<a data-target="${item.mar_id}" class="icon-close" title="关闭"></a> <i class="msg-logo ${messageType.type_style}"></i>
+					<div class="msg-info clearfix">
+						<h3>
+							${item.messagePrivate.mp_title }<span>${item.messagePrivate.mp_sendTime?string('yyyy-MM-dd HH:mm:ss') }</span>
+						</h3>
+						${item.messagePrivate.mp_content}
+					</div>
+				</div>
+			</#list>
+			
+		</div>
+	</div>
+	
+	<#include "/view/usercenter/base.js.html">
+</body>
+
+<script type="text/javascript">
+$("div.msg-item>a").on("click",function(){
+	var $div = $(this).parent();
+	//$div.fadeOut(400);
+	$.post("messagePrivate/messageDelete.json",{id:$(this).attr("data-target")},function(){
+		$div.slideUp();
+	})
+	
+	
+})
+</script>
+</html>

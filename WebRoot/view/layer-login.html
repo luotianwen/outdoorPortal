@@ -1,0 +1,53 @@
+<link rel="stylesheet" type="text/css" href="static/css/hw_css/login.css" />
+	<div class="login-popup-box" id="layer_login_div" style="display: none;" >
+		<a class="close-btn" id="popup_close">
+			<i></i>
+		</a>
+		<div class="login-logo">
+			<img src="static/images/hw_img/login-logo.png" />
+		</div>
+		
+		<div class="login-input">
+			<input name="n" type="text" style="width:240px" placeholder="手机号/邮箱" />
+		</div>
+		
+		<div class="no-error" id="n_error"></div>
+		
+		<div class="login-input">
+			<input name="p" type="password" style="width:240px" placeholder="密码" />
+		</div>
+		
+		<div class="no-error" id="p_error"></div>
+		
+		<div <#if SESSION_LOGIN_ERROR_NUM lt 2> style="display: none;"</#if> id="yzm_div">
+			<div class="login-input" >
+				<input name="y" type="text" placeholder="验证码" class="w1" maxlength="6" />
+				<img src="" id="check_code" class="jym" alt="点击更换验证码"  title="点击更换验证码"/>
+			</div>
+			<div class="no-error" id="y_error"></div>
+		</div>
+		
+		<div class="login-btn">
+			<button type="button" id="layer_login_submit">登录</button>
+		</div>
+		<div class="login-link">
+			<span class="color5" id="autoLogin">
+				<i class="box-f box-y" id="autoLogin"></i>自动登录
+			</span>
+			<span class="float-r">
+				<a href="register.html">注册</a>
+				&nbsp;|&nbsp;
+				<a href="forget.html" target="_blank" class="fr">忘记密码</a>
+			</span>
+		</div>
+		<!-- <div class="bg-line">
+			<h3>第三方账号登录</h3>
+		</div>
+		<div class="connect-box">
+			<p>
+				<a href="#" class="qq"></a>
+				<a class="wechat" href="#"></a>
+				<a class="weibo" href="#"></a>
+			</p>
+		</div> -->
+	</div>

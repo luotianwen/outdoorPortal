@@ -1,0 +1,7 @@
+@charset "utf-8";
+/* CSS Document */
+.article-title .at01{border-bottom:4px solid #999;}
+.article-title .at02{border-bottom:4px solid #e0de4c;background: url(../../images/hw_img/p-04.jpg) no-repeat right bottom;}
+.article-title .at03{border-bottom:4px solid #e3342c;background: url(../../images/hw_img/p-05.jpg) no-repeat right bottom;position: relative;}
+.article-title .at03 i{width:33px;height:26px;display: inline-block;background: url(../../images/hw_img/p-06.jpg) no-repeat;position: absolute;left:0;bottom:4px;}
+

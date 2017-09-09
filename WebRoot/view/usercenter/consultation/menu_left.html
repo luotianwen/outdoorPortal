@@ -1,0 +1,17 @@
+<div class="sidebar">
+	<ul>
+		<h2>${usex}的问答</h2>
+		
+		<#if users.uId=SESSION_USER.uId && (SESSION_USER.uType == 1 || SESSION_USER.uType == 2)>
+		<li>
+			<a href="activeConsultation/consultation.html?id=${users.uId}&type=1" <#if map.left='1'>class="now"</#if> > 我来解答 </a>
+		</li>
+		</#if>
+		<li>
+			<a href="activeConsultation/consultation.html?id=${users.uId}&type=2" <#if map.left='2'>class="now"</#if> > ${usex}的回答 </a>
+		</li>
+		<li>
+			<a href="activeConsultation/consultation.html?id=${users.uId}&type=3" <#if map.left='3'>class="now"</#if> > ${usex}的提问 </a>
+		</li>
+	</ul>
+</div>

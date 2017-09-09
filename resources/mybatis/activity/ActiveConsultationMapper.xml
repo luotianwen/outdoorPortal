@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="activeConsultationMapper">
+	<sql id="Base_Column_List">
+    ac_id,ac_create_user_id ,ac_create_time ,ac_comment ,ac_active_id ,ac_praises
+    </sql>
+
+   <!-- 活动咨询问答列表map （保留）-->
+   <resultMap type="com.op.entity.activity.ActiveConsultation" id="ActiveConsultationReturnMap">
+      <id column="ac_id" property="ac_id"/>
+      
+      <!-- 查询该评论所有回复信息-->
+      <collection property="acrs" ofType="com.op.entity.activity.ActiveConsultationReply" column="ac_id" select="activeConsultationReplyMapper.findActiveConsulationReplyByAcrAcId" ></collection>
+      
+   </resultMap>
+   
+   <!-- 查询活动咨询问道列表 (保留)-->
+   <select id="findActiveConsulationsByActiveId" parameterType="int" resultMap="ActiveConsultationReturnMap" >
+	SELECT <include refid="Base_Column_List"/>
+	, us.uname ac_create_user_name ,us.uheadimg ac_create_user_header_img
+	FROM activeConsultation ac
+	LEFT JOIN users us ON ac_create_user_id = us.u_id
+	WHERE ac_active_id   =#{id}
+	ORDER BY ac_create_time
+   </select>
+   
+   <!-- 保存活动评论 -->
+   <insert id="inserintoConsultation" parameterType="com.op.entity.activity.ActiveConsultation">
+   insert into activeConsultation (ac_create_user_id ,ac_comment ,ac_active_id)
+   values (
+   	#{ac_create_user_id },#{ac_comment },#{ac_active_id}
+   )
+   </insert>
+   
+   
+   <!-- 查询咨询信息 -->
+   <select id="findConsultationPage" parameterType="page" resultType="com.op.entity.activity.ActiveConsultation" >
+    SELECT ac_id,ac_create_time ,ac_comment ,ac_praises ,ac_reply_user_id ,ac_reply_comment ,ac_reply_time 
+    <if test="t.userId != null">
+    ,acp.acp_id
+    </if>
+	FROM activeConsultation acs
+	<if test="t.userId != null">
+	LEFT JOIN activeConsultationPraises acp on acs.AC_ID=acp.ACP_AC_ID AND acp.ACP_USER_ID=#{t.userId}
+	</if>
+	WHERE acs.AC_ACTIVE_ID='${t.activeId}' 
+	AND acs.ac_is_reply in(1,2)
+	ORDER BY 
+	<choose>
+		<when test="t.type=='NEW'">
+		acs.AC_CREATE_TIME DESC
+		</when>
+		
+		<otherwise>
+		acs.AC_PRAISES DESC
+		</otherwise>
+	</choose>
+   </select>
+   
+   <!-- 更改点赞数量 -->
+   <update id="updatePraises" parameterType="java.util.Map">
+   update activeConsultation set 
+   <choose>
+   	<when test="type == 'delete'">ac_praises=ac_praises-1</when>
+   	<otherwise>ac_praises=ac_praises+1</otherwise>
+   </choose>
+   </update>
+   
+   
+   <!-- 个人中心	→	我的问答	→	查询相关资讯信息 -->
+   <resultMap type="com.op.dto.activity.reply.ReplyDataDTO" id="selectNoReplyByActiveIdResultMap">
+      <id column="ac_id" property="ac_id"/>
+      <result column="ac_create_user_id" property="ac_create_user_id"/>
+      <result column="ac_create_time" property="ac_create_time"/>
+      <result column="ac_comment" property="ac_comment"/>
+      <result column="ac_reply_user_id" property="ac_reply_user_id"/>
+      <result column="ac_reply_comment" property="ac_reply_comment"/>
+      <result column="ac_reply_time" property="ac_reply_time"/>
+      <result column="ac_is_reply" property="ac_is_reply"/>
+      <result column="uHeadImg" property="uHeadImg"/>
+      <result column="uName" property="uName"/>
+      <result column="replyHeadImg" property="replyHeadImg"/>
+      <result column="replyUname" property="replyUname"/>
+      
+      <!-- 回复列表 -->
+      <collection property="acrs" ofType="com.op.entity.activity.ActiveConsultationReply" column="ac_id" select="activeConsultationReplyMapper.findActiveConsulationReplyByAcrAcId" ></collection>
+   </resultMap>
+   
+   
+   <!-- 领队查询待解答和已回答的问题 -->
+   <select id="selectNoReplyByActiveIdForLeaderPage" parameterType="Page" resultMap="selectNoReplyByActiveIdResultMap">
+	SELECT ac.ac_id,
+	  ac.ac_create_user_id,
+	  ac.ac_create_time,
+	  ac.ac_comment,
+	  ac.ac_reply_user_id,
+	  ac.ac_reply_comment,
+	  ac.ac_reply_time,
+	  ac.ac_is_reply,
+	  u.uHeadImg,
+	  u.uName,
+	  u2.uHeadImg replyHeadImg,
+	  u2.uName replyUname
+	FROM activeConsultation ac
+	INNER JOIN users u ON ac.AC_CREATE_USER_ID=u.u_id
+	LEFT JOIN users u2 ON ac.ac_reply_user_id=u2.u_id
+	WHERE 
+	ac.ac_active_id  =#{t.activityId} 
+	
+	<choose>
+		<when test="t.loadType == 'create'">
+		and ac.AC_CREATE_USER_ID = #{t.userId}
+		</when>
+		<when test="t.loadType == 'reply'">
+		and ac.AC_REPLY_USER_ID = #{t.userId}
+		</when>
+	</choose>
+	
+	<choose>
+		<when test="t.replyType == 0">
+		AND ac.ac_is_reply in (0,2)
+		</when>
+		<when test="t.replyType == 1">
+		AND ac.ac_is_reply = 1
+		</when>
+	</choose>
+	
+   </select>
+	
+	<select id="userConsultationNum" parameterType="String" resultType="com.op.dto.activity.consultation.ConsultationNumDTO">
+		SELECT
+		  ( SELECT COUNT(ac_id) FROM activeConsultation WHERE ac_create_user_id=#{id}
+		  ) allNum,
+		  (SELECT COUNT(ac_id) FROM activeConsultation WHERE ac_create_user_id=#{id} AND AC_IS_REPLY IN (0,2)
+		  ) waitNum,
+		  (SELECT COUNT(ac_id) FROM activeConsultation WHERE ac_create_user_id=#{id} AND AC_IS_REPLY = 1
+		  ) replyNum
+		FROM dual
+	</select>
+   
+   <!-- 发布者回复用户提问 -->
+   <update id="updateReplyInfo" parameterType="com.op.dto.activity.consultation.ReplyDTO">
+   update activeConsultation set ac_reply_user_id=#{replyUserId},ac_reply_comment=#{comment},ac_reply_time=#{time},ac_is_reply=1
+   where ac_id=#{ac_id} and ac_create_user_id=#{userId}
+   </update>
+   
+   <!-- 发布者回复用户追问 -->
+   <update id="updateReply" parameterType="com.op.dto.activity.consultation.ReplyDTO">
+   update activeConsultation set ac_is_reply=#{replyType}
+   where ac_id=#{ac_id} and ac_create_user_id=#{userId}
+   </update>
+</mapper>

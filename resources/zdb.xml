@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tables>
+	<!-- 用户表 begin -->
+	<table name="USERS">
+		<column name="UTYPE">
+			<entry key="1" value="个人发布者" />
+			<entry key="2" value="企业" />
+			<entry key="3" value="普通用户" />
+		</column>
+		<column name="USEX">
+			<entry key="1" value="男" />
+			<entry key="2" value="女" />
+		</column>
+	</table>
+
+	<!-- 用户审核表 begin -->
+	<table name="USER_CHECK">
+		<column name="UTYPE">
+			<entry key="1" value="个人发布者" />
+			<entry key="2" value="企业" />
+		</column>
+		<column name="UCPROGRESS">
+			<entry key="1" value="提交申请" />
+			<entry key="2" value="人工审核中" />
+			<entry key="3" value="审核完成" />
+			<entry key="4" value=">审核失败" />
+		</column>
+	</table>
+
+	<!-- 领队评分表 begin -->
+	<table name="SCORE">
+		<column name="STYPE">
+			<entry key="1" value="延时" />
+			<entry key="2" value="恶意敲诈" />
+			<entry key="3" value="安全问题" />
+			<entry key="4" value="言语文明" />
+			<entry key="5" value="违规操作" />
+		</column>
+		<column name="SSTATE">
+			<entry key="1" value="待反馈" />
+			<entry key="2" value="已处理" />
+			<entry key="3" value="驳回" />
+		</column>
+	</table>
+
+	<!-- 活动表 状态 -->
+	<table name="ACTIVITY">
+		<column name="STATE">
+			<entry key="1" value="草稿" />
+			<entry key="2" value="发布待审核" />
+			<entry key="3" value="审核中" />
+			<entry key="4" value="审核不通过" />
+			<entry key="5" value="审核成功" /><!-- 审核成功 -->
+			<entry key="15" value="活动结束" />
+		</column>
+	</table>
+
+	<!-- 活动报名表 状态 -->
+	<table name="activeSignup">
+		<!-- 参加人员性别 -->
+		<column name="asu_user_sex">
+			<entry key="1" value="男" />
+			<entry key="2" value="女" />
+		</column>
+		<!-- 报名状态 -->
+		<column name="asu_state">
+			<entry key="10" value="等待领队确认" />
+			<entry key="20" value="领队已确认" />
+			<entry key="30" value="交易完成"/>
+			<entry key="40" value="报名已取消"/>
+			<entry key="50" value="等待领队确认取消"/>
+		</column>
+		<!-- 退款状态 -->
+		<column name="asu_refund_state">
+			<entry key="80" value="等待领队确认" />
+			<entry key="90" value="等待用户确认" />
+			<entry key="100" value="等待退款"/>
+			<entry key="105" value="等待退款到账"/>
+			<entry key="110" value="退款关闭"/>
+			<entry key="120" value="等待客服处理"/>
+			<entry key="130" value="退款完成" />
+		</column>
+		<!-- 支付状态（1：未支付；2：已支付；） -->
+		<column name="asu_pay_state">
+			<entry key="1" value="未支付" />
+			<entry key="2" value="已支付" />
+		</column>
+		<!-- 付款类型（10：全款；20：预付款；30：免费；） -->
+		<column name="asu_price_type">
+			<entry key="10" value="全款" />
+			<entry key="20" value="预付款" />
+			<entry key="30" value="免费"/>
+		</column>
+	</table>
+</tables>

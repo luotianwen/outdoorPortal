@@ -1,0 +1,83 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<base href="/" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>提现详情</title>
+<#include "/view/usercenter/base.css.html">
+<style>
+body {
+	background: #f1f1f1;
+}
+</style>
+</head>
+<body>
+<#include "/view/header.html">
+
+<div class="boxw clearfix" style="margin-top: 20px;">
+<#include "/view/usercenter/user/user_left_menu.html">
+  <div class="myinfo-main">
+    <div class="myinfo-title">
+      <h1>提现详情</h1>
+    </div>
+    <div class="myinfo-list">
+      <div class="my-wallet-txxq clearfix">
+        <div class="txxq-states">
+         <!--  <h1>
+		    <#if withdrawals.cw_state == '1'>
+	            	提现申请中 
+            <#elseif withdrawals.cw_state == '2'>
+	              	审核处理中
+            <#elseif withdrawals.cw_state == '3'>
+            	 	提现成功
+            <#else>
+	             	提现失败
+            </#if>	
+		 </h1> -->
+          <p><span class="s1">${withdrawals.application_time?string('yyyy-MM-dd HH:mm:ss')}</span><span class="s2">提现流水号：${withdrawals.id}</span></p>
+        </div>
+        <div class="txxq-detail">
+          <p><span>提现至： ${withdrawals.type_name}</span></p>
+          <p><span class="s1">账户姓名：${withdrawals.account_name}</span><span class="s2">账户账号：${withdrawals.account_number}</span></p>
+          <p><span class="s1">提现金额：${withdrawals.cw_cash?string(',##0.00')}元</span><span class="s2">提现手续费：${withdrawals.fee_cash?string(',##0.00')}元</span></p>
+          <!-- <p><span>备注说明：</span></p> -->
+        </div>
+        <div class="txxq-list">
+          	<p>处理进度：
+            <#if withdrawals.cw_state == '1'>
+	            <span class="states-01">提交申请</span>
+            <#elseif withdrawals.cw_state == '2'>
+	            <span class="states-01">提交申请</span>
+          		<span class="states-01">审核处理</span>
+            <#elseif withdrawals.cw_state == '3'>
+            	<span class="states-01">提交申请</span>
+	          	<span class="states-01">审核处理</span>
+	          	<span class="states-02">提现成功</span>
+            <#else>
+	            <span class="states-01">提交申请</span>
+	          	<span class="states-01">审核处理</span>
+	          	<span class="states-03">提现失败</span></p>
+            </#if>	
+          <table>
+          
+          <#list withdrawals.cashWithdrawalsLogList as log>
+          <tr>
+            <td>${log.handling_time?string('yyyy-MM-dd HH:mm:ss')}</td>
+            <td>${log.log}</td>
+          </tr>
+          </#list >
+          </table>
+        </div>
+       
+      </div>
+      <div class="txmx-btns">
+<a  href="javascript:void(0);" onClick="javascript :history.back(-1);">返回</a>
+</div>
+    </div>
+  </div>
+</div>
+<!-- main end -->
+
+<#include "/view/usercenter/base.js.html">
+</body>
+</html>

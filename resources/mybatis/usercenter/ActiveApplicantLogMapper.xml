@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="ActiveApplicantLogMapper">
+	<sql id="Base_Column_List">
+    aal_id,aa_id ,asu_id ,activity_id ,aal_create_time ,aal_type ,aal_remark ,user_Id,orderState
+    </sql>
+
+    <resultMap type="com.op.entity.usercenter.ActiveApplicantLog" id="ActiveApplicantLogReturnMap">
+      <id column="aal_id" property="aal_id"/>
+      <result column="aa_id" property="aa_id"/>
+      <result column="asu_id" property="asu_id"/>
+      <result column="activity_id" property="activity_id"/>
+      <result column="aal_create_time" property="aal_create_time"/>
+      <result column="aal_type" property="aal_type"/>
+      <result column="aal_remark" property="aal_remark"/>
+      <result column="user_Id" property="user_Id"/>
+      <result column="orderState" property="orderState"/>
+      
+   </resultMap>
+   
+   	<!-- 新增操作日志 -->
+	<insert id="saveActiveApplicantLog" parameterType="java.util.List">
+		insert into activeapplicantlog 
+		(
+			aa_id ,asu_id ,activity_id ,aal_create_time ,aal_type ,aal_remark ,user_Id,orderState
+		)
+		 values
+		<foreach collection="list" item="item" separator=",">
+			(
+			#{item.aa_id },#{item.asu_id },#{item.activity_id },
+			#{item.aal_create_time },#{item.aal_type },#{item.aal_remark},#{item.user_Id},#{item.orderState}
+			)
+		</foreach>
+
+	</insert>
+	
+	<!-- 查询该报名人的所有操作日志 -->
+	<select id="findAllByActiveApplicantId" parameterType="String" resultMap="ActiveApplicantLogReturnMap">
+		select <include refid="Base_Column_List"/> from activeapplicantlog 
+		where aa_id = #{aa_id} and (AAL_TYPE=2 or AAL_TYPE=3)
+		order by AAL_CREATE_TIME asc
+	</select>
+	
+	
+</mapper>

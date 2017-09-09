@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="classificationMapper">
+    <!--mybatis ehcache缓存配置 -->
+    <cache type="org.mybatis.caches.ehcache.LoggingEhcache" />
+
+	<sql id="Base_Column_List">
+		cl_id,cl_level,cl_name,cl_parentid,cl_describe,cl_sort
+	</sql>
+	<!-- 查询所有活动类型 -->
+	<select id="selectList" resultType="com.op.entity.classification.Classification">
+		select 
+		<include refid="Base_Column_List" />
+		from classification
+	</select>
+	
+	<!-- 根据级别查询 -->
+	<select id="findTypesByLevel" parameterType="java.lang.Integer" resultType="com.op.entity.classification.Classification">
+		select 
+		<include refid="Base_Column_List" />
+		from classification
+		where cl_level = #{level}
+	</select>
+</mapper>

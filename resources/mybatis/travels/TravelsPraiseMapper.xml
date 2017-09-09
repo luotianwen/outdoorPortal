@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="travelsPraiseMapper">
+	<sql id="Base_Column_List">
+    tp_id,tp_travelsId ,tp_userId ,tp_createTime 
+    </sql>
+
+    <resultMap type="com.op.entity.travels.TravelsPraise" id="TravelsPraiseReturnMap">
+      <id column="tp_id" property="tp_id"/>
+      <result column="tp_travelsId" property="tp_travelsId"/>
+      <result column="tp_userId" property="tp_userId"/>
+      <result column="tp_createTime" property="tp_createTime"/>
+   </resultMap>
+   
+   <select id="countByTravelsIdAndUserId" parameterType="java.util.Map" resultType="int">
+   select count(tp_id) num
+   from travelsPraise
+   where tp_travelsId=#{id}
+   and tp_userId=#{userId}
+   </select>
+   
+   <insert id="insertTravelsPraise" parameterType="java.util.Map">
+   insert into travelsPraise 
+   ( tp_travelsId ,tp_userId ,tp_createTime )
+   values
+   ( #{id},#{userId},now())
+   </insert>
+   
+   <update id="updateTravelsPraiseNum" parameterType="java.util.Map">
+   update travels set like_count=like_count+1,operation_time = now() where id=#{id}
+   </update>
+   
+</mapper>

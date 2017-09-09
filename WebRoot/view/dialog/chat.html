@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<base href="/" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>玩嘛</title> 
+
+<#include "/view/base.css.html">
+<link rel="stylesheet" type="text/css" href="static/css/emoji/emoji.css" />
+<link rel="stylesheet" type="text/css" href="static/css/hw_css/msg.css" />
+</head>
+<body>
+<#include "/view/header.html">
+	<div class="boxw clearfix">
+		<div class="fl chat-sidebar">
+			<h2>我的私聊</h2>
+			<ul class="clearfix" id="chatList" style="max-height: 580px;">
+				<#list dialogList as item>
+					<li <#if item_index==0>class="now"</#if> data-target="${item.id}">
+						<input type="hidden" id="userId" value="${item.user.u_id}"/>
+						<a href="javascript:void(0)" id="dialogUser">
+							<img src="${item.user.uHeadImg}" alt="${item.user.uName}" /><#if item.user.uName?length gt 5>${item.user.uName[0..4]}...<#else>${item.user.uName}</#if>
+						</a>
+						<#if item.count gt 0>
+							<span id="dialogCount" class="msg-num" style="display: inline;">${item.count}</span>
+							<#else>
+							<span id="dialogCount" style="display: inline;"></span>
+						</#if>
+						
+						<i class="btn-close" id="close" title="关闭"></i>
+					</li>
+				</#list>
+			</ul>
+			<#if (dialogList?size gt 9)>
+			<div style="margin-left: 60px;" id="moreDialog">
+				<a style="font-size: 14px;color: #ff8a01;" href="javascript:void(0)">查看更多</a>
+			</div>
+			</#if>
+		</div>
+		<div class="fr chat-list clearfix">
+			<div class="dialogContent" id="dialogContent">
+				<#if (listDialogContent?size gt 0)>
+					<div class="more-info" id="moreInfo">
+						<a href="javascript:void(0)">查看更多消息</a>
+					</div>
+				</#if>
+				
+				<#list listDialogContent as item>
+					<#if item.addressee==SESSION_USER.uId>
+						<div class="chat-message clearfix" id="chatContent" data-target="${item.id}">
+							<div class="message-send clearfix">
+								<img src="${friendUser.uHeadImg}" class="author" />
+								<div class="msg">${item.content}</div>
+								<div class="time">${item.sendTime?string('yyyy-MM-dd HH:mm:ss')}</div>
+							</div>
+						</div>
+						<#else>
+						<div class="chat-message clearfix" id="chatContent" data-target="${item.id}">
+							<div class="message-receive clearfix">
+								<img src="${SESSION_USER.uHeadImg}" class="author" />
+								<div class="msg">${item.content}</div>
+								<div class="time">${item.sendTime?string('yyyy-MM-dd HH:mm:ss')}</div>
+							</div>
+						</div>
+					</#if>
+				</#list>
+				
+				<#if (listDialogContent?size gt 0)>
+					<div class="tips" id="history">
+						<span>以上是历史记录</span>
+					</div>
+				</#if>
+			</div>
+			<div class="msg-edit">
+				<textarea spellcheck="false" id="content"></textarea>
+			</div>
+			<div class="expression">
+				<div class="emoji-container" id="chat-emoji">
+					<a href="javascript:void(0)" id='expression' title="选择表情" class="selected-expression"></a>
+					<a href="javascript:void(0)" id="send" class="btn-send">发送</a>
+					<span style="float:right;color: #999999;margin-top:10px;margin-right: 20px">按Ctrl+Enter键发送消息</span>
+				</div>
+			</div>
+
+		</div>
+	</div>
+
+	<#include "/view/base.js.html">
+	<script type="text/javascript" src="static/js/dialog/dialog.js"></script>
+    <!-- 滚动条 -->
+    <script type="text/javascript" src="static/js/travels/show/jquery.nicescroll.js" ></script>
+	<script type="text/javascript">
+		function txtarea_this(obj){
+			return $("#content").get(0);
+	    }
+		
+		<#if error?exists>
+			$(function(){
+				layer.alert('不能和自己聊天',{title:"错误信息",icon:0});
+			})
+		</#if>
+	</script>
+	
+	<!-- 添加表情 -->
+	<script type="text/javascript" src="static/js/travels/emoji/underscore-min.js"></script>
+    <script type="text/javascript" src="static/js/travels/emoji/emojis.js"></script>
+    
+</body>
+</html>

@@ -1,0 +1,94 @@
+<!-- base js -->
+<script type="text/javascript" src="static/js/jquery-2.1.1.min.js"></script>
+<script type="text/javascript" src="static/js/plugins/layer/layer.min.js"></script>
+
+<!-- scrollUp -->
+<script type="text/javascript" src="static/js/scrollUp/jquery.scrollUp.min.js"></script>
+<script type="text/javascript" src="static/js/default.js"></script>
+
+<script type="text/javascript">
+	var header_lp = -68;
+	$(function(){
+		$("#buoy").css("left",header_lp);
+		
+		if($("div.my-name").length>0){
+			$("body,html").animate({scrollTop:$("div.my-name").offset().top-210},0);
+		}
+		
+		var ulleft = $("ul#my-tabs li").css("margin-left");
+		var m;
+		if(ulleft!=null&&ulleft!=""){
+			m = ulleft.replace("px","");
+		}
+		/**
+		 * 我的足迹还原
+		 * var count = 0;
+		 */
+		var count = 1;
+		var bool = false;
+		$("ul#my-tabs li a").each(function(index,element){
+			if($(this).attr("class")=="now"){
+				bool = true;
+			}else{
+				if(bool){
+					count++;
+				}
+			}
+		});
+		
+		// 鼠标移到导航滑动效果
+		_map_lp = 1200-2*m-count*3*m+"px";
+		$("#my-tab-buoy").css("left",_map_lp);
+		
+	})
+	var _map_lp;
+	
+	var str = "";
+	
+	if($('body').height()+100<$(document).height()){
+		str += "style='position: fixed;bottom: 0;'";
+		$("body").css({
+			"margin-bottom":"120px"
+		});
+	}
+	
+	//添加尾部页面
+	$('body').append("<div class='m-footer' id='footer' "+str+">"+
+			"	<div class='boxw clearfix'>"+
+			"	<div class='m-footer-img'>"+
+			"		<a href='index.html'><img src='static/images/hw_img/logo.png' /></a>"+
+			"	</div>"+
+			"	<div class='m-footer-info'>"+
+			"		<p class='p1'>"+
+			"			<a href='javascript:void(0)' id='apply_leader'>申请领队</a>"+
+			"			客服电话：<span>400-0928-400</span>"+
+			"		</p>"+
+			"		<p class='p2'>"+
+			"			<span>版权所有：2011-2016 北京慧斓美国际商贸有限公司 京ICP备11036453号-2 </span><span>客服邮箱：2355566249@qq.com</span>"+
+			"		</p>"+
+			"	</div>"+
+			"	<div style='position: absolute;right: 350px;'>"+
+			"		<img src='static/images/hw_img/app-qrdroid.jpg' style='width: 100px;'>"+
+			"	</div>"+
+			"</div>"+ 
+			"</div>");
+	
+
+var	currentSessionUID="${SESSION_USER.uId}";
+</script>
+
+<!-- tab -->
+<script type="text/javascript" src="static/js/hw_js/mytab.js" ></script>
+
+<script type="text/javascript" src="static/js/jquery.cookie.js"></script>
+<script type="text/javascript" src="static/js/home/header.js"></script>
+
+<script type="text/javascript" src="static/js/security.js"></script>
+<!-- layerLogin -->
+<script type="text/javascript" src="static/js/login/layer.login.js"></script>
+
+<!-- 站内信消息数量 -->
+<script type="text/javascript" src="static/js/message/message.js"></script>
+
+<!-- webSocket -->
+<script type="text/javascript" src="static/js/webSocket/webSocket.js"></script>

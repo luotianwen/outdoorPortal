@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="imagesMapper">
+	<sql id="Base_Column_List">
+    img_id,relevance_id,local_url,aliyun_url,name,uploadtime,user_id,img_type
+    </sql>
+    <!-- 新增图片 -->
+    <insert id="insertImages" parameterType="java.util.List" useGeneratedKeys="false">
+    	
+    	insert into images( relevance_id,local_url,aliyun_url,name,user_id,img_type)
+    	values
+    	 <foreach collection="list" item="item" index="index" separator=",">
+			 (
+    	  #{item.relevance_id},#{item.local_url},#{item.aliyun_url},#{item.name}
+     	  ,#{item.user_id},#{item.img_type}
+			 )
+		 </foreach>
+
+    </insert>
+    
+    
+</mapper>

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+		"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="commentProjectMapper">
+	 
+
+	 
+	 <!-- 根据点评ID查询 -->
+	 <select id="findCommentProjectByCid" parameterType="int" resultType="com.op.spot.entity.CommentProject">
+	 	select scp.id ,cid ,pid ,num ,sp.name cname
+	    FROM s_comment_project scp
+	    left join s_project sp on sp.id = scp.pid
+	    where cid = #{id}
+	 </select>
+	 
+	 <!-- 新增点评项目 -->
+	 <insert id="saveCommentProject" parameterType="com.op.spot.entity.CommentProject">
+	 	insert into s_comment_project
+	 	(
+	 		cid,pid,num
+	 	)
+	 	values
+	 	(
+	 		#{cid},#{pid},#{num}
+	 	)
+	 	
+	 </insert>
+	 
+	 
+</mapper>

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="businessDaysMapper">
+	<sql id="Base_Column_List">
+    psbd_id,psbd_day ,psbd_point_service_id ,psabd_id 
+    </sql>
+
+	<insert id="insert" parameterType="java.util.List" useGeneratedKeys="false">
+		insert into businessDaysDeputy
+		
+		( psbd_day ,psbd_point_service_id ,psabd_id )
+	  
+		  values
+		    <foreach collection="list" item="item"   separator=",">
+				(
+			     #{item.psbd_day},
+			     #{item.psbd_point_service_id},
+			     #{item.psabd_id}
+				)
+		    </foreach>
+
+	
+	</insert>
+	
+	<!-- 显示项目营业时间 -->
+	<select id="findBusinessDaysByPsabdId" parameterType="String" resultType="com.op.entity.pointService.BusinessDays">
+		select psbd_id,psbd_day,psabd_id from businessDays
+		where psabd_id = #{psabd_id}
+		order by psabd_id asc
+	</select>
+	
+</mapper>

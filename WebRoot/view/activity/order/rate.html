@@ -1,0 +1,173 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<base href="/" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>玩嘛</title>
+
+<#include "/view/base.css.html">
+<link rel="stylesheet" type="text/css" href="static/css/hw_css/form.css" />
+<link rel="stylesheet" type="text/css" href="static/upload/style.css"/>
+</head>
+<body>
+	<#include "/view/header.html">
+	<div class="boxw clearfix" style="margin-top: 20px;">
+		<div class="trade-success-form">
+			<i class="success-img"></i>
+			<div class="success-info">
+				<h1>交易成功！请给予活动评价！</h1>
+				<P>小伙伴都很关心你的评价哦，还可以帮助其他人参与活动！</P>
+			</div>
+		</div>
+	</div>
+	<div class="boxw clearfix">
+		<div class="rate-box">
+			<div class="rate-title">活动评价</div>
+			<table class="event-info">
+				<tr>
+					<td width="200" class="nopad"><img src="static/images/hw_img/img_01.jpg"
+						width="200" height="119" /></td>
+					<td>${mySignUp.title}</td>
+					<td width="100">${mySignUp.activeApplicants?size}人</td>
+					<td width="100">${mySignUp.asu_account_paid}</td>
+				</tr>
+			</table>
+			<div class="rate-form">
+				<dl class="clearfix">
+					<dt>* 活动评分：</dt>
+					<dd class="star" id="activeStar">
+						<img num="0" src="static/images/hw_img/star0.png" />
+						<img num="1" src="static/images/hw_img/star0.png" />
+						<img num="2" src="static/images/hw_img/star0.png" />
+						<img num="3" src="static/images/hw_img/star0.png" />
+						<img num="4" src="static/images/hw_img/star0.png" />
+					</dd>
+				</dl>
+				<dl class="clearfix">
+					<dt>* 领队评分：</dt>
+					<dd class="star" id="leaderStar">
+						<img num="0" src="static/images/hw_img/star0.png" />
+						<img num="1" src="static/images/hw_img/star0.png" />
+						<img num="2" src="static/images/hw_img/star0.png" />
+						<img num="3" src="static/images/hw_img/star0.png" />
+						<img num="4" src="static/images/hw_img/star0.png" />
+					</dd>
+				</dl>
+				<dl class="clearfix">
+					<dt>* 评分内容：</dt>
+					<dd>
+						<textarea name="comment" id="comment" maxlength="100" placeholder="在这里分享您对活动的感受吧！不要超过300字哦!"></textarea>
+					</dd>
+				</dl>
+				<dl class="clearfix">
+					<dt>晒图：</dt>
+					<dd class="edit-img" id="container">
+						<a href="javascript:void(0)" id="saveimg" class="add-img">添加图片</a><em id="imgcount">0/4</em>
+						<ul id="thumbnail">
+							
+						</ul>
+					</dd>
+				</dl>
+				<div class="btns">
+					<a class="btn-next" id="submit" href="javascript:void(0)">提交评论</a>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	<#include "/view/base.js.html">
+	<script type="text/javascript" src="static/upload/plupload-2.1.8/js/plupload.full.min.js"></script>
+	<script type="text/javascript" src="static/js/activesignup/uploadComment.js"></script>
+	
+	<script type="text/javascript">
+		var activeStar = 0;
+		var leaderStar = 0;
+		
+		$(function(){
+			$("#activeStar img").on("click",function(){
+				var num = 5;
+				var $this = $(this);
+				$("#activeStar img").each(function(index,element){
+					var _this = $(this);
+					if(index<num){
+						if($this.attr("num") == _this.attr("num")){
+							num = index;
+							activeStar = index+1;
+						}
+						_this.attr("src","static/images/hw_img/star1.png");
+					}else{
+						_this.attr("src","static/images/hw_img/star0.png");
+					}
+				});
+				
+			});
+			$("#leaderStar img").on("click",function(){
+				var num = 5;
+				var $this = $(this);
+				$("#leaderStar img").each(function(index,element){
+					var _this = $(this);
+					if(index<num){
+						if($this.attr("num") == _this.attr("num")){
+							num = index;
+							leaderStar = index+1;
+						}
+						_this.attr("src","static/images/hw_img/star1.png");
+					}else{
+						_this.attr("src","static/images/hw_img/star0.png");
+					}
+				});
+				
+			});
+			
+			$("#submit").on("click",function(){
+				if(activeStar==0){
+					layer.msg('必须给活动评分哦！');
+	  				return;
+				}else if(leaderStar==0){
+					layer.msg('必须给领队评分哦！');
+	  				return;
+				}else if($("#comment").val().trim()==""){
+					layer.msg('请撰写评论内容！');
+	  				return;
+				}else{
+					layer.confirm('是否保存评价内容？',{icon:3,btn:['保存','再看看']},function(index){
+						layer.load(0,{
+							shade: [0.3, '#393D49']
+						});
+						
+						var images = "";
+						$("#thumbnail").find("li").each(function(index,element){
+							if(index==0){
+								images += $(this).find("img").attr("data-src");
+							}else{
+								images += ","+$(this).find("img").attr("data-src");
+							}
+						});
+						
+						
+						
+		  				$.post('activeComments/comment.html',{
+		  					activity_id:${mySignUp.activityId},
+		  					suId:${mySignUp.asu_id},
+		  					content:$('#comment').val(),
+		  					activityScore:activeStar,
+		  					leaderScore:leaderStar,
+		  					images:images
+		  				},function(data){
+							if(data.RESPONSE_STATE=="200"){
+								layer.msg('评论成功',{icon:1,time:800},function(){
+									window.location.replace("activeSignup/mySignUp.html");
+								});
+							}else if(data.RESPONSE_STATE=="500"){
+								layer.closeAll('loading');
+								layer.alert(data.ERROR_INFO,{icon:0});
+							}
+		  				});
+		  			});
+					
+				}
+			});
+		});
+	</script>
+</body>
+</html>

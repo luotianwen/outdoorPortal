@@ -1,0 +1,64 @@
+<div id="remove_img_page" style="display:none;">
+	<div class="img-panel clearfix">
+		<div class="mt"><h2 id="show_tag_title"></h2><span class="num">共<i id="tag_img_num">0</i>张图片</span></div>
+		<div class="mc">
+			<ul class="clearfix" id="tag_show_img_ul">
+			</ul>
+		</div>
+	</div>
+	<div class="btn-aciton">
+		<a class="fr btn-complete" title="完成" style="margin-right:50px;" id="tag_remove_img_done">
+		完成
+		</a>
+	</div>
+</div>
+
+<div id="paragraphAddImgDiv" style="display: none;">
+	<div class="img-panel clearfix">
+		<a class="close" title="关闭" id="closeAddImgParagraph"></a>
+		<div class="mt">
+			<h1>添加图片</h1>
+		</div>
+		
+		<!--  xiala -->
+		<ul class="oul" id="showTagsUl" style="display: none;">
+		</ul>
+		
+		<div class="mc">
+			<div class="img-type" img-tag style="display: none;">
+				<select id="chooseImgTag">
+					<option value="spot">景点</option>
+					<option value="dining">餐厅</option>
+					<option value="hotel">酒店</option>
+				</select>
+				<input placeholder="请输入景点名称" id="inTag" id="ul1">
+				<!-- <a class="btn-complete" title="添加完成" id="doneChooseImgTag" style="vertical-align: -2px;">添加完成</a> -->
+			</div>
+			<div style="margin-top: 28px;display: none;" id="show-drag-img-title">
+				<span style="color: #FF8A01;font-size: 16px;">将图片拖动至下面的标签试试0.0</span>
+			</div>
+			<div class="type-list" img-tag-show style="display: none;">
+				<span class="btn-prev"><i></i></span>
+				<span class="btn-next"><i></i></span>
+				<ul class="type-ul clearfix">
+				</ul>
+			</div>
+		
+		
+			<div class="img-selected-num">共<i id="iImgNum">0</i>张图片</div>
+			<ul class="clearfix" id="uploadImgUl">
+				<li>
+					<a class="btn-add" id="addImg" title="添加图片" role="button">
+						<i></i>
+					</a>
+				</li>
+			</ul>
+		</div>
+	</div>
+	<div class="btn-aciton">
+		<a class="fr btn-complete" id="doneUpload" title="完成上传" style="margin-right:50px;">上传</a>
+	</div>
+	<input type="file" name="file" style="display:none;" multiple="multiple" id="imgFileElement" />
+</div>
+<script type="text/javascript" src="static/js/travels/release/travels.release.img.js" ></script>
+<script type="text/javascript" src="static/js/travels/release/aliyunUpload.js"></script>

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+		"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="commentPhoMapper">
+
+	 
+	 <!-- 根据点评ID查询 -->
+	 <select id="findCommentPhoByCid" parameterType="int" resultType="com.op.spot.entity.CommentPho">
+	 	select id ,cid ,pho 
+	    FROM s_comment_pho
+	    where cid = #{id}
+	 </select>
+	 
+	 <!-- 新增点评图片 -->
+	 <insert id="saveCommentPho" parameterType="com.op.spot.entity.CommentPho">
+	 	insert into s_comment_pho
+	 	(
+	 		cid,pho
+	 	)
+	 	values
+	 	(
+	 		#{cid},#{pho}
+	 	)
+	 </insert>
+	 
+	 
+</mapper>

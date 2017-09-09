@@ -1,0 +1,194 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<base href="/" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>玩嘛</title> <#include "/view/usercenter/base.css.html">
+<style>
+body {
+	background: #f1f1f1;
+}
+
+.laypageskin_molv a {
+	background-color: #fff !important;
+}
+</style>
+</head>
+<body>
+	<#include "/view/usercenter/header.html"/>
+	<div class="boxw clearfix">
+
+		<div class="info-sidebar">
+			<#if (follow?size>0)>
+			<div class="my-users">
+				<div class="my-users-title">${usex}的关注</div>
+				<ul id="follow">
+					<#list follow as item>
+						<li>
+							<a target="_blank" href="users/center.html?id=${item.u_id}">
+								<img src="<#if item.uHeadImg?exists>${item.uHeadImg}<#else>static/portrait/default.jpg</#if>" width="50" height="50" />
+							</a>
+							<p>
+								<a title="${item.uName}" target="_blank" href="users/center.html?id=${item.u_id}">${item.uName}</a>
+							</p>
+						</li>
+					</#list>
+				</ul>
+				<div class="my-users-page">
+					<span title="上一页" class="my-prev" id="fprevious"></span>
+					<span title="下一页" class="my-next" id="fnext"></span>
+				</div>
+			</div>
+			</#if>
+			<div class="my-users">
+				<#if (recentVisit?size>0)>
+				<div class="my-users-title">最近访客</div>
+				<ul id="recentVisit">
+					<#list recentVisit as item>
+						<li>
+							<a target="_blank" href="users/center.html?id=${item.u_id}">
+								<img src="<#if item.uHeadImg?exists>${item.uHeadImg}<#else>static/portrait/default.jpg</#if>" width="50" height="50" />
+							</a>
+							<p>
+								<a title="${item.uName}" target="_blank" href="users/center.html?id=${item.u_id}">${item.uName}</a>
+							</p>
+						</li>
+					</#list>
+				</ul>
+				</#if>
+				<div class="my-users-history">
+					<span>历史访客<i class="c1">${users.historyVisit}</i></span>
+					<span>今日<i class="c1"><#if todayVisit?exists>${todayVisit}<#else>0</#if></i></span>
+				</div>
+			</div>
+		</div>
+
+		<div class="info-main-box">
+			<div class="note-links">
+				<ul>
+					<li><span>${mycount.travels_count}</span>
+					<p>游记</p></li>
+					<li><span>${mycount.read_count}</span>
+					<p>浏览</p></li>
+					<li><span>${mycount.reply_count}</span>
+					<p>回复</p></li>
+					<li class="last"><a href="travels/draft.html"
+						class="btn-write"><i></i>写游记</a></li>
+				</ul>
+			</div>
+			<div class="my-note-list">
+				<#if mycount.travels_count lt 1 >
+				<div class="note-not">
+					<img src="static/images/hw_img/note-img-no.jpg" />
+				</div>
+
+				<#else>
+				<ul id="myTravels" class="clearfix">
+					<#list travelsList as travels>
+					<li>
+						<div class="mn-img">
+							<img src="${travels.cover_image}" />
+						</div>
+						<div class="mn-item">
+							<div class="mn-actions">
+								<a href="javascript:void(0)" class="note-good on">${travels.like_count}<i></i></a>
+							</div>
+							<div class="mn-info">
+								<div class="mn-tit">
+									<h2>
+										<a href="travels/detail/${travels.id}.html" target="_blank">${travels.title}</a>
+									</h2>
+								</div>
+								<div class="mn-date">${travels.issued_time?string("yyyy-MM-dd
+									HH:mm:ss")}</div>
+								<div class="mn-text">
+									<a href="travels/detail/${travels.id}.html" target="_blank">${travels.digest}<#if
+										travels.digest?length gt 285>……</#if></a>
+								</div>
+							</div>
+							<div class="mn-extra">
+								<span class="note-view"><i></i>${travels.read_count}/${travels.reply_count}</span>
+								<span class="note-star"><i></i>${travels.collection_count}</span>
+								<a href="javascript:void(0)" class="note-place"><i></i>${travels.address}</a>
+							</div>
+						</div>
+					</li> </#list >
+				</ul>
+				</#if>
+				<div id="page" style="text-align:center;"></div>
+			</div>
+
+
+
+
+		</div>
+	</div>
+	<!-- main end -->
+	<#include "/view/usercenter/base.js.html">
+	<!-- 分页 -->
+	<script type="text/javascript" src="static/js/plugins/layer/laypage/laypage.js"></script>
+	<script type="text/javascript">
+		$(function() {
+			laypage({
+				cont : $('#page'), // 容器。值支持id名 
+				pages : ${page.totalPage}, // 通过后台拿到的总页数
+				curr : ${page.currentPage},// 当前页
+				skin : '#FF8A01',// 如果背景为白色，要设置css
+				skip : true, //是否开启跳页
+				groups : 3, //连续显示分页数
+				first : 1,
+				prev : "<",
+        next:">",
+				last : ${page.totalPage}, //在尾页追加总页数。
+				jump : function(obj, first) { //触发分页后的回调
+					if (!first) {
+						//点击跳页触发函数自身，并传递点击的当前页：obj.curr
+						getData({
+							'currentPage' : obj.curr
+						});// 搜索指定页数据
+					}
+				}
+			});
+		});
+
+		//异步分页
+		function getData(data) {
+			$.getJSON("travels/my_Travels.html", data, function(res) {
+				laypage({
+					cont : $('#page'), // 容器。值支持id名 
+					pages : res.totalPage, // 通过后台拿到的总页数
+					curr : res.currentPage,// 当前页
+					skin : '#FF8A01',// 如果背景为白色，要设置css
+					skip : true, //是否开启跳页
+					groups : 3, //连续显示分页数
+					first : 1,
+					prev : "<",
+	        next:">",
+					last : res.totalPage, //在尾页追加总页数。
+					jump : function(obj, first) { //触发分页后的回调
+						if (!first) {
+							//点击跳页触发函数自身，并传递点击的当前页：obj.curr
+							getData({
+								'currentPage' : obj.curr
+							});// 搜索指定页数据
+						}
+					}
+				});
+				$('html,body').animate({
+					scrollTop : $(".note-links").offset().top
+				}, 500);
+				$myTravels = $("#myTravels");
+				$myTravels.fadeOut();
+				$myTravels.html(res.resultList);
+				$myTravels.fadeIn();
+			});
+		};
+		var userId = ${users.uId};
+		var fcurrent = ${pageFR.currentPage};
+		var ftotal = ${pageFR.totalPage};
+		var rcurrent = ${pageFR.currentPage};
+		var rtotal = ${pageFR.totalPage};
+	</script>
+	<script type="text/javascript" src="static/js/usercenter/center.js"></script>
+</body>
+</html>

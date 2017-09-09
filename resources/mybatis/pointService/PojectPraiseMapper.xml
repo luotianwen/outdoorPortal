@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+	<!-- 项目点赞(pojectPraise)Mapper -->
+<mapper namespace="pojectPraiseMapper">
+    <!--mybatis ehcache缓存配置 -->
+    <!-- 以下两个<cache>标签二选一,第一个可以输出日志,第二个不输出日志 不使用缓存加入useCache="false" -->
+    <!-- <cache type="org.mybatis.caches.ehcache.LoggingEhcache" /> -->
+    <!-- <cache type="org.mybatis.caches.ehcache.EhcacheCache"/>  -->
+
+	<sql id="Base_Column_List">
+    pp_id,pp_project_id ,pp_user_id 
+    </sql>
+
+    <resultMap type="com.op.entity.pointService.project.PojectPraise" id="PojectPraiseReturnMap">
+		<!-- id -->
+      <id column="pp_id" property="pp_id"/>
+		<!-- 项目ID -->
+      <result column="pp_project_id" property="pp_project_id"/>
+		<!-- 用户ID -->
+      <result column="pp_user_id" property="pp_user_id"/>
+   </resultMap>
+   
+	<!-- 项目点赞数量 -->
+	<select id="projectLike" parameterType="String" resultType="String">
+		select count(pp_id) from PojectPraise
+		where pp_project_id = #{id}
+	</select>
+  
+  	<!-- 点赞 -->
+  	<insert id="addLike" parameterType="java.util.Map">
+		insert into PojectPraise
+		(
+			 pp_project_id ,pp_user_id
+		)
+		values
+		(
+			 ${id },${userId}
+		)
+	</insert>
+	
+	<!-- 取消点赞 -->
+	<delete id="cancelLike" parameterType="java.util.Map">
+		delete from PojectPraise
+		where pp_project_id = ${id } and pp_user_id = ${userId}
+	</delete>
+</mapper>

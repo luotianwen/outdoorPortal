@@ -1,0 +1,160 @@
+<div class="m_toolbar" id="m_toolbar">
+	<div class="boxw clearfix">
+		<div class="fl logoarea">
+			<a href="index.html">
+				<h1><img src="static/images/hw_img/logo-1.jpg" alt="玩嘛" /></h1>
+			</a>
+		</div>
+		<div class="fl nav_list">
+			<ul id="nav">
+				<li>
+					<a href="index.html" <#if map.ht = '首页'>class="first"</#if> >首页</a>
+				</li>
+				<li>
+					<a href="search/actives.html" <#if map.ht = '活动'>class="first"</#if> >活动</a>
+				</li>
+				<!-- <li>
+					<a href="pointService/search.html" <#if map.ht = '场馆'>class="first"</#if> >场馆</a>
+				</li> -->
+				<li>
+					<a href="spot/list.html" <#if map.ht = '景区'>class="first"</#if> >景区</a>
+				</li>
+			</ul>
+			<div id="buoy" style="left:-68;"></div>
+		</div>
+		
+		<div id="layerLoginUpdateDiv">
+		
+		<#if !SESSION_USER??>
+		<div class="fr login">
+			<a target="_blank" href="register.html">注册</a>|<a href="login.html" >登录</a>
+		</div>
+		<#else>
+		<div class="fr head_user">
+			<a href="users/center.html?id=${SESSION_USER.uId}" title="${SESSION_USER.uName}" class="user_link">
+				<img src="${SESSION_USER.uHeadImg}" /><i></i>
+			</a>
+			<ul class="dropdown_group">
+				<li>
+					<a href="users/center.html?id=${SESSION_USER.uId}" target="_blank">
+						<i class="icon_my"></i>我的玩嘛
+					</a>
+				</li>
+				<li>
+					<a href="travels/draft.html" >
+						<i class="icon_writeNote"></i>写游记
+					</a>
+				</li>
+				<#if SESSION_USER.uType == 1 || SESSION_USER.uType == 2>
+					<li>
+						<a href="javascript:void(0)" id="releaseActivity" >
+							<i class="icon_releaseActivity"></i>发布活动
+						</a>
+					</li>
+					<#elseif SESSION_USER.uType == 50>
+					<!-- <li>
+						<a href="javascript:void(0)" id="releaseProject" >
+							<i class="icon_releaseProject"></i>发布项目
+						</a>
+					</li> -->
+				</#if>
+				<!-- <li>  
+        			<a href="pointService/myfind.html" target="_blank">
+        				<i class="icon_findshop"></i>发现好店
+        			</a>
+        		</li> -->
+				<#if SESSION_USER.uType == 3>
+					<li>
+						<a href="javascript:void(0)" id="apply_leader" >
+							<i class="icon_appLeader"></i>申请领队
+						</a>
+					</li> 
+	        		<!-- <li>  
+	        			<a href="pointService/apply.html" target="_blank">
+	        				<i class="icon_append"></i>申请商户
+	        			</a>
+	        		</li> -->
+				</#if>
+				<li>
+					<a href="huodong/myActive.html" target="_blank">
+						<i class="icon_myActivity"></i>我的活动
+					</a>
+				</li>
+				
+				
+				<li>
+					<a href="activeConsultation/consultation.html?id=${SESSION_USER.uId}" target="_blank">
+						<i class="icon_myQuestion"></i>我的问答
+					</a>
+				</li>
+				
+				<li>
+					<a href="follow/myActive.html" target="_blank">
+						<i class="icon_myCollect"></i>我的收藏
+					</a>
+				</li>
+				<li>
+					<a href="activeSignup/MySignUp.html" target="_blank">
+						<i class="icon_myOrder"></i>我的订单
+					</a>
+				</li>
+				<li>
+					<a href="users/userInfo.html" target="_blank">
+						<i class="icon_settings"></i>设置
+					</a>
+				</li>
+				<li>
+					<a href="javascript:void(0)" id="logout">
+						<i class="icon_logout"></i>退出
+					</a>
+				</li>
+			</ul>
+		</div>
+		<div class="fr head_msg">
+			<a href="javascript:void(0)" class="drop_trigger">
+				<i class="icon-msg"></i>消息
+				<span class="msg-num" id="messageAll" style="display: inline;">0</span>
+			</a>
+			<ul class="dropdown_msg">
+				<li>
+					<a href="messagePrivate/receive.html?type=11" target="_blank">
+						系统通知<span class="msg-num" id="sysAll" style="display: inline;">0</span>
+					</a>
+				</li>
+				<li>
+					<a href="messagePrivate/receive.html?type=51" target="_blank">
+						文章消息<span class="msg-num" id="travelAll" style="display: inline;">0</span>
+					</a>
+				</li>
+				<#if SESSION_USER.uType == 1>
+					<li>
+						<a href="messagePrivate/receive.html?type=21" target="_blank">
+							活动消息<span class="msg-num" id="acAll" style="display: inline;">0</span>
+						</a>
+					</li>
+					<#else>
+					<li>
+						<a href="messagePrivate/receive.html?type=31" target="_blank">
+							订单消息<span class="msg-num" id="orderAll" style="display: inline;">0</span>
+						</a>
+					</li>
+				</#if>
+				<li>
+					<a href="messagePrivate/receive.html?type=41" target="_blank">
+						问答消息<span class="msg-num" id="askAll" style="display: inline;">0</span>
+					</a>
+				</li>
+				<li>
+					<a href="dialog/msg.html" target="_blank">
+						私信<span class="msg-num" id="dialogAll" style="display: inline;">0</span>
+					</a>
+				</li>
+			</ul>
+		</div>
+		</#if>
+		
+		</div>
+	</div>
+</div>
+
+<#include "/view/layer-login.html">

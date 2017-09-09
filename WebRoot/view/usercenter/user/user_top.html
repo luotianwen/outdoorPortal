@@ -1,0 +1,25 @@
+
+<link rel="stylesheet" type="text/css" href="static/css/hw_css/header.css" />
+
+<div class="m_toolbar">
+	<div class="boxw clearfix">
+		<div class="fl m_entry" id="login_user_info" overtime="<#if userName?exists>no<#else>yes</#if>">
+			<#if userName?exists>
+				<div>
+					<span>欢迎您：${userName}</span>
+					<a href="logout.html" target="_self" style="margin-left:20px;">退出登录</a>
+				</div>
+			<#else>
+				<div>
+					<a href="login.htm" target="_blank">登录</a>
+					<a href="register.html" target="_blank" style="margin-left:20px;">注册</a>
+				</div>
+			</#if>
+		</div>
+		<div class="fr m_nav">
+			<a href="users/userInfo.html" >个人中心</a>
+			<a href="javascript:void(0)" target="_blank">帮助</a>
+			<a href="javascript:void(0)" target="_blank" style="margin-right:40px;">联系客服</a>
+		</div>
+	</div>
+</div>

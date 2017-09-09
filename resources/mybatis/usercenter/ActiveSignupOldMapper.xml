@@ -1,0 +1,388 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="oldActiveSignupMapper">
+	<sql id="Base_Column_List">
+    asu_id,asu_user_name ,asu_user_sex ,asu_user_phone ,asu_user_certificates_type ,asu_user_certificates_num ,asu_user_emergency 
+    ,asu_user_emergency_phone ,asu_active_id ,asu_user_id ,asu_create_time ,asu_state ,asu_account_paid ,asu_user_account_num 
+    ,asu_refund_time ,asu_refund_state ,asu_refund_flag ,asu_refund_price ,asu_order_area ,asu_link_user_phone,asu_price_type,asu_pay_state
+    </sql>
+
+    <resultMap type="com.op.entity.usercenter.ActiveSignup" id="ActiveSignupReturnMap">
+      <id column="asu_id" property="asu_id"/>
+   </resultMap>
+   	<select id="select" resultType="com.op.entity.activity.Activity">
+   		select * from activity where id=99999
+   	</select>
+   
+   <!-- 我的活动或者退款管理功能-->
+   <select id="selectActiveListPage" parameterType="page" resultType="com.op.entity.usercenter.ActiveSignupInfo">
+   		select Activesignup.asu_id,Activesignup.asu_active_id,Activesignup.asu_create_time,Activesignup.asu_user_account_num,Activesignup.asu_refund_time
+   		,Activesignup.asu_refund_state,Activesignup.asu_account_paid,Activesignup.asu_state,Activesignup.asu_refund_price,Activesignup.asu_user_phone
+   		,Activesignup.asu_user_name,Activesignup.asu_user_sex,Activesignup.asu_link_user_phone,Activesignup.asu_pay_state
+   		,Activesignup.asu_order_id,Activesignup.asu_leader_refund_area,Activesignup.asu_is_comment
+   		,Activity.title,Activity.price
+   		,User_check.mobile
+   		from Activesignup,Activity,Signupstate,User_check
+   		where 1=1
+   		and Activesignup.asu_is_delete=0
+   		and Activesignup.asu_user_id=#{t.asu_user_id}
+   		and Activity.id=Activesignup.asu_active_id
+   		and Activity.createuser=User_check.u_id
+			<!-- 活动id -->
+   			<if test="t.asu_active_id!=0">
+   				and Activesignup.asu_active_id=#{t.asu_active_id}
+   			</if>
+   			<!-- 报名id -->
+   			<if test="t.asu_id!=null and t.asu_id!=''">
+   				and Activesignup.asu_id=#{t.asu_id}
+   			</if>
+   			<!-- 报名状态id -->
+   			<if test="t.asu_state!=0">
+   				and Activesignup.asu_state=#{t.asu_state}
+   			</if>
+   			<!-- 退款状态id -->
+   			<if test="t.asu_refund_state!=0">
+   				and Activesignup.asu_refund_state=#{t.asu_refund_state}
+   			</if>
+   			<!-- 查询开始时间 -->
+   			<if test="t.starttime!=null and t.starttime!=''">
+   				and Activesignup.<if test="t.sus_type==1">asu_create_time</if><if test="t.sus_type==2">asu_refund_time</if>>=#{t.starttime}
+   			</if>
+   			<!-- 查询结束时间 -->
+   			<if test="t.endtime!=null and t.endtime!=''">
+   				and Activesignup.<if test="t.sus_type==1">asu_create_time</if><if test="t.sus_type==2">asu_refund_time</if><![CDATA[<=]]>#{t.endtime}
+   			</if>
+			<!-- 活动标题 -->
+			<if test="t.title!=null and t.title!=''">
+				 and Activity.title like CONCAT(CONCAT('%', #{t.title}),'%')
+			</if>
+			<!-- 状态类型   此列可判断用于  我的活动功能还是退款管理功能-->
+			<if test="t.sus_type!=0">
+				 <if test="t.sus_type==1">and Activesignup.asu_state=Signupstate.sus_id </if>
+				 <if test="t.sus_type==2">and Activesignup.asu_refund_state=Signupstate.sus_id </if>
+			</if>
+			<!-- 支付流水号 -->
+			<if test="t.asu_user_account_num!=null and t.asu_user_account_num!=''">
+				and Activesignup.asu_user_account_num=#{t.asu_user_account_num}
+			</if>
+			 order by Activesignup.<if test="t.sus_type!=2">asu_create_time</if><if test="t.sus_type==2">asu_refund_time</if> desc
+   </select>
+   
+   <!-- 查询报名信息-->
+   <select id="selectSignupInfo" parameterType="map" resultType="Map">
+   		select
+   		 Activesignup.asu_state,Activesignup.asu_refund_state,Activesignup.asu_active_id,Activesignup.asu_account_paid
+   		 ,Activity.alreadyinnum,Activity.confirmusernum
+   		 from Activesignup,Activity
+   		where 
+   		Activesignup.asu_id=#{asu_id} 
+   		and Activesignup.asu_user_id=#{asu_user_id}
+   		and Activesignup.asu_active_id=Activity.id
+   		and Activesignup.asu_is_delete=0
+   </select>
+   
+   <!-- 查询该条退款信息能否执行退款操作-->
+   <select id="selectRefundInfo" parameterType="map" resultType="int">
+   		select count(*) from Activesignup,Activity
+   		where 
+   		Activesignup.asu_id=#{asu_id} 
+   		and Activesignup.asu_user_id=#{asu_user_id}
+   		and Activesignup.asu_active_id=Activity.id
+   		and Activesignup.asu_refund_state=90<!-- 退款状态为:等待用户确认 -->
+   		and Activesignup.asu_is_delete=0
+   </select>
+   
+   <!-- 查询是否存在传入的订单id-->
+   <select id="selectOrderId" parameterType="map" resultType="int">
+   		select count(*) from Activesignup where asu_order_id=#{asu_order_id} and asu_user_id=#{asu_user_id}
+   </select>
+   
+   <!-- 修改报名信息 -->
+   <update id="updateActive" parameterType="map">
+   		 update Activesignup set asu_id=#{asu_id}
+		<!-- 公用部分 -->
+   		 <if test="asu_state!=null and asu_state!=''">,asu_state=#{asu_state}</if>
+   		 <if test="asu_refund_state!=null and asu_refund_state!=''">,asu_refund_state=#{asu_refund_state}</if>
+   		 <choose>
+	   		 <!-- 取消报名操作. -->
+	   		 	<when test="type=='canelActive'">
+	   		 		<!--申请退款方式: 等待领队确认、无需等待领队确认，直接退全款。 -->
+	   		 		<if test="asu_refund_state==80">,asu_refund_flag=1,asu_refund_time=now()</if>
+	   		 		<if test="asu_refund_state==100">,asu_refund_price=asu_account_paid,asu_refund_flag=1,asu_refund_time=now()</if>
+	   		 		
+	   		 		<!-- 无需退款 -->
+	   		 		
+	   		 	</when>
+	   		 <!-- 退款同意与否操作. -->	
+	   		 	<when test="type=='refundActive'">
+	   		 		<!-- 退款满意,将是否申请退款改成:是 --><if test="asu_refund_state==100">,asu_refund_flag=1</if>
+	   		 		<!-- 退款不满意  备注 --><if test="asu_refund_state==120">,asu_refund_flag=0,asu_user_comment=#{asu_user_comment}</if>
+	   		 	</when>
+   		 </choose>
+   		 where Activesignup.asu_is_delete=0 and asu_id=#{asu_id} and asu_user_id=#{asu_user_id}
+   </update>
+   <!--查询订单详情-->
+   <select id="selectDetails" parameterType="map" resultType="com.op.entity.usercenter.ActiveSignupInfo">
+   		select Activesignup.asu_id,Activesignup.asu_user_account_num,Activesignup.asu_user_name,Activesignup.asu_user_sex,Activesignup.asu_user_phone
+   		,Activesignup.asu_account_paid,Activesignup.asu_state,Activesignup.asu_link_user_phone,Activesignup.asu_order_area,Activesignup.asu_active_id,Activesignup.asu_order_id
+   		,Activity.title,Activity.price
+   		,Users.uname
+   		<!-- 作用:判断用户能否投诉领队-->,(case when (Activesignup.asu_state=20 or Activesignup.asu_state=30) and now()>=Activity.endtime then 'true' else 'false' end) as complain
+   		from Activesignup,Activity,Users
+   		where Activity.id=Activesignup.asu_active_id 
+   		and users.U_id=Activesignup.asu_user_id
+   		and Activesignup.asu_is_delete=0
+   		and Activesignup.asu_id=#{asu_id}
+   		and Activesignup.asu_user_id=#{asu_user_id}
+   </select>
+   <!-- 生成报名订单 -->
+   <insert id="generateOrder" parameterType="java.util.List" useGeneratedKeys="false" >
+   		
+	  insert into activesignup (asu_id,asu_active_id,asu_user_id,asu_create_time,asu_state
+	  ,asu_account_paid,asu_order_area,asu_price_type,asu_link_user_phone,asu_pay_state
+	  ,asu_user_name,asu_user_sex,asu_user_phone)
+	  VALUES
+	  <foreach collection="list" item="item" separator=",">
+	  (
+		   #{item.asu_id},#{item.asu_active_id},#{item.asu_user_id},#{item.asu_create_time},#{item.asu_state}
+		  ,#{item.asu_account_paid},#{item.asu_order_area},#{item.asu_price_type}
+		  ,#{item.asu_link_user_phone},#{item.asu_pay_state}
+		  ,#{item.asu_user_name},#{item.asu_user_sex},#{item.asu_user_phone}
+	  )
+	  </foreach>
+	  
+   </insert>
+	
+	<!-- 修改支付订单信息 -->
+	<update id="updateActiveSignUpPayInfo" parameterType="com.op.entity.alipay.Alipay">
+	update Activesignup set 
+	<!-- 订单状态（1：未支付；2：已支付；） -->
+	asu_pay_state=2,
+	<!-- 已付款总额(元) -->
+	asu_account_paid=#{total_fee},
+	<!-- 支付宝交易号 -->
+	asu_trade_no=#{trade_no},
+	<!-- 付款时间 -->
+	asu_pay_time=#{pay_time}
+	where asu_id in
+	<foreach collection="asu_ids" index="index" item="item" open="(" separator="," close=")" >
+		#{item}
+	</foreach>
+	</update>
+	
+	<!-- 根据订单ID查询活动信息 -->
+	<select id="findActiveSignUpById" parameterType="java.lang.String" resultType="com.op.dto.signUp.ActiveAndSignUpDTO">
+		select 
+		asu_active_id,asu_price_type,asu_pay_state,asu_refund_flag,asu_is_delete
+		,needUserNum,alreadyInNum,a_enroll_end_time,state,price,a_reserve_price
+		from activesignup asu
+		left join activity av on asu.asu_active_id=av.id
+		where asu_id = #{id}
+	</select>
+	
+   <!-- 领队的活动(报名的活动以及发布的活动.)-->
+   <select id="selectActiveListPageOfLeaderPage" parameterType="page" resultType="com.op.dto.usercenter.leader.activeManager.activeSignUp.LeaderActiveSignUpsDTO">
+		SELECT acs.asu_id,
+		  acs.asu_order_id,
+		  acs.asu_user_name,
+		  acs.asu_user_sex,
+		  acs.asu_link_user_phone,
+		  acs.asu_order_area ,
+		  acs.asu_active_id,
+		  acs.asu_state,
+		  acs.asu_account_paid,
+		  acs.asu_pay_state ,
+		  acs.asu_price_type,
+		  acs.asu_create_time ,
+		  ac.title
+		FROM activity ac
+		JOIN Activesignup acs ON ac.id = acs.asu_active_id
+		WHERE 1=1
+		<!-- 活动ID -->
+		<if test="t.activeId != null and t.activeId != '' ">
+		AND ac.id=#{t.activeId}
+		</if>
+		
+		<!-- 订单编号 -->
+		<if test="t.asu_order_id != null and t.asu_order_id != '' ">
+		AND acs.asu_order_id LIKE CONCAT('%',CONCAT(#{t.asu_order_id},'%'))
+		
+		</if>
+		
+		<!-- 参加人员姓名 -->
+		<if test="t.asu_user_name != null and t.asu_user_name != '' ">
+		AND acs.asu_user_name LIKE CONCAT('%',CONCAT(#{t.asu_user_name},'%'))
+		</if>
+		
+		<!-- 报名联系人手机号码 -->
+		<if test="t.asu_link_user_phone != null ">
+		AND acs.asu_link_user_phone LIKE CONCAT('%',CONCAT(#{t.asu_link_user_phone},'%'))
+		</if>
+		
+		<!-- 报名状态 -->
+		<if test="t.asu_state != 0 ">
+		AND acs.asu_state=#{t.asu_state}
+		</if>
+		
+		<!-- 支付状态 -->
+		<if test="t.asu_pay_state != 0 ">
+		AND acs.asu_pay_state=#{t.asu_pay_state}
+		</if>
+		
+		<!-- 报名查询 开始时间 -->
+		<if test="t.start_asu_create_time != null ">
+		AND acs.asu_create_time >= #{t.start_asu_create_time}
+		</if>
+		
+		<!-- 报名查询 结束时间 -->
+		<if test="t.end_asu_create_time != null ">
+		AND acs.asu_create_time &lt;= #{t.end_asu_create_time}
+		</if>
+		
+		<!-- 创建用户 -->
+		AND ac.createUser=#{t.createUser}
+		<!-- 根据创建时间倒序排列 -->
+		order by acs.asu_create_time desc
+   </select>
+	
+	
+	<!-- 领队确认报名 -->
+	<update id="confirmSignUpById" parameterType="java.util.Map">
+		update activeSignup set asu_state=20 where asu_id=#{asuId} and asu_active_id=#{activeId}
+	</update>
+	
+	
+	<!-- 领队确认取消报名 -->
+	<update id="cancelSignUpById" parameterType="java.util.Map">
+		update activeSignup set asu_state=40 where asu_id=#{asuId} and asu_active_id=#{activeId}
+	</update>
+	
+	
+	<!-- 领队报名退款订单 -->
+	<select id="leaderRefundsPage" parameterType="page" 
+		resultType="com.op.dto.usercenter.leader.activeManager.activeRefund.LeaderActiveRefundsDTO" >
+		SELECT ac.title,
+		  asu.asu_order_id,
+		  asu.asu_id,
+		  asu.asu_account_paid,
+		  asu.asu_refund_state,
+		  asu.asu_refund_price,
+		  asu.asu_refund_time,
+		  asu.asu_create_time,
+		  asu.asu_active_id,
+		  asu.asu_pay_time,
+		  asu.asu_leader_refund_area,
+		  asu.asu_refund_date
+		FROM activity ac
+		JOIN activesignup asu ON ac.id = asu.ASU_ACTIVE_ID
+		<!-- 创建用户 -->
+		WHERE ac.createuser  =#{t.createUser}
+		
+		<!-- 订单编号 -->
+		<if test="t.asu_order_id != null and t.asu_order_id != '' ">
+		AND asu.asu_order_id LIKE CONCAT('%',CONCAT(#{t.asu_order_id},'%'))
+		</if>
+		
+		<!-- 退款状态 -->
+		<if test="t.asu_refund_state != 0 ">
+		AND asu.asu_refund_state = #{t.asu_refund_state}
+		</if>
+		
+		<!-- 申请退款起始时间 -->
+		<if test="t.asu_refund_time_start != null ">
+		AND asu.asu_refund_time  >= #{t.asu_refund_time_start}
+		</if>
+		
+		<!-- 申请退款终止时间 -->
+		<if test="t.asu_refund_time_end != null ">
+		AND asu.asu_refund_time  &lt;= #{t.asu_refund_time_end}
+		</if>
+		
+		<!-- 报名起始时间 -->
+		<if test="t.asu_create_time_start != null ">
+		AND asu.asu_create_time  >= #{t.asu_create_time_start}
+		</if>
+		
+		<!-- 报名终止时间-->
+		<if test="t.asu_create_time_end != null ">
+		AND asu.asu_create_time  &lt;= #{t.asu_create_time_end}
+		</if>
+		
+		<!-- 是否申请退款（0：默认；1：是；） -->
+		AND ASU_REFUND_FLAG  =1
+		<!-- 是否已经删除(0：默认；1：是；) -->
+		AND ASU_IS_DELETE    =0
+		<!-- 订单状态（1：未支付；2：已支付；） -->
+		AND asu.asu_pay_state=2
+	</select>
+	
+	<!-- 领队设置退款订单的退款金额和退款备注 -->
+	<update id="updateRefundOfLeader" parameterType="java.util.Map">
+	UPDATE activeSignup
+	SET asu_refund_price    =#{asu_refund_price},
+	  asu_leader_refund_area=#{asu_leader_refund_area},
+	  asu_refund_state      =90
+	WHERE asu_id            =#{asu_id}
+	AND asu_active_id       =#{asu_active_id}
+	</update>
+	
+	<!-- 用户确认交易完成 -->
+	<update id="complete" parameterType="java.util.Map">
+	UPDATE activesignup
+	<!-- 交易完成 -->
+	SET asu_state  = 30
+	<!-- 活动订单ID -->
+	WHERE asu_id   =#{asu_id}
+	<!-- 创建用户 -->
+	AND ASU_USER_ID=#{userId}
+	</update>
+	
+	<!-- 根据活动ID和订单ID判断创建人是否为自己 -->
+	<select id="insertComment" parameterType="com.op.entity.comments.ActiveComments" resultType="String" >
+	select asu_user_id 
+	from activeSignup 
+	where asu_id=#{suId}
+	and asu_active_id=#{activity_id}
+	</select>
+	
+	<!-- 更改订单评论状态为已评论 -->
+	<update id="updateActiveSignUpCommentFlag" parameterType="java.lang.String">
+	update activesignup set asu_is_comment=1
+	where asu_id=#{suId}
+	</update>
+	
+	<!-- 检测该活动是否已经完成	&&	检测该订单是否已经交易完成 -->
+	<select id="findActiveStateAndSignUpState" parameterType="String" resultType="java.util.Map" >
+		SELECT ac.STATE,
+		  asu.ASU_STATE
+		FROM activesignup asu
+		JOIN activity ac
+		ON asu.asu_active_id = ac.id
+		WHERE asu.asu_id=#{suId}
+	</select>
+	
+	<!-- 根据支付流水号查询该订单数据，处理支付宝异步通知修改支付信息	 -->
+	<select id="findAsuIdByAccountNum" parameterType="java.lang.String" resultType="java.lang.String" >
+	select asu_id from activeSignup
+	where asu_user_account_num=#{asu_user_account_num}
+	</select>
+	
+	<!-- 查询是否已经报名过该活动 -->
+	<select id="findCountByUserAndActiveId" parameterType="java.util.Map" resultType="int">
+	select count(asu_id) from activeSignup
+	where asu_user_id = #{userId}
+	and asu_active_id=#{activeId}
+    AND asu_state not in (40,110,130)
+	</select>
+	
+	<!-- 是否已经报名 -->
+	<select id="isAlreadySignUp" parameterType="java.util.Map" resultType="String" >
+	select asu_id from activesignup where ASU_ACTIVE_ID=#{activeId} and ASU_USER_ID=#{userId}
+	</select>
+	
+	
+	
+	
+	
+</mapper>

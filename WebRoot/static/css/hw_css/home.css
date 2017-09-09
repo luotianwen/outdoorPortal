@@ -1,0 +1,59 @@
+@charset "utf-8";
+/* CSS Document */
+.m_toolbar{width:100%;background:#f1f1f1;height:40px;min-width:1200px;}
+.m_entry, .m_nav{line-height:40px;font-size:14px;}
+.m_toolbar a{color:#666;text-decoration:none;}
+.m_toolbar a:hover{color:#666;text-decoration:none;}
+.m_nav a{color:#666;text-decoration:none;margin:0 10px;}
+.m_header{width:100%;background:#fff;min-width:1200px;}
+.m_header .logoarea{padding-bottom:16px;width:280px;height:74px;position:relative;}
+.m_header .logoarea span{font-size:18px;color:#ff8a01; position:absolute; right:0; bottom:12px;}
+.m_header .release{padding-top:34px;font-size:14px;padding-right:40px;}
+.m_header .release a.btn01{border: 1px solid #ff8a01;border-radius: 3px;height: 38px; width: 95px;line-height:38px;text-align:center;display:inline-block;text-decoration:none;color:#ff8a01;margin-left:18px;background:#fff;}
+.m_header .release a.btn01:hover{text-decoration:none;color:#fff;border: 1px solid #ff8a01;background:#ff8a01;cursor: pointer;}
+
+.m_main{width:100%;min-width:1200px;position:relative;}
+.m_main .m_banner{width:100%;height:460px;min-width:1200px;/* background:url(../../images/home/IMG_4734.jpg) */}
+
+/* search */
+.search-area{background:url(../../images/home/alpha-bj.png) repeat;bottom: 0; height: 118px;left: 0; position: absolute; width: 100%; z-index: 99;}
+.search-main {margin: 40px auto 0;width: 1200px;position:relative;}
+.solr { width: 100%;}
+.solr .solr-item {cursor: pointer;float: left;overflow: inherit;padding-left: 15px;padding-right: 15px; position: relative;    width: 208px;z-index: 999999;}
+.solr .solr-item input {border: 1px solid #fff;border-radius: 3px;font-size: 14px;height: 36px;padding-left: 5px;width: 100%;
+background: transparent;color:#fff;}
+.solr .solr-item i { color: #1d924c; font-size: 18px;  position: absolute;  right: 23px; top: 9.5px;}
+.solr .solr-item-btn {float: right;text-align: center;width: 208px;}
+.active-search-btn {background-color: #ff8a01;border: 1px solid #ff8a01;border-radius: 3px; color: white; display: inline-block;font-size: 14px; height: 36px; transition: all 0.5s ease 0s; width: 80%;cursor: pointer;}
+.show-choose {width:928px;background:url(../../images/home/alpha-bj.png) repeat;border: 1px solid #fff;border-radius: 3px;height:auto;overflow: hidden; position: absolute; right:7px;top:45px;height:146px;}
+.active-tag{padding:10px 12px;overflow:hidden;}
+.show-choose a{float:left;display:inline-block;width:70px;background:transparent;border:1px solid #fff;border-radius: 3px;height:30px;color:#fff;font-size:14px;line-height:30px;text-align:center;margin:5px; }
+.show-choose a:hover{background:#ff8a01;border:1px solid #ff8a01;color:#fff;}
+.show-choose .choose-current-a{background:#ff8a01;border:1px solid #ff8a01;color:#fff;}
+.show-choose .choose-where-tag{width:500px;}
+.show-choose .choose-where-tag a{width:216px;}
+.show-choose .where-add-home{width:240px;padding-left:80px;}
+.show-choose .where-add-home a{background:#ff8a01;border:1px solid #ff8a01;color:#fff;width:220px;}
+.show-choose.position-01{right:-231px;}
+
+
+
+
+/* channel */
+.active-channel-main{background-color: #ffffff;overflow: hidden; width: 100%;height:120px;}
+.active-channel {margin: 0 auto; overflow: hidden; width: 1200px;}
+.active-channel .channel-item {cursor: pointer; float: left; padding: 20px 0; width: 25%;}
+.channel-item i {color: #1d924c;display: block; float: left; font-size: 39px; height: 39px; margin-right: 5px; width: 45px;}
+.channel-item p {color: #999;}
+.channel-item span {color: #ff8a01; display: block;font: 18px/24px "微软雅黑";}
+
+::-moz-placeholder { color: #FEFCFC; }
+::-webkit-input-placeholder { color:#FEFCFC; }
+:-ms-input-placeholder { color:#FEFCFC; }
+
+.auto-search {top: 5px;width: 214px;overflow: hidden;background:url(../../images/home/alpha-bj.png) repeat;border: 1px solid #D1D1D1;border-top: 0;z-index: 1024;position: relative;display: none;}
+
+.auto-item{color: #FFFFFF;}
+.auto-item:hover{background-color: #B6B3A3;}
+.auto-item-span{color: #ECE8E8;}
+

@@ -1,0 +1,83 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<base href="/" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>玩嘛</title>
+
+<!-- base -->
+<#include "/view/base.css.html">
+
+<link rel="stylesheet" type="text/css" href="static/css/hw_css/info.css" />
+<link rel="stylesheet" type="text/css" href="static/js/plugins/focus/css/focusStyle.css">
+
+<style>
+body {
+	background: #f1f1f1;
+}
+</style>
+
+</head>
+<body>
+
+<!-- header -->
+<#include "/view/header.html">
+
+	<div class="boxw detail-block clearfix">
+		<div class="comment-content">
+			<div class="activity-item">
+				<div class="act-img">
+					<a href="huodong/info/${dto.id}.html"><img src="${dto.a_active_img}">
+					</a>
+				</div>
+				<div class="act-tit">
+					<a href="huodong/info/${dto.id}.html">${dto.title}</a>
+				</div>
+				<div class="act-price">${dto.price?string(",##0.00")}元</div>
+				<div class="act-info">
+					<#list dto.jds as item>
+						${item}<#if item_has_next>、</#if>
+					</#list>
+				</div>
+			</div>
+			<div class="comment-list">
+				<ul class="comment-box-list">
+					<li class="item-rainbow-01">
+						<div class="user-image">
+							<img src="${dto.uHeaderImg?if_exists}" width="90" height="90" />
+						</div>
+						<div class="user-name-info">
+							<span class="pro-info">${dto.uName}</span>
+							<span class="user-time">${dto.commentTime?string('yyyy-MM-dd hh:mm:ss')}</span>
+						</div>
+						<dl class="user-comment" id="user_comment" co-id="${id}">
+							<dt class="user-comment-content">
+								<p class="content-detail">
+									${dto.content}
+								</p>
+								<#if dto.images?size gt 0>
+								<div class="content-img">
+									<#list dto.images as item>
+										<img src="${item.ci_location_url}" width="150" height="150" />
+									</#list>
+								</div>
+								</#if>
+							</dt>
+							<dd class="user-comment-self-input showIn">
+								<div class="input-block">
+									<input type="text" placeholder="回复楼主" name="content"> 
+									<a class="answer-btn" href="javascript:void(0);" id="reply">回复</a>
+								</div>
+							</dd>
+							<dd class="user-comment-answer" id="page" style="width:100%;text-align:center;padding-left:0px;"></dd>
+						</dl>
+					</li>
+				</ul>
+			</div>
+		</div>
+	</div>
+	<#include "/view/base.js.html">
+<script type="text/javascript" src="static/js/plugins/layer/laypage/laypage.js"></script>
+<script type="text/javascript" src="static/js/activity/comments/comment.reply.js"></script>
+</body>
+</html>

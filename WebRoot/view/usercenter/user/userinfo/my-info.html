@@ -1,0 +1,123 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<base href="/" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>玩嘛</title>
+<#include "/view/usercenter/base.css.html">
+<style>
+body {
+	background: #f1f1f1;
+}
+</style>
+</head>
+<body>
+	<#include "/view/header.html"/>
+
+	<form>
+		<div class="boxw clearfix" style="margin-top: 20px;">
+			<#include "/view/usercenter/user/user_left_menu.html"/>
+			<div class="myinfo-main">
+				<div class="myinfo-title">
+					<h1>我的信息</h1>
+				</div>
+				<div class="myinfo-list">
+					<dl class="clearfix">
+						<dt>昵称：</dt>
+						<dd>
+							<input type="text" name="uName" value="${usersInfo.uName}" id="uName" placeholder="用户昵称" maxlength="10">
+						</dd>
+					</dl>
+					<dl class="clearfix">
+						<dt>性别：</dt>
+						<dd>
+							<label>
+								<span class="cssradio">
+									<input type="radio" value="1" name="uSex" <#if usersInfo.uSex==1>checked="true"</#if>>
+									<span></span>
+								</span>男
+							</label>
+							<label>
+								<span class="cssradio">
+									<input type="radio" value="2" name="uSex" <#if usersInfo.uSex==2>checked="true"</#if>>
+									<span></span>
+								</span>女
+							</label>
+							<label>
+								<span class="cssradio">
+									<input type="radio" value="3" name="uSex" <#if usersInfo.uSex==3>checked="true"</#if>>
+									<span></span>
+								</span>保密
+							</label>
+						</dd>
+					</dl>
+					<dl class="clearfix">
+						<dt>住址：</dt>
+						<dd>
+							<input type="text" name="uLoginAreaCode" id="uLoginAreaCode" value="${usersInfo.uLoginAreaCode!''}" placeholder="现居城市">
+						</dd>
+					</dl>
+					<dl class="clearfix">
+						<dt>出生日期：</dt>
+						<dd>
+							<input type="text" class="laydate-icon" name="birthday" id="birthday" placeholder="出生日期" value="<#if usersInfo.birthday?exists>${usersInfo.birthday?string('yyyy-MM-dd')}</#if>"/>
+						</dd>
+					</dl>
+					<dl class="clearfix">
+						<dt>个性签名：</dt>
+						<dd>
+							<textarea maxlength="100" id="personalitySignature" name="personalitySignature">${usersInfo.personalitySignature!''}</textarea>
+						</dd>
+					</dl>
+					<div class="btn-sub">
+						<a id="submit">保存</a>
+					</div>
+				</div>
+			</div>
+		</div>
+	</form>
+	<!-- main end -->
+	
+	<#include "/view/usercenter/base.js.html">
+	<script type="text/javascript" src="static/js/plugins/layer/laydate/laydate.js"></script>
+	<script type="text/javascript">
+		laydate.skin('cheng');
+		laydate({
+		    elem: '#birthday',
+		    format: 'YYYY-MM-DD', // 分隔符可以任意定义，该例子表示只显示年月
+		    festival: true, //显示节日
+		    choose: function(datas){ //选择日期完毕的回调
+		        
+		    }
+		});
+		
+		$("#submit").on("click",function(){
+			var uName = $("#uName").val(),
+				$this = $(this);
+			if(uName==null||uName==''){
+				layer.tips("昵称不能为空","#uName",{tipsMore: true});
+			}else if(uName.length>10){
+				layer.tips("昵称最长为10个字符","#uName",{tipsMore: true});
+			}else{
+				var $form = $this.closest("form");
+				$.post("users/updateUsers.json",$form.serialize(),function(data){
+					if(data.RESPONSE_STATE=="200"){
+						layer.msg(data.SUCCESS_INFO,{
+							icon :1,
+							shade:0.6,
+							time:1*1000
+						},function(){
+							location.reload();
+						})
+					}else if(data.RESPONSE_STATE=="500"){
+						layer.alert(data.ERROR_INFO, {
+							title:"错误信息",
+							icon:0
+						});
+					}
+				})
+			}
+		});
+	</script>
+</body>
+</html>

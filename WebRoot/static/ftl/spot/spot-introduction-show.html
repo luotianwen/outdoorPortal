@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head  >
+	<base href="/" />
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<title>${spot.name}</title>
+	<#include "/view/base.css.html">
+	<link rel="stylesheet" type="text/css" href="static/css/hw_css/scenic.css" />
+<style>
+    body{font-size:14px; font-family: 'Microsoft Yahei', 'Helvetica Neue', 'Luxi Sans', 'DejaVu Sans', Tahoma, 'Hiragino Sans GB', STHeiti; color:#6c6c6c;background: #fff;}
+
+</style>
+</head>
+<body>
+<#include "/view/header.html">
+    <!-- scenic begin -->
+    <div class="boxw clearfix">
+        <div class="scenic-detail">
+            <div class="tit">${spot.name}</div>
+            <div class="content">${scenicspotintroduction.content}</div>
+        </div>
+    </div>
+    <!-- scenic end -->
+</body>
+<#include "/view/base.js.html">
+</html>

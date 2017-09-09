@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<base href="/" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>玩嘛</title> 
+
+<#include "/view/usercenter/base.css.html">
+
+<link rel="stylesheet" href="static/css/page.css">
+
+<style>
+body {
+	background: #f1f1f1;
+}
+.laypageskin_molv a {
+    background-color: #fff !important;
+}
+</style>
+
+</head>
+<body>
+
+<#include "/view/usercenter/header.html">
+
+	<div class="boxw clearfix">
+		
+		<#include "/view/usercenter/housekeeper/menu_left.html">
+	
+		<div class="mainActivity-box">
+			<div class="activity-nav" id="linkMyActive">
+				<ul>
+					<li <#if type = 1>class="now"</#if> type="1">
+						<p class="num"><#if dto?exists>${dto.stop!"0"}<#else>0</#if></p>
+						<#if SESSION_USER.uType = 1 || SESSION_USER.uType = 2>
+						<p>举行过的</p>
+						<#else>
+						<p>去过的</p>
+						</#if>
+					</li>
+					<li <#if type = 2>class="now"</#if>  type="2">
+						<p class="num"><#if dto?exists>${dto.ing!"0"}<#else>0</#if></p>
+						<p>进行中的</p>
+					</li>
+					<li <#if type = 3>class="now"</#if>  type="3">
+						<p class="num"><#if dto?exists>${dto.wait!"0"}<#else>0</#if></p>
+						<p>待进行的</p>
+					</li>
+				</ul>
+			</div>
+			<!-- s1:待审核、s2:审核中、s3:审核失败、s4:审核成功 -->
+			<div class="activity-list" id="activity-list">
+				<ul>
+					<#if dto?exists>
+					<#list dto.infos as item>
+						<li data-id="${item.id}">
+							<div class="act-img">
+								<a target="_blank" >
+									<img src="${item.a_active_img}">
+								</a>
+								<span class="s${item.state-1}">
+								<#if item.state = 2>
+								待审核
+								<#elseif item.state = 3>
+								审核中
+								<#elseif item.state = 4>
+								审核失败
+								<#elseif item.state = 5>
+								审核成功
+								</#if>
+								</span>
+							</div>
+							<div class="act-tit">
+								<a>
+								<#if item.title?length gt 15>
+									${item.title[0..15]}
+								<#else>
+									${item.title}
+								</#if>
+								</a>
+							</div>
+							<div class="act-place">
+							<#if item.title?length gt 15>
+								${item.title[15..]}
+							<#else>
+							&nbsp;
+							</#if>
+							</div>
+							<div class="act-price">${item.price?string(",##0.00")}元</div>
+							<div class="act-info">
+								<#list item.jds as item>
+									${item}<#if item_has_next>、</#if>
+								</#list>
+							</div>
+							<#if SESSION_USER.uType = 1 || SESSION_USER.uType = 2>
+								<div class="activity-ico">
+									<#if item.template==0>
+										<a id="template" template="0" href="javascript:void(0)">
+											<i></i>
+											<span>设为模板</span>
+										</a>
+										<#elseif item.template==1>
+										<a id="template" template="1" href="javascript:void(0)">
+											<i></i>
+											<span>取消模板</span>
+										</a>
+									</#if>
+									
+									<#if (item.a_close==0||item.a_close==3) && item.state!=15>
+										<a id="close" href="javascript:void(0)" close="0">
+											<i></i>
+											<span>关闭活动</span>
+										</a>
+										<#elseif item.a_close==1 && item.state!=15>
+										<a id="close" href="javascript:void(0)" close="1">
+											<span>已申请关闭</span>
+										</a>
+										<#elseif item.a_close==2 || item.state==15>
+										<a id="close" href="javascript:void(0)" close="2">
+											<span>活动已关闭</span>
+										</a>
+									</#if>
+								</div>
+							</#if>
+						</li>
+					</#list>
+					</#if>
+				</ul>
+			</div>
+				
+			<div style="width: 100%;text-align: center;/* background-color: white;padding-top: 6px; */" id="page">
+			</div>
+		</div>
+	</div>
+	
+	<#include "/view/usercenter/base.js.html">
+	<!-- 分页 -->
+	<script type="text/javascript" src="static/js/plugins/layer/laypage/laypage.js"></script>
+	<script type="text/javascript" src="static/js/page.js"></script>
+	<!-- main end -->
+	<script type="text/javascript" src="static/js/usercenter/housekeeper/activity/usercenter.myActivity.js"></script>
+	<script type="text/javascript">
+		$("div#page").page({
+			totalPage:${page.totalPage},
+			currentPage:${page.currentPage},
+			param:{
+				type:${type}
+			},
+			link:"huodong/myActive.html"
+		})
+	</script>
+</body>
+</html>

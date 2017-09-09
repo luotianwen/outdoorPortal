@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<base href="/" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>玩嘛</title>
+<#include "/view/usercenter/base.css.html">
+
+<link rel="stylesheet" type="text/css" href="static/css/hw_css/venue.css" />
+<style>
+body {
+	background: #f1f1f1;
+}
+
+.laypageskin_molv a {
+	background-color: #fff !important;
+}
+</style>
+
+</head>
+<body>
+	<#include "/view/usercenter/header.html">
+
+	<div class="boxw clearfix">
+		<#include "/view/usercenter/poinService/pointCenter/menu_left.html">
+
+		<#list list as dto>
+			<div class="venue-item clearfix" style="float: right;margin-bottom: 30px;">
+				<div class="item-img fl" id="pointImg" data_id="${dto.ps_id}"></div>
+				<div class="item-message fl">
+					<h1><a href="pointService/detail/${dto.ps_id}.html" style="color:#555;" target="_blank">${dto.ps_zh_name}</a></h1>
+					<dl class="clearfix">
+						<dt>地 址：</dt>
+						<dd>${dto.ps_countys_id}${dto.ps_province_id}${dto.ps_city_id}${dto.ps_address}</dd>
+					</dl>
+					<dl class="clearfix">
+						<dt>联系电话：</dt>
+						<dd><#list dto.pointServiceContactList as item>${item.psc_number}<#if (item_has_next)>、</#if></#list></dd>
+					</dl>
+					<dl class="clearfix">
+						<dt>类 型：</dt>
+						<dd>${dto.ps_type}</dd>
+					</dl>
+					<dl class="clearfix">
+						<dt>营业时间：</dt>
+						<dd>
+							<#list dto.businessTimeDTOList as item>
+								<#list item.businessDaysList as dayitem>
+									${dayitem.psbd_day}<#if (dayitem_has_next)>、</#if>
+								</#list>
+								 ${item.psabd_start_date}-<#if item.psabd_end_date=='0:00'>24:00<#else>${item.psabd_end_date}</#if>
+								 <#if (item_has_next)><br/></#if>
+							</#list>
+						</dd>
+					</dl>
+					<#if dto.pointServiceFeatureList?size!=0>
+						<dl class="clearfix">
+							<dt>标 签：</dt>
+							<dd>
+								<#list dto.pointServiceFeatureList as item>
+									<span class="tags">${item.psf_name}</span>
+								</#list>
+							</dd>
+						</dl>
+					</#if>
+				</div>
+				
+			</div>
+		</#list>
+	</div>
+
+	<#include "/view/usercenter/base.js.html">
+	<script type="text/javascript">
+		$(function(){
+			layer.config({
+				extend: 'extend/layer.ext.js'
+			});
+			
+			$("div.venue-item div#pointImg").each(function(){
+				var $this = $(this);
+				var data;
+				$.post("pointService/pointServiceImg.json",{id:$this.attr("data_id")},function(json){
+					$this.html("<img style='width:375px;height:250px;' src='"+json.data[0].src+"'/><div style='text-align: center;'>查看全部 "+json.data.length+" 张照片</div>");
+					data = json;
+				})
+				
+				//场馆图片
+				$this.on("click",function(){
+					layer.photos({
+						photos: data
+					});
+				})
+			})
+			
+		})
+	</script>
+</body>
+</html>

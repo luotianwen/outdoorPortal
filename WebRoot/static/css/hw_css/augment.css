@@ -1,0 +1,997 @@
+/* 初始化样式  */
+html, body, div, span, iframe, h1, h2, h3, h4, h5, h6, p, blockquote, pre, a, address, big, cite, code, del, em, font, img, ins, small, strong, var, b, u, i, center, dl, dt, dd, ol, ul, li, fieldset, form, label, legend { margin: 0; padding: 0;}
+ol,ul,li{ list-style:none; list-style-position:outside;}
+:focus { outline: 0 none;}
+a img {border: 0 none;}
+img {vertical-align: middle;}
+table{border-collapse:collapse;border-spacing:0;}
+address, caption, cite, code, dfn, em, th, var, b, i, s{font-style:normal;font-weight:normal;}
+body{font-size:12px; font-family: 'Microsoft Yahei', 'Helvetica Neue', 'Luxi Sans', 'DejaVu Sans', Tahoma, 'Hiragino Sans GB', STHeiti; color:#6c6c6c;background: #f1f1f1;}
+.fl{float:left;display:inline;}
+.fr{float:right;display:inline;}
+.boxw{width:1200px;margin:0 auto;}
+.clearfix:before, .clearfix:after {content: ".";display: block;height: 0;visibility: hidden;}
+.clearfix:after {clear: both;}
+.clearfix {zoom: 1;} /* IE < 8 */
+
+
+
+
+.hrea{
+	width: 200px;
+    display: inline-block;
+    position: absolute;
+    top: 20px;
+    right: 128px;
+}
+.hrea-top{
+	width: 200px;
+    display: inline-block;
+    position: absolute;
+    top: 14px;
+    right: 100px;
+}
+.colher{
+	margin-right: 226px;
+}
+
+.bshare-custom{
+	display: inline-block;
+	font-size: 16px;
+    line-height: 20px !important;
+    
+}
+.bshare{
+	    height: 32px !important;
+    	width: 34px !important;
+    	padding-left:0 !important;
+}
+.bshare2{
+	    height: 35px !important;
+    	width: 34px !important;
+    	padding-left:0 !important;
+}
+.bshare3{
+	    width: 34px !important;
+    	height: 28px !important;
+    	padding-left:0 !important;
+}
+.bshare-sinaminiblog{
+	background:url("../../images/hw_img/piuter-img.png") no-repeat -238px -8px !important;
+    display: inline-block;
+}
+.bshare-qzone{
+	background: url("../../images/hw_img/a7.png") no-repeat !important;
+    display: inline-block;
+}
+.bshare-weixin{
+	background: url("../../images/hw_img/piuter-img.png") no-repeat -39px -7px !important;
+    display: inline-block;
+}
+
+/* 整圆 */
+.border-R{
+    border-radius: 50%;
+}
+.mL-4{
+    margin-left: 10px;
+}
+.mL_4{
+    margin-left: -10px;
+}
+.mL-5{
+    margin-left: 20px;
+}
+.mL_5{
+    margin-left: -20px;
+}
+.mL-6{
+    margin-left: 40px;
+}
+.mL_7{
+    margin-left: -50px;
+}
+.mL-7{
+    margin-left: 100px;
+}
+.mL_7{
+    margin-left: -100px;
+}
+/* margin-top 相关 */
+.mT-4{margin-top: 10px;}
+.mT_4{margin-top: -10px;}
+.mT-5{margin-top: 20px;}
+.mT_5{margin-top: -20px;}
+.mT-6{margin-top: 30px;}
+.mT_6{margin-top: -50px;}
+.mT-7{margin-top: 70px;}
+.mT_7{margin-top: -100px;}
+/* padding  */
+.pad{
+    padding: 30px;
+}
+/* padding-left相关   */
+.pL-4{padding-left: 10px}
+.pL-5{padding-left: 20px}
+.pL-6{padding-left: 50px}
+.pL-7{padding-left: 100px}
+/*padding-top 相关  */
+
+.pT-4{padding-top: 10px;}
+.pT-5{padding-top: 20px;}
+.pT-6{padding-top: 70px;}
+.pT-7{padding-top: 40px;}
+/* 宽度相关  */
+.w0{width: 30px;}
+.w1{width: 100px;}
+.w2{width: 120px;}
+.w3{width: 200px;}
+.w4{width: 400px;}
+.w5{width: 500px;}
+.w6{width: 600px;}
+.w7{width: 820px;}
+.w8{width: 880px;}
+.w9{width: 900px;}
+.w10{width: 100%;}
+/* height 相关*/
+.h1{height:10px;}
+.h2{height:30px;}
+.h3{height:40px;}
+.h4{height:80px;}
+.h5{height:100px;}
+.h5-5{height: 120px;}
+.h6{height:140px;}
+.h7{height:600px;}
+/* line-height 相关*/
+.lH-1{line-height: 12px;}
+.lH-2{line-height: 24px;}
+.lH-3{line-height: 30px;}
+.lH-4{line-height: 40px;}
+.lH-5{line-height: 48px;}
+/* 定位相关  */
+.position-a{
+    position: absolute;
+}
+.position-r{
+    position: relative;
+}
+/* 浮动相关  */
+.float-l{
+    float: left;
+}
+.float-r{
+    float: right;
+}
+/*两端对齐相关*/
+.taJ{text-align: justify}
+.taD{display: inline-block}
+.taM{display: inline-block;width: 100%;height: 0;overflow: hidden;}
+/* 溢出相关 */
+.overF{overflow: hidden;}
+.none1{
+    display: none;
+}
+/*  背景图片相关  */
+.back1{
+    background-size: contain;
+}
+.back2{
+    background-size:cover;
+}
+/* 字体大小相关  */
+.fontS1{
+    font-size: 14px;
+}
+.fontS2{
+    font-size: 18px;
+}
+.fontS3{
+    font-size: 24px;
+}
+/* 文字对齐方式  */
+.textA1{
+    text-align: center;
+}
+
+.textA2{
+    text-align: left;
+}
+.textA3{
+    vertical-align: text-bottom;;
+}
+/*  文字颜色 */
+.colorFFF{
+    color:#FFFFFF;
+}
+.colorf{
+    color:#ff8a01; ;
+}
+.color3{
+    color: #333;
+}
+
+.color6{
+    color:#666;
+}
+.color9{
+    color:#999;
+}
+/* 居中 */
+.maGm{
+    margin: 0 auto;
+}
+.borf{
+    border: 1px solid #fff;
+}
+.backFFF{
+    background-color: #fff;
+}
+.backf{
+    background-color: #ff8a01;
+}
+.db{
+    display: block;
+}
+/*  样式  */
+.mo-top{
+    background-color: #FFF;
+}
+.mo-top1{
+    width:100%;
+    height: 600px;
+    background-size: cover;
+}
+.mo-top2{
+    bottom: 50px;
+    left: 50%;
+    margin-left: -400px;
+}
+.mo-top3{
+    background-size: cover;
+    top:-70px;
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    display: inline-block;
+}
+.mo-top4{
+    display: inline-block;
+    width: 30px;
+    height: 30px;
+    background-color: rgba(0,0,0,0.8);
+    top:-25px;
+    left: 45px;
+}
+.mo-top5{
+    line-height: 24px;
+    vertical-align: bottom;
+}
+.mo-top6{
+    font-size: 18px;
+    margin-left: 134px;
+    vertical-align: text-bottom;
+}
+.mo-top-1{
+    width: 20px;
+    height: 20px;
+    background: url("../../images/hw_img/piuter-img.png") no-repeat -12px -38px;
+    margin-left: 5px;
+    display:inline-block;
+    vertical-align: middle;
+}
+.mo-top-2{
+    width: 20px;
+    height: 20px;
+    background: url("../../images/hw_img/piuter-img.png") no-repeat -104px -39px;
+    margin-left: 5px;
+    display:inline-block;
+    vertical-align: middle;
+}
+
+.mo-top7{
+    font-size: 14px;
+    margin-left: 26px;
+}
+.mo-top8{
+    color: #ea3c1a;
+}
+.mo-topDay{
+	width: 880px;
+	margin-left: 352px;
+    margin-top: -70px;
+    text-align: center;
+}
+.mo-one1{
+    background: url("../../images/hw_img/piuter-img.png") no-repeat -187px -9px;
+    width: 26px;
+    height: 26px;
+    display: inline-block;
+    margin-top: -7px;
+    vertical-align: middle;
+    cursor: pointer;
+}
+.mo-one2{
+    background: url("../../images/hw_img/piuter-img.png") no-repeat -41px -32px;
+    width: 26px;
+    height: 26px;
+    margin-top: -8px;
+    margin-left: 16px;
+    display: inline-block;
+    vertical-align: middle;
+    cursor: pointer;
+}
+
+.mo-one4{
+    background: url("../../images/hw_img/piuter-img.png") no-repeat -39px -7px;
+    width: 34px;
+    height: 26px;
+    display: inline-block;
+    vertical-align: middle;
+}
+.mo-one5{
+    background: url("../../images/hw_img/a7.png") no-repeat;
+    width: 32px;
+    height: 32px;
+    display: inline-block;
+    vertical-align: middle;
+}
+.mo-one6{
+    background: url("../../images/hw_img/piuter-img.png") no-repeat -238px -8px;
+    width: 34px;
+    height: 26px;
+    display: inline-block;
+    vertical-align: middle;
+}
+.mo-top9{
+    font-size: 18px;
+    margin-top: -12px;
+    width: 814px;
+    white-space: nowrap;
+    height: 40px;
+    overflow: hidden;
+}
+.ma{
+    margin: 5px 10px 0 30px;
+}
+.mo-one7{
+    cursor: pointer;
+    width: 120px;
+    height: 40px;
+    line-height: 40px;
+    display: inline-block;
+    text-align: center;
+    vertical-align: middle;
+}
+.mo-one7:before{
+    content: "";
+    background:url("../../images/hw_img/piuter-img.png") no-repeat -273px -10px;
+    width: 26px;
+    height: 24px;
+    display: inline-block;
+    vertical-align: text-bottom;
+}
+.a6:before{
+    content: "";
+    background: url("../../images/hw_img/piuter-img.png") no-repeat -104px -8px;
+    width: 25px;
+    height: 25px;
+    position: absolute;
+    left: 5px;
+    top:12px;
+}
+.a7:before{
+    content: "";
+    background: url("../../images/hw_img/piuter-img.png") no-repeat -159px -8px;
+    width: 25px;
+    height: 25px;
+    position: absolute;
+    left: 5px;
+    top:12px;
+}
+.a8:before{
+    content: "";
+    background: url("../../images/hw_img/piuter-img.png") no-repeat -213px -12px;
+    width: 25px;
+    height: 25px;
+    position: absolute;
+    left: 5px;
+    top:12px;
+}
+
+.a9:before{
+    content: "";
+    background: url("../../images/hw_img/piuter-img.png") no-repeat -133px -7px;
+    width: 25px;
+    height: 25px;
+    position: absolute;
+    left: 5px;
+    top:12px;
+}
+.mo-top10{
+    width: 880px;
+    background-size: cover;
+    background: #fff;
+    margin-bottom: 10px;
+}
+
+.mo-one8:before{
+    display: inline-block;
+    content: "";
+    background: url("../../images/hw_img/piuter-img.png") no-repeat -72px -5px;
+    width: 30px;
+    height: 30px;
+    position: absolute;
+    top:0;
+    left: -35px;
+}
+.mo-one8{
+    height:70px;
+    margin-top: 20px;
+    margin-left: 64px;
+    display: inline-block;
+    line-height: 30px;
+    font-size: 14px;
+    color: #999;
+    text-align: center;
+    position: relative;
+}
+.mo-middle1{
+    margin-top: 10px;
+    width: 100%;
+
+}
+/* 新改样式  */
+.mrT{
+	margin-right: -130px;
+    margin-top: -11px;
+}
+.mR{
+	    margin-right: 214px;
+	    float:right;
+}
+.mo-middle2{
+    display: none; 
+    position: absolute;
+    width: 100%;
+    height: 40px;
+    background-color: rgba(0,0,0,0.5);
+}
+.mo-middle3{
+    line-height: 40px;
+    text-align: center;
+}
+.mo-two2{
+    margin-right: 10px;
+}
+.mo-middle3>span{
+    margin-left: 25px;
+}
+.mo-two1:before{
+    content: "";
+    cursor: pointer;
+    background: url("../../images/hw_img/piuter-img.png") no-repeat -133px -35px;
+    width: 26px;
+    height: 26px;
+    display: inline-block;
+    vertical-align: middle;
+}
+.hov{
+    position: relative;
+}
+.hov:hover .mo-middle2{
+    display: block;
+} 
+.mo-middle4{
+    height: 100px;
+    line-height: 100px;
+    font-size: 14px;
+    background-color: #fff;
+    position: relative;
+}
+.mo-middle5:before{
+    display: inline-block;
+    content: "";
+    background: url("../../images/hw_img/piuter-img.png") no-repeat -189px -39px;
+    width: 25px;
+    height: 25px;
+    margin-left: 30px;
+    vertical-align: middle;
+}
+.mo-middle6:before{
+    display: inline-block;
+    content: "";
+    background: url("../../images/hw_img/piuter-img.png") no-repeat -159px -36px;
+    width: 25px;
+    height: 25px;
+    margin-left: 140px;
+    vertical-align: middle;
+}
+.mo-middle7{
+    margin-left: 260px;
+}
+.mo-middle8{
+    height: 100px;
+}
+.mo-middle9{
+    color: #ff8a01;
+}
+.mo-middle9:before{
+    content: "";
+    background: url("../../images/hw_img/piuter-img.png") no-repeat  -222px -44px;
+    width: 16px;
+    height: 16px;
+    display: inline-block;
+    vertical-align: middle;
+}
+.my-reply{
+    width: 880px;
+    line-height: 30px;
+    background: #fff;
+    position: relative;
+    margin-bottom: 10px;
+}
+.my-reply>div>p{
+    width: 680px;
+    margin: 0 auto;
+    padding-top: 40px;
+    font-size: 14px;
+    color: #666;
+}
+.headP1{
+    width: 680px;
+    /* border-bottom: 1px solid #999; */
+    margin: 0 auto;
+    /* padding-bottom: 30px; */
+
+}
+.headP{
+    background: url("../../images/hw_img/a9.jpg") no-repeat;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background-size: cover;
+    position: absolute;
+    top:50px;
+    left: 32px;
+}
+.map{
+    background: url("../../images/hw_img/a9.jpg") no-repeat;
+    width: 360px;
+    background-size: cover;
+    margin-top: 20px;
+    /* margin-left: 41px; */
+}
+.import{
+    width: 590px;
+    height: 35px;
+    border: 1px solid #999999;
+    margin: 26px auto;
+    text-align: left;
+    padding-left: 10px;
+}
+.import1{
+    width: 680px;
+    margin: 0 auto;
+}
+.button{
+    width: 78px;
+    height: 39px;
+    border: 1px solid #999;
+    color: #999;
+    text-align: center;
+    margin-left: -5px;
+    margin-top: 15px;
+    cursor: pointer;
+}
+.coatImg{
+    width: 680px;
+    vertical-align: middle;
+    line-height: 40px;
+    margin: 0 auto;
+    background: #fff;
+    position: relative;
+}
+.critic{
+    color: #555555;
+    margin-top: 10px;
+    display: inline-block;
+    margin-left: 56px;
+}
+.line{
+    padding-left: 40px;
+    color: #aaa;
+}
+.favicon{
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-size: cover;
+    position: absolute;
+    top:5px;
+    left: 0;
+}
+.shrink{
+    width: 680px;
+    vertical-align: middle;
+    line-height: 36px;
+    margin: 0 auto;
+    background: #fff;
+    padding-bottom:20px ;
+    color: #333333;
+}
+.shrink span{
+	cursor: pointer;
+}
+.comment-buttom{
+    color: #555;
+    width: 780px;
+    margin: 10px auto;
+    line-height: 102px;
+    text-align: left;
+    vertical-align: middle;
+    border-top: 1px solid #999;
+}
+.marT{
+    margin-left: 20px;
+}
+.mo-buttom1{
+    background-color: #f1f1f1;
+    line-height: 56px;
+    vertical-align: middle;
+    display: inline-block;
+    padding-top: 46px;
+}
+.mo-buttom2{
+    margin-left: -10px;
+    margin-top: 40px;
+    display: inline-block;
+}
+.before1{
+    display: inline-block;
+    width: 55px;
+    height: 55px;
+    margin-left:28px;
+    border-radius: 50%;
+    background-size: cover;
+    margin-right: 20px;
+    vertical-align: middle;
+}
+.mo-buttom3{
+    display: block;
+    width: 800px;
+    margin: 0 auto;
+    height: 250px;
+    margin-top: 30px;
+    resize: none;
+	border-color: #ddd;
+    font-size: 15px;
+    padding: 10px;
+}
+.mo-buttom5{
+    display: inline-block;
+    font-size: 14px;
+    line-height: 40px;
+    text-align: center;
+    color: #fff;
+    float: right;
+    cursor: pointer;
+}
+.mo-buttom4:before{
+    content: "";
+    width: 35px;
+    height: 35px;
+    background: url("../../images/hw_img/piuter-img.png") no-repeat -4px -61px;
+    display: inline-block;
+    vertical-align: middle;
+}
+.mo-buttom4{
+	cursor: pointer;
+}
+.index{
+    display: inline-block;
+    margin-left: 40px;
+    width: 200px;
+    line-height: 48px;
+    padding-left: 50px
+}
+.ta{
+    text-align: justify;
+    background-color: #fff;
+    color: #555;
+    line-height: 24px;
+}
+/* 固定区域  */
+.top-top{
+    background: #fff;
+    height: 64px;
+}
+.top-top1{
+    background-size: cover;
+    top: 7px;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    display: inline-block;
+    background-size: cover;
+}
+.top-top2{
+    display: inline-block;
+    width: 15px;
+    height: 15px;
+    background-color: rgba(0,0,0,0.8);
+    top: 20px;
+    left: 20px;
+}
+.aba{
+    padding-top:24px ;
+}
+.top-top3{
+    bottom: -22px;
+    left: 40%;
+    margin-left: -400px;
+    color: #555;
+    font-size: 18px;
+    white-space: nowrap;
+    cursor: default;
+}
+
+.article-title{
+	width:880px;
+	overflow: hidden;
+	display: block;
+	text-align: center;
+}
+.article-title p{
+	font-size: 24px;
+	color:#898989;
+	height:67px;
+	line-height:80px;
+	width:880px;
+	margin-bottom: 30px;
+}
+
+.img{
+	background-color: #fff;
+	padding: 30px 0 30px 0;
+}
+
+.right-all{
+	display: none;
+    width: 312px;
+    background: #FFFFFF;
+    margin-left: 5px;
+    background-size: contain;
+    font-size: 16px;
+    color: #666666;
+    line-height: 32px;
+    position: absolute;
+    right: 0;
+    top:0;
+
+}
+.right-all>div>.right-font,.right-all>div>ul{
+    margin-left: 18px;
+    line-height: 38px;
+    font-size: 20px;
+
+}
+.fontSize{
+    font-size: 14px;
+    margin-left: 24px;
+}
+.mo-one1:hover{
+    background: url("../../images/hw_img/piuter-img.png") no-repeat -73px -33px;
+}
+.follow{
+	background: url("../../images/hw_img/piuter-img.png") no-repeat -73px -33px;
+}
+.praise{
+	background: url("../../images/hw_img/piuter-img.png") no-repeat -13px -5px;
+}
+.mo-one2:hover{
+    background: url("../../images/hw_img/piuter-img.png") no-repeat -13px -5px;
+}
+#content{width:302px;height:0;overflow:hidden;}
+ .home{
+     background: url("piuter-img/piuter-img.png") no-repeat -222px -43px;
+     width: 16px;
+     height: 16px;
+     display: inline-block;
+     vertical-align: middle;
+ }
+
+ .button1-1{
+     display: inline-block;
+     width: 80px;
+     height: 40px;
+     text-align: center;
+     line-height: 40px;
+     font-size: 14px;
+     margin-left: 5px;
+     cursor: pointer;
+ }
+.fontF{
+    float: right;
+    margin-top: 7px;
+}
+
+/* 返回草稿 */
+.tier{
+    width: 100%;
+    background-color: #000;
+    opacity: 0.5;
+    height: 80px;
+    position: fixed;
+    bottom: 0;
+    z-index: 10;
+}
+.goBack{
+    position: fixed;
+    bottom: 20px;
+    right: 488px;
+    z-index: 10;
+}
+.goBack1{
+    display: inline-block;
+    width: 100px;
+    height: 40px;
+    text-align: center;
+    background-color: #ff8a01;
+}
+.goBack>a{
+    color: #fff;
+    line-height: 40px;
+}
+.travels-comment-page{
+	width: 880px;
+	text-align: center;
+	margin-top: 30px;
+}
+.comment-travels{
+	padding-top: 20px;
+}
+
+/* 音乐样式 */
+.user-head{
+    
+    -webkit-animation:user-head 6s linear infinite;
+    -moz-animation:user-head 6s linear infinite;
+    animation:user-head 6s linear infinite;
+}
+
+@-webkit-keyframes user-head {
+    0% {
+        -webkit-transform: rotateZ(0deg);
+    }
+    100% {
+        -webkit-transform: rotateZ(360deg);
+    }
+}
+@-moz-keyframes user-head {
+    0% {
+        -moz-transform: rotateZ(0deg);
+    }
+    100% {
+        -moz-transform: rotateZ(360deg);
+    }
+}
+@keyframes user-head {
+    0% {
+        transform: rotateZ(0deg);
+    }
+    100% {
+        transform: rotateZ(360deg);
+    }
+}
+
+
+/* 完善信息 */
+.pB-6{
+	padding-bottom: 40px;
+}
+.edit-ico {
+	background: url("../../images/hw_img/piuter.png") no-repeat -179px -11px;
+    width: 24px;
+    height: 24px;
+    position: absolute;
+    top: 50px;
+    left: 23px;
+	
+}
+.borderB{
+    border: 1px solid #ff8a01;
+}
+.mR-4{margin-right: 40px;}
+.mT-2{margin-top: 4px;}
+/* 点赞  */
+.zH{
+	float: right;
+    margin-right: 220px;
+    margin-top: 6px;
+}
+
+/* 完善信息编辑 */
+
+
+/* 完善信息弹框 */
+.pop-box{width: 800px;background: #fff;padding:0 30px;}
+.pop-box .mt{height:60px;line-height: 60px;position: relative;}
+.pop-box .mt h1{font-size:18px;color: #999;font-weight: normal;}
+.pop-box .mt .close{width:30px;height: 30px;display: block;background: url(../../images/hw_img/icons-all.png) no-repeat; background-position: -67px -234px;position: absolute; right:0;top:14px;}
+.pop-box .mt .close:hover{background-position: -108px -234px;}
+.pop-box .mc{overflow: hidden;padding:10px 20px 30px;}
+.pop-box .complete-list{margin-left:50px;margin-right:40px;}
+.pop-box .complete-list ul{border-left:2px solid #ccc;padding-left:35px;}
+.pop-box .complete-list li{position: relative;font-size: 14px; line-height: 24px;padding: 16px 0;color:#666;}
+.pop-box .complete-list .btns {border: 1px solid #ff8a00; float: right; font-size: 12px; color: #ff8a00; height: 22px; line-height: 22px; padding: 0; text-align: center; width: 58px;background: #fff;cursor: pointer;}
+.pop-box .complete-list .btns:hover{background: #ff8a00;color:#fff;}
+.pop-box .complete-list .num{position: absolute;left:-44px;top: 21px;  background: #fff;border: 1px solid #ccc; border-radius:50%;width:14px;height:14px; }
+.pop-box .complete-list .name {display: inline-block; width: 257px;}
+.pop-box .btns{text-align: center;padding:25px 0;}
+
+.note-info-box{overflow: hidden;margin-top:25px;}
+.note-info-box dl{margin-bottom:20px;}
+.note-info-box dt{float:left;font-size:16px;color:#999;width:130px;padding-right:10px;text-align: right;line-height: 35px;}
+.note-info-box dt span{font-size:18px;color:#fd3f3f;margin-right:5px;vertical-align: -3px;}
+.note-info-box dd{float:left;width:400px;font-size:16px;}
+.note-info-box input,.note-info-box select{width:298px;height:33px;border:1px solid #f1f1f1;background: #f1f1f1;line-height: 33px;font-size:16px;color:#999;padding:0 10px;}
+.note-info-box input:focus ,.note-info-box select:focus{background-color: #fff;border-color: #ff8a01;}
+.note-info-box select{width:320px;}
+.note-info-box select option{text-indent: 10px;padding:5px 0;}
+
+.btn-complete{width:120px;height: 40px;color:#fff;background: #ff8a01;font-size:18px;display: inline-block;line-height: 40px;text-align: center;cursor: pointer;}
+
+/* 目录 */
+.box{
+    -webkit-box-shadow: 0 7px 10px -3px rgba(0,0,0,0.3) inset;
+    -moz-box-shadow: 0 7px 10px -3px rgba(0,0,0,0.3) inset;
+    box-shadow: 0 7px 10px -3px rgba(0,0,0,0.3) inset;
+}
+
+.box1{
+    display: inline-block;
+    -webkit-box-shadow: 0 7px 10px -3px rgba(0,0,0,0.3);
+    -moz-box-shadow: 0 7px 10px -3px rgba(0,0,0,0.3);
+    box-shadow: 0 7px 10px -3px rgba(0,0,0,0.3);
+}
+
+.right-icon{
+    background: url("../../static/images/hw_img/catalog.png") no-repeat;
+    display: inline-block;
+    width: 24px;
+    height: 24px;
+    vertical-align: middle;
+    margin-right: 10px;
+}
+.curP{
+    cursor: pointer;
+}
+.branch{
+    margin-left: 3px;
+}
+.pTB{
+    padding: 40px 0 30px 0;
+}
+.triangle{
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+}
+.up{
+    background: url("../../static/images/hw_img/upDown.png") no-repeat -26px 3px;
+}
+.down{
+    background: url("../../static/images/hw_img/upDown.png") no-repeat -8px 3px;
+}
+
+/* 没有图片头图样式 */
+.no_pic{
+	position: absolute;
+    left: 50%;
+    top: 50%;
+    margin-top: -20px;
+    font-size: 24px;
+    color: #666;
+    margin-left: -145px;
+}
+

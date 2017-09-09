@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<base href="/" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>玩嘛</title>
+
+<#include "/view/usercenter/base.css.html">
+<style>
+body {
+	background: #f1f1f1;
+}
+</style>
+</head>
+<body>
+	<#include "/view/usercenter/header.html">
+	<div class="boxw clearfix">
+		<#include "/view/usercenter/housekeeper/menu_left.html">
+		<div class="main-box">
+			<h1>退款详情</h1>
+			<div class="refund-info det clearfix">
+				<a href="pointServiceOrder/orderInfo.html?id=${psoId}" class="refund-btn-1 edit-info">订单详情</a>
+			</div>
+			
+			<#list orderRefundInfoDTOList as item>
+				<div class="refund-info det clearfix" id="refundInfo">
+					<dl>
+						<dt>申请退款时间：</dt>
+						<dd>${item.psoar_refund_apply_time?string('yyyy-MM-dd HH:mm:ss')}</dd>
+					</dl>
+					<dl>
+						<dt>退款方式：</dt>
+						<dd>原路返回</dd>
+					</dl>
+					<dl>
+						<dt>退款金额：</dt>
+						<dd>
+							<span class="style-2">${item.psoar_refund_number?number * item.pso_discount_price?number}</span><span class="style-3">元</span>
+						</dd>
+					</dl>
+					
+					<#if item.psoar_state==10>
+						<div class="refund-state-1 clearfix">
+							<img src="static/images/hw_img/loading-1.gif" /> <span>退款申请已提交，正等待网站后台处理。</span>
+						</div>
+						<#elseif item.psoar_state==20>
+						<div class="refund-state-1 clearfix">
+							<img src="static/images/hw_img/loading-1.gif" /> <span>支付平台已处理，等待退款到账。</span>
+						</div>
+						<#elseif item.psoar_state==30>
+						<div class="refund-state-2 clearfix">
+							<i class="success-img"></i>
+							<div class="success-info">
+								<h1>恭喜您！退款成功</h1>
+								<p>交易号：${item.pso_pay_sequence}</p>
+								<p>
+									您可凭借上方交易号致电，支付宝<span>95188</span>查询到账情况，退款时间已查询结果为准。
+								</p>
+							</div>
+						</div>
+					</#if>
+					
+					<div class="refund-state-3 clearfix">
+						<#if item.psoar_state==10>
+							<ul class="s1">
+								<li class="on-1">1. 提交申请</li>
+								<li>2. 后台处理</li>
+								<li>3. 支付平台</li>
+								<li>4. 退款成功</li>
+							</ul>
+							<#elseif item.psoar_state==20>
+							<ul class="s1">
+								<li class="on-2">1. 提交申请</li>
+								<li class="on-4">2. 后台处理</li>
+								<li class="on-3">3. 支付平台</li>
+								<li>4. 退款成功</li>
+							</ul>
+							<#elseif item.psoar_state==30>
+							<ul class="s1">
+								<li class="on-2">1. 提交申请</li>
+								<li class="on-4">2. 后台处理</li>
+								<li class="on-4">3. 支付平台</li>
+								<li class="on-3">4. 退款成功</li>
+							</ul>
+						</#if>
+						<ul class="s2">
+							<li><#if item.psoar_refund_apply_time?exists>${item.psoar_refund_apply_time?string('yyyy-MM-dd HH:mm:ss')}</#if></li>
+							<li><#if item.psoar_refund_time?exists>${item.psoar_refund_time?string('yyyy-MM-dd HH:mm:ss')}</#if></li>
+							<li><#if item.psoar_refund_time?exists>${item.psoar_refund_time?string('yyyy-MM-dd HH:mm:ss')}</#if></li>
+							<li><#if item.psoar_refund_success_time?exists>${item.psoar_refund_success_time?string('yyyy-MM-dd HH:mm:ss')}</#if></li>
+						</ul>
+					</div>
+					<#if item.psoar_state==10>
+						<a href="javascript:void(0)" psoar_id="${item.psoar_id}" id="cancelRefund" style="color:#555;float: right;">取消退款</a>
+					</#if>
+				</div>
+				
+			</#list>
+		</div>
+	</div>
+	<!-- main end -->
+</body>
+<#include "/view/usercenter/base.js.html">
+<script type="text/javascript">
+	$(function(){
+		$("div#refundInfo").on("click","a#cancelRefund",function(){
+			var $this = $(this);
+			var id = $this.attr("psoar_id");
+			layer.confirm("是否确定取消退款?",{icon:3},function(index){
+				$.post("pointServiceOrder/cancelRefund.json",{id:id},function(data){
+					if(data.RESPONSE_STATE==200){
+						layer.msg("取消退款成功。",{icon:1,time:1*1000,shade:0.3},function(){
+							$this.closest("#refundInfo").remove();
+						})
+					}else if(RESPONSE_STATE==500){
+						layer.alert("取消退款失败，请稍后再试！",{title:"错误信息",icon:0});
+					}
+				})
+			});
+		})
+		
+	})
+</script>
+
+</html>

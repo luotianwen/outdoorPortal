@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+	<!-- 订单出游人(s_orderTravelPeople)Mapper -->
+<mapper namespace="s_orderTravelPeopleMapper">
+    <!--mybatis ehcache缓存配置 -->
+    <!-- 以下两个<cache>标签二选一,第一个可以输出日志,第二个不输出日志 不使用缓存加入useCache="false" -->
+    <!-- <cache type="org.mybatis.caches.ehcache.LoggingEhcache" /> -->
+    <!-- <cache type="org.mybatis.caches.ehcache.EhcacheCache"/>  -->
+
+	<sql id="Base_Column_List">
+    otp_id,user_id ,orderId ,agentOrderId ,productSn ,productName ,productType ,unitPrice ,count ,retailPrice ,settlementPrice ,inDate ,validTimeBegin ,validTimeEnd ,visitorName ,visitorPhone ,cardType ,cardNum ,sex ,codeNumber ,emsContent ,ticketTimeInfo ,status ,pay_status ,pay_time ,usedNum ,usedState ,trade_no ,isSuccess ,errorCode ,errorMsg ,dealTime 
+    </sql>
+
+    <resultMap type="com.op.spot.entity.S_orderTravelPeople" id="S_orderTravelPeopleReturnMap">
+		<!-- id -->
+      <id column="otp_id" property="otp_id"/>
+		<!-- 用户id -->
+      <result column="user_id" property="user_id"/>
+		<!-- 订单id -->
+      <result column="orderId" property="orderId"/>
+		<!-- 对接方订单编号 -->
+      <result column="agentOrderId" property="agentOrderId"/>
+		<!-- 产品编号 -->
+      <result column="productSn" property="productSn"/>
+		<!-- 产品名称 -->
+      <result column="productName" property="productName"/>
+		<!-- 产品种类 -->
+      <result column="productType" property="productType"/>
+		<!-- 产品单价（单位：分） -->
+      <result column="unitPrice" property="unitPrice"/>
+		<!-- 产品数量 -->
+      <result column="count" property="count"/>
+		<!-- 建议售价（单位：分） -->
+      <result column="retailPrice" property="retailPrice"/>
+		<!-- 结算价格（单位：分） -->
+      <result column="settlementPrice" property="settlementPrice"/>
+		<!-- 入园日期 -->
+      <result column="inDate" property="inDate"/>
+		<!-- 电子票开始时间 -->
+      <result column="validTimeBegin" property="validTimeBegin"/>
+		<!-- 电子票结束时间 -->
+      <result column="validTimeEnd" property="validTimeEnd"/>
+		<!-- 姓名 -->
+      <result column="visitorName" property="visitorName"/>
+		<!-- 手机号 -->
+      <result column="visitorPhone" property="visitorPhone"/>
+		<!-- 证件类型 -->
+      <result column="cardType" property="cardType"/>
+		<!-- 证件号码 -->
+      <result column="cardNum" property="cardNum"/>
+		<!-- 性别（0:男,1:女） -->
+      <result column="sex" property="sex"/>
+		<!-- 辅助码 -->
+      <result column="codeNumber" property="codeNumber"/>
+		<!-- 短信内容 -->
+      <result column="emsContent" property="emsContent"/>
+		<!-- 电子票日期 -->
+      <result column="ticketTimeInfo" property="ticketTimeInfo"/>
+		<!-- 订单状态（0：等待付款、1：已付款、2：等待出票、3：已出票、4：申请退票、5：部分申请退票、6：退票成功、7：部分退票成功、8：拒绝退票、9：已完成、10：已取消、11：退票中、12：退票失败）   -->
+      <result column="status" property="status"/>
+		<!-- 付款状态（0：等待支付、1：付款成功、2：退款中、3：已退款、4：等待退款） -->
+      <result column="pay_status" property="pay_status"/>
+		<!-- 付款时间 -->
+      <result column="pay_time" property="pay_time"/>
+		<!-- 电子票已验证数量 -->
+      <result column="usedNum" property="usedNum"/>
+		<!-- 电子票使用状态 -->
+      <result column="usedState" property="usedState"/>
+		<!-- 支付宝交易号 -->
+      <result column="trade_no" property="trade_no"/>
+		<!-- 操作是否成功 -->
+      <result column="isSuccess" property="isSuccess"/>
+		<!-- 错误码 -->
+      <result column="errorCode" property="errorCode"/>
+		<!-- 错误说明 -->
+      <result column="errorMsg" property="errorMsg"/>
+		<!-- 处理完成时间 -->
+      <result column="dealTime" property="dealTime"/>
+   </resultMap>
+  
+  <!-- 保存出游人信息 -->
+  <insert id="saveOrderTravelPeople" parameterType="java.util.ArrayList">
+   insert into S_orderTravelPeople
+	  ( user_id,orderId ,agentOrderId ,productSn ,productName ,productType ,unitPrice ,count ,retailPrice ,settlementPrice ,inDate ,validTimeBegin ,validTimeEnd ,visitorName ,visitorPhone ,cardType ,cardNum ,sex ,codeNumber ,emsContent ,ticketTimeInfo ,status ,pay_status ,usedNum ,usedState ,trade_no ,isSuccess ,errorCode ,errorMsg ,dealTime 
+	   )
+	  	VALUES
+		 <foreach collection="list" item="item" separator="," >
+			(
+			 
+			  #{item.user_id},#{item.orderId},#{item.agentOrderId},#{item.productSn},#{item.productName},#{item.productType},#{item.unitPrice},#{item.count},#{item.retailPrice},#{item.settlementPrice},#{item.inDate},#{item.validTimeBegin},#{item.validTimeEnd},#{item.visitorName},#{item.visitorPhone},#{item.cardType},#{item.cardNum},#{item.sex},#{item.codeNumber},#{item.emsContent},#{item.ticketTimeInfo},#{item.status},#{item.pay_status},#{item.usedNum},#{item.usedState},#{item.trade_no},#{item.isSuccess},#{item.errorCode},#{item.errorMsg},#{item.dealTime} 
+			  
+			)
+		 </foreach>	
+  
+  </insert>
+  
+  
+   <!--  更新支付状态 -->
+  <update id="updatePayState" parameterType="com.newAlipay.AlipayInfo">
+  		update S_orderTravelPeople set 
+  			pay_status = 1 , pay_time = NOW()
+    	where
+  			orderId = #{out_trade_no}	
+  			and pay_status = 0
+  </update> 
+  
+  
+  <!-- 根据订单id查询出游人信息 -->
+  <select id="getOrderTravelPeople" parameterType="String" resultType="com.op.spot.entity.S_orderTravelPeople">
+    	select
+  			<include refid="Base_Column_List"></include>
+  		from
+  			S_orderTravelPeople
+  		where
+  		   orderId = #{orderId}	
+  </select>
+  
+  
+  <!-- 更新出票信息状态 -->
+  <update id="updateTicketState" parameterType="java.util.ArrayList">
+  
+  	<foreach collection="list" item="item" index="index" open="" close="" separator=";">
+		    update  S_orderTravelPeople
+			set 
+				agentOrderId = #{item.agentOrderId}
+				,validTimeBegin = #{item.validTimeBegin}
+				,validTimeEnd = #{item.validTimeEnd}
+				,codeNumber = #{item.codeNumber}
+				,emsContent = #{item.emsContent}
+				,isSuccess = #{item.isSuccess}
+				,errorCode = #{item.errorCode}
+				,errorMsg = #{item.errorMsg}
+				,dealTime = #{item.dealTime}
+				,status = #{item.status}
+			where 
+       			otp_id = #{item.otp_id} 
+	   </foreach>		
+  
+  </update>
+	
+	<!-- 根据出游人id（otp_id）获取出游人信息 -->
+	<select id="getTravelPeopleByid" parameterType="String" resultType="com.op.spot.entity.S_orderTravelPeople">
+    	select
+  			<include refid="Base_Column_List"></include>
+  		from
+  			S_orderTravelPeople
+  		where
+  		   otp_id in 
+  		   <foreach collection="array" item="item" index="index" open="(" close=")" separator=",">
+  		   		#{item}
+  		   </foreach>
+  		   and status in (1,3)
+  	</select>
+	
+	 
+  <!-- 更新退票信息状态 -->
+  <update id="updateApplyTicketState" parameterType="java.util.ArrayList">
+  
+  	<foreach collection="list" item="item" index="index" open="" close="" separator=";">
+		    update  S_orderTravelPeople
+			set 
+				isSuccess = #{item.isSuccess}
+				,errorCode = #{item.errorCode}
+				,errorMsg = #{item.errorMsg}
+				,dealTime = #{item.dealTime}
+				,status = #{item.status}
+			where 
+       			otp_id = #{item.otp_id} 
+	   </foreach>		
+  
+  </update>
+  
+  
+</mapper>

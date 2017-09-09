@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="MessagePrivateMapper">
+	<sql id="Base_Column_List">
+    mp_id,mp_title ,mp_content ,mp_sendTime ,mp_type ,mp_identity ,mp_isaddresserdelete
+    </sql>
+
+    <resultMap type="com.op.entity.messageprivate.MessagePrivate" id="MessagePrivateReturnMap">
+      <id column="mp_id" property="mp_id"/>
+      <result column="mp_title" property="mp_title"/>
+      <result column="mp_content" property="mp_content"/>
+      <result column="mp_sendTime" property="mp_sendTime"/>
+      <result column="mp_type" property="mp_type"/>
+      <result column="mp_identity" property="mp_identity"/>
+      <result column="mp_isaddresserdelete" property="mp_isaddresserdelete"/>
+      
+   </resultMap>
+   
+	<!-- 新增 -->
+	<insert id="saveMessagePrivate" parameterType="com.op.entity.messageprivate.MessagePrivate" useGeneratedKeys="true" keyProperty="mp_id">
+		insert into MessagePrivate 
+		(
+			mp_title,mp_content,mp_sendTime,mp_type,mp_identity,mp_isaddresserdelete
+		)
+		values 
+		(
+			#{mp_title},#{mp_content},#{mp_sendTime},#{mp_type},#{mp_identity},#{mp_isaddresserdelete}	
+	 	)
+	</insert>
+	
+	<!-- 根据ID查询信息 -->
+	<select id="findForMessagePrivateById" parameterType="java.lang.String" resultMap="MessagePrivateReturnMap">
+		select <include refid="Base_Column_List"/> from MessagePrivate
+		where mp_id = #{id}
+	</select>
+	
+	<!-- 删除消息 -->
+	<update id="messageDelete" parameterType="java.lang.String">
+		update MessagePrivate set  
+	   		mp_isaddresserdelete = 1
+	   where mp_id = #{mp_id}
+	</update>
+	
+	<!-- 查询发信箱信息 -->
+   	<select id="getMessagePageListSend" parameterType="page" resultMap="MessagePrivateReturnMap">
+   		select <include refid="Base_Column_List"/> from MessagePrivate where mp_isaddresserdelete = 0 
+   		<!-- 信息类型 -->
+   		<if test="null!=t.type and ''!=t.type">
+   			and mp_type = #{t.type}
+   		</if>
+   		<!-- 用户身份 -->
+   		<if test="null!=t.identity and ''!=t.identity">
+   			and mp_identity = #{t.identity}
+   		</if>
+   		 
+   		order by mp_sendTime desc
+   	</select>
+   	
+   	<!-- 查询垃圾箱信息 -->
+   	<select id="getMessagePageListDelete" parameterType="page" resultMap="MessagePrivateReturnMap">
+   		select <include refid="Base_Column_List"/> from MessagePrivate where mp_isaddresserdelete = 1 
+   		<!-- 信息类型 -->
+   		<if test="null!=t.type and ''!=t.type">
+   			and mp_type = #{t.type}
+   		</if>
+   		<!-- 用户身份 -->
+   		<if test="null!=t.identity and ''!=t.identity">
+   			and mp_identity = #{t.identity}
+   		</if>
+   		
+   		order by mp_sendTime desc
+   	</select>
+   
+   <!-- 匹配收信人信息表中没有的系统群发消息 -->
+   <select id="matchingMessage" parameterType="java.util.Map" resultMap="MessagePrivateReturnMap">
+   		select <include refid="Base_Column_List"/> from MESSAGEPRIVATE mp 
+		where (mp_identity = #{identity} or mp_identity = 0) and mp_isaddresserdelete = 0 and 
+		not exists(select mar.mp_id from MESSAGEADDRESSEE mar where mar_addressee=#{id} and mar.mp_id=mp.mp_id)
+   </select>
+   
+   <!-- 匹配收信人信息表中没有的系统群发消息总数 -->
+   <select id="matchingMessageCount" parameterType="java.util.Map" resultType="java.lang.Integer">
+   		select count(*) from MESSAGEPRIVATE mp 
+		where (mp_identity = #{identity} or mp_identity = 0) and mp_isaddresserdelete = 0 and 
+		not exists(select mar.mp_id from MESSAGEADDRESSEE mar where mar_addressee=#{id} and mar.mp_id=mp.mp_id)
+   </select>
+   
+	<!-- 彻底删除系统信息 -->
+	<delete id="messageShiftDelete"  parameterType="java.lang.String">
+		DELETE FROM MESSAGEPRIVATE WHERE mp_id = #{id}
+	</delete>
+
+</mapper>

@@ -1,0 +1,78 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<base href="/" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>玩嘛</title>
+
+<#include "/view/usercenter/base.css.html">
+
+<style>
+body { background: #f1f1f1; }
+.laypageskin_molv a {
+    background-color: #f1eff0 !important;
+}
+</style>
+
+</head>
+<body>
+
+	<#include "/view/usercenter/header.html"/>
+
+	<div class="boxw clearfix">
+		
+		<#include "/view/usercenter/consultation/menu_left.html">
+		
+		<div class="mainQuestion-box">
+			<div class="question-title">
+				<h1>${usex}来解答</h1>
+			</div>
+			
+			<#list list as item>
+			<div class="question-list" id="question-list" replyType="0" activityId="${item.id}">
+				<ul>
+					<li>
+						<div class="activity-info">
+							<div class="fl">
+								<a href="huodong/info/${item.id}.html" target="_blank" class="act-name">${item.title}</a><span
+									class="act-date">${item.activityTime?string("yyyy-MM-dd HH:mm:ss")}</span>
+							</div>
+							<div class="fr">
+								<a href="javascript:void(0)" class="act-num">
+									<em id="consultation_num">${item.num}</em>个问答
+									<i load="0" class="down" id="down_up"></i>
+								</a>
+							</div>
+						</div>
+						<div class="activity-item" id="activity-item">
+						</div>
+						<div style="width: 100%;text-align: center;" id="page">
+						</div>
+					</li>
+				</ul>
+			</div>
+		  </#list>
+				
+		  <div style="width: 100%;text-align: center;margin-top: 20px;" id="activePage">
+		  </div>
+		</div>
+	</div>
+	<!-- main end -->
+	
+	<#include "/view/usercenter/base.js.html">
+	<!-- 分页 -->
+	<script type="text/javascript" src="static/js/plugins/layer/laypage/laypage.js"></script>
+	<script type="text/javascript" src="static/js/page.js"></script>
+	<script type="text/javascript">
+	var userId='${users.uId}';
+	$(function(){
+		$("div#activePage").page({
+			totalPage:${page.totalPage},
+			currentPage:${page.currentPage},
+			link:"activeConsultation/consultation.html?id="+userId+"&type=1"
+		})
+   	})
+	</script>
+	<script type="text/javascript" src="static/js/usercenter/consultation/activity/question.js"></script>
+</body>
+</html>

@@ -1,0 +1,160 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<base href="/" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>修改账户信息</title>
+<link rel="stylesheet" type="text/css" href="static/css/hw_css/base.css" />
+<link rel="stylesheet" type="text/css" href="static/css/hw_css/header.css" />
+<link rel="stylesheet" type="text/css" href="static/css/hw_css/mystyle.css" />
+<style>
+body {
+	background: #f1f1f1;
+}
+select{border: 1px solid #aaa;height:38px;line-height:38px;color:#999;font-size:14px;width:240px;margin-right:50px;text-align:center;}
+.mc .icon-error{width:30px;height:30px;display: inline-block;background:url(static/images/hw_img/icons-all.png) no-repeat -30px -234px;margin-left:10px;vertical-align: -10px;}
+.mc .icon-success{width:30px;height:30px;display: inline-block;background:url(static/images/hw_img/icons-all.png) no-repeat -0px -234px;margin-left:10px;vertical-align: -10px;}
+.mc input.input-error{border:1px solid #fa5d5d;}
+.mc input.input-success{border:1px solid #ADD75C;}
+.mc dd p{color:#fa5d5d;}
+.mc .icon-error{width:30px;height:30px;display: inline-block;background:url(static/images/hw_img/icons-all.png) no-repeat -30px -234px;margin-left:10px;vertical-align: -10px;}
+.mc .icon-success{width:30px;height:30px;display: inline-block;background:url(static/images/hw_img/icons-all.png) no-repeat -0px -234px;margin-left:10px;vertical-align: -10px;}
+</style>
+</head>
+<body style="background-color:#FFFFFF; ">
+ 
+<!--新增账户 -->
+<div class="pop-box">
+  <form action="" id="account">
+  <div class="mt"><h1>新增账户信息</h1><a href="javascript:void(0)" id="cancel" class="close" title="关闭"></a></div>
+  <div class="mc ">
+      <dl class="tx clearfix">
+    <dt><em class="c-red">*</em> 账户类型：</dt>
+        <dd> 
+              <select name="wt_id" id="wt_id">
+             	 	<option  value>选择提现账户类型</option>
+	              <#list withdrawalsTypeList as type>
+			        <option value="${type.id}" <#if account.wt_id == type.id >selected</#if> type="${type.type}">${type.type_name}</option>
+			      </#list>   
+		      </select>
+        </dd>
+      </dl>
+    <dl class="clearfix">
+    <dt><em class="c-red">*</em> 账户姓名：</dt>
+        <dd>
+           <input  type="text" name="account_name" id="account_name" value="${account.account_name}">
+           <i></i>
+         </dd>
+      </dl>
+      <dl class="clearfix">
+    <dt><em class="c-red">*</em> 账户账号：</dt>
+        <dd>
+                  <input  type="text" name="account_number" id="account_number" value="${account.account_number}">
+                  <i></i>
+                </dd>
+      </dl>
+     
+      <div class="btns">
+      	<a class="btn-exit" href="javascript:void(0)" id="cancel">取消</a>
+		<a class="btn-over" id="submit" href="javascript:void(0)">保存</a>
+	  </div>
+  </div>
+  
+           <input  type="hidden" name="id" id="id" value="${account.id}">
+  </form>
+  </div>
+  
+<script type="text/javascript" src="static/js/jquery-2.1.1.min.js" ></script>
+<script type="text/javascript" src="static/js/plugins/layer/layer.min.js"></script>
+<script type="text/javascript" src="static/js/plugins/validate/jquery.validate.min.js"></script>
+<script type="text/javascript" src="static/js/plugins/validate/messages_zh.min.js"></script>
+  <script type="text/javascript">
+  var index = parent.layer.getFrameIndex(window.name); //获取窗口索引
+  //取消
+  $("a#cancel").on("click" , function(){
+  	 parent.layer.close(index);
+  }); 
+
+	//提交
+	$("#submit").on("click" , function(){
+	  if($("#account").valid()){
+		  $.post("wAccount/save.html",$("#account").serialize(),function(data){
+			 if(data.RESPONSE_STATE=="200"){ 
+				    account_name = $("#account_name").val()
+					 account_number = $("#account_number").val();
+					 wt_id = $("#wt_id").find("option:selected").text();
+					
+					 $account = parent.$("div#account_${account.id}");		  
+					 $account.find("span:eq(0)").html(account_name);		  
+					 $account.find("span:eq(2)").html(account_number);		  
+					 $account.find("span:eq(1)").html(wt_id);
+					  parent.layer.close(index);
+			 	 }else{
+			 		 layer.alert(data.ERROR_INFO, {icon: 0});
+			 	 }
+		  });
+			 
+	  }
+	}); 	 
+	$("#wt_id").change(function() {
+		type = $(this).find("option:selected").attr("type");
+	 	if(type == 2){
+	 		//删除
+	 		$("#account_number").rules("remove","creditcard");
+	 	}else{
+	 		//添加
+	 		$("#account_number").rules("add",{creditcard:true});
+	 	}
+	});
+	
+	 $.validator.setDefaults({
+	     highlight: function(a) {
+	         $(a).removeClass("input-success").addClass("input-error");
+	         $(a).nextAll("i").removeClass("icon-success").addClass("icon-error");
+	     },
+	     success: function(a) {
+	    	 a.prev("input").removeClass("input-error").addClass("input-success");
+	    	 a.prev("i").removeClass("icon-error").addClass("icon-success");
+	     },
+	     errorElement: "p",  
+	     errorPlacement: function(a, b) {
+	        if (b.is(":radio") || b.is(":checkbox")) {
+	             a.appendTo(b.parent().parent().parent());
+	         } else {
+	             a.appendTo(b.parent());
+	         }
+	     },
+	     errorClass: "input-error",
+	     validClass: "input-success"
+	 });
+
+	 $("#account").validate({
+	    rules:{
+	    	account_name:{
+	    		required:true,
+	    		maxlength:4
+	        },
+	        account_number:{
+	        	required:true
+	        }, 
+	        wt_id:{
+     			required: true
+     		}
+	    },
+	    messages:{
+	    	account_name:{
+	            required:"请输入账户姓名"
+	        },
+	        account_number:{
+	            required:"请输入账户账号",
+	            creditcard:"卡号不正确"
+	        }, 
+	        wt_id:{
+     			required: "请选择提现账户类型"
+     		}                          
+	    }
+	});    
+	 
+  </script>
+</body>
+</html>

@@ -1,0 +1,110 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>玩嘛</title>
+<base href="/" /><!-- logo -->
+
+<link rel="shortcut icon" href="static/images/logo/logo.jpg"/>
+<!-- base css -->
+<link rel="stylesheet" type="text/css" href="static/css/hw_css/base.css" />
+<link rel="stylesheet" type="text/css" href="static/css/hw_css/login.css" />
+<link rel="stylesheet" type="text/css" href="static/js/plugins/supersized/css/supersized.css" />
+
+<style type="text/css">
+.reg-box{
+	padding-bottom: 60px;
+}
+</style>
+</head>
+<body>
+	<form action="" id="register">
+		<div class="fullscreen-bg"></div>
+		<div class="reg-box">
+			<div class="box-name">
+				注 册
+				<div class="login-link">
+					已有账号？<a href="login.html" >登录</a>
+				</div>
+			</div>
+			<div class="login-logo">
+				<img src="static/images/hw_img/login-logo.png" />
+			</div>
+			
+			<div class="login-input">
+				<input name="uPhone" type="text" maxlength="11" onkeyup="this.value=this.value.replace(/\D/g,'')" onafterpaste="this.value=this.value.replace(/\D/g,'')" placeholder="手机号" />
+			</div>
+			<div class="no-error" for="uPhone-error">
+			</div>
+			
+			<div class="login-input">
+				<input name="verify" id="verify" class="w2" type="text" maxlength="4" placeholder="验证码" />
+				<img id="verify-img" src="verifyCode/getVerifyCodeImage/register"/>
+			</div>
+			<div class="no-error" for="verify-error">
+			</div>
+			
+			
+			<div class="login-input">
+				<input name="yzm" type="text" placeholder="短信验证码" class="w2" style="float: left;" />
+				<a href="javascript:void(0)" class="yzm" id="get_code" >获取验证码</a>
+			</div>
+			<div class="no-error" for="yzm-error">
+			</div>
+			
+			<div class="login-input">
+				<input name="uName" type="text" placeholder="昵称" maxlength="10" />
+			</div>
+			<div class="no-error" for="uName-error">
+			</div>
+			
+			<div class="login-input">
+				<input name="uPassword" type="password" id="uPassword" placeholder="密码" />
+			</div>
+			<div class="no-error" for="uPassword-error">
+			</div>
+			
+			<div class="login-input">
+				<input name="reuPassword" type="password" placeholder="密码确认" />
+			</div>
+			<div class="no-error" for="reuPassword-error">
+			</div>
+			
+			<div class="login-btn">
+				<button type="button" id="submit">立即注册</button>
+			</div>
+			<div class="login-link">
+				<i class="box-f" id="consentAgreement"></i>
+				<em class="color5">已阅读并同意</em>
+				<a id="agreement" href="agreement/register-agreement.html" target="blank" >《玩嘛用户协议》</a>
+			</div>
+			<!-- <div class="bg-line">
+				<h3>第三方账号注册</h3>
+			</div>
+			<div class="connect-box">
+				<p>
+					<a class="qq" href="javascript:void(0)" ></a>
+					<a class="wechat" href="javascript:void(0)" ></a>
+					<a class="weibo" href="javascript:void(0)" ></a>
+				</p>
+			</div> -->
+		</div>
+	</form>
+	<script type="text/javascript" src="static/js/jquery-2.1.1.min.js"></script>
+	<script type="text/javascript" src="static/js/plugins/validate/jquery.validate.min.js"></script>
+	<script type="text/javascript" src="static/js/jquery.cookie.js"></script>
+	<script type="text/javascript" src="static/js/plugins/layer/layer.min.js"></script>
+	<script type="text/javascript" src="static/js/register/register.js"></script>
+	<script type="text/javascript" src="static/js/plugins/supersized/js/supersized.3.2.7.min.js"></script>
+	<script type="text/javascript" src="static/js/plugins/supersized/js/supersized-init.js"></script>
+	<script type="text/javascript">
+		$(function(){
+			$("#verify-img").on("click",function(){
+				$.post("verifyCode/getVerifyCodeImage/register",function(data){
+					$("#verify-img").attr("src","verifyCode/getVerifyCodeImage/register");
+				})
+			})
+		})
+	</script>
+</body>
+</html>

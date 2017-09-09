@@ -1,0 +1,34 @@
+@CHARSET "utf-8";
+.xx-body {
+	font-family: 'Open Sans';
+	font-size: 14px;
+	color: #393939;
+	line-height: 1.5;
+}
+#xx-tooltip {
+	position: absolute;
+	border: 1px solid #ccc;
+	background: #333;
+	padding: 2px;
+	display: none;
+	color: #fff;
+	z-index: 10;
+}
+.xx-bsl{
+	transition: 0.5s ease;
+	-moz-transition: 0.5s ease;
+	-o-transition: 0.5s ease;
+	-webkit-transition: 0.5s ease;
+}
+        
+.remove-in{
+	position: absolute;
+	padding:3px 8px !important;
+	right: 20px;
+	top:5px;
+	background-color: #ECECEC;
+	border-radius:10px;
+	line-height:17px;
+	color: #BFBFBF;
+	display: none;
+}

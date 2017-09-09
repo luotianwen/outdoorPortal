@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="activeScenicMapper">
+
+    <!--mybatis ehcache缓存配置 -->
+    <cache type="org.mybatis.caches.ehcache.LoggingEhcache" />
+    
+	<sql id="Base_Column_List">
+    as_id,as_name ,as_active_id 
+    </sql>
+
+    <resultMap type="com.op.entity.activity.ActiveScenic" id="ActiveScenicReturnMap">
+      <id column="as_id" property="as_id"/>
+      <result column="as_name" property="as_name"/>
+      <result column="as_active_id" property="as_active_id"/>
+   </resultMap>
+   
+   <!-- 保存活动景点 -->
+   <insert id="insertActiveScenic" parameterType="java.util.Map" useGeneratedKeys="false">
+   		insert into activeScenic (as_active_id ,as_name)
+   		VALUES
+   		<foreach collection="list" item="item" index="index" separator=",">
+   		(
+   			#{at_active_id},#{list[${index}]}
+   		)
+   		</foreach>
+   </insert>
+   
+   <!-- 根据活动ID删除 -->
+   <delete id="deleteByActivityId" parameterType="java.lang.String">
+   delete from activeScenic where as_active_id=#{id}
+   </delete>
+   
+   <!-- 根据活动查询所有活动景点 集合-->
+   <select id="findScenicByActiveId" parameterType="int" resultType="com.op.entity.activity.ActiveScenic">
+	   select <include refid="Base_Column_List"/>
+	   FROM activeScenic
+	   where as_active_id=#{id}
+   </select>
+   
+   <!-- 根据活动ID查询所有的景点名称 -->
+   <select id="findNameByActiveId" parameterType="String" resultType="String" useCache="false">
+   select as_name from activeScenic  where as_active_id=#{id}
+   </select>
+   
+</mapper>

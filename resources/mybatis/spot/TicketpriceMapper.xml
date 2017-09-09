@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+		"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="ticketpriceMapper">
+	 
+	<select id="ticketpriceList" resultType="com.op.spot.entity.Ticketprice">
+		select id ,bmoney ,emoney ,name ,status ,cdate ,notes from s_ticketprice
+		where status=1
+	</select>
+	
+</mapper>

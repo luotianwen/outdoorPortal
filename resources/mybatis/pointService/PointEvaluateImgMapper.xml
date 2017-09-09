@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 地点服务评价图片表(pointEvaluateImg)Mapper -->
+<mapper namespace="pointEvaluateImgMapper">
+	<!--mybatis ehcache缓存配置 -->
+	<!-- 以下两个<cache>标签二选一,第一个可以输出日志,第二个不输出日志 不使用缓存加入useCache="false" -->
+	<!-- <cache type="org.mybatis.caches.ehcache.LoggingEhcache" /> -->
+	<!-- <cache type="org.mybatis.caches.ehcache.EhcacheCache"/> -->
+
+	<sql id="Base_Column_List">
+		psei_id,psei_venue_evaluate_id ,psei_img_url ,psei_create_user_id ,psei_create_time
+	</sql>
+
+	<resultMap type="com.op.entity.pointService.PointEvaluateImg" id="PointEvaluateImgReturnMap">
+		<!-- id -->
+		<id column="psei_id" property="psei_id" />
+		<!-- 评价ID -->
+		<result column="psei_venue_evaluate_id" property="psei_venue_evaluate_id" />
+		<!-- 图片地址 -->
+		<result column="psei_img_url" property="psei_img_url" />
+		<!-- 创建人 -->
+		<result column="psei_create_user_id" property="psei_create_user_id" />
+		<!-- 创建时间 -->
+		<result column="psei_create_time" property="psei_create_time" />
+	</resultMap>
+
+	<select id="findPointEvaluateImgByPseId" parameterType="String" resultType="com.op.entity.pointService.PointEvaluateImg">
+		select psei_id,psei_venue_evaluate_id ,psei_img_url ,psei_create_user_id ,psei_create_time
+		from PointEvaluateImg
+		where psei_venue_evaluate_id = #{pse_id}
+	</select>
+	
+	<!-- 新增评论图片 -->
+	<insert id="savePointEvaluateImg" parameterType="com.op.entity.pointService.PointEvaluateImg">
+
+			insert into PointEvaluateImg
+			(
+				psei_venue_evaluate_id ,psei_img_url ,psei_create_user_id
+			)
+			values
+		<foreach collection="list" item="item" separator=",">
+			(
+				#{item.psei_venue_evaluate_id },#{item.psei_img_url },#{item.psei_create_user_id}
+			)
+		</foreach>
+	</insert>
+	
+	
+
+</mapper>

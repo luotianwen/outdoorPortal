@@ -1,0 +1,17 @@
+@charset "utf-8";
+/* CSS Document */
+html, body, div, span, iframe, h1, h2, h3, h4, h5, h6, p, blockquote, pre, a, address, big, cite, code, del, em, font, img, ins, small, strong, var, b, u, i, center, dl, dt, dd, ol, ul, li, fieldset, form, label, legend { margin: 0; padding: 0;}
+ol,ul,li{ list-style:none; list-style-position:outside;}
+:focus { outline: 0 none;}
+a img {border: 0 none;}
+img {vertical-align: middle;}
+a,a:hover{text-decoration:none;}
+table{border-collapse:collapse;border-spacing:0;}
+address, caption, cite, code, dfn, em, th, var, b, i, s{font-style:normal;font-weight:normal;}
+body{font-size:12px; font-family: 'Microsoft Yahei', 'Helvetica Neue', 'Luxi Sans', 'DejaVu Sans', Tahoma, 'Hiragino Sans GB', STHeiti; color:#6c6c6c;background: #f1f1f1;}
+.fl{float:left;display:inline;}
+.fr{float:right;display:inline;}
+.boxw{width:1200px;margin:0 auto;}
+.clearfix:before, .clearfix:after {content: ".";display: block;height: 0;visibility: hidden;}
+.clearfix:after {clear: both;}
+.clearfix {zoom: 1;} /* IE < 8 */

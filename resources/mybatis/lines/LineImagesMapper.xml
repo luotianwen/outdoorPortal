@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="lineImagesMapper">
+	<sql id="Base_Column_List">
+    li_id,li_line_id ,li_local_url ,li_aliyun_url ,li_name ,li_create_time ,li_create_user ,li_description ,li_active_line_flag ,li_active_line_id ,li_caption ,uploadOSSState 
+    </sql>
+
+    <resultMap type="com.op.entity.lines.LineImages" id="LineImagesReturnMap">
+      <id column="li_id" property="li_id"/>
+      <result column="li_line_id" property="li_line_id"/>
+      <result column="li_local_url" property="li_local_url"/>
+      <result column="li_aliyun_url" property="li_aliyun_url"/>
+      <result column="li_name" property="li_name"/>
+      <result column="li_create_time" property="li_create_time"/>
+      <result column="li_create_user" property="li_create_user"/>
+      <result column="li_description" property="li_description"/>
+      <result column="li_active_line_flag" property="li_active_line_flag"/>
+      <result column="li_active_line_id" property="li_active_line_id"/>
+      <result column="li_caption" property="li_caption"/>
+      <result column="uploadOSSState" property="uploadOSSState"/>
+   </resultMap>
+	
+	
+	<!-- 添加活动和线路图片数据	 2016年3月18日-->
+	<insert id="insertintoLineImage" parameterType="com.op.dto.activity.insertActivity.line.InsertLineDTO" useGeneratedKeys="false">
+		insert into lineImages(li_line_id,li_local_url,li_create_user,li_description,li_active_line_flag)
+		values
+        <foreach collection="images" index="index" item="item" separator=",">
+            (
+		#{l_id},#{item.li_local_url},#{l_create_user},#{item.li_description},2
+            )
+		</foreach>
+	</insert>
+	
+	<!-- 根据线路ID查询所有的图片 	2016年3月18日-->
+	<select id="findImagesListByActiveLineId" parameterType="java.lang.String" resultType="com.op.entity.lines.LineImages" >
+		select <include refid="Base_Column_List"/>
+		from lineImages
+		where li_line_id=#{li_active_line_id}
+	</select>
+	
+	<!-- 获取没有上传阿里云OSS云存储的图片 -->
+	<select id="notUploadOSSImages" resultType="com.op.entity.lines.LineImages" >    
+    	select li_id,li_local_url
+    	from lineImages 
+    	where uploadOSSState = 1
+    </select>
+    
+	<!-- 更改图片上传阿里云OSS云存储的状态 -->
+   <update id="updateUploadOSSState" parameterType="java.util.List" >
+      <foreach collection="list" item="item" index="index" separator=";">
+                update lineImages set
+                li_aliyun_url = '${item.li_aliyun_url}' ,
+                uploadOSSState = 2
+                where li_id = '${item.li_id}' ;
+       </foreach>   		
+ 
+   </update>    
+	
+	
+	<!-- 删除数据库历史图片信息 	2016年3月18日-->
+	<delete id="deleteLineImages" parameterType="String">
+	delete from lineImages where li_line_id=#{id}
+	</delete>
+	
+	<!-- 根据活动ID删除图片 -->
+	<delete id="deleteByActiveId" parameterType="String">
+	delete from lineimages where LI_LINE_ID =#{id}
+	</delete>
+</mapper>

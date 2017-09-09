@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+		"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="characteristicaspectMapper">
+	 
+
+	<select id="getCharacteristicaspectList" parameterType="int" resultType="com.op.spot.entity.Characteristicaspect">
+		SELECT
+		t.id ,t.content,name
+		FROM
+		s_characteristicaspect t
+
+		WHERE t.sid=#{id}
+
+	</select>
+	<select id="getCharacteristicaspectTop3List" parameterType="int"
+			resultType="com.op.spot.entity.Characteristicaspect">
+		SELECT
+		t.id ,t.content,name
+		FROM
+		s_characteristicaspect t
+
+		WHERE t.sid=#{id}
+		limit 0,3
+	</select>
+	<select id="getCharacteristicaspectById" parameterType="String"
+			resultType="com.op.spot.entity.Characteristicaspect">
+		SELECT
+		id ,sid ,content,name
+
+		FROM s_characteristicaspect
+		WHERE
+
+		id = #{id}
+	</select>
+
+	 
+</mapper>
+ 

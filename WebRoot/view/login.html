@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>玩嘛</title>
+<base href="/" /><!-- logo -->
+
+<link rel="shortcut icon" href="static/images/logo/logo.jpg"/>
+<!-- base css -->
+<link rel="stylesheet" type="text/css" href="static/css/hw_css/base.css" />
+<link rel="stylesheet" type="text/css" href="static/css/hw_css/login.css" />
+<link rel="stylesheet" type="text/css" href="static/js/plugins/supersized/css/supersized.css" />
+
+<style type="text/css">
+.login-box{
+	padding-bottom: 30px;
+}
+</style>
+
+</head>
+<body style="width: 100%;height: 100%;">
+	<input type="hidden" id="modulus" value="${publicKey.modulus }"> 
+	<input type="hidden" id="exponent" value="${publicKey.exponent }">
+	<div class="fullscreen-bg"></div>
+	<div class="login-box">
+		<div class="box-name">登 录</div>
+		
+		
+		<div class="login-logo">
+			<img src="static/images/hw_img/login-logo.png" />
+		</div>
+		<div class="login-input">
+			<input name="n" type="text" placeholder="手机号/邮箱" />
+		</div>
+		
+		<div class="no-error" id="n_error"></div>
+		
+		<div class="login-input">
+			<input name="p" type="password" placeholder="密码" />
+		</div>
+		
+		<div class="no-error" id="p_error"></div>
+		
+		<div <#if SESSION_LOGIN_ERROR_NUM lt 2> style="display: none;"</#if> id="yzm_div">
+			<div class="login-input" >
+				<input name="y" type="text" placeholder="验证码" class="w1" maxlength="6" />
+				<img src="<#if SESSION_LOGIN_ERROR_NUM?? && SESSION_LOGIN_ERROR_NUM gte 2>checkCode/generateCode.json?width=86&height=35</#if>" id="check_code" class="jym" alt="点击更换验证码"  title="点击更换验证码"/>
+			</div>
+			<div class="no-error" id="y_error"></div>
+		</div>
+		
+		<div class="login-btn">
+			<button type="button" id="submit">登录</button>
+		</div>
+		<div class="login-link">
+			<span class="color5" id="autoLogin">
+				<i class="box-f box-y" id="autoLogin"></i>自动登录
+			</span>
+			<span class="float-r">
+				<a href="register.html">注册</a>
+				&nbsp;|&nbsp;
+				<a href="forget.html" class="fr">忘记密码</a>
+			</span>
+		</div>
+		<!-- <div class="bg-line">
+			<h3>第三方账号登录</h3>
+		</div> -->
+		<div class="connect-box">
+			<!-- <p>
+				<a class="qq" href="jointLogin/qq/login.html" ></a>
+				<a class="wechat" href="javascript:alert('敬请期待')"></a>
+				<a class="weibo" href="javascript:alert('敬请期待')"></a>
+			</p> -->
+		</div>
+	</div>
+<script type="text/javascript" src="static/js/jquery-2.1.1.min.js"></script>
+<script type="text/javascript" src="static/js/plugins/layer/layer.min.js"></script>
+<script type="text/javascript" src="static/js/jquery.cookie.js"></script>
+<script type="text/javascript" src="static/js/security.js"></script>
+<script type="text/javascript" src="static/js/login/login.js"></script>
+<script type="text/javascript" src="static/js/plugins/supersized/js/supersized.3.2.7.min.js"></script>
+<script type="text/javascript" src="static/js/plugins/supersized/js/supersized-init.js"></script>
+
+</body>
+</html>

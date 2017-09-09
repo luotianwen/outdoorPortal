@@ -1,0 +1,20 @@
+.c1{color:#ff8a01;}
+/* 保险2016.03.23 */
+.insure{height:600px;padding:0 50px;background:#fff;max-height: 600px;overflow-y:hidden}
+.insure .insure-title{height:70px;line-height:70px;border-bottom:1px solid #ddd;}
+.insure .insure-title span{font-size:20px;color:#333;}
+.insure .insure-main{overflow:hidden;}
+.insure .insure-main .insure-select{padding:25px 0;}
+.insure .insure-main .insure-select label{font-size:16px;color:#555;margin-right:44px;}
+.insure .insure-main .insure-select select{border: 1px solid #aaa;height:38px;line-height:38px;color:#555;font-size:14px;width:145px;margin-right:50px;text-align:center;}
+.insure .insure-main .insure-age{padding:10px 0;font-size:14px;color:#999;}
+.insure .insure-main .insure-btns{padding:20px 0;text-align:center;}
+.insure .insure-main .insure-btns .btn-cancel{width:100px;height:40px;line-height:40px;text-align:center;color:#fff;font-size:16px;background:#aaa;margin:0 10px;display:inline-block;}
+.insure .insure-main .insure-btns .btn-ok{width:100px;height:40px;line-height:40px;text-align:center;color:#fff;font-size:16px;background:#ff8a00;margin:0 10px;display:inline-block;}
+.insure .insure-main table{width:100%;}
+.insure .insure-main th{background:#eee;border-bottom:1px solid #fff;padding:15px 5px;font-size:14px;color:#999;}
+.insure .insure-main td{background:#eee;border-bottom:1px solid #fff;padding:15px 5px;font-size:14px;color:#555;text-align:center;}
+.radio .icon-select{display:inline-block;width:15px;height:15px;background:url(../../images/hw_img/icon-select.png) no-repeat 0 -70px;vertical-align: -14%;margin-right:5px;}
+.radio.now .icon-select{display:inline-block;width:15px;height:15px;background:url(../../images/hw_img/icon-select.png) no-repeat 0 -48px;vertical-align: -14%;margin-right:5px;}
+.insure .insure-main .insure-list{height:250px;overflow-y:auto;}
+

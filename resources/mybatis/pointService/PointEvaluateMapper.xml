@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 地点服务评价(pointEvaluate)Mapper -->
+<mapper namespace="pointEvaluateMapper">
+	<!--mybatis ehcache缓存配置 -->
+	<!-- 以下两个<cache>标签二选一,第一个可以输出日志,第二个不输出日志 不使用缓存加入useCache="false" -->
+	<!-- <cache type="org.mybatis.caches.ehcache.LoggingEhcache" /> -->
+	<!-- <cache type="org.mybatis.caches.ehcache.EhcacheCache"/> -->
+
+	<sql id="Base_Column_List">
+		pse_id,ps_id ,pse_star ,pse_evaluate_comment ,pse_park_info ,pse_create_user_id
+		,pse_create_time ,pse_project_id ,pse_venue_order_id ,pse_price
+		,pse_delete,pse_anonymous,auditor_id,audit_notes,audit_state,auditor_time
+	</sql>
+
+	<resultMap type="com.op.entity.pointService.PointEvaluate" id="PointEvaluateReturnMap">
+		<!-- id -->
+		<id column="pse_id" property="pse_id" />
+		<!-- 地点服务id -->
+		<result column="ps_id" property="ps_id" />
+		<!-- 总体评价星级（1-5星） -->
+		<result column="pse_star" property="pse_star" />
+		<!-- 评价内容 -->
+		<result column="pse_evaluate_comment" property="pse_evaluate_comment" />
+		<!-- 停车信息(车停哪里了？收费么？) -->
+		<result column="pse_park_info" property="pse_park_info" />
+		<!-- 评价人 -->
+		<result column="pse_create_user_id" property="pse_create_user_id" />
+		<!-- 评价时间 -->
+		<result column="pse_create_time" property="pse_create_time" />
+		<!-- 评价项目ID -->
+		<result column="pse_project_id" property="pse_project_id" />
+		<!-- 评价订单ID -->
+		<result column="pse_venue_order_id" property="pse_venue_order_id" />
+		<!-- 人均(元) -->
+		<result column="pse_price" property="pse_price" />
+		<!-- 是否删除(0:否;1:是) -->
+		<result column="pse_delete" property="pse_delete" />
+		<!-- 是否匿名(0:否;1:是) -->
+		<result column="pse_anonymous" property="pse_anonymous" />
+		<!-- 审核人 -->
+		<result column="auditor_id" property="auditor_id" />
+		<!-- 审核失败备注 -->
+		<result column="audit_notes" property="audit_notes" />
+		<!-- 审核状态(0:待审核;10:审核中;20:审核成功;30:审核失败) -->
+		<result column="audit_state" property="audit_state" />
+		<!-- 审核时间 -->
+		<result column="auditor_time" property="auditor_time" />
+		
+	</resultMap>
+
+	<resultMap type="com.op.dto.pointService.show.PointEvaluateDTO" id="PointEvaluateDTOResultMap">
+		<!-- id -->
+		<id column="pse_id" property="pse_id" />
+
+		<!-- 评论图片 -->
+		<collection property="pointEvaluateImgList" ofType="com.op.entity.pointService.PointEvaluateImg" 
+			column="pse_id" select="pointEvaluateImgMapper.findPointEvaluateImgByPseId"></collection>
+	</resultMap>
+
+	<!-- 场馆评论 -->
+	<select id="findPointCommentByIdPage" parameterType="Page" resultMap="PointEvaluateDTOResultMap">
+		select
+		pse_id,ps_id,pse_star,pse_evaluate_comment,pse_park_info,pse_create_user_id,
+		pse_create_time,pse_project_id,psp.psp_item_name,pse_venue_order_id,pse_price,
+		users.U_ID "uId",users.uName,users.uHeadImg
+		from pointEvaluate pse
+		left join users on users.u_id = pse.pse_create_user_id
+		left join pointServiceProjects psp on psp.psp_id = pse.pse_project_id
+		<if test="t.img=='true'">
+			left join GROUP_POINTEVALUATEIMG_NUMBER gpn on gpn.psei_venue_evaluate_id = pse.pse_id
+		</if>
+		
+		where ps_id = #{t.id} and audit_state = 20
+		<if test="t.img=='true'">
+			and gpn.num is not null
+		</if>
+		
+		order by pse_create_time desc
+	</select>
+
+	<!-- 商家后台查看所有评论 -->
+	<select id="allEvaluate" parameterType="Page" resultMap="PointEvaluateDTOResultMap">
+		select
+		pse_id,pse.ps_id,pse_star,pse_evaluate_comment,pse_park_info,pse_create_user_id,
+		pse_create_time,pse_project_id,psp.psp_item_name,pse_venue_order_id,pse_price,
+		users.U_ID "uId",users.uName,users.uHeadImg
+		from pointEvaluate pse
+		left join users on users.u_id = pse.pse_create_user_id
+		left join pointServiceProjects psp on psp.psp_id = pse.pse_project_id
+		left join pointService ps on ps.ps_auth_user_id = #{t.id}
+		where pse.ps_id = ps.ps_id and audit_state = 20
+		
+		order by pse_create_time desc
+	</select>
+
+	<!-- 项目评论 -->
+	<select id="findProjectCommentByIdPage" parameterType="Page" resultMap="PointEvaluateDTOResultMap">
+		select
+		pse_id,ps_id,pse_star,pse_evaluate_comment,pse_park_info,pse_create_user_id,
+		pse_create_time,pse_project_id,pse_venue_order_id,pse_price,
+		users.U_ID "uId",users.uName,users.uHeadImg
+		from pointEvaluate pse
+		left join users on users.u_id = pse.pse_create_user_id
+		
+		<if test="t.img=='true'">
+			left join GROUP_POINTEVALUATEIMG_NUMBER gpn on gpn.psei_venue_evaluate_id = pse.pse_id
+		</if>
+		
+		where pse_project_id = #{t.id} and audit_state = 20
+		<if test="t.img=='true'">
+			and gpn.num is not null
+		</if>
+		
+		order by pse_create_time desc
+	</select>
+
+	<!-- 查询评论回复 -->
+	<select id="findPointEvaluateReplyByIdPage" parameterType="Page" resultType="com.op.dto.pointService.show.PointEvaluateReplyDTO">
+		select 
+			pser_id,pser_venue_evaluate_id ,pser_comment ,pser_reply_user_id,
+			pser_by_reply_user_id ,pser_reply_time,reply.U_ID ruId,reply.uName ruName,
+			reply.uHeadImg ruHeadImg,users.u_id "uId",users.uName
+		from pointEvaluateReply pser
+		left join users reply on reply.u_id = pser.pser_reply_user_id
+		left join users on users.u_id = pser.pser_by_reply_user_id
+		where pser_venue_evaluate_id = #{t}
+		order by pser_reply_time asc
+	</select>
+
+	<!-- 回复评论 -->
+	<insert id="saveReplyEvaluate" parameterType="com.op.entity.pointService.PointEvaluateReply">
+		insert into pointEvaluateReply
+		(
+		 pser_venue_evaluate_id ,pser_comment ,pser_reply_user_id ,
+		pser_by_reply_user_id
+		)
+		values
+		(
+		 #{pser_venue_evaluate_id}
+		,#{pser_comment} ,#{pser_reply_user_id} ,#{pser_by_reply_user_id}
+		)
+	</insert>
+
+	<!-- 场馆打分 -->
+	<select id="avgPoint" parameterType="String" resultType="String">
+		select avg(pse_star) from pointEvaluate
+		where ps_id = #{id}
+	</select>
+	
+	<!-- 评论打分 -->
+	<select id="avgProject" parameterType="String" resultType="String">
+		select avg(pse_star) from pointEvaluate
+		where pse_project_id = #{id}
+	</select>
+
+	<!-- 新增订单评论 -->
+	<insert id="saveEvaluate" parameterType="com.op.entity.pointService.PointEvaluate" useGeneratedKeys="true" keyProperty="pse_id">
+
+		
+		insert into pointEvaluate
+		(
+			 ps_id,pse_star,pse_evaluate_comment,pse_park_info,pse_create_user_id,pse_project_id,
+			pse_venue_order_id,pse_anonymous,audit_state
+		)
+		values
+		(
+			 #{ps_id},#{pse_star},#{pse_evaluate_comment},#{pse_park_info},#{pse_create_user_id},#{pse_project_id},
+			#{pse_venue_order_id},#{pse_anonymous},#{audit_state}
+		)
+	</insert>
+	
+	
+	<!--                                  商家个人中心                                                                                        -->
+	
+	<!-- 场馆评论 -->
+	<select id="findPointCommentPage" parameterType="Page" resultMap="PointEvaluateDTOResultMap">
+		select
+		pse_id,ps_id,pse_star,pse_evaluate_comment,pse_park_info,pse_create_user_id,
+		pse_create_time,pse_project_id,pse_venue_order_id,pse_price,
+		users.U_ID "uId",users.uName,users.uHeadImg
+		from pointEvaluate pse
+		left join users on users.u_id = pse.pse_create_user_id
+		
+		where ps_id = #{t.id}
+		order by pse_create_time desc
+	</select>
+	
+	
+	
+</mapper>

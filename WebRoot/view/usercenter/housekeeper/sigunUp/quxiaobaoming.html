@@ -1,0 +1,82 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<base href="/" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>玩嘛</title>
+
+<#include "/view/usercenter/base.css.html">
+
+</head>
+  <body>
+  	<input type="text" id="refund" />
+	<table>
+		<#list activeApplicantList as item>
+			<tr>
+				<td>
+					<input type="checkbox" id="checkbox" value="${item.aa_id}"/>
+				</td>
+				<td>
+					${item.aa_user_name}
+				</td>
+				<td>
+					${item.aa_user_phone}
+				</td>
+				<td>
+					${item.aa_state_str}
+				</td>
+			</tr>
+		</#list>
+	</table>
+	<input type="hidden" id="asu_id" value="${asu_id}"/>
+	<button id="quxiao">确定取消</button>
+	
+	<#include "/view/usercenter/base.js.html">
+	<script type="text/javascript">
+		var aa_id = "";
+		$("input#checkbox").each(function(index,element){
+			var $this = $(this);
+			$this.prop("checked",true)
+			if(aa_id==""){
+				aa_id = $this.val();
+			}else{
+				aa_id += ","+$this.val();
+			}
+		});
+		$("input#checkbox").on("click",function(){
+			aa_id = "";
+			$("input#checkbox").each(function(index,element){
+				var $this = $(this);
+				if($this.prop("checked")){
+					if(aa_id==""){
+						aa_id = $this.val();
+					}else{
+						aa_id += ","+$this.val();
+					}
+				}
+			});
+			
+		});		
+		$("#quxiao").on("click",function(){
+			layer.confirm('您确定要取消订单？', {
+				icon :0,btn: ['确定','取消'] //按钮
+			}, function(index){
+				layer.close(index);
+				$.post("activeSignup/quxiaodigndan?asu_id="+$("#asu_id").val()+"&aa_refund_area="+$("#refund").val()+"&aa_id="+aa_id,function(data){
+					if(data.RESPONSE_STATE=="500"){
+						layer.alert(data.ERROR_INFO, {
+							title:"错误信息",
+							icon:2
+						});
+					}else if(data.RESPONSE_STATE=="200"){
+						layer.alert(data.SUCCESS_INFO, {
+							title:"成功信息",
+							icon:1
+						});
+					}
+				});
+			});
+		})
+	</script>
+  </body>
+</html>

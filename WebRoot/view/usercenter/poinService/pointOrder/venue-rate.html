@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<base href="/" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>玩嘛</title>
+
+<#include "/view/usercenter/base.css.html">
+<link rel="stylesheet" type="text/css" href="static/upload/style.css"/>
+<style>
+body {
+	background: #f1f1f1;
+}
+</style>
+</head>
+<body>
+<#include "/view/header.html">
+	<div class="boxw clearfix">
+		<div class="main-box" style="margin-top: 20px;margin-bottom: 20px;width:1120px">
+			<h1>
+				场馆点评
+			</h1>
+			<div class="venue-rate clearfix">
+				<dl>
+					<dt>
+						<img src="${pointEvaluateInfo.pointImg}" width="118" height="80" />
+					</dt>
+					<dd>
+						<h1>${pointEvaluateInfo.ps_zh_name}</h1>
+					</dd>
+				</dl>
+				<dl>
+					<dt>我的总体评价：</dt>
+					<dd class="rate-all" id="evaluate">
+						<a>差评</a>
+						<a>一般</a>
+						<a>满意</a>
+						<a>很满意</a>
+						<a>强烈推荐</a>
+					</dd>
+				</dl>
+				
+				<!-- 
+				<dl>
+					<dt>
+						<span class="style-7">体验：</span>
+					</dt>
+					<dd class="star">
+						<img src="hw_img/star3.png">
+						<img src="hw_img/star3.png">
+						<img src="hw_img/star3.png">
+						<img src="hw_img/star3.png">
+						<img src="hw_img/star4.png">
+					</dd>
+				</dl>
+				<dl>
+					<dt>
+						<span class="style-7">服务：</span>
+					</dt>
+					<dd class="star">
+						<img src="hw_img/star3.png">
+						<img src="hw_img/star3.png">
+						<img src="hw_img/star3.png">
+						<img src="hw_img/star3.png">
+						<img src="hw_img/star4.png">
+					</dd>
+				</dl>
+				<dl>
+					<dt>
+						<span class="style-7">环境：</span>
+					</dt>
+					<dd class="star">
+						<img src="hw_img/star3.png">
+						<img src="hw_img/star3.png">
+						<img src="hw_img/star3.png">
+						<img src="hw_img/star3.png">
+						<img src="hw_img/star4.png">
+					</dd>
+				</dl>
+				 -->
+				
+				<dl>
+					<dt>订单晒图：</dt>
+					<dd class="edit-img" id="container">
+						<a href="javascript:void(0)" id="saveimg" class="add-img">添加图片</a><em id="imgcount">0/4</em>
+						<ul id="thumbnail">
+							
+						</ul>
+					</dd>
+				</dl>
+				<dl>
+					<dt>写评论：</dt>
+					<dd>
+						<textarea id="comment" placeholder="亲！最多输入不超过100字哦！" maxlength="100" name="intro"></textarea>
+					</dd>
+				</dl>
+			</div>
+
+			<div class="venue-refund-btns">
+				<a class="refund-btn-2" id="submit" href="javascript:void(0)">发表评论</a>
+			</div>
+		</div>
+	</div>
+	<!-- main end -->
+	<#include "/view/usercenter/base.js.html">
+
+	<script type="text/javascript" src="static/upload/plupload-2.1.8/js/plupload.full.min.js"></script>
+	<script type="text/javascript" src="static/js/pointService/order/uploadComment.js"></script>
+	
+	<script type="text/javascript">
+		var pointServiceId = ${pointEvaluateInfo.ps_id};
+		
+		$(function(){
+			$("dd#evaluate").on("click","a",function(){
+				var $this = $(this);
+				$("dd#evaluate a").removeClass("selected");
+				$this.addClass("selected");
+				
+			})
+			
+			$("#submit").on("click",function(){
+				if(!$("dd#evaluate a").hasClass("selected")){
+					layer.tips("请选择评价", "dd#evaluate a:last");
+					return;
+				}
+				
+				var comment = $("#comment").val();
+				if(comment==null||comment==""){
+					layer.tips("请填写评论信息", "#comment span");
+					return;
+				}
+				
+				var star = 0;
+				$("dd#evaluate a").each(function(index,element){
+					if($(this).hasClass("selected")){
+						star = index+1;
+					}
+				})
+				
+				var anonymous = 0;
+				
+				var images = "";
+				$("#thumbnail").find("li").each(function(index,element){
+					if(index==0){
+						images += $(this).find("img").attr("data-src");
+					}else{
+						images += ","+$(this).find("img").attr("data-src");
+					}
+				});
+				
+				$.post("pointEvaluate/savePointEvaluate.json",{ps_id:pointServiceId,pse_star:star,pse_evaluate_comment:comment,pse_anonymous:anonymous,images:images},function(data){
+					if(data.RESPONSE_STATE=="200"){
+						layer.msg("评价成功",{icon:1,time:800},function(){
+							window.location.replace("pointService/detail/"+pointServiceId+".html");
+						});
+					}else if(data.RESPONSE_STATE=="500"){
+						layer.alert("评价订单失败，请刷新后再试！",{title:"错误信息",icon:0});
+					}
+					
+				})
+
+			})
+		})
+		
+	</script>
+</body>
+
+</html>

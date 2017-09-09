@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="activeDifficultyTypeMapper">
+    <!--mybatis ehcache缓存配置 -->
+    <cache type="org.mybatis.caches.ehcache.LoggingEhcache" />
+
+	<sql id="Base_Column_List">
+    adt_id,adt_description 
+    </sql>
+
+    <resultMap type="com.op.entity.zd.ActiveDifficultyType" id="ActiveDifficultyTypeReturnMap">
+      <id column="adt_id" property="adt_id"/>
+      <result column="adt_description" property="adt_description"/>
+    </resultMap>
+   
+	   
+	<!-- 查询所有 -->
+	<select id="selectList" resultType="com.op.entity.zd.ActiveDifficultyType">
+		select <include refid="Base_Column_List"/>
+		from activeDifficultyType
+	</select>
+</mapper>

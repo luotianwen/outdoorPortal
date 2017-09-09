@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 游记内容(travelsContent)Mapper -->
+<mapper namespace="travelsContentMapper">
+	<!--mybatis ehcache缓存配置 -->
+	<!-- 以下两个<cache>标签二选一,第一个可以输出日志,第二个不输出日志 不使用缓存加入useCache="false" -->
+	<!-- <cache type="org.mybatis.caches.ehcache.LoggingEhcache" /> -->
+	<!-- <cache type="org.mybatis.caches.ehcache.EhcacheCache"/> -->
+
+	<sql id="Base_Column_List">
+		id,travels_id ,content_type ,content ,photo_id ,title_id ,video_id ,
+		sort ,user_id ,create_time ,update_time ,parent_id 
+	</sql>
+
+	<resultMap type="com.op.entity.travels.TravelsContent" id="TravelsContentReturnMap">
+		<!-- id -->
+		<id column="id" property="id" />
+		<!-- 游记ID -->
+		<result column="travels_id" property="travels_id" />
+		<!-- 内容类型（1：文字；2：图片；3：视频；4：段落标题；5：day模板） -->
+		<result column="content_type" property="content_type" />
+		<!-- 内容 -->
+		<result column="content" property="content" />
+		<!-- 图片ID -->
+		<result column="photo_id" property="photo_id" />
+		<!-- 段落标题ID -->
+		<result column="title_id" property="title_id" />
+		<!-- 视频ID -->
+		<result column="video_id" property="video_id" />
+		<!-- 排序 -->
+		<result column="sort" property="sort" />
+		<!-- 创建人 -->
+		<result column="user_id" property="user_id" />
+		<!-- 创建时间 -->
+		<result column="create_time" property="create_time" />
+		<!-- 修改时间 -->
+		<result column="update_time" property="update_time" />
+		<!-- 父内容ID（默认0为一级） -->
+		<result column="parent_id" property="parent_id" />
+		
+	</resultMap>
+	
+	<resultMap type="com.op.entity.travels.TravelsContent" id="TravelsContentListReturnMap">
+		<!-- id -->
+		<id column="id" property="id" />
+		<!-- 游记ID -->
+		<result column="travels_id" property="travels_id" />
+		<!-- 内容类型（1：文字；2：图片；3：视频；4：段落标题；5：day模板） -->
+		<result column="content_type" property="content_type" />
+		<!-- 内容 -->
+		<result column="content" property="content" />
+		<!-- 图片ID -->
+		<result column="photo_id" property="photo_id" />
+		<!-- 段落标题ID -->
+		<result column="title_id" property="title_id" />
+		<!-- 视频ID -->
+		<result column="video_id" property="video_id" />
+		<!-- 排序 -->
+		<result column="sort" property="sort" />
+		<!-- 创建人 -->
+		<result column="user_id" property="user_id" />
+		<!-- 创建时间 -->
+		<result column="create_time" property="create_time" />
+		<!-- 修改时间 -->
+		<result column="update_time" property="update_time" />
+		<!-- 父内容ID（默认0为一级） -->
+		<result column="parent_id" property="parent_id" />
+		
+		<!-- 内容对应的图片 -->
+   		<association property="travelsPhotos" javaType="com.op.entity.travels.TravelsPhotos" column="id" select="travelsPhotosMapper.findTraelsPhotosByTravelsContentId"></association>
+   		<!-- 内容对应的段落 -->
+   		<association property="travelsTitle" javaType="com.op.entity.travels.TravelsTitle" column="id" select="travelsTitleMapper.findTraelsTitleByTravelsContentId" ></association>
+	</resultMap>
+	
+	<!-- 新增游记内容 -->
+	<insert id="addTravelsContent" parameterType="com.op.entity.travels.TravelsContent" useGeneratedKeys="true" keyProperty="id">
+		insert into travelscontent
+		(
+			travels_id ,content_type ,content ,photo_id ,title_id
+			,video_id ,sort,user_id,parent_id
+		)
+		values
+		(
+			#{travels_id },#{content_type },#{content },#{photo_id },#{title_id }
+			,#{video_id },#{sort },#{user_id},#{parent_id}
+		)
+
+	</insert>
+	
+	<!-- 修改空游记内容 -->
+	<update id="updateNullTravelsContent" parameterType="com.op.entity.travels.TravelsContent">
+		update travelscontent set
+		travels_id = #{travels_id},
+		content_type = #{content_type},
+		content = #{content},
+		photo_id = #{photo_id},
+		title_id = #{title_id},
+		video_id = #{video_id},
+		sort = #{sort},
+		user_id = #{user_id},
+		parent_id = #{parent_id}
+		where id = #{id}
+	</update>
+
+	<!-- 内容排序 -->
+	<update id="updatesort" parameterType="java.util.List">
+		<foreach collection="list" item="item" index="index" separator=";">
+			update travelscontent set
+				sort = #{index}+1,
+				update_time = now()
+			where id = #{item.contentId} and travels_id = #{item.id}
+		</foreach>
+	</update>
+	
+	<!-- 删除所有该游记内容 -->
+	<delete id="deleteTravels" parameterType="com.op.entity.travels.Travels">
+		delete from travels
+		where travels_id = #{id} and user_id = #{user_id}
+	</delete>
+	
+	<!-- 删除内容 -->
+	<delete id="deleteTravelsContent" parameterType="com.op.dto.travels.TravelsModifyDTO">
+		delete from travelscontent
+		where id = #{content_id} and user_id = #{user_id}
+	</delete>
+	
+	<!-- 删除day模块所有内容 -->
+	<delete id="deleteTravelsContentByDay" parameterType="com.op.dto.travels.TravelsModifyDTO">
+		delete from travelscontent
+		where (id = #{content_id} or parent_id = #{content_id})
+	</delete>
+	
+	<!-- 修改游记内容 -->
+	<update id="updateTravelsContent" parameterType="com.op.dto.travels.TravelsModifyDTO">
+		update travelscontent set
+		update_time = now()
+		<if test="data.o=='1'.toString()">
+			,content = #{data.c}
+		</if>
+		<if test="data.o=='daytitle'.toString()">
+			,title_id = #{data.c}
+		</if>
+		<if test="data.o=='dayphotos'.toString()">
+			,photo_id = #{data.c}
+		</if>
+		
+		where id = #{content_id} and user_id = #{user_id}
+	</update>
+	
+	<!-- 通过内容ID查询游记内容 -->
+	<select id="findTravelsContentById" parameterType="com.op.dto.travels.TravelsModifyDTO" resultMap="TravelsContentReturnMap">
+		select <include refid="Base_Column_List"/> from travelscontent
+		where id = #{content_id} and user_id = #{user_id}
+	</select>
+	
+	<!-- 通过游记ID查内容 -->
+	<select id="findTraelsContentByTravelsId" parameterType="String" resultMap="TravelsContentListReturnMap">
+		select <include refid="Base_Column_List"/> from travelsContent
+		where travels_id = #{id}
+		order by sort asc
+	</select>
+	
+	<!-- 游记详情，根据游记查询关联的内容 -->
+	<resultMap type="com.op.dto.travels.show.TravelsDetailContentDTO" id="travelsDetailContentsResultMap"></resultMap>
+	<select id="findByTravelsId" parameterType="java.lang.String" resultMap="travelsDetailContentsResultMap">
+	
+	</select>
+	
+	<resultMap type="com.op.entity.travels.TravelsContent" id="TravelsContentTitleReturnMap">
+		<!-- id -->
+		<id column="id" property="id" />
+		
+   		<!-- 内容对应的段落 -->
+   		<association property="travelsTitle" javaType="com.op.entity.travels.TravelsTitle" column="id" select="travelsTitleMapper.findTraelsTitleByTravelsContentId" ></association>
+	</resultMap>
+	
+	<!-- 查询所有文字内容 -->
+	<select id="findTravelsContentForWord" parameterType="String" resultType="com.op.entity.travels.TravelsContent">
+		select content from travelsContent
+		where travels_id = #{id} and content_type=1
+		order by sort asc
+	</select>
+	
+</mapper>

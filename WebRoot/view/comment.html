@@ -1,0 +1,42 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<base href="/" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>玩嘛</title>
+<link rel="stylesheet" type="text/css" href="static/css/hw_css/base.css" />
+<link rel="stylesheet" type="text/css" href="static/css/hw_css/qt.css" />
+</head>
+<body>
+	<div class="boxw clearfix">
+		<div class="error-404-logo">
+			<img src="static/images/hw_img/logo-2.png" />
+		</div>
+		<div class="error-404-info">
+			<img src="static/images/hw_img/not-img.png" />
+			<p class="p1"
+				style="margin-top:10px;margin-bottom:100px;font-size:36px;">抱歉！您已经评论过了！</p>
+			<p class="p2">
+				此页面<span id="num">5</span>秒后，自动跳转到订单页面。
+			</p>
+			<p class="p3" style="padding-top:20px;">
+				<a href="activeSignup/MySignUp.html">查看订单</a>
+			</p>
+		</div>
+	</div>
+	<script type="text/javascript" src="static/js/jquery-2.1.1.min.js"></script>
+	<script type="text/javascript">
+		$(function(){
+			window.setInterval(function() {
+				var num = Number($("#num").html());
+				$("#num").html(num-1);
+				
+				if(num==1){
+					window.location.href="activeSignup/MySignUp.html";
+				}
+				
+			}, 1000);
+		});
+	</script>
+</body>
+</html>

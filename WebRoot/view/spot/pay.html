@@ -1,0 +1,182 @@
+<!DOCTYPE HTML>
+<html lang="zh-cn">
+<head>
+	<base href="/" />
+	<meta charset="UTF-8">
+	<title>${order.productName}</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+	<#include "/view/base.css.html">
+	<link rel="stylesheet" href="static/css/hw_css/base.css">
+	<link rel="stylesheet" href="static/css/hw_css/pay.css">
+	<script src="http://apps.bdimg.com/libs/jquery/1.8.2/jquery.min.js"></script>
+</head>
+<body>
+
+	<#include "/view/header.html">
+	
+	
+	<div class="header">
+		<div class="san">
+			1.填写订单
+		</div>
+		<div class="san">
+			2.在线支付
+		</div>
+		<div class="san2">
+			3.成功提交订单
+		</div>
+	</div>
+	<div class="content">
+		<div class="gopay">
+			<p>
+				<span class="gole">
+					应支付金额: <span>￥${order.order_total_price}</span>
+				</span>
+				<span class="gori">
+					您需要在<span class="count" id="countdown"></span>内完成支付，否则将自动取消订单
+				</span>
+			</p>
+			<hr>
+			<p class="bp">
+				订单号：${order.orderId}
+			</p>
+			<p class="bp">
+				商品名称：${order.productName}
+			</p>
+			<p class="bp">
+				游玩时间：${order.inDate}
+			</p>
+		</div>
+		<p class="tit">
+			选择支付方式
+		</p>
+			<div class="zffs">
+		<div class="zftop">
+			<div class="zffs1 active">
+				平台支付
+			</div>
+			<div class="zffs1">
+				储蓄卡支付
+			</div>
+			<div class="zffs1">
+				信用卡支付
+			</div>
+			<div class="zffs2"></div>			
+		</div>
+		<div class="zfpt">
+			<div class="pt pt1">
+				<img src="static/css/bank/165x58.png" alt="#">
+			</div>
+			<div class="pt">
+				<img src="static/images/hw_img/wei.png" alt="#">
+			</div>
+			<div class="pt">
+				<img src="static/images/hw_img/wei.png" alt="#">
+			</div>
+		</div>
+		<div class="bank" style="display:none">
+			<div class="pt pt1">
+				<img src="static/images/hw_img/yin.png" alt="#">
+			</div>
+			<div class="pt">
+				<img src="static/images/hw_img/yin.png" alt="#">
+			</div>
+			<div class="pt">
+				<img src="static/images/hw_img/yin.png" alt="#">
+			</div>
+			<div class="pt">
+				<img src="static/images/hw_img/yin.png" alt="#">
+			</div>
+			<div class="pt">
+				<img src="static/images/hw_img/yin.png" alt="#">
+			</div>
+			<div class="pt">
+				<img src="static/images/hw_img/yin.png" alt="#">
+			</div>
+			<div class="pt">
+				<img src="static/images/hw_img/yin.png" alt="#">
+			</div>
+			<div class="pt">
+				<img src="static/images/hw_img/yin.png" alt="#">
+			</div>
+			<div class="pt">
+				<img src="static/images/hw_img/yin.png" alt="#">
+			</div>
+		</div>
+		<div class="bank2" style="display:none">
+			<div class="pt pt1">
+				<img src="static/images/hw_img/yin.png" alt="#">
+			</div>
+			<div class="pt">
+				<img src="static/images/hw_img/yin.png" alt="#">
+			</div>
+			<div class="pt">
+				<img src="static/images/hw_img/yin.png" alt="#">
+			</div>
+			<div class="pt">
+				<img src="static/images/hw_img/yin.png" alt="#">
+			</div>
+			<div class="pt">
+				<img src="static/images/hw_img/yin.png" alt="#">
+			</div>
+			<div class="pt">
+				<img src="static/images/hw_img/yin.png" alt="#">
+			</div>
+			<div class="pt">
+				<img src="static/images/hw_img/yin.png" alt="#">
+			</div>
+			<div class="pt">
+				<img src="static/images/hw_img/yin.png" alt="#">
+			</div>
+			<div class="pt">
+				<img src="static/images/hw_img/yin.png" alt="#">
+			</div>
+		</div>
+	</div>
+	<a href="ticket/pay?orderId=${order.orderId}" class="next">立即付款</a>
+	</div>
+	<#include "/view/base.js.html">
+	<!-- 倒计时 -->
+	<script type="text/javascript" src="static/js/plugins/date/jquery.downCount.js"></script>
+</body>
+<script>
+	$(function  () {
+		$(".pt").click(function  () {
+			$(this).not("p").attr("class","pt1")
+			       .siblings().not("p").attr("class","pt")
+		});
+		$(".zffs1").eq(0).click(function  () {
+			$(this).addClass("active");
+			$(this).siblings().removeClass("active");
+			$(".bank").css("display","none");
+			$(".bank2").css("display","none");
+			$(".zfpt").css("display","block");
+		});
+		$(".zffs1").eq(1).click(function  () {
+			$(this).addClass("active");
+			$(this).siblings().removeClass("active");
+			$(".bank").css("display","block");
+			$(".zfpt").css("display","none");
+			$(".bank2").css("display","none");
+		});
+		$(".zffs1").eq(2).click(function  () {
+			$(this).addClass("active");
+			$(this).siblings().removeClass("active");
+			$(".bank2").css("display","block");
+			$(".zfpt").css("display","none");
+			$(".bank").css("display","none");
+		});
+		
+		//倒计时
+		timer("${time}");
+	})
+
+	//倒计时
+	function timer(showdate) {
+		$("#countdown").djs({
+			time:showdate,
+			stop:"付款时间已过，交易失败！"
+		})
+	}
+</script>
+</html>

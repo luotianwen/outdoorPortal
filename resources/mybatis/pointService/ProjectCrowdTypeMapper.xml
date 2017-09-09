@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="projectCrowdTypeMapper">
+	<sql id="Base_Column_List">
+		id,projectId ,crowdTypeId
+	</sql>
+
+	<resultMap type="com.op.dto.pointService.insert.fabu.ProjectCrowdTypeDTO" id="ProjectCrowdTypeReturnMap">
+		<id column="id" property="id" />
+		<result column="projectId" property="projectId" />
+		<result column="crowdTypeId" property="crowdTypeId" />
+	</resultMap>
+
+
+	<insert id="saveProjectCrowdType" parameterType="java.util.List"
+		useGeneratedKeys="false">
+		insert into projectCrowdType
+		( projectId ,crowdTypeId )
+
+	 values
+
+		<foreach collection="list" item="item"
+			separator=",">
+			(
+			#{item.projectId},
+			#{item.crowdTypeId}
+			)
+		</foreach>
+
+
+	</insert>
+
+	<!-- 查询适合人群 -->
+	<select id="findProjectCrowdTypeByPspId" parameterType="String" resultMap="ProjectCrowdTypeReturnMap">
+		select id,projectId ,crowdTypeId from projectCrowdType
+		where projectId = #{psp_id}
+	</select>
+	
+
+</mapper>

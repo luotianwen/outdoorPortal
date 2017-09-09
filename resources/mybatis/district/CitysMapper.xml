@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="citysMapper">
+    <!--mybatis ehcache缓存配置 -->
+    <cache type="org.mybatis.caches.ehcache.LoggingEhcache" />
+    
+	<sql id="Base_Column_List">
+    code,name ,parent_code 
+    </sql>
+
+    <resultMap type="com.op.entity.district.Citys" id="CitysReturnMap">
+      <id column="code" property="code"/>
+      <result column="name" property="name"/>
+      <result column="parent_code" property="parent_code"/>
+      
+
+	  <!-- 1:N 【市】对应的【区县】查询 -->
+      <collection property="countys" ofType="com.op.entity.district.Countys" column="code" select="countysMapper.selectCountyByCityCode">
+      </collection>
+      
+   </resultMap>
+
+	<!-- 根据id查询对应的市 -->
+	<select id="selectCitys" resultMap="CitysReturnMap" parameterType="java.lang.String">
+		select <include refid="Base_Column_List"/> 
+		from citys where parent_code=#{parent_code}
+	</select>
+	
+	<!-- 景点获取当前城市信息 -->
+	<select id="findNowCity" parameterType="String" resultMap="CitysReturnMap">
+		select code,name ,parent_code 
+		from citys where name = #{name}
+	</select>
+	
+</mapper>

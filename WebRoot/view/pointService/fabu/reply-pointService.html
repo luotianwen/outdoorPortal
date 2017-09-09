@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<base href="/">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>发布项目</title>
+
+<!-- base -->
+<#include "/view/base.css.html">
+
+<link rel="stylesheet" type="text/css" href="static/css/hw_css/form.css" />
+
+<!-- 多选 -->
+<link rel="stylesheet" href="static/css/plugins/chosen/chosen.css" >
+</head>
+<body>
+
+	<!-- header -->
+	<#include "/view/header.html">
+ 
+	<div class="boxw clearfix" style="margin-top: 20px;">
+		<div class="venue-form">
+			<div class="mt-venue">
+				<h1>场馆发布</h1>
+				<span>(<em>*</em>为必填选项)</span>
+			</div>
+			<div class="venue-nav">
+				<ul id="stepUl">
+					<li step="1" class="currented">1. 完善场馆信息</li>
+					<li step="2" >2. 发布项目</li>
+					<li step="3" >3. 成功发布</li>
+				</ul>
+			</div>
+			<form action="" id="replyPointServiceForm">
+			<input type="hidden" name="ps_id" value="${ps_id}">
+				<div class="venue-box clearfix" id="step1">
+					<dl class="clearfix" >
+						<dt>特色标签：</dt>
+						<dd sign="tab" >
+							<input type="text" name="tabName" style="width:150px;" placeholder="输入商家标签"> 
+							<a class="add-rel" id="addTabs" role="button"><i></i>添加标签</a>
+						</dd>
+					</dl>
+					<dl class="clearfix">
+						<dt>
+							<em>*</em>购买须知：
+						</dt>
+						<dd>
+							<textarea maxlength="500" name="psi_pay_info" placeholder="亲！最多不超过 500 字"
+								style="height:150px;">${dto.psi_pay_info}</textarea>
+							<div for="psi_pay_info-error" class="error-area">
+							</div>
+						</dd>
+					</dl>
+					<dl class="clearfix">
+						<dt>
+							<em>*</em>提供的服务：
+						</dt>
+						<dd>
+							<textarea maxlength="500" name="psi_service" placeholder="场馆免费提供淋浴，休息室，Wife，音乐，零食。" 
+								style="height:150px;">${dto.psi_service}</textarea>
+							<div for="psi_service-error" class="error-area">
+							</div>
+						</dd>
+					</dl>
+					<dl class="clearfix">
+						<dt>
+							<em>*</em>场馆介绍：
+						</dt>
+						<dd>
+							<textarea name="psi_introduce" placeholder="" style="height:150px;">${dto.psi_introduce}</textarea>
+							<div for="psi_introduce-error" class="error-area">
+							</div>
+	
+						</dd>
+					</dl>
+					
+				</div>
+				
+				<div id="step2" style="display: none;" >
+					<div class="venue-box clearfix" style="padding-top:0;position:relative;">
+					  <project index="0">
+					  		<a class="icon-close" id="deleteProject" title="删除"></a>
+	    					<div class="item-tit" style="margin-bottom:22px;">项目 1
+	    						<span>(<em>*</em>为必填选项)</span> 
+	    					</div>
+					      <dl class="clearfix">
+					        <dt><em>*</em>项目名称：</dt>
+					        <dd>
+					          <input required type="text" name="projects[0].psp_item_name"  placeholder="亲！最多不要超过 20 字哦！" maxlength="20" >
+					          <span class="error-tips"><i></i>请输入真实姓名</span> 
+					        </dd>
+					      </dl>
+					      <dl class="clearfix">
+					        <dt><em>*</em>项目原价：</dt>
+					        <dd>
+					        <input required type="text" name="projects[0].psp_item_price"  placeholder="所需的价格" style="width:200px;">
+					          元 </dd>
+					      </dl>
+					      <dl class="clearfix">
+					        <dt><em>*</em>项目打折价：</dt>
+					        <dd>
+					          <input required type="text" name="projects[0].psp_discount_price"  placeholder="所需的价格" style="width:200px;">
+					          元 </dd>
+					      </dl>
+					      <dl class="clearfix">
+					        <dt><em>*</em>适合人群：</dt>
+					        <dd>
+					          <select name="projects[0].crowds" style="width:218px;" data-placeholder="选择适合人群" class="chosen-select" multiple  >
+					          	<#list crowds?keys as key>
+					          		<option value="${key}" >${crowds[key]}</option>
+					          	</#list>
+					          </select>
+					        </dd>
+					      </dl>
+					      <dl class="clearfix">
+					        <dt><em>*</em>支持预约：</dt>
+					        <dd id="yuyuedd">
+					          <label>
+					          	<span class="cssradio">
+						            <input type="radio" value="1" name="projects[0].psp_is_yuyue">
+						            <span></span>
+					            </span>
+					                                 是
+					          </label>
+					          
+					          <label>
+					          	<span class="cssradio">
+						            <input type="radio" value="0" name="projects[0].psp_is_yuyue" checked="true">
+						            <span></span>
+					            </span>
+					                                否
+					           </label>
+					           <input class="laydate-icon" id="defaultDate" type="text" name="projects[0].psp_yuyue_time" style="width:222px;display: none;" placeholder="选择预约时间" readonly="readonly" > 
+					        </dd>
+					      </dl>
+					      <dl class="clearfix">
+					        <dt><em>*</em>支持退款：</dt>
+					        <dd>
+					          <label>
+					          	<span class="cssradio">
+						            <input type="radio" value="0" name="projects[0].psp_is_refund" checked="true">
+						            <span></span>
+					            </span>
+					                               是
+					           </label>
+					           
+					          <label>
+					          	<span class="cssradio">
+						            <input type="radio" value="1" name="projects[0].psp_is_refund">
+						            <span></span>
+					            </span>
+					                                 否
+					          </label>
+					          
+					        </dd>
+					      </dl>
+					      <dl class="clearfix">
+					        <dt><em>*</em>有效期：</dt>
+					        <dd>
+					          <input class="laydate-icon" id="validity_date_start" type="text" name="projects[0].psp_validity_date_start" style="width:222px;" placeholder="选择生效期" readonly="readonly" >
+					          &nbsp;--&nbsp;
+					          <input class="laydate-icon" id="validity_date_end" type="text" name="projects[0].psp_validity_date_end" style="width:222px;" placeholder="选择截止日期" readonly="readonly" >
+					        </dd>
+					      </dl>
+					       <dl class="clearfix">
+					        <dt><em>*</em>图片上传：</dt>
+					        <dd>
+					        <ul id="uploadUl" class="venue-img clearfix">
+					        	<li id="${.now?string('yyyyMMddHHmmss')}_0"><a class="edit-add"><i></i>添加照片</a></li>
+					        </ul>
+					        </dd>
+					      </dl>
+					      <dl class="clearfix">
+					        <dt><em>*</em>项目内容：</dt>
+					        <dd>
+					          <textarea  maxlength="100"  name="projects[0].psp_item_comment" placeholder="亲！最多不超过 500 字" style="height:150px;"></textarea>
+					        </dd>
+					      </dl>
+				      </project>
+				    </div>
+				</div>
+				<div class="venue-box clearfix" id="step3" style="display: none;">
+				    <div class="reply-success">
+					    <i class="success-ico"></i>
+					    <h1>恭喜！场馆发布成功！</h1>
+					    <p><b id="count_down">5</b>秒后自动跳转到详情页</p>
+					    <p><a href="javascript:void(0)" target="_blank">查看详情</a></p>
+				    </div>
+			    </div>
+		    </form>
+			      
+			<div class="add-button" id="addProjectDIV" style="display: none;">
+				<a id="addProjectA" class="add-ico" role="button" title="添加">
+				<i></i>添加项目</a>
+			</div>
+			
+			<div class="btns">
+				<p>
+			    	<span class="checkbox now">
+			    		<i class="icon-select"></i>我已阅读并同意
+			    	</span>
+			    	<a class="c1" href="javascript:void(0)">《玩嘛场馆发布规则》</a>
+			    </p>
+		    
+				<a href="javascript:void(0)" class="btn-sub-gray" id="prevStep" style="display: none;">上一步</a>
+				<a href="javascript:void(0)" class="btn-sub" id="nextStep">下一步</a>
+			</div>
+		</div>
+	</div>
+
+<div id="container" style="display: none;">
+	<a id="selectfiles" href="javascript:void(0);" class='btn'></a>
+	<a id="postfiles" href="javascript:void(0);" class='btn'></a>
+</div>
+
+<script type="text/javascript">
+	var crowds="";
+	<#list crowds?keys as key>
+   		crowds+='<option value="${key}" >${crowds[key]}</option>';
+   	</#list>
+</script>
+
+<#include "/view/base.js.html">
+
+<script type="text/javascript" src="static/js/plugins/validate/jquery.validate.min.js"></script>
+<script type="text/javascript" src="static/upload/plupload-2.1.8/js/plupload.full.min.js"></script>
+<script type="text/javascript" src="static/js/pointService/fabu/upload.js"></script>
+<!-- 多选 -->	    
+<script type="text/javascript" src="static/js/plugins/chosen/chosen.jquery.js" ></script>
+<script type="text/javascript" src="static/js/pointService/fabu/reply.pointService.js"></script>
+<!-- 日期插件 -->
+<script type="text/javascript" src="static/js/plugins/layer/laydate/laydate.js"></script>
+
+<script type="text/javascript">
+	$(function(){
+		<#list dto.tabs as item>
+			$("input[name=tabName]").val("${item.psf_name}");
+			$("dd[sign='tab'] a#addTabs").trigger("click");
+		</#list>
+	})
+</script>
+
+</body>
+</html>

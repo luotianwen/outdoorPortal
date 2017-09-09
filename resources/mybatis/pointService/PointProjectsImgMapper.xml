@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="pointProjectsImgMapper">
+	<sql id="Base_Column_List">
+    ppi_id,ppi_venue_project_id ,ppi_url ,ppi_order ,pi_upload_time ,pi_upload_user_id 
+    </sql>
+
+    <resultMap type="com.op.entity.pointService.project.PointProjectsImg" id="PointProjectsImgReturnMap">
+      <id column="ppi_id" property="ppi_id"/>
+      <result column="ppi_venue_project_id" property="ppi_venue_project_id"/>
+      <result column="ppi_url" property="ppi_url"/>
+      <result column="ppi_order" property="ppi_order"/>
+      <result column="pi_upload_time" property="pi_upload_time"/>
+      <result column="pi_upload_user_id" property="pi_upload_user_id"/>
+   </resultMap>
+   
+   
+   <insert id="saveProjectImg" parameterType="java.util.List" useGeneratedKeys="false">
+   insert into pointProjectsImg
+   ( ppi_venue_project_id ,ppi_url ,ppi_order ,pi_upload_time ,pi_upload_user_id )
+	  
+	 values
+	  
+	  <foreach collection="list" item="item"  separator=",">
+		  (
+	   #{item.ppi_venue_project_id},
+	   #{item.ppi_url},
+	   #{item.ppi_order},
+	   #{item.pi_upload_time},
+	   #{item.pi_upload_user_id}
+		  )
+	  </foreach>
+	  
+
+   </insert>
+	
+	<!-- 项目图片 -->
+	<select id="findPointProjectsImgByPspId" resultType="com.op.entity.pointService.project.PointProjectsImg">
+		select ppi_url from pointProjectsImg
+		where ppi_venue_project_id = #{psp_id}
+		order by ppi_order asc
+	</select>
+	
+</mapper>

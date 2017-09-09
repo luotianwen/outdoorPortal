@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<base href="/">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>入驻</title>
+
+<!-- base -->
+<#include "/view/base.css.html">
+
+<link rel="stylesheet" type="text/css" href="static/css/hw_css/form.css" />
+</head>
+<body>
+
+	<!-- header -->
+	<#include "/view/header.html">
+<div id="ruzhu">
+	<form id="pointServiceForm">
+		<div class="boxw clearfix" style="margin-top: 20px;">
+			<div class="venue-form">
+				<div class="mt-venue">
+					<h1>商户入驻</h1>
+					<span>
+						(<em>*</em>为必填选项)
+					</span>
+				</div>
+				<div class="venue-box clearfix">
+					<dl class="clearfix">
+						<dt>
+							<em>*</em>商户名：
+						</dt>
+						<dd>
+							<input type="text" name="ps_zh_name" placeholder="请输入商户名，最多不要超过 50 字哦！" maxlength="50">
+							<!-- <span class="error-tips"><i></i>请输入商户名</span> -->
+						</dd>
+					</dl>
+					<dl class="clearfix" id="chooseType">
+						<dt>
+							<em>*</em>类型：
+						</dt>
+						<dd>
+							<select venuetype='1'>
+								<option value="">请选择</option> <#list types as type> <#if type.isLock == 0>
+								<option value="${type.categoryId}">${type.categoryName}</option>
+								</#if> </#list>
+							</select>
+						</dd>
+					</dl>
+					<dl class="clearfix" id="chooseAddress">
+						<dt>
+							<em>*</em>地址位置：
+						</dt>
+						<dd>
+							<select addresstype="province" name="ps_province_id">
+								<option value="">请选择</option> 
+								<#list provinces as item>
+									<option value="${item.code}">${item.name}</option> 
+								</#list>
+							</select>
+							<select addresstype="city" name="ps_city_id">
+								<option value="">城市/地区</option>
+							</select>
+							<select addresstype="county" name="ps_countys_id">
+								<option value="">区/县</option>
+							</select>
+						</dd>
+					</dl>
+					<dl class="clearfix">
+						<dt></dt>
+						<dd>
+							<input type="text" name="ps_address" placeholder="详细地址" maxlength="100">
+							<!-- <span class="error-tips"><i></i>请输入详细地址</span> -->
+						</dd>
+					</dl>
+					<dl class="clearfix" id="contact">
+						<dt>
+							<em>*</em>联系方式：
+						</dt>
+						<dd>
+							<input type="text" name="contact[0]" style="width:150px;" placeholder="座机，手机或邮箱" maxlength="20">
+							<a class="add-rel" role="button" id="addPhone" handle-type="add">
+								<i></i>添加联系方式
+							</a>
+						</dd>
+					</dl>
+
+
+					<dl class="clearfix" id="contact">
+						<dt>
+							<em>*</em>标记地图：
+						</dt>
+						<dd style="line-height: 40px;" id="addMapAddressDD">
+							<a class="add-rel" role="button" id="addMapAddress">
+								<i></i>地图标记位置
+							</a>
+						</dd>
+					</dl>
+
+
+					<dl class="clearfix">
+						<dt><em>*</em>交通方式：</dt>
+						<dd>
+							<textarea maxlength="500" name="ps_traffic" placeholder="亲！最多不超过 500 字" style="height:150px;"></textarea>
+							<!-- 
+								<div class="error-area">
+									<span class="error-tips">
+										<i></i>请输入交通方式
+									</span>
+								</div>
+							-->
+						</dd>
+					</dl>
+					<dl class="clearfix">
+						<dt>
+							<em>*</em>营业时间：
+						</dt>
+						<dd elementType="chooseWeek">
+							<div class="business-hours clearfix" style="z-index: 7;">
+								<div class="week clearfix" id="weekDIV">
+									<a class="all-week selected" id="allWeek">整&nbsp;&nbsp;周</a>
+									<a>周一</a>
+									<a>周二</a>
+									<a>周三</a>
+									<a>周四</a>
+									<a>周五</a>
+									<a>周六</a>
+									<a>周日</a>
+									<span>可以多选</span>
+									<input name="dates[0].days" type="hidden" value="周一,周二,周三,周四,周五,周六,周日" />
+								</div>
+								<div class="hour clearfix">
+									<a class="hours-24">24小时营业</a>
+									<a class="time-select">
+										<showtime>选择开始时间</showtime>
+										<b></b>
+										<div class="time-list" style="display: none;">
+											<ul>
+												<li>0:00</li>
+												<li>0:30</li>
+												<li>1:00</li>
+												<li>1:30</li>
+												<li>2:00</li>
+												<li>2:30</li>
+												<li>3:00</li>
+												<li>3:30</li>
+												<li>4:00</li>
+												<li>4:30</li>
+												<li>5:00</li>
+												<li>5:30</li>
+												<li>6:00</li>
+												<li>6:30</li>
+												<li>7:00</li>
+												<li>7:30</li>
+												<li>8:00</li>
+												<li>8:30</li>
+												<li>9:00</li>
+												<li>9:30</li>
+												<li>10:00</li>
+												<li>10:30</li>
+												<li>11:00</li>
+												<li>11:30</li>
+												<li>12:00</li>
+												<li>12:30</li>
+												<li>13:00</li>
+												<li>13:30</li>
+												<li>14:00</li>
+												<li>14:30</li>
+												<li>15:00</li>
+												<li>15:30</li>
+												<li>16:00</li>
+												<li>16:30</li>
+												<li>17:00</li>
+												<li>17:30</li>
+												<li>18:00</li>
+												<li>18:30</li>
+												<li>19:00</li>
+												<li>19:30</li>
+												<li>20:00</li>
+												<li>20:30</li>
+												<li>21:00</li>
+												<li>21:30</li>
+												<li>22:00</li>
+												<li>22:30</li>
+												<li>23:00</li>
+												<li>23:30</li>
+											</ul>
+											<input type="hidden" name="dates[0].startDate">
+										</div>
+									</a>
+									<span>至</span>
+									<a class="time-select">
+										<showtime>选择结束时间</showtime>
+										<b></b>
+										<div class="time-list" style="display: none;">
+											<ul>
+												<li>0:00</li>
+												<li>0:30</li>
+												<li>1:00</li>
+												<li>1:30</li>
+												<li>2:00</li>
+												<li>2:30</li>
+												<li>3:00</li>
+												<li>3:30</li>
+												<li>4:00</li>
+												<li>4:30</li>
+												<li>5:00</li>
+												<li>5:30</li>
+												<li>6:00</li>
+												<li>6:30</li>
+												<li>7:00</li>
+												<li>7:30</li>
+												<li>8:00</li>
+												<li>8:30</li>
+												<li>9:00</li>
+												<li>9:30</li>
+												<li>10:00</li>
+												<li>10:30</li>
+												<li>11:00</li>
+												<li>11:30</li>
+												<li>12:00</li>
+												<li>12:30</li>
+												<li>13:00</li>
+												<li>13:30</li>
+												<li>14:00</li>
+												<li>14:30</li>
+												<li>15:00</li>
+												<li>15:30</li>
+												<li>16:00</li>
+												<li>16:30</li>
+												<li>17:00</li>
+												<li>17:30</li>
+												<li>18:00</li>
+												<li>18:30</li>
+												<li>19:00</li>
+												<li>19:30</li>
+												<li>20:00</li>
+												<li>20:30</li>
+												<li>21:00</li>
+												<li>21:30</li>
+												<li>22:00</li>
+												<li>22:30</li>
+												<li>23:00</li>
+												<li>23:30</li>
+											</ul>
+											<input type="hidden" name="dates[0].endDate">
+										</div>
+									</a>
+								</div>
+							</div>
+							<div>
+								<a id="addTime" class="add-rel" role="button"><i></i>添加营业时间</a>
+							</div>
+						</dd>
+					</dl>
+					<dl class="clearfix">
+						<dt>
+							<em>*</em>图片上传：
+						</dt>
+						<dd>
+							<ul class="venue-img clearfix" id="uploadUl">
+								<li id="${.now?string('yyyyMMddHHmmss')}_0">
+								<a class="edit-add"><i></i>添加照片</a></li>
+							</ul>
+						</dd>
+					</dl>
+				</div>
+				<div class="btns">
+					<a href="javascript:void(0)" id="submitInfo" class="btn-sub">去填写认证信息</a>
+				</div>
+			</div>
+		</div>
+	</form>
+
+	<div id="container" style="display: none;">
+		<a id="selectfiles" href="javascript:void(0);" class='btn'>选择文件</a>
+		<a id="postfiles" href="javascript:void(0);" class='btn'>开始上传</a>
+	</div>
+
+	<pre id="console"></pre>
+
+	<p>&nbsp;</p>
+</div>
+
+<div id="renzheng" style="display:none;">
+	<div class="boxw clearfix">
+		<div class="venue-form">
+			<div class="mt-venue">
+				<h1>我的认证</h1>
+				<span>
+					(<em>*</em>为必填选项)
+				</span>
+			</div>
+			<form action="" id="insertAuthForm">
+				<input type="hidden" id="ps_id" name="ps_id" value="${ps_id}">
+				<div class="venue-box sh clearfix">
+					<dl class="clearfix">
+						<dt>
+							<em>*</em>真实姓名：
+						</dt>
+						<dd>
+							<input type="text" name="contactName" placeholder="请输入真实姓名">
+						</dd>
+					</dl>
+					<dl class="clearfix">
+						<dt>
+							<em>*</em>身份证号：
+						</dt>
+						<dd>
+							<input type="text" name="idCard" placeholder="请输入身份证号">
+						</dd>
+					</dl>
+					<dl class="clearfix">
+						<dt>
+							<em>*</em>手机号：
+						</dt>
+						<dd>
+							<input type="text" name="mobile" placeholder="请输入手机号">
+						</dd>
+					</dl>
+					<dl class="clearfix">
+						<dt>
+							<em>*</em>邮箱：
+						</dt>
+						<dd>
+							<input type="text" name="email" placeholder="请输入邮箱地址">
+						</dd>
+					</dl>
+					<dl class="clearfix">
+						<dt>
+							<em>*</em>身份证（正面）：
+						</dt>
+						<dd>
+							<ul class="venue-img clearfix" style="width:920px;">
+								<li addphoto id="idCard_p_src">
+									<a class="edit-add"><i></i>上传证件照</a>
+								</li>
+							</ul>
+						</dd>
+					</dl>
+					<dl class="clearfix">
+						<dt>
+							<em>*</em>身份证（反面）：
+						</dt>
+						<dd>
+							<ul class="venue-img clearfix" style="width:920px;">
+								<li addphoto id="idCard_i_src2"><a class="edit-add"><i></i>上传证件照</a></li>
+							</ul>
+						</dd>
+					</dl>
+					<dl class="clearfix">
+						<dt>
+							<em>*</em>三/五证合一：
+						</dt>
+						<dd>
+							<input type="radio" name="threeinone" value="0"/>有<input type="radio" checked="true" name="threeinone" value="1"/>无
+						</dd>
+					</dl>
+					<dl class="clearfix">
+						<dt>
+							<em>*</em>营业执照注册号：
+						</dt>
+						<dd>
+							<input type="text" name="license_number" placeholder="营业执照注册号">
+						</dd>
+					</dl>
+					<dl class="clearfix">
+						<dt>
+							<em>*</em>营业执照扫描件：
+						</dt>
+						<dd>
+							<ul class="venue-img clearfix" style="width:940px;">
+								<li addphoto id="license_src"><a class="edit-add"><i></i>营业执照扫描件</a></li>
+							</ul>
+						</dd>
+					</dl>
+					<div id="threeinone" style="display:block;">
+						<dl class="clearfix">
+							<dt>
+								<em>*</em>组织机构代码：
+							</dt>
+							<dd>
+								<input type="text" name="organizationCode" placeholder="组织机构代码">
+							</dd>
+						</dl>
+						<dl class="clearfix">
+							<dt>
+								<em>*</em>组织机构代码证：
+							</dt>
+							<dd>
+								<ul class="venue-img clearfix" style="width:940px;">
+									<li addphoto id="organizationCode_src"><a class="edit-add"><i></i>组织机构代码证</a></li>
+								</ul>
+							</dd>
+						</dl>
+						<dl class="clearfix">
+							<dt>
+								<em>*</em>纳税人识别号：
+							</dt>
+							<dd>
+								<input type="text" name="taxpayer_identity_number" placeholder="纳税人识别号">
+							</dd>
+						</dl>
+						<dl class="clearfix">
+							<dt>
+								<em>*</em>税务登记证扫描件：
+							</dt>
+							<dd>
+								<ul class="venue-img clearfix" style="width:940px;">
+									<li addphoto id="tax_registration_certificate"><a class="edit-add"><i></i>税务登记证扫描件</a></li>
+								</ul>
+							</dd>
+						</dl>
+					</div>
+				</div>
+			</form>
+			<div class="btns">
+				<a href="javascript:void(0)" class="btn-sub-gray" id="last">上一步</a>
+				<a href="javascript:void(0)" class="btn-sub" id="submit">提 交</a>
+			</div>
+		</div>
+	</div>
+
+	<div id="container-rz" style="display: none;">
+		<a id="selectfiles-rz" href="javascript:void(0);" class='btn'>选择文件</a>
+		<a id="postfiles-rz" href="javascript:void(0);" class='btn'>开始上传</a>
+	</div>
+</div>
+
+	<#include "/view/base.js.html">
+	<script type="text/javascript" src="static/upload/plupload-2.1.8/js/plupload.full.min.js"></script>
+	<script type="text/javascript" src="static/js/pointService/ruzhu/ruzhu.pointService.js"></script>
+	<script type="text/javascript" src="static/js/pointService/ruzhu/upload.js"></script>
+	
+	<script type="text/javascript" src="static/js/pointService/renzheng/upload.js"></script>
+	<script type="text/javascript" src="static/js/plugins/validate/jquery.validate.min.js"></script>
+	<!-- 身份证 -->
+	<script type="text/javascript" src="static/js/IDValidator/GB2260.js"></script>
+	<script type="text/javascript" src="static/js/IDValidator/IDValidator.js"></script>
+	<script type="text/javascript" src="static/js/pointService/renzheng/auth.pointService.js"></script>
+</body>
+</html>

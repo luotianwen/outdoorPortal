@@ -1,0 +1,464 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+	<!-- 场馆订单(pointServiceOrder)Mapper -->
+<mapper namespace="pointServiceOrderMapper">
+    <!--mybatis ehcache缓存配置 -->
+    <!-- 以下两个<cache>标签二选一,第一个可以输出日志,第二个不输出日志 不使用缓存加入useCache="false" -->
+    <!-- <cache type="org.mybatis.caches.ehcache.LoggingEhcache" /> -->
+    <!-- <cache type="org.mybatis.caches.ehcache.EhcacheCache"/>  -->
+
+	<sql id="Base_Column_List">
+	    pso_id,pso_project_id ,pso_snapshot_id,pso_project_name ,pso_project_price ,pso_discount_price,
+	    pso_project_num ,pso_validity_date_start ,pso_validity_date_end ,
+	    pso_price ,pso_point_service_id ,pso_zh_name ,pso_appointment_time_start ,
+	    pso_appointment_time_end ,pso_user_comment ,pso_order_state ,
+	    pso_no_consent_comment ,pso_pay_state ,pso_create_user_id ,pso_create_time ,
+	    pso_pay_time ,pso_pay_type ,pso_pay_sequence ,pso_phone ,pso_user_name ,
+	    pso_is_del ,pso_refund_time ,pso_refund_amount ,pso_refund_mode ,
+	    pso_refund_state ,pso_refund_reason ,pso_already_refund ,pso_comment
+    </sql>
+
+    <resultMap type="com.op.entity.pointService.order.PointServiceOrder" id="PointServiceOrderReturnMap">
+		<!-- 订单序号 -->
+      <id column="pso_id" property="pso_id"/>
+		<!-- 项目ID -->
+      <result column="pso_project_id" property="pso_project_id"/>
+      	<!-- 快照项目ID -->
+	  <result column="pso_snapshot_id" property="pso_snapshot_id"/>
+		<!-- 项目名称 -->
+      <result column="pso_project_name" property="pso_project_name"/>
+		<!-- 项目单价 -->
+      <result column="pso_project_price" property="pso_project_price"/>
+		<!-- 项目打折价 -->
+		<result column="pso_discount_price" property="pso_discount_price"/>
+		<!-- 项目数量 -->
+      <result column="pso_project_num" property="pso_project_num"/>
+		<!-- 有效期start -->
+      <result column="pso_validity_date_start" property="pso_validity_date_start"/>
+		<!-- 有效期end -->
+      <result column="pso_validity_date_end" property="pso_validity_date_end"/>
+		<!-- 订单总金额 -->
+      <result column="pso_price" property="pso_price"/>
+		<!-- 地点服务ID -->
+      <result column="pso_point_service_id" property="pso_point_service_id"/>
+		<!-- 场馆中文名 -->
+      <result column="pso_zh_name" property="pso_zh_name"/>
+		<!-- 用户预约时间start -->
+      <result column="pso_appointment_time_start" property="pso_appointment_time_start"/>
+		<!-- 用户预约时间end -->
+      <result column="pso_appointment_time_end" property="pso_appointment_time_end"/>
+		<!-- 用户备注 -->
+      <result column="pso_user_comment" property="pso_user_comment"/>
+		<!-- 订单状态（10：待消费；20：已使用） -->
+      <result column="pso_order_state" property="pso_order_state"/>
+		<!-- 商家未接单备注 -->
+      <result column="pso_no_consent_comment" property="pso_no_consent_comment"/>
+		<!-- 支付状态（10：未支付；20：已支付；） -->
+      <result column="pso_pay_state" property="pso_pay_state"/>
+		<!-- 创建人 -->
+      <result column="pso_create_user_id" property="pso_create_user_id"/>
+		<!-- 创建时间 -->
+      <result column="pso_create_time" property="pso_create_time"/>
+		<!-- 支付时间 -->
+      <result column="pso_pay_time" property="pso_pay_time"/>
+		<!-- 支付方式 -->
+      <result column="pso_pay_type" property="pso_pay_type"/>
+		<!-- 支付流水号 -->
+      <result column="pso_pay_sequence" property="pso_pay_sequence"/>
+		<!-- 手机号 -->
+      <result column="pso_phone" property="pso_phone"/>
+		<!-- 姓名 -->
+      <result column="pso_user_name" property="pso_user_name"/>
+		<!-- 是否删除（0：否；1：是） -->
+      <result column="pso_is_del" property="pso_is_del"/>
+		<!-- 退款时间 -->
+      <result column="pso_refund_time" property="pso_refund_time"/>
+		<!-- 退款金额 -->
+      <result column="pso_refund_amount" property="pso_refund_amount"/>
+		<!-- 退款方式 -->
+      <result column="pso_refund_mode" property="pso_refund_mode"/>
+		<!-- 退款状态(0：未申请退款；10：等待玩嘛确认，20：退款中，30：退款成功，40：退款失败，50：取消退款) -->
+      <result column="pso_refund_state" property="pso_refund_state"/>
+		<!-- 退款原因 -->
+      <result column="pso_refund_reason" property="pso_refund_reason"/>
+		<!-- 已退金额 -->
+      <result column="pso_already_refund" property="pso_already_refund"/>
+      <!-- 是否评价（0：未评价，1：已评价） -->
+      <result column="pso_comment" property="pso_comment"/>
+      
+   </resultMap>
+   
+	<!-- 订单类型数量 -->
+	<select id="findPointServiceOrderCount" parameterType="String" resultType="java.util.Map">
+		SELECT
+			COUNT(IF(PSO_PAY_STATE = 10,TRUE,NULL)) one,
+			COUNT(IF(PSO_ORDER_STATE = 20 AND PSO_PAY_STATE = 20,TRUE,NULL)) two,
+			COUNT(IF(PSO_ORDER_STATE = 10 AND PSO_PAY_STATE = 20,TRUE,NULL)) three,
+			COUNT(IF(PSO_REFUND_STATE = 10,TRUE,NULL)) four,
+			COUNT(IF(PSO_REFUND_STATE = 20,TRUE,NULL)) five,
+			COUNT(IF(PSO_IS_DEL = 1,TRUE,NULL)) six
+		FROM pointServiceOrder
+		where pso_create_user_id = #{userId}
+	</select>
+   
+	<!-- 查询所有场馆订单 -->
+	<select id="findPointServiceOrderByUserIdPage" parameterType="Page" resultType="com.op.dto.pointService.order.PointServiceOrderListDTO">
+		select
+			pso.pso_id,pso_project_id,pso_project_name,pso_validity_date_start,pso_validity_date_end,pso_point_service_id,
+			pso_zh_name,pso_discount_price,pso_project_num,pso_price,pso_order_state,pso_refund_state,pso_refund_amount,
+			pso_pay_state,pso_create_user_id,pso_create_time,ppi.ppi_url as pointProjectsImg,pso.pso_already_refund,
+			gpr.num refunding,gprs.num refundSuccess
+		from pointServiceOrder pso
+		left join pointProjectsImg ppi on ppi.ppi_venue_project_id = pso.pso_project_id
+		left join GROUP_PROJECT_IMG_ORDER gpio on gpio.PPI_VENUE_PROJECT_ID = pso.pso_project_id
+		left join GROUP_POINTSERVICE_REFUNDING gpr on gpr.pso_id = pso.pso_id
+		left join GROUP_POINT_REFUND_SUCCESS gprs on gprs.pso_id = pso.pso_id
+		
+		where pso_create_user_id = #{t.userId} and ppi.PPI_ORDER = gpio.num
+		
+		<if test="t.type=='1'">
+			and PSO_PAY_STATE = 10
+		</if>
+		<if test="t.type=='2'">
+			and PSO_ORDER_STATE = 20 and PSO_PAY_STATE = 20
+		</if>
+		<if test="t.type=='3'">
+			and PSO_ORDER_STATE = 10 and PSO_PAY_STATE = 20
+		</if>
+		<if test="t.type=='4'">
+			and PSO_REFUND_STATE = 10
+		</if>
+		<if test="t.type=='5'">
+			and PSO_REFUND_STATE = 20
+		</if>
+		<if test="t.type=='6'">
+			and PSO_IS_DEL = 1
+		</if>
+		
+		order by pso_create_time desc
+	</select>
+
+	<!-- 查询商家所有场馆订单 -->
+	<select id="findPointServiceBusinessOrderByUserId" parameterType="Page" resultType="com.op.dto.pointService.order.PointServiceOrderListDTO">
+		select
+			pso.pso_id,pso_project_id,pso_project_name,pso_validity_date_start,pso_validity_date_end,pso_point_service_id,
+			pso_zh_name,pso_project_num,pso_price,pso_order_state,pso_refund_state,pso_refund_amount,
+			pso_pay_state,pso_create_user_id,pso_create_time,ppi.ppi_url as pointProjectsImg,pso.pso_already_refund,
+			gpr.num refunding,gprs.num refundSuccess
+		from pointServiceOrder pso
+		left join pointServiceProjects psp on psp.psp_id = pso.PSO_PROJECT_ID
+		left join pointService ps on ps.ps_id = pso.PSO_POINT_SERVICE_ID
+		left join pointProjectsImg ppi on ppi.ppi_venue_project_id = pso.pso_project_id
+		left join GROUP_PROJECT_IMG_ORDER gpio on gpio.PPI_VENUE_PROJECT_ID = pso.pso_project_id
+		left join GROUP_POINTSERVICE_REFUNDING gpr on gpr.pso_id = pso.pso_id
+		left join GROUP_POINT_REFUND_SUCCESS gprs on gprs.pso_id = pso.pso_id
+		
+		where ps.PS_CREATE_USER_ID = #{t.userId} and ppi.PPI_ORDER = gpio.num
+		and pso.pso_pay_state = 20
+		
+		order by pso_create_time desc
+	</select>
+	
+	<!-- 新增订单 -->
+	<insert id="savePointServiceOrder" parameterType="com.op.entity.pointService.order.PointServiceOrder" useGeneratedKeys="true" keyProperty="pso_id">
+
+		
+		insert into pointServiceOrder
+		(
+			 pso_project_id ,pso_snapshot_id,pso_project_name ,pso_project_price ,pso_discount_price,
+		    pso_project_num ,pso_validity_date_start ,pso_validity_date_end ,
+		    pso_price ,pso_point_service_id ,pso_zh_name ,pso_appointment_time_start ,
+		    pso_appointment_time_end ,pso_user_comment ,pso_pay_time ,pso_pay_type ,
+		    pso_pay_sequence ,pso_phone ,pso_user_name ,pso_refund_time ,pso_create_user_id,
+		    pso_refund_amount ,pso_refund_mode ,pso_refund_reason ,pso_already_refund 
+		)
+		values
+		(
+			 #{pso_project_id },#{pso_snapshot_id},#{pso_project_name },#{pso_project_price },#{pso_discount_price},
+		    #{pso_project_num },#{pso_validity_date_start },#{pso_validity_date_end },
+		    #{pso_price },#{pso_point_service_id },#{pso_zh_name },#{pso_appointment_time_start },
+		    #{pso_appointment_time_end },#{pso_user_comment },#{pso_pay_time },#{pso_pay_type },
+		    #{pso_pay_sequence },#{pso_phone },#{pso_user_name },#{pso_refund_time },#{pso_create_user_id},
+		    #{pso_refund_amount },#{pso_refund_mode },#{pso_refund_reason },#{pso_already_refund }
+		)
+	</insert>
+
+	<resultMap type="com.op.dto.pointService.order.PointServiceOrderInfoDTO" id="pointServiceOrderInfoDTOResultMap">
+		<result column="pso_id" property="pso_id" />
+		
+		<!-- 识别码 -->
+		<collection property="pointServiceUniquenessList" ofType="com.op.entity.pointService.order.PointServiceUniqueness" column="pso_id" select="pointServiceUniquenessMapper.findPointServiceUniquenessByPsoId"></collection>
+		
+	</resultMap>
+
+	<!-- 通过ID查询订单 -->
+	<select id="findPointServiceOrderById" parameterType="java.util.Map" resultMap="pointServiceOrderInfoDTOResultMap">
+		select
+			pso.pso_id,pso_project_id ,pso_snapshot_id,pso_project_name ,pso_project_price ,pso_discount_price,
+		    pso_project_num ,pso_validity_date_start ,pso_validity_date_end ,
+		    pso_price ,pso_point_service_id ,pso_zh_name ,pso_appointment_time_start ,
+		    pso_appointment_time_end ,pso_user_comment ,pso_order_state ,
+		    pso_no_consent_comment ,pso_pay_state ,pso_create_user_id ,pso_create_time ,
+		    pso_pay_time ,pso_pay_type ,pso_pay_sequence ,pso_phone ,pso_user_name ,
+		    pso_is_del ,pso_refund_time ,pso_refund_amount ,pso_refund_mode ,
+		    pso_refund_state ,pso_refund_reason ,pso_already_refund ,ppi.ppi_url as pointProjectsImg,
+		    gpr.num refunding,gprs.num refundSuccess
+		from pointServiceOrder pso
+		left join pointProjectsImg ppi on ppi.ppi_venue_project_id = pso.pso_project_id
+		left join GROUP_PROJECT_IMG_ORDER gpio on gpio.PPI_VENUE_PROJECT_ID = pso.pso_project_id
+		left join GROUP_POINTSERVICE_REFUNDING gpr on gpr.pso_id = pso.pso_id
+		left join GROUP_POINT_REFUND_SUCCESS gprs on gprs.pso_id = pso.pso_id
+		
+		where pso.pso_id = #{id} and pso_create_user_id = #{userId} and ppi.PPI_ORDER = gpio.num
+	</select>
+
+	<!-- 查询订单应付金额 -->
+	<select id="findPointServiceOrderPriceById" parameterType="String" resultType="String">
+		select
+			pso_price
+		from pointServiceOrder
+		where pso_id = #{id}
+	</select>
+
+	<!-- 修改订单 -->
+	<update id="updatePointServiceOrder" parameterType="com.op.entity.pointService.order.PointServiceOrder">
+		update pointServiceOrder set
+		pso_project_num = #{pso_project_num},
+		pso_price = #{pso_price},
+		pso_phone = #{pso_phone},
+		pso_user_name = #{pso_user_name}
+		where pso_id = #{pso_id}
+	</update>
+
+	<!-- 修改订单支付状态 -->
+	<update id="updateOrderPayState" parameterType="com.op.entity.alipay.Alipay">
+		update pointServiceOrder set 
+		
+		pso_pay_state = 20,
+		pso_pay_type = 0,
+		pso_pay_sequence = #{trade_no},
+		pso_pay_time = #{pay_time}
+		
+		where pso_id = #{out_trade_no}
+	</update>
+
+	<!-- 提交订单时修改原有未支付订单 -->
+	<update id="updateBuyOrder" parameterType="com.op.entity.pointService.order.PointServiceOrder">
+		update pointServiceOrder set
+		
+		pso_project_name = #{pso_project_name},
+		pso_project_price = #{pso_project_price},
+		pso_discount_price = #{pso_discount_price},
+		pso_project_num = #{pso_project_num},
+		pso_price = #{pso_price},
+		pso_validity_date_start = #{pso_validity_date_start},
+		pso_validity_date_end = #{pso_validity_date_end},
+		pso_zh_name = #{pso_zh_name},
+		pso_phone = #{pso_phone},
+		pso_user_name = #{pso_user_name}
+		
+		where pso_project_id = #{pso_project_id} and pso_point_service_id = #{pso_point_service_id} 
+		and pso_create_user_id = #{pso_create_user_id} and pso_is_del = 0 and PSO_PAY_STATE = 10
+	</update>
+	
+	<!-- 提交订单时查询未支付订单信息 -->
+	<select id="findOrderForBuy" parameterType="java.util.Map" resultType="com.op.entity.pointService.order.PointServiceOrder">
+		select 
+		pso_id,pso_project_id,pso_project_name ,pso_project_price ,pso_discount_price,
+		pso_project_num,pso_price,pso_point_service_id,pso_zh_name,pso_phone,pso_user_name
+		from pointServiceOrder
+		where pso_project_id = #{pspId} and pso_point_service_id = #{psId} 
+		and pso_create_user_id = #{userId} and pso_is_del = 0 and PSO_PAY_STATE = 10
+	</select>
+
+	<!-- 立即付款查询未支付订单信息 -->
+	<select id="findOrderForImmediatePay" parameterType="java.util.Map" resultType="com.op.entity.pointService.order.PointServiceOrder">
+		select 
+		pso_id,pso_project_id,pso_project_name ,pso_project_price ,pso_discount_price,
+		pso_project_num,pso_price,pso_point_service_id,pso_zh_name,pso_phone,pso_user_name
+		from pointServiceOrder
+		where pso_id = #{psoId} and pso_create_user_id = #{userId} and pso_is_del = 0 and PSO_PAY_STATE = 10
+	</select>
+
+	<resultMap type="com.op.dto.pointService.order.OrderRefundDTO" id="OrderRefundDTOResultMap">
+		<result column="pso_id" property="pso_id" />
+		
+		<!-- 识别码 -->
+		<collection property="pointServiceUniquenessList" ofType="com.op.entity.pointService.order.PointServiceUniqueness" column="pso_id" select="pointServiceUniquenessMapper.findPointServiceUniquenessByPsoId"></collection>
+		
+	</resultMap>
+
+	<!-- 申请退款页面显示信息 -->
+	<select id="orderRefundInfo" parameterType="java.util.Map" resultMap="OrderRefundDTOResultMap">
+		select
+			pso_id,pso_project_id,pso_project_name,pso_discount_price,pso_price,pso_point_service_id,pso_zh_name
+		from pointServiceOrder pso
+		where pso_id = #{id} and pso_create_user_id = #{userId}
+	</select>
+
+	<!-- 申请退款 -->
+	<update id="orderRefund" parameterType="java.util.Map">
+		update pointServiceOrder
+		set
+		PSO_REFUND_STATE = 10 
+		where pso_id = #{id} and pso_create_user_id = #{userId}
+		and pso_order_state=10 and pso_pay_state=10 and pso_refund_state=0
+	</update>
+
+	<!-- 删除订单 -->
+	<update id="deletePointServiceOrder" parameterType="java.util.Map">
+		update
+		pointServiceOrder set
+		pso_is_del = 1
+		where pso_id = #{id} and pso_create_user_id = #{userId}
+		and (pso_order_state=20 or pso_pay_state=20 or pso_refund_state=20)
+	</update>
+
+	<!-- 购买人数 -->
+	<select id="findPurchaseNumber" parameterType="String" resultType="String">
+		select num from GROUP_PROJECT_PURCHASE
+		where PSO_PROJECT_ID = #{id}
+		
+	</select>
+	
+	<!-- 购买项目数量 -->
+	<select id="orderProjectNum" parameterType="String" resultType="int">
+		select PSO_PROJECT_NUM from pointServiceOrder
+		where pso_id = #{id}
+	</select>
+
+	<!-- 修改订单退款信息 -->
+	<update id="updateOrderRefund" parameterType="java.util.Map">
+		update pointServiceOrder set 
+		pso_refund_amount = pso_refund_amount+pso_discount_price*#{refundNum}
+		
+		where pso_id = #{id} and pso_create_user_id = #{userId}
+	</update>
+
+	<!-- 新增退款申请 -->
+	<insert id="saveRefundReason" parameterType="java.util.Map">
+		insert into PointServiceOrderApplyRefund
+		(
+			pso_id,psu_id,psoar_refund_number
+		)
+		values
+		(
+			#{id},#{uniqueness},#{refundNum}
+		)
+	</insert>
+
+	<!-- 新增退款原因 -->
+	<insert id="saveOrderRefundReason" parameterType="java.util.Map">
+
+			insert into pointServiceRefundReason
+			(
+				psrr_refund_reason,psoar_id
+			)
+			VALUES
+			<foreach collection="list" item="item"  separator=",">
+				(
+					#{item.reason},#{psoarId}
+				)
+			</foreach>
+	</insert>
+	
+	<resultMap type="com.op.dto.pointService.order.OrderRefundInfoDTO" id="OrderRefundInfoDTOResultMap">
+		<result column="psu_id" property="psu_id" />
+		<result column="psoar_id" property="psoar_id" />
+		
+		<!-- 识别码 -->
+		<collection property="pointServiceUniquenessList" ofType="com.op.entity.pointService.order.PointServiceUniqueness" column="psu_id" select="pointServiceUniquenessMapper.findPointServiceUniquenessByRefund"></collection>
+		
+		<!-- 退款原因 -->
+		<collection property="pointServiceRefundReasonList" ofType="com.op.entity.pointService.order.PointServiceRefundReason" column="psoar_id" select="pointServiceOrderMapper.findPointServiceRefundReason"></collection>
+		
+	</resultMap>
+	
+	<!-- 退款详情 -->
+	<select id="findRefundInfo" parameterType="java.util.Map" resultMap="OrderRefundInfoDTOResultMap">
+		select 
+		pso.pso_id,pso.pso_project_id,pso.pso_project_name,pso.pso_discount_price,pso.pso_price,
+		pso.pso_point_service_id,pso.pso_zh_name,pso.pso_pay_sequence,psoar.psu_id,
+		psoar.psoar_refund_time,psoar.psoar_refund_apply_time,psoar.psoar_refund_success_time,
+		psoar.psoar_refund_number,psoar.psoar_state,psoar.psoar_id
+		from PointServiceOrderApplyRefund psoar
+		left join pointServiceOrder pso on pso.pso_id = psoar.pso_id
+		
+		where pso.pso_id = #{id} and pso.pso_create_user_id = #{userId}
+		and (psoar.PSOAR_STATE != 40 and psoar.PSOAR_STATE != 50)
+	</select>
+	
+	<!-- 退款原因 -->
+	<select id="findPointServiceRefundReason" parameterType="String" resultType="com.op.entity.pointService.order.PointServiceRefundReason">
+		select 
+		psrr_id,psrr_refund_reason
+		from PointServiceRefundReason
+		where PSOAR_ID = #{psoar_id}
+	</select>
+	
+	<!-- 验证是否可以退款 -->
+	<select id="verificationCancelRefund" parameterType="java.util.Map" resultType="com.op.dto.pointService.order.OrderRefundInfoDTO">
+		select 
+		pso.pso_id,pso.pso_project_id,pso.pso_project_name,pso.pso_discount_price,pso.pso_price,
+		pso.pso_point_service_id,pso.pso_zh_name,pso.pso_pay_sequence,psoar.psu_id,
+		psoar.psoar_refund_time,psoar.psoar_refund_apply_time,psoar.psoar_refund_success_time,
+		psoar.psoar_refund_number,psoar.psoar_state,psoar.psoar_id
+		from PointServiceOrderApplyRefund psoar
+		left join pointServiceOrder pso on pso.pso_id = psoar.pso_id
+		
+		where psoar.psoar_id = #{id} and pso.pso_create_user_id = #{userId}
+		and (psoar.PSOAR_STATE != 40 and psoar.PSOAR_STATE != 50)
+	</select>
+	
+	<!-- 退款申请取消退款 -->
+	<update id="cancelApplyRefund" parameterType="java.util.Map">
+		update PointServiceOrderApplyRefund set 
+		PSOAR_STATE = 50,
+		psoar_cancel_refund_time = now()
+		where psoar_id = #{id}
+	</update>
+	
+	<!-- 取消退款修改订单信息 -->
+	<update id="cancelOrderRefund" parameterType="java.util.Map">
+		update pointServiceOrder set 
+		pso_refund_amount = pso_refund_amount-pso_discount_price*#{cancelNum}
+		
+		where pso_id = #{psoId} and pso_create_user_id = #{userId}
+	</update>
+	
+	<!-- 标识码取消退款 -->
+	<update id="cancelUniquenessRefund" parameterType="java.util.Map">
+		update pointServiceUniqueness set
+		pso_refund_state = 0
+		where psu_id = #{psuId}
+	</update>
+	
+	<!-- 订单评价展示信息 -->
+	<select id="findOrderEvaluateInfo" parameterType="java.util.Map" resultType="com.op.dto.pointService.order.OrderEvaluateInfo">
+		select
+		pso_id,pso_project_id,pso_project_name,pso_point_service_id,pso_zh_name,
+		gpen.num evaluateNum,ppi.ppi_url as pointProjectsImg
+		from pointServiceOrder pso
+		left join GROUP_PROJECT_EVALUATE_NUMBER gpen on gpen.pse_project_id = pso_project_id
+		left join pointProjectsImg ppi on ppi.ppi_venue_project_id = pso.pso_project_id
+		left join GROUP_PROJECT_IMG_ORDER gpio on gpio.PPI_VENUE_PROJECT_ID = pso.pso_project_id
+		
+		where pso.pso_id = #{id} and pso_create_user_id = #{userId} and ppi.PPI_ORDER = gpio.num
+	</select>
+	
+	<!-- 修改订单识别码已使用 -->
+	<update id="updateOrderUse" parameterType="String">
+		update pointServiceOrder set
+		PSO_ORDER_STATE = 20
+		where pso_id = #{pso_id}
+	</update>
+	
+	<!-- 用户评论 -->
+	<update id="updateOrderConment" parameterType="String">
+		update pointServiceOrder set 
+		pso_comment = 1
+		where pso_id = #{pso_id}
+	</update>
+	
+	
+</mapper>

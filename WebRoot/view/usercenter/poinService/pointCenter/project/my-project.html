@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<base href="/" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>玩嘛</title>
+<#include "/view/usercenter/base.css.html">
+
+<link rel="stylesheet" href="static/css/page.css">
+
+<style>
+body {
+	background: #f1f1f1;
+}
+
+.laypageskin_molv a {
+	background-color: #fff !important;
+}
+</style>
+
+</head>
+<body>
+
+	<#include "/view/usercenter/header.html">
+
+	<div class="boxw clearfix">
+
+		<#include "/view/usercenter/poinService/pointCenter/menu_left.html">
+
+		<div class="mainPoint-box">
+			<div class="point-tit">
+                <h1>所有项目 (<span id="count">${pointServiceProjectDTOList?size}</span>)</h1>
+                <#if users.uId=SESSION_USER.uId><a target="_blank" class="add-btn" id="releaseProject"><i></i>发布项目</a></#if>
+            </div>
+			<div class="point-list">
+				<!-- s1:待审核、s2:审核中、s3:审核失败、s4:审核成功 -->
+				<ul>
+					<#list pointServiceProjectDTOList as item>
+						<li>
+							<div class="act-img">
+								<a href="pointServiceProjects/detail/${item.psp_id}.html" target="_blank">
+									<img src="${item.pointProjectsImg}">
+								</a>
+								<#if item.psp_state=='0'>
+									<span class="s1">待审核</span>
+								</#if>
+								<#if item.psp_state=='1'>
+									<span class="s4">审核成功</span>
+								</#if>
+								<#if item.psp_state=='2'>
+									<span class="s3">审核失败</span>
+								</#if>
+							</div>
+							<div class="act-tit">
+								<a href="pointServiceProjects/detail/${item.psp_id}.html" target="_blank">${item.psp_item_name}</a>
+							</div>
+							<div class="act-place"></div>
+							<div class="act-price">${item.psp_discount_price}元</div>
+							<div class="act-info">${item.psp_validity_date_start?string('yyyy-MM-dd')} 至 ${item.psp_validity_date_end?string('yyyy-MM-dd')}</div>
+						</li>
+					</#list>
+				</ul>
+			</div>
+		</div>
+	</div>
+
+	<#include "/view/usercenter/base.js.html">
+	<!-- 分页 -->
+	<script type="text/javascript" src="static/js/plugins/layer/laypage/laypage.js"></script>
+	<script type="text/javascript" src="static/js/page.js"></script>
+</body>
+</html>

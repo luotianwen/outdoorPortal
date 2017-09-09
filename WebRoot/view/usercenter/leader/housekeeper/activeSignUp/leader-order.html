@@ -1,0 +1,261 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<base href="/" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>玩嘛</title>
+
+<#include "/view/usercenter/base.css.html">
+<link href="static/css/page.css" rel="stylesheet">
+<link href="static/js/plugins/layer/skin/moon/style.css" rel="stylesheet">
+<style>
+body {
+	background: #f1f1f1;
+}
+a {
+	cursor:pointer;
+}
+</style>
+
+</head>
+<body>
+<#include "/view/usercenter/header.html">
+	<div class="boxw clearfix">
+		<#include "/view/usercenter/housekeeper/menu_left.html">
+		<form action="activeSignup/MySignUp.html" method="post">
+			<div class="main-box">
+				<h1>我的订单</h1>
+				<div class="order-nav">
+					<a href="activeSignup/MySignUp.html" <#if type=="0">class="now"</#if>> 全部活动 </a>
+					<a href="activeSignup/MySignUp.html?type=1" <#if type=="1">class="now"</#if>>未开始活动（${wait}） </a>
+					<a href="activeSignup/MySignUp.html?type=2" <#if type=="2">class="now"</#if>>进行中活动（${ing}） </a>
+					<a href="activeSignup/MySignUp.html?type=3" <#if type=="3">class="now"</#if>>已完成活动（${stop}） </a>
+				</div>
+				<#list leaderSignUp as item>
+					<div class="order-list">
+						<!-- order-item begin -->
+						<div class="admin-order-item clearfix" id="active">
+							<#list item.mySignUp as signupitem>
+								<#if signupitem_index==0>
+									<div class="event-info">
+										<a id="showsignup" href="javascript:void(0)" class="order-more">收起<i class="up"></i></a>
+										<div class="event-title"><a href="huodong/info/${signupitem.activityId}.html" style="color: #666;" target="_blank">${signupitem.title}</a></div>
+										<input type="hidden" id="activityId" value="${signupitem.activityId}"/>
+										<div>
+											<span class="event-date">出发日期：${signupitem.activitytime?string('yyyy-MM-dd')} </span>
+											<span class="event-date">结束日期：${signupitem.endtime?string('yyyy-MM-dd')}</span>
+											<span class="event-date">报名人数：${signupitem.alreadyInNum}</span>
+											<span class="event-date">已确认人数：${signupitem.confirmUserNum}</span>
+										</div>
+									</div>
+								</#if>
+								<!-- applicants begin  -->
+								<#if signupitem_index==0>
+									<div id="allsignup">
+								</#if>
+								<div class="admin-order-list clearfix">
+									<div class="applicants-order-info">
+										<span>
+											${signupitem.asu_create_time?string('yyyy-MM-dd HH:mm')}
+										</span>
+										<span>
+											订单号：${signupitem.asu_id}
+										</span>
+										<div class="order-price">
+											 实付款：<i>${signupitem.asu_account_paid}</i>元
+										</div>
+									</div>
+									<div class="applicants-info">
+										<#list signupitem.activeApplicants as aaitem>
+											<#if aaitem_index lt 3>
+												<ul>
+													<li class="w1">${aaitem.aa_user_name}</li>
+													<li class="w2">
+														<#if aaitem.aa_user_sex==1>
+															男
+															<#else>
+															女
+														</#if>
+													</li>
+													<li class="w3">${aaitem.aa_user_phone}</li>
+													<li>${aaitem.aa_state_str!''}</li>
+												</ul>
+											</#if>
+										</#list>
+										
+										<div id="allapplicant" style="display: none;">
+										<#list signupitem.activeApplicants as aaitem>
+											<#if aaitem_index gte 3>
+												<ul>
+													<li class="w1">${aaitem.aa_user_name}</li>
+													<li class="w2">
+														<#if aaitem.aa_user_sex==1>
+															男
+															<#else>
+															女
+														</#if>
+													</li>
+													<li class="w3">${aaitem.aa_user_phone}</li>
+													<li>${aaitem.aa_state_str!''}</li>
+												</ul>
+											</#if>
+										</#list>
+										</div>
+										
+										<#if (signupitem.activeApplicants?size>3)>
+											<a id="showAll" href="javascript:void(0)" class="applicants-more">查看更多<i class="down"></i></a>
+										</#if>
+									</div>
+									<div class="order-btns-area">
+										<a class="btns" href="activeSignup/orderDetails.html?asu_id=${signupitem.asu_id}" target="_blank">订单详情</a>
+									</div>
+								</div>
+								<#if signupitem_index==2>
+									<#if (item.mysignupPage.totalPage>1)>
+										<div id="page" style="text-align:center;">
+											${item.pageStr}
+										</div>
+									</#if>
+									</div>
+								</#if>
+								<!-- applicants end  -->
+							</#list>	
+						</div>
+						<!-- order-item end -->
+					</div>
+					<#if !item_has_next>
+						<div class="admin-order-item clearfix" id="active"></div>
+					</#if>
+				</#list>
+				<#if (page.totalPage>1)>
+					${page.pageStr}
+				</#if>
+			</div>
+		</form>
+	</div>
+	
+	<#include "/view/usercenter/base.js.html">
+	<!-- main end -->
+	<script type="text/javascript" src="static/js/plugins/layer/laypage/laypage.js"></script>
+	<script type="text/javascript" src="static/js/page.js"></script>
+	<script type="text/javascript">
+		$(function(){
+			$("div#active").on("click","a#showAll",function(){
+				var $this = $(this);
+				if($this.find("i").attr("class")=="up"){
+					$this.parent().parent().find("#allapplicant").slideUp();
+					$this.html("查看更多<i class='down'></i>");
+				}else if($this.find("i").attr("class")=="down"){
+					$this.parent().parent().find("#allapplicant").slideDown();
+					$this.html("收起<i class='up'></i>");
+				}
+				
+			});
+			
+			$("div#active").on("click","a#showsignup",function(){
+				var $this = $(this);
+				if($this.find("i").attr("class")=="up"){
+					$this.parent().parent().find("#allsignup").slideUp();
+					$this.html("展开<i class='down'></i>");
+				}else{
+					$this.parent().parent().find("#allsignup").slideDown();
+					$this.html("收起<i class='up'></i>");
+				}
+				
+				
+			});
+			
+			$("div#active").on("click","div#page a#flip",function(){
+				var $this = $(this);
+				var page = $this.attr("page");
+				var activityId = $this.closest("div#active").find("#activityId").val();
+				
+				$.post("activeSignup/signupByactive.html", {page:page,activityId:activityId}, function(data){
+					var html = "";
+					for(var i=0;i<data.mySignUps.length;i++){
+						var signupitem = data.mySignUps[i];
+						html+=  "<div class='admin-order-list clearfix'>"+
+								  	"<div class='applicants-order-info'>"+
+									"	<span>"+signupitem.asu_create_time+
+									"	</span>"+
+									"	<span>"+
+									"		订单号："+signupitem.asu_id+
+									"	</span>"+
+									"	<div class='order-price'>"+
+									"		 实付款：<i>"+signupitem.asu_account_paid+"</i>元"+
+									"	</div>"+
+									"</div>"+
+									"<div class='applicants-info'>";
+						if(signupitem.activeApplicants.length>3){
+							for(var j=0;j<3;j++){
+								var aaitem = signupitem.activeApplicants[j];
+									html+=	" <ul>"+
+											"	<li class='w1'>"+aaitem.aa_user_name+"</li>"+
+											"	<li class='w2'>";
+									if(aaitem.aa_user_sex==2){
+										html+="女";
+									}else{
+										html+="男";
+									}
+									html+=	"</li>"+
+											"	<li class='w3'>"+aaitem.aa_user_phone+"</li>"+
+											"	<li>"+aaitem.aa_state_str+"</li>"+
+											"</ul>";
+							}
+						}else{
+							for(var j=0;j<signupitem.activeApplicants.length;j++){
+								var aaitem = signupitem.activeApplicants[j];
+									html+=	" <ul>"+
+											"	<li class='w1'>"+aaitem.aa_user_name+"</li>"+
+											"	<li class='w2'>";
+									if(aaitem.aa_user_sex==2){
+										html+="女";
+									}else{
+										html+="男";
+									}
+									html+=	"</li>"+
+											"	<li class='w3'>"+aaitem.aa_user_phone+"</li>"+
+											"	<li>"+aaitem.aa_state_str+"</li>"+
+											"</ul>";
+							}
+						}
+					
+								html+=	"<div id='allapplicant' style='display: none;'>";
+						for(var j=3;j<signupitem.activeApplicants.length;j++){
+							var aaitem = signupitem.activeApplicants[j];
+									html+=	"<ul>"+
+												"<li class='w1'>"+aaitem.aa_user_name+"</li>"+
+												"	<li class='w2'>";
+									if(aaitem.aa_user_sex==2){
+										html+="女";
+									}else{
+										html+="男";
+									}
+									html+=	"</li>"+
+												"<li class='w3'>"+aaitem.aa_user_phone+"</li>"+
+												"<li>"+aaitem.aa_state_str+"</li>"+
+											"</ul>";
+						}
+								html+=  "</div>";
+								
+						if(signupitem.activeApplicants.length>3){
+								html+=  "<a id='showAll' href='javascript:void(0)' class='applicants-more'>查看更多<i class='down'></i></a>";
+						}
+							html+=  "</div>"+
+									"<div class='order-btns-area'>"+
+									"	<a class='btns' href='activeSignup/orderDetails.html?asu_id="+signupitem.asu_id+"' target='_blank'>订单详情</a>"+
+									"</div>"+
+								"</div>"+
+							"</div>";
+						if(i==data.mySignUps.length-1){
+							html += "<div id='page' style='text-align:center;'>"+data.pageStr+"</div>";
+						}
+					}
+					$this.closest("div#active").find("#allsignup").html(html);
+				});
+				
+			});
+		})
+	</script>
+</body>
+</html>

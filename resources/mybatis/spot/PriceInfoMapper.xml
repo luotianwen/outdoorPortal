@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+	<!-- 景点门票价格信息(s_priceInfo)Mapper -->
+<mapper namespace="s_priceInfoMapper">
+    <!--mybatis ehcache缓存配置 -->
+    <!-- 以下两个<cache>标签二选一,第一个可以输出日志,第二个不输出日志 不使用缓存加入useCache="false" -->
+    <!-- <cache type="org.mybatis.caches.ehcache.LoggingEhcache" /> -->
+    <!-- <cache type="org.mybatis.caches.ehcache.EhcacheCache"/>  -->
+
+	<sql id="Base_Column_List">
+    id,productSn ,productName ,ticketTimeType ,useDate ,salesPrice ,retailPrice ,settlementPrice ,displayBeginDate ,displayEndDate ,stockNumber 
+    </sql>
+
+    <resultMap type="com.op.spot.entity.PriceInfo" id="PriceInfoReturnMap">
+		<!-- id -->
+      <id column="id" property="id"/>
+		<!-- 产品编号 -->
+      <result column="productSn" property="productSn"/>
+		<!-- 产品名称 -->
+      <result column="productName" property="productName"/>
+		<!-- 电子票有效期类型 -->
+      <result column="ticketTimeType" property="ticketTimeType"/>
+		<!-- 游玩时间 -->
+      <result column="useDate" property="useDate"/>
+		<!-- 市场价格 -->
+      <result column="salesPrice" property="salesPrice"/>
+		<!-- 建议售价 -->
+      <result column="retailPrice" property="retailPrice"/>
+		<!-- 结算价格 -->
+      <result column="settlementPrice" property="settlementPrice"/>
+		<!-- 展示有效开始时间 -->
+      <result column="displayBeginDate" property="displayBeginDate"/>
+		<!-- 展示有效结束时间 -->
+      <result column="displayEndDate" property="displayEndDate"/>
+		<!-- 可用库存 -->
+      <result column="stockNumber" property="stockNumber"/>
+   </resultMap>
+   
+  <!-- 返回产品价格列表 -->
+   <select id="getProductPriceList" parameterType="String" resultType="com.op.spot.entity.PriceInfo">
+   		select 
+   			ticketTimeType,useDate,convert(IFNULL(retailPrice,0)/100,DECIMAL(10,2)) retailPrice,displayBeginDate,displayEndDate,stockNumber
+   		from
+   			s_priceInfo
+   		where 
+   			productSn = #{productSn}
+   			AND 
+   			(
+				( DATE_FORMAT(useDate, '%y-%m-%d') >= CURDATE() AND ticketTimeType = 4  )
+				OR
+				ticketTimeType IN(1,2,3)
+   			)
+   		order by useDate asc
+   </select>
+  
+  
+  <select id="getPriceInfo" parameterType="String" resultType="com.op.spot.entity.PriceInfo">
+  
+ 	 select 
+   			productSn,productName,ticketTimeType,useDate,retailPrice,settlementPrice,displayBeginDate,displayEndDate,stockNumber
+   		from
+   			s_priceInfo
+   		where 
+   		   productSn = #{array[0]}
+   		   and 
+   		   (
+   		   		(useDate = #{array[1]}   and ticketTimeType = 4 )
+   		   		or
+   		   		( #{array[1]} BETWEEN displayBeginDate AND displayEndDate  and ticketTimeType != 4 )
+   		   )
+  </select>
+  
+	
+</mapper>

@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="UserCheckMapper">
+	<sql id="Base_Column_List">
+    ucId,u_Id,realName,gender,mobile,telephone,idcardType,idcardNum,cityId,email,qq,emergencyName,emergencyMobile,relation,antecedents,training,
+    idcartFrontUrl,idcartBackUrl,idcartHandUrl,enterpriseName,address,enterpriseHomepage,licenseNum,licensePictureUrl,enterpriseIntro,proposer,
+    clubName,clubLogo,clubIntro,ucFailRemarks,ucCreateTime,ucAuditUserId,ucAuditTime,ucType,ucProgress
+    </sql>
+    
+    <!-- 根据用户id查询是否已经申请过领队(通过)或正在审核中 -->
+	<select id="selectUser_Check" parameterType="String" resultType="Integer" >
+		select ucProgress from User_Check where u_id=#{u_id}
+	</select>
+
+	<!-- 注册领队 -->
+	<insert id="insertUser_Check" parameterType="com.op.entity.user_check.UserCheck">
+		insert into User_Check(
+		 u_Id,realName,gender,mobile,telephone,idcardType,idcardNum,cityId,email,qq,emergencyName,emergencyMobile,relation,antecedents,
+    	training,idcartFrontUrl,idcartBackUrl,idcartHandUrl,enterpriseName,address,enterpriseHomepage,licenseNum,licensePictureUrl,
+    	enterpriseIntro,proposer,clubName,clubLogo,clubIntro,ucType,provinceId,countyId
+    	)
+		values(
+		 #{u_Id},#{realName},#{gender},#{mobile},#{telephone},#{idcardType},#{idcardNum},#{cityId},#{email},
+		#{qq},#{emergencyName},#{emergencyMobile},#{relation},#{antecedents},#{training},#{idcartFrontUrl},#{idcartBackUrl},
+		#{idcartHandUrl},#{enterpriseName},#{address},#{enterpriseHomepage},#{licenseNum},#{licensePictureUrl},#{enterpriseIntro},
+		#{proposer},#{clubName},#{clubLogo},#{clubIntro},#{ucType},#{provinceId},#{countyId}
+		)
+	</insert>
+	<!-- 修改注册领队信息 -->
+	<update id="updateUser_Check" parameterType="com.op.entity.user_check.UserCheck">
+		update User_Check set realname=#{realName},gender=#{gender},mobile=#{mobile},telephone=#{telephone},idcardType=#{idcardType},idcardNum=#{idcardNum}
+		,cityId=#{cityId},email=#{email},qq=#{qq},emergencyName=#{emergencyName},emergencyMobile=#{emergencyMobile},relation=#{relation},antecedents=#{antecedents}
+		,training=#{training},idcartFrontUrl=#{idcartFrontUrl},idcartBackUrl=#{idcartBackUrl},idcartHandUrl=#{idcartHandUrl},enterpriseName=#{enterpriseName}
+		,address=#{address},enterpriseHomepage=#{enterpriseHomepage},licenseNum=#{licenseNum},licensePictureUrl=#{licensePictureUrl},enterpriseIntro=#{enterpriseIntro}
+		,proposer=#{proposer},clubName=#{clubName},clubLogo=#{clubLogo},clubIntro=#{clubIntro},ucType=#{ucType}
+		,ucFailRemarks=#{ucFailRemarks},ucProgress=1,ucCreateTime=now(),ucAuditTime=null,ucAuditUserId=null
+		where u_id=#{u_Id}
+	</update>
+	
+	<!-- 根据活动创建用户查询领队身份信息 -->
+	<select id="findUserInfoById" parameterType="String" resultType="com.op.entity.user_check.UserCheck">
+	select <include refid="Base_Column_List"/>
+	from user_check where u_Id=#{createUser}
+	</select>
+	
+</mapper>

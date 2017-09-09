@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+	<base href="/" />
+    <meta charset="UTF-8">
+	<title>玩嘛—户外旅游导航平台</title>
+	<meta name="keywords" content="玩嘛，旅游景区，旅游景点，旅游攻略，旅游线路，户外旅游 自驾线路，旅游门票，旅游游记，旅游活动" />
+	<meta name="description" content="玩嘛是一个汇总旅游活动、旅游景点、旅游景区等户外旅游产品预订及户外旅游攻略、旅游线路、旅游游记的户外旅游导航服务平台，为户外旅游爱好者提供便捷的一站式出游攻略" />
+	<meta name="Robots" content="all">
+	<meta name="author" content="玩嘛">
+    <title>玩嘛首页</title>
+ 	 <#include "/view/base.css.html">
+    <link rel="stylesheet" href="static/css/hw_css/index.css"/>
+	<!-- 日历 -->
+	<link rel="stylesheet" type="text/css" href="static/js/plugins/pickerDateRange/dateRange.css"/>
+</head>
+<body>
+ <#include "/view/header.html">
+ <div class="top-one">
+	 <div id="banner">
+		 <ul class="thumbnail">
+			 <li class="tuo1 on" style="background: url('static/images/mainImg/main01.jpg') no-repeat;background-size:cover;" text="1";></li>
+			 <li class="tuo2" style="background: url('static/images/mainImg/main02.jpg') no-repeat;background-size:cover;" text="2";></li>
+			 <li class="tuo3" style="background: url('static/images/mainImg/main03.jpg') no-repeat;background-size:cover;" text="3";></li>
+			 <li class="tuo4" style="background: url('static/images/mainImg/main04.jpg') no-repeat;background-size:cover;" text="4";></li>
+		 </ul>
+		 <div id="banner_list">
+			 <a href="javascript:void(0)" target="_blank"><img src="static/images/mainImg/main01.jpg"/></a>
+			 <a href="javascript:void(0)" target="_blank"><img src="static/images/mainImg/main02.jpg"/></a>
+			 <a href="javascript:void(0)" target="_blank"><img src="static/images/mainImg/main03.jpg"/></a>
+			 <a href="javascript:void(0)" target="_blank"><img src="static/images/mainImg/main04.jpg"/></a>
+		 </div>
+	 </div>
+ </div>
+
+ <div style="width: 1200px;height: 80px;background-color: #000;opacity: 0.6;margin: 0 auto;margin-top: -14em"></div>
+ <form action="search/group.html" method="post">
+ <div class="seek" id="seekDiv">
+
+	 <div class="seek_1" style="z-index:10;">
+	 
+	 	 <span class="picIcon1" show-type="in_position" ></span>
+		 <input type="text" name="position" value=""  autocomplete="off" id="current_address" show-type="in_position" placeholder="&nbsp&nbsp当前位置：北京市" class="input1"/>
+		 <input type="hidden" name="default_position" />
+		 <input type="hidden" name="bl"  />
+		 
+		 
+	 	 <span class="picIcon2" show-type="span_in_time" ></span>
+		 <input type="text" value="" show-type="in_time" id="show-time" placeholder="&nbsp&nbsp时间" class="input2" onclick="isShowOrHide(this)" />
+		 <i class="fa fa-calendar" show-type="in_time" ></i>
+		 <input type="hidden" name="st" />
+		 <input type="hidden" name="lt" />
+		 
+		 
+		 
+		 <span class="picIcon3" show-search show-type="areas_div_id" ></span>
+		 <input type="text" readonly="readonly" show-search show-type="areas_div_id" placeholder="&nbsp&nbsp去哪儿" class="input3" value="≤75公里" />
+		 
+		 
+		 
+		 <span class="picIcon4" show-search show-type="lequ_div_id" ></span>
+		 <input type="text" readonly="readonly" show-search show-type="lequ_div_id" placeholder="&nbsp&nbsp玩嘛" class="input4"/>
+		 
+		 
+		 
+		 <button type="submit" class="button" style="cursor: pointer;">
+		 	<span class="picIcon5">搜活动</span>
+		 </button>
+
+
+
+		 <!-- 去哪儿下拉框  -->
+		 <div class="whereToGo" id="areas_div_id" >
+			 <ul class="whereToGo-ul" id="choose_where_tag">
+				 <li value=""><a href="javascript:void(0)">距离不限</a></li>
+				 <li value="75" class="aa2"><a href="javascript:void(0)">≤75公里</a></li>
+				 <li value="25"><a href="javascript:void(0)">≤25公里</a></li>
+				 <li value="100"><a href="javascript:void(0)">≤100公里</a></li>
+				 <li value="50"><a href="javascript:void(0)">≤50公里</a></li>
+				 <li value="125"><a href="javascript:void(0)">≤125公里</a></li>
+			 </ul>
+			 <!-- <ul class="whereToGo-ul right-ul">
+				 <li>
+				 	<a href="javascript:void(0)">添加常驻住址</a>
+				 </li>
+				 <li>
+				 	<a href="javascript:void(0)">寻找附近活动</a>
+				 </li>
+			 </ul> -->
+		 </div>
+		 <input type="hidden" name="d" value="75" />
+	 </div>
+	 <!--  当前位置下拉框  -->
+	 <div class="location" id="auto_search" >
+		 <ul class="location-ul">
+		 </ul>
+	 </div>
+
+	 <!-- 玩什么  -->
+	 <div class="play" id="lequ_div_id" >
+	 	<ul class="inline-box" id="choose_lequ_tag">
+            <#list types as type>
+            	<a choose="0" class="inline-item" value="${type.cl_id}" >${type.cl_name}</a>
+            </#list>
+		</ul>
+	 </div>
+	<input type="hidden" name="keyword" />
+ </div>
+ </form>
+
+
+
+  <!-- 下部  -->
+<div class="note-list clearfix">
+  <div class="mt">
+  	<a href="javascript:void(0)" class="hot">热门游记</a>
+  	<!-- <a href="javascript:void(0)" class="new">最新游记</a> -->
+  	<a href="travels/draft.html" class="snap">写游记</a>
+  </div>
+  <div class="mc">
+    <ul id="travels_content" style="display:none;">
+     
+      
+    </ul>
+    <div id="page3" style="text-align:center;"></div>
+
+	<div class="mt">
+		<a href="search/actives.html" class="hot">最新活动</a>
+		<!-- <a href="search/actives.html" class="new">优惠活动</a> --> 
+		<a href="javascript:void(0)" id="releaseActivity" class="snap backP">发布活动</a>
+	</div>
+</div>
+</div>
+</body>
+<#include "/view/base.js.html">
+	<!-- 地图 -->
+    <#include "/view/webapi.js.html">
+    <!-- search -->
+	<script type="text/javascript" src="static/js/index/index.js"></script>
+	<!-- 双日历 -->
+	<script type="text/javascript" src="static/js/plugins/pickerDateRange/dateRange.js"></script>
+	<!-- 分页 -->
+	<script type="text/javascript" src="static/js/plugins/layer/laypage/laypage.js"></script>
+<script>
+		 var t = n = 0, count;
+		$(function(){
+		
+			count=$("#banner_list a").length;
+			$("#banner_list a:not(:first-child)").hide();
+			$("#banner_info").html($("#banner_list a:first-child").find("img").attr('alt'));
+			$("#banner_info").click(function(){window.open($("#banner_list a:first-child").attr('href'), "_blank")});
+			$("#banner li").click(function() {
+				var i = $(this).index();//获取Li元素内的值，即1，2，3，4
+				n = i;
+				if (i >= count) return;
+				$("#banner_info").html($("#banner_list a").eq(i).find("img").attr('alt'));
+				$("#banner_info").unbind().click(function(){window.open($("#banner_list a").eq(i).attr('href'), "_blank")})
+				$("#banner_list a").filter(":visible").fadeOut(500).parent().children().eq(i).fadeIn(500);
+				$("#banner").css("background","none");
+				$(this).toggleClass("on");
+				$(this).siblings().removeAttr("class");
+			});
+			t = setInterval("showAuto()", 3.5*1000);
+			$("#banner").hover(function(){clearInterval(t)}, function(){t = setInterval("showAuto()", 3.5*1000);});
+		
+			// 双日历插件
+			new pickerDateRange('show-time', {
+				autoSubmit : true,// 自动提交
+		        isTodayValid : true,
+		        minValidDate: "${minValidDate}",// 最小时间为当前日期
+		        stopToday : false,// 是否截止到当前日期
+		        startDate:"${startDate}",
+		        endDate:"${startDate}",
+		        defaultText : ' 至 ',
+		        theme : 'ta',
+		        success : function(obj) {
+		        	$("input[name=st]:hidden").val(obj.startDate);
+		        	$("input[name=lt]:hidden").val(obj.endDate);
+		        	$("input#show-time").trigger("click");
+		        }
+			});
+			
+			getData();
+		});
+
+		function showAuto()
+		{
+			n = n >=(count - 1) ? 0 : ++n;
+			$("#banner li").eq(n).trigger('click','auto');
+		} 
+			
+		//异步分页
+		function getData(data){
+			$.getJSON("travels/article.html", data, function(res){
+				var count = 3;
+				if(res.pageCount<=3+1){
+					count = 4;
+				}
+				
+				laypage({
+				    cont: 'page3', // 容器。值支持id名 
+				    pages: res.pageCount, // 通过后台拿到的总页数
+				    curr:  res.pageNow,// 当前页
+				    skin: '#ff8a01', //皮肤
+				    skip: true, //是否开启跳页
+				    groups: count, //连续显示分页数
+				    first: 1,
+				    last: res.pageCount,
+				    jump: function(obj, first){ //触发分页后的回调
+				    	if(!first){
+				    		 //点击跳页触发函数自身，并传递点击的当前页：obj.curr
+				             getData({'pageNow':obj.curr});// 搜索指定页数据
+				            
+				         }
+				    }
+				});
+				
+				//$("#travels_content").fadeOut();
+				$("#travels_content").html(res.result);
+				$("#travels_content").fadeIn();
+				var self = $("[limit]");
+				self.each(function(){  
+					var objString = $(this).text();  
+					var objLength = $(this).text().length;  
+					var num = $(this).attr("limit");  
+					if(objLength > num){  
+						$(this).attr("title",objString);  
+						objString = $(this).text(objString.substring(0,num) + "...");  
+					}  
+				})
+				
+				  
+			});
+		};
+		
+		
+	 
+		  
+		 
+</script>
+
+</html>

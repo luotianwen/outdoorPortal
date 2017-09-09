@@ -1,0 +1,167 @@
+@CHARSET "utf-8";
+
+ul {
+	list-style: none;
+}
+
+ul,li {
+	margin: 0;
+	padding: 0;
+}
+
+.zdy-header {
+	width: 1200px;
+	margin: 0 auto;
+	overflow: hidden;
+}
+
+.zdy-header .hd-navigate {
+	width: 100%;
+	overflow: inherit;
+}
+
+.hd-navigate ul {
+	float: right;
+}
+
+.hd-navigate ul li {
+	float: left;
+	padding: 0px 10px;
+	border-left: 1px solid;
+}
+
+.hd-navigate ul li:FIRST-CHILD {
+	border-left: 0px;
+}
+
+.hd-navigate ul li a {
+	font-size: 14px;
+}
+
+.hd-navigate ul li a:HOVER {
+	color: #1D924C;
+}
+
+/*-------*/
+.zdy-header .hd-logo-handle {
+	width: 100%;
+	overflow: inherit;
+}
+
+.hd-logo-handle .wm {
+	width: 140px;
+	overflow: inherit;
+	float: left;
+}
+
+.hd-logo-handle .wm strong {
+	font-size: 60px;
+	color: #FF047F;
+}
+
+.hd-logo-handle .introduction {
+	width: 285px;
+	overflow: inherit;
+	float: left;
+	text-align: center;
+	padding-top: 10px;
+}
+
+.hd-logo-handle .introduction p {
+	display: block;
+	font-size: 25px;
+	color: #C88B54;
+	margin: 0;
+}
+
+.hd-logo-handle .welcome {
+	width: 300px;
+	float: left;
+	overflow: hidden;
+	line-height: 80px;
+	text-align: right;
+}
+
+.hd-logo-handle .welcome span {
+	font-size: 15 px;
+}
+
+.hd-logo-handle .release {
+	width: 140px;
+	float: right;
+	text-align: center;
+	line-height: 80px;
+}
+
+.hd-logo-handle .release a {
+	font-size: 25px;
+	color: #C88B54;
+	font-weight: 900;
+}
+
+/*-----------*/
+.channel-bg {
+	width: 100%;
+	overflow: hidden;
+	margin-top: 10px;
+	background-color: #F7F8F2;
+	border-top: 2px solid #FFD697;
+}
+
+.channel-bg .channel {
+	width: 1200px;
+	margin: 0 auto;
+	overflow: hidden;
+}
+
+.channel ul li {
+	transition: 0.5s ease;
+	-moz-transition: 0.5s ease;
+	-o-transition: 0.5s ease;
+	-webkit-transition: 0.5s ease;
+}
+
+.channel ul li:HOVER {
+	background-color: #1D924C;
+}
+
+.channel ul li a {
+	font-size: 18px;
+	font-weight: 900;
+}
+
+.channel ul li:HOVER a {
+	color: white;
+}
+
+.channel .classification {
+	width: 900px;
+	overflow: inherit;
+	float: left;
+}
+
+.classification ul li {
+	padding: 10px 15px;
+	float: left;
+	cursor: pointer;
+}
+
+.classification ul .active {
+	background-color: #1D924C;
+}
+
+.classification ul .active a {
+	color: white;
+}
+
+.channel .register-login {
+	width: 160px;
+	overflow: inherit;
+	float: right;
+}
+
+.register-login ul li {
+	padding: 10px 10px;
+	float: right;
+	cursor: pointer;
+}

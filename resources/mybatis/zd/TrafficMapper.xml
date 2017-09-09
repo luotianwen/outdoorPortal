@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="trafficMapper">
+
+    <!--mybatis ehcache缓存配置 -->
+    <cache type="org.mybatis.caches.ehcache.LoggingEhcache" />
+    
+	<sql id="Base_Column_List">
+    t_id,t_content ,t_icon 
+    </sql>
+
+    <resultMap type="com.op.entity.zd.Traffic" id="TrafficReturnMap">
+      <id column="t_id" property="t_id"/>
+      <result column="t_content" property="t_content"/>
+      <result column="t_icon" property="t_icon"/>
+   </resultMap>
+	
+	<!-- 查询所有的交通工具 -->
+	<select id="allTraffic" resultType="com.op.entity.zd.Traffic" >
+	select <include refid="Base_Column_List"></include>
+	from traffic 
+	</select>
+	
+</mapper>

@@ -1,0 +1,106 @@
+/*  头部   通用  */
+.m_toolbar{width:100%;background:#fff;height:70px;min-width:1200px;}
+.m_toolbar .logoarea{height:70px;}
+.m_toolbar .login{font-size:16px;color:#666;margin-top:22px;}
+.m_toolbar .login a{font-size:16px;color:#666;margin:0 15px;}
+.m_toolbar .login a:hover{color:#ff8a01;}
+.m_toolbar .head_user{position: relative;z-index: 99999;}
+.m_toolbar .head_user .user_link{height:70px;display: inline-block;cursor: pointer;margin-right:15px;}
+.m_toolbar .head_user .user_link img{width:50px;height:50px;border-radius: 50%;border:1px solid transparent;margin-top:9px;margin-right:14px;vertical-align: middle;}
+.m_toolbar .head_user .user_link i{width:13px;height:6px;background: url(../../images/hw_img/icons-head.png) no-repeat;background-position: -92px 0;display: inline-block;vertical-align: -5px;}
+.m_toolbar .head_user .user_link:hover img{border:1px solid #ff8a01;}
+
+.dropdown_group{background: #fff;border:1px solid #ddd;position: absolute;right: 0;top:70px;width:148px;display: none}
+.dropdown_group li{line-height:40px;}
+.dropdown_group li a{padding-left:28px;width:120px;height:40px;line-height: 40px;display: inline-block;font-size:14px;color:#666;}
+.dropdown_group li a:hover{background: #f1f1f1;}
+.icon_my,.icon_writeNote,.icon_releaseActivity,.icon_releaseProject,.icon_appLeader,.icon_myActivity,.icon_myQuestion,.icon_myCollect,.icon_myOrder,.icon_settings,.icon_logout,.icon_append,.icon_findshop{width:16px;height:16px;background: url(../../images/hw_img/icons-head.png) no-repeat;display: inline-block;margin-right:13px;vertical-align: -2px;}
+.icon_my{background-position: -60px 0;}
+.icon_writeNote{background-position: -60px -39px;}
+.icon_releaseActivity{background-position: -60px -80px;}
+.icon_releaseProject{background-position: -125px -358px;}
+.icon_appLeader{background-position: -60px -120px;}
+.icon_myActivity{background-position: -60px -160px;}
+.icon_myQuestion{background-position: -60px -199px;}
+.icon_myCollect{background-position: -60px -240px;}
+.icon_myOrder{background-position: -60px -280px;height:17px;vertical-align:-3px; }
+.icon_settings{background-position: -60px -320px;width:17px;}
+.icon_logout{background-position: -60px -358px;width:17px;}
+.icon_append{background-position: -102px -242px;width:17px;}
+.icon_findshop{background-position: -125px -316px;width:17px;}
+.dropdown_group li a:hover .icon_my{background-position: -4px 0;  -webkit-transform-origin: top center;  transform-origin: top center;  -moz-transform-origin: top center;  -webkit-animation: move 1s ease 1;  animation: move 1s ease 1;  -moz-animation: move 1s ease 1;}
+.dropdown_group li a:hover .icon_writeNote{background-position: -4px -39px;  -webkit-transform-origin: top center;  transform-origin: top center;  -moz-transform-origin: top center;  -webkit-animation: move 1s ease 1;  animation: move 1s ease 1;  -moz-animation: move 1s ease 1;}
+.dropdown_group li a:hover .icon_releaseActivity{background-position: -4px -80px;  -webkit-transform-origin: top center;  transform-origin: top center;  -moz-transform-origin: top center;  -webkit-animation: move 1s ease 1;  animation: move 1s ease 1;  -moz-animation: move 1s ease 1;}
+.dropdown_group li a:hover .icon_releaseProject{background-position: -101px -358px;  -webkit-transform-origin: top center;  transform-origin: top center;  -moz-transform-origin: top center;  -webkit-animation: move 1s ease 1;  animation: move 1s ease 1;  -moz-animation: move 1s ease 1;}
+.dropdown_group li a:hover .icon_appLeader{background-position: -4px -120px;  -webkit-transform-origin: top center;  transform-origin: top center;  -moz-transform-origin: top center;  -webkit-animation: move 1s ease 1;  animation: move 1s ease 1;  -moz-animation: move 1s ease 1;}
+.dropdown_group li a:hover .icon_myActivity{background-position: -4px -160px;  -webkit-transform-origin: top center;  transform-origin: top center;  -moz-transform-origin: top center;  -webkit-animation: move 1s ease 1;  animation: move 1s ease 1;  -moz-animation: move 1s ease 1;}
+.dropdown_group li a:hover .icon_myQuestion{background-position: -4px -199px;  -webkit-transform-origin: top center;  transform-origin: top center;  -moz-transform-origin: top center;  -webkit-animation: move 1s ease 1;  animation: move 1s ease 1;  -moz-animation: move 1s ease 1;}
+.dropdown_group li a:hover .icon_myCollect{background-position: -4px -240px;  -webkit-transform-origin: top center;  transform-origin: top center;  -moz-transform-origin: top center;  -webkit-animation: move 1s ease 1;  animation: move 1s ease 1;  -moz-animation: move 1s ease 1;}
+.dropdown_group li a:hover .icon_myOrder{background-position: -4px -280px;  -webkit-transform-origin: top center;  transform-origin: top center;  -moz-transform-origin: top center;  -webkit-animation: move 1s ease 1;  animation: move 1s ease 1;  -moz-animation: move 1s ease 1;}
+.dropdown_group li a:hover .icon_settings{background-position: -4px -320px;  -webkit-transform-origin: top center;  transform-origin: top center;  -moz-transform-origin: top center;  -webkit-animation: move 1s ease 1;  animation: move 1s ease 1;  -moz-animation: move 1s ease 1;}
+.dropdown_group li a:hover .icon_logout{background-position: -4px -358px;  -webkit-transform-origin: top center;  transform-origin: top center;  -moz-transform-origin: top center;  -webkit-animation: move 1s ease 1;  animation: move 1s ease 1;  -moz-animation: move 1s ease 1;}
+.dropdown_group li a:hover .icon_append{background-position: -102px -282px;  -webkit-transform-origin: top center;  transform-origin: top center;  -moz-transform-origin: top center;  -webkit-animation: move 1s ease 1;  animation: move 1s ease 1;  -moz-animation: move 1s ease 1;}
+.dropdown_group li a:hover .icon_findshop{background-position: -101px -316px;  -webkit-transform-origin: top center;  transform-origin: top center;  -moz-transform-origin: top center;  -webkit-animation: move 1s ease 1;  animation: move 1s ease 1;  -moz-animation: move 1s ease 1;}
+
+.m_toolbar .head_user:hover .dropdown_group{display: block;}
+.m_toolbar .head_user:hover .user_link i{background-position: -92px -7px;}
+
+/* 站内信样式 */
+.m_toolbar .head_msg{position: relative;z-index: 99999;}
+.m_toolbar .head_msg .drop_trigger{height:70px;line-height: 70px;display: inline-block;cursor: pointer;margin-right:40px;font-size:14px;color:#333;position:relative;}
+.m_toolbar .head_msg .drop_trigger .icon-msg{width:16px;height:16px;display:inline-block;background: url(../../images/hw_img/icons-head.png) no-repeat;background-position: -92px -36px; vertical-align:-3px;margin-right:8px;}
+.m_toolbar .head_msg .drop_trigger .msg-num{background-color: #fd3f3f;border-radius: 7px; color: #fff;font-size: 12px;height: 14px;line-height: 14px;padding: 0 4px;position: absolute;right: 42px;top: 20px; white-space: nowrap; z-index: 2;}
+.dropdown_msg{background: #fff;border:1px solid #ddd;position: absolute;right: 0;top:70px;width:148px;display: none}
+.dropdown_msg li{line-height:40px;}
+.dropdown_msg li a{padding-left:28px;width:120px;height:40px;line-height: 40px;display: inline-block;font-size:14px;color:#666;position:relative;}
+.dropdown_msg li a:hover{background: #f1f1f1;}
+.dropdown_msg li .msg-num{background-color: #fd3f3f;border-radius: 7px; color: #fff;font-size: 12px;height: 14px;line-height: 14px;padding: 0 4px; white-space: nowrap;position:absolute;right:20px;top:13px;}
+.m_toolbar .head_msg:hover .dropdown_msg{display: block;}
+
+
+
+
+.nav_list{height:60px;line-height:60px;padding:5px 0;position:relative;overflow:hidden;margin-left:50px;}
+.nav_list li{float:left;height:60px;}
+.nav_list li a{color:#666;font-size:18px;display:inline-block;height:60px;padding:0 16px;}
+.nav_list li a:hover{color:#ff8a01;text-decoration:none;}
+.nav_list li a.first{color:#ff8a01;text-decoration:none;}
+.nav_list #buoy{position:absolute;width:68px;height:3px;background:#ff8a01;bottom:0px;}
+
+.m_main{width:100%;min-width:1200px;position:relative;}
+.m_main .m_banner{width:100%;height:460px;min-width:1200px;background:url(../../images/hw_img/IMG_4734.jpg)}
+
+
+
+
+
+@-webkit-keyframes move {
+    0%, 100% {
+        -webkit-transform: rotate(10deg);
+        transform: rotate(10deg);
+    }
+    50% {
+        -webkit-transform: rotate(-10deg);
+        transform: rotate(-10deg);
+    }
+}
+@-moz-keyframes move {
+    0%, 100% {
+        -webkit-transform: rotate(10deg);
+        transform: rotate(10deg);
+    }
+    50% {
+        -webkit-transform: rotate(-10deg);
+        transform: rotate(-10deg);
+    }
+}
+@keyframes move {
+    0%, 100% {
+        -webkit-transform: rotate(10deg);
+        transform: rotate(10deg);
+    }
+    50% {
+        -webkit-transform: rotate(-10deg);
+        transform: rotate(-10deg);
+    }
+}

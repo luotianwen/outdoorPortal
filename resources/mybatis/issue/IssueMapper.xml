@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="issueMapper">
+	<sql id="Base_Column_List">
+    id,issueType ,content ,contact ,userId ,submitTime ,postil ,operator 
+    </sql>
+
+    <resultMap type="com.op.entity.issue.Issue" id="IssueReturnMap">
+      <id column="id" property="id"/>
+      <result column="issueType" property="issueType"/>
+      <result column="content" property="content"/>
+      <result column="contact" property="contact"/>
+      <result column="userId" property="userId"/>
+      <result column="submitTime" property="submitTime"/>
+      <result column="postil" property="postil"/>
+      <result column="operator" property="operator"/>
+   </resultMap>
+   
+   <!-- 添加意见建议 -->
+   <insert id="insertIssue" parameterType="map">
+   		insert into issue( issuetype,content,contact,userid,submittime)
+   		 values( #{issuetype},#{content},#{contact},#{userid},now())
+   </insert>
+</mapper>

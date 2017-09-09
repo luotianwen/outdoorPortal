@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 筛选条件(screening)Mapper -->
+<mapper namespace="screeningMapper">
+	<!--mybatis ehcache缓存配置 -->
+	<!-- 以下两个<cache>标签二选一,第一个可以输出日志,第二个不输出日志 不使用缓存加入useCache="false" -->
+	<!-- <cache type="org.mybatis.caches.ehcache.LoggingEhcache" /> -->
+	<!-- <cache type="org.mybatis.caches.ehcache.EhcacheCache"/> -->
+
+	<sql id="Base_Column_List">
+		sc_id,sc_name ,sc_sort ,sc_type ,sc_modularType ,sc_parent_id ,sc_create_time
+		,sc_create,sc_delete,sc_update_time,sc_update
+	</sql>
+
+	<resultMap type="com.op.entity.screening.Screening" id="ScreeningReturnMap">
+		<!-- id -->
+		<id column="sc_id" property="sc_id" />
+		<!-- 筛选类目名称 -->
+		<result column="sc_name" property="sc_name" />
+		<!-- 排序 -->
+		<result column="sc_sort" property="sc_sort" />
+		<!-- 类型(1：多选；2：单选) -->
+		<result column="sc_type" property="sc_type" />
+		<!-- 模块类别 -->
+		<result column="sc_modularType" property="sc_modularType" />
+		<!-- 父id -->
+		<result column="sc_parent_id" property="sc_parent_id" />
+		<!-- 创建时间 -->
+		<result column="sc_create_time" property="sc_create_time" />
+		<!-- 创建人 -->
+		<result column="sc_create" property="sc_create" />
+		<!-- 删除(1：否；2：是) -->
+		<result column="sc_delete" property="sc_delete" />
+		<!-- 修改时间 -->
+		<result column="sc_update_time" property="sc_update_time" />
+		<!-- 修改人 -->
+		<result column="sc_update" property="sc_update" />
+		
+	</resultMap>
+	
+	<resultMap type="com.op.dto.screening.ScreeningDTO" id="ScreeningDTOResultMap">
+		<id property="sc_id" column="sc_id"/>
+		
+		<collection property="subScreening" ofType="com.op.dto.screening.ScreeningDTO" column="sc_id" select="screeningMapper.findScreeningByParentId"></collection>
+
+	</resultMap>
+	
+	<!-- 查询所有筛选条件 -->
+	<select id="findAllScreening" parameterType="java.util.Map" resultMap="ScreeningDTOResultMap">
+		select sc_id,sc_name ,sc_sort ,sc_type ,sc_parent_id ,sc_create,users.uName as sc_update,sc_update_time
+		from screening
+		left join users on users.u_id = sc_update
+		where sc_modularType = #{sc_modularType} and sc_parent_id = 0 and sc_delete = 1
+		order by sc_sort asc
+	</select>
+	
+	<resultMap type="com.op.dto.screening.ScreeningDTO" id="ScreeningDTOCResultMap">
+		<id property="sc_id" column="sc_id"/>
+		
+		<collection property="subScreening" ofType="com.op.dto.screening.ScreeningDTO" column="sc_id" select="screeningMapper.findScreeningByParentId"></collection>
+
+	</resultMap>
+	
+	<!-- 查询所有子筛选条件 -->
+	<select id="findScreeningByParentId" parameterType="String" resultMap="ScreeningDTOCResultMap">
+		select sc_id,sc_name ,sc_sort ,sc_type ,sc_parent_id ,sc_create,users.uName as sc_update,sc_update_time
+		from screening
+		left join users on users.u_id = sc_update
+		where sc_parent_id = #{sc_id} and sc_delete = 1
+		order by sc_sort asc
+	</select>
+	
+	
+</mapper>

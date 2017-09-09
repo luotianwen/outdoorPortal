@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="spotMapper">
+
+
+    <select id="getSpotById" parameterType="int" resultType="com.op.spot.entity.Spot">
+		SELECT
+        id ,name ,level ,price ,address ,scenicspotintroduction ,channel ,labelss ,cdate ,status ,resourceId ,
+        type ,province ,city ,area ,website ,longitude ,latitude ,url,suitablecrowd,lastdate
+		FROM s_spot
+		WHERE 	 id = #{id}
+
+	</select>
+	<select id="getSpotDetailById" parameterType="int" resultType="com.op.spot.entity.Spot">
+		SELECT
+		s.id ,s.name ,sl.name as level ,s.price ,s.address ,s.scenicspotintroduction ,s.channel ,s.labelss ,s.cdate ,s.status ,s.resourceId ,
+		s.type ,s.province ,s.city ,s.area ,s.website ,s.longitude ,s.latitude ,s.url,s.suitablecrowd,s.lastdate
+		FROM s_spot s
+        left join s_spotlevel sl on sl.id=s.level
+		WHERE 	 s.id = #{id}
+
+	</select>
+
+</mapper>

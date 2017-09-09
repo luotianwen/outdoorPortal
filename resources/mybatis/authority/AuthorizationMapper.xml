@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="authorizationMapper">
+	<sql id="Base_Column_List">
+    aId,rId ,mId 
+    </sql>
+
+    <resultMap type="com.op.entity.authority.Authorization" id="AuthorizationReturnMap">
+      <id column="aId" property="aId"/>
+      <result column="rId" property="rId"/>
+      <result column="mId" property="mId"/>
+   </resultMap>
+   
+   <!-- 根据角色ID查询菜单ID集合 -->
+	<select id="findMenusByRId" parameterType="String" resultType="String">
+	select mId
+	from authorization
+	where rId=#{rId}
+	</select>
+	
+	<!-- 删除历史数据 -->
+	<delete id="deleteAuthorizationByRid" parameterType="String">
+	delete from authorization where rId=#{rId}
+	</delete>
+	
+	<!-- 保存新数据 -->
+	<insert id="saveAuthorizations" parameterType="java.util.List" useGeneratedKeys="false" >
+	  INSERT INTO authorization (aId,rId,mId)
+		values
+	  <foreach collection="list" item="item" index="index" separator=",">
+		  (
+	   #{item.aId},#{item.rId},#{item.mId}
+		  )
+	  </foreach>
+	</insert>
+	
+	<!-- shiro封装权限 -->
+	<select id="findAuthorizationForMenus" resultType="com.op.dto.ShiroDTO" >
+	SELECT au.rid roleId, m.MPATH path
+	FROM authorization au
+	LEFT JOIN menus m ON au.mid = m.mid
+	WHERE m.MPATH IS NOT NULL
+	</select>
+	
+	<!-- 检测菜单是否关联角色 -->
+	<select id="checkMenusForRoleByMid" parameterType="String" resultType="Integer">
+	select count(*)  from authorization where mid = #{mId}
+	</select>
+	
+	<!-- 根据角色删除权限数据 -->
+	<delete id="deleteAuthorByRId" parameterType="String">
+	delete from authorization where rId = #{rId}
+	</delete>
+	
+	<!-- 根据角色集合删除权限数据 -->
+	<delete id="deleteAuthorByRIds" parameterType="java.util.List">
+	delete from authorization where rId in 
+	<foreach collection="list" index="index" item="item" open="(" separator="," close=")">
+	#{item}
+	</foreach>
+	</delete>
+</mapper>

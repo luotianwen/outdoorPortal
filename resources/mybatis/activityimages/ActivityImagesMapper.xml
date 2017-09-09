@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="activityImagesMapper">
+	<sql id="Base_Column_List">
+        ssi_id,relevance_id,img_type
+    </sql>
+    
+    <!-- 插入活动图片集合信息 -->
+    <insert id="insertActivityImages" parameterType="com.op.entity.activityimages.ActivityImages" useGeneratedKeys="true" keyProperty="ssi_id">
+
+     	
+    	insert into activityimages(<include refid="Base_Column_List"></include>)
+    	 values( #{relevance_id},#{img_type})
+    </insert>
+</mapper>

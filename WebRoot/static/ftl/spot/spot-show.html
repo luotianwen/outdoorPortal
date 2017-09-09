@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head  >
+	<base href="/" />
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<title>${spot.name}</title>
+	<#include "/view/base.css.html">
+	<link rel="stylesheet" type="text/css" href="static/css/hw_css/scenic.css" />
+	<link rel="stylesheet" type="text/css" href="static/upload/style.css"/>
+        <style>
+
+
+            .info-title {
+                color: white;
+                font-size: 14px;
+                background-color:blue;
+                line-height: 26px;
+                padding: 0px 0 0 6px;
+                font-weight: lighter;
+                letter-spacing: 1px
+            }
+            .info-content {
+                font: 12px Helvetica, 'Hiragino Sans GB', 'Microsoft Yahei', '微软雅黑', Arial;
+                padding: 4px;
+                color: #666666;
+                line-height: 23px;
+            }
+            .info-content img {
+                float: left;
+                margin: 3px;
+            }
+
+            .picScroll-left{
+                background: #fff none repeat scroll 0 0;
+                height: 220px;
+                margin-top: 10px;
+                padding: 20px 0;
+                position: relative;
+                width: 1200px;
+                margin: 0 auto;
+            }
+            .hd{
+                width: 60px;
+                float: left;
+                height: 220px;
+            }
+            .bd{
+                width: 1040px;
+                float: left;
+                overflow: hidden;
+            }
+            .bd li{
+                float: left;
+                height: 220px;
+                margin-left: 5px;
+                width: 340px;
+            }
+            .pic{
+                width: 340px;
+                height: 220px;
+            }
+            .pic img{
+                display: block;
+                width: 100%;
+                height: 100%;
+            }
+            .picList{
+                width: 100%;
+                list-style: outside none none;
+                margin: 0;
+                padding: 0;
+            }
+            .hd a{
+                display: inline-block;
+                width: 60px;
+                height: 50px;
+                margin-top: 80px;
+                background-position: 15px 0px;
+                cursor: pointer;
+            }
+            .next{
+                background: url(static/images/hw_img/a4.png) no-repeat;
+            }
+            .prev{
+                background: url(static/images/hw_img/a15.png) no-repeat;
+            }
+            
+            .edit-img-box {
+			    height: 40px;
+			    line-height: 40px;
+			    width: 180px;
+			    background: url(static/images/hw_img/banner_tra.png) repeat-x;
+			    position: absolute;
+			    top:0px;
+			    text-align: right;
+			    padding-right: 10px;
+			}
+			.edit-del {
+				background: url(static/images/hw_img/icons-modify.png) no-repeat -152px -93px;
+			    cursor: pointer;
+			    display: inline-block;
+			    height: 26px;
+			    margin-left: 10px;
+			    vertical-align: middle;
+			    width: 24px;
+			}
+			ul#commentimg {
+				list-style: none;
+	    		list-style-position: outside;
+			}
+			ul#commentimg li {
+				list-style: none;
+	    		list-style-position: outside;
+			    display: inline-block;
+		        padding: 0 15px 0px 0;
+				position: relative;
+			}
+            ul#commentimg li img{
+            	width:190px;
+            }
+        </style>
+        
+        <link rel="stylesheet" href="http://cache.amap.com/lbs/static/main1119.css"/>
+</head>
+<body>
+<#include "/view/header.html">
+	<div class="scenic-name boxw">
+		<h1>${spot.name}</h1><span>景区级别：${spot.level}级</span><span>特色：${spot.labelss}</span>
+	</div>
+	<div class="scenic-banner boxw">
+		<#if spot.url?exists>
+			<img src="${spot.url}" width="1200" height="500"  alt=""/>
+		</#if>
+	</div>
+	<div id="tabs"></div>
+	<div class="scenic-tabs" id="scenic-tabs">
+		<div class="boxw clearfix ">
+            <a href="javascrpt:void(0)" onclick="selected(this,'ticket-list')" class="tp selected">门票套餐</a>
+            <a href="javascrpt:void(0)" onclick="selected(this,'scenic-intro')"    class="tp">景点介绍</a>
+            <a href="javascrpt:void(0)" onclick="selected(this,'picScroll-left')"  class="tp">景点照片</a>
+            <a href="javascrpt:void(0)" onclick="selected(this,'scenic-hd')"  class="tp">攻略推荐</a>
+            <a href="javascrpt:void(0)" onclick="selected(this,'scenic-traffic')"  class="tp">交通指南</a>
+            <a href="javascrpt:void(0)" onclick="selected(this,'tuijian')"  class="tp">周边推荐</a>
+            <a href="javascrpt:void(0)" onclick="selected(this,'scenic-comment-input')" class="tp">景点评价</a>
+        </div>
+	</div>
+
+    <div class="boxw">
+
+
+        <div class="ticket-list clearfix" id="ticket-list">
+
+
+        </div>
+        <#if scenicspotintroduction.content?exists>
+        <div class="scenic-intro"  id="scenic-intro">
+			${scenicspotintroduction.content}
+            <div class="tit"><span class="icons-01"></span><p>景点介绍</p></div>
+
+        </div>
+        </#if>
+        <div class="scenic-item clearfix"   >
+            <ul class="clearfix">
+
+                <#list characteristicaspects as item>
+                    <li>
+                        <div class="mt"><i class="num-${item_index+1}"></i>${item.name}</div>
+                        <div class="mc"><#if item.content?length lt 49 >
+                            ${item.content}
+                            <#else>
+                                ${item.content[0..48]}...
+                        </#if>
+
+                            <a href="spot/characteristicaspectslist/${spot.id}.html" target="_blank">更多详情>></a></div>
+
+                    </li>
+                </#list>
+
+                <#if (characteristicaspects?size>0)>
+                    <li class="more">
+
+                        <a href="spot/characteristicaspectslist/${spot.id}.html" target="_blank">更多内容</a>
+
+                    </li>
+                </#if>
+
+
+            </ul>
+        </div>
+        <div class="travel-tips clearfix">
+            <div class="fl">
+                <dl>
+                    <dt>旺季：</dt>
+                    <dd style="width:380px;">${traveltips.bbusyseason}-${traveltips.ebusyseason}</dd>
+                </dl>
+                <dl>
+                    <dt>淡季：</dt>
+                    <dd style="width:380px;">${traveltips.blowseason}-${traveltips.elowseason}</dd>
+                </dl>
+                <dl>
+                    <dt>提示：</dt>
+                    <dd style="width:380px;">${traveltips.notice}</dd>
+                </dl>
+                <dl>
+                    <dt>景区电话：</dt>
+                    <dd>${traveltips.phone}</dd>
+                </dl>
+                <dl>
+                    <dt>最佳旅游时间：</dt>
+                    <dd>${traveltips.besttime}</dd>
+                </dl>
+                <dl>
+                    <dt>大约浏览时间：</dt>
+                    <dd>${traveltips.aboutbrowsingtime}</dd>
+                </dl>
+            </div>
+            <div class="fl" style="margin-left:40px;padding-bottom:40px;">
+                <dl>
+                    <dt>景点设施：</dt>
+                    <dd style="width:360px;">${traveltips.attractionsfacilities}</dd>
+                </dl>
+            </div>
+            <div class="tit"><span class="icons-02"></span><p>出行贴士</p></div>
+           <!-- <div class="btn-edit"><a href="javascript:void(0)"><i></i>纠错</a></div>-->
+        </div>
+        <div class="ticket clearfix">
+            <div class="fl">
+                <dl>
+                    <dt>旺季价格:</dt>
+                    <dd>${ticketinformation.peakseasonfare}</dd>
+                </dl>
+                <dl>
+                    <dt>淡季价格:</dt>
+                    <dd>${ticketinformation.offseasorates}</dd>
+                </dl>
+
+                <dl>
+                    <dt>注意:</dt>
+                    <dd style="width:380px;">${ticketinformation.becareful}</dd>
+                </dl>
+            </div>
+            <div class="fl" style="width:430px;margin-left:40px;padding-bottom:40px;">
+                ${ticketinformation.preferentialinformation}
+            </div>
+            <div class="tit"><span class="icons-03"></span><p>门票信息</p></div>
+            <!--<div class="btn-edit"><a href="javascript:void(0)"><i></i>纠错</a></div>-->
+        </div>
+    </div>
+
+    <#if (attractionsphotos?size>0)>
+    <div class="picScroll-left" id="picScroll-left">
+        <div class="hd">
+            <a class="next"></a>
+        </div>
+        <div class="bd">
+            <ul class="picList">
+
+                <#list attractionsphotos as item>
+
+                <li>
+                    <div class="pic"><a href="javascript:void(0)" target="_blank"><img src="${item.pho}" /></a></div>
+                </li>
+
+                </#list>
+
+            </ul>
+        </div>
+        <div class="hd">
+            <a class="prev"></a>
+        </div>
+    </div>
+    </#if>
+    <#if (wonderfulstrategys?size>0)>
+    <div class="scenic-hd boxw clearfix" id="scenic-hd">
+        <ul class="clearfix">
+            <#list wonderfulstrategys as item>
+                <li class="clearfix">
+                   <div class="hd-img"><img src="${item.pho}" /></div>
+                    <div class="hd-info">
+                        <div class="tit"><a href="spot/wonderfulstrategys/${item.id}.html" target="_blank">${item.name}</a></div>
+                        <div class="txt"><a href="spot/wonderfulstrategys/${item.id}.html" target="_blank"> <#if item.content?length lt 201 >
+                            ${item.content}
+                            <#else>
+                                ${item.content[0..200]}...
+                        </#if></a></div>
+                         <div class="extra">
+                            <a class="user" href="javascript:void(0)">${item.creator}</a>
+                            <a class="good on" href="javascript:void(0)">${item.cdate?datetime}</a></div>
+                    </div>
+                </li>
+            </#list>
+
+        </ul>
+
+        <div class="btns-more"><#if (wonderfulstrategys?size>0)><a href="spot/wonderfulstrategyslist/${spot.id}.html" target="_blank">查看更多攻略</a> </#if></div>
+
+    </div>
+   </#if>
+    <div class="boxw clearfix" id="scenic-traffic">
+
+        <div class="scenic-map clearfix"  style="position: relative;height: 342px;overflow: hidden"><div id="container" style="width: 1200px;"></div>   </div>
+
+        <div class="scenic-traffic">
+            <p class="m10">${trafficguide.busline}</p>
+            <p>${trafficguide.selfdrivingroute}</p>
+            <div class="tit"><span class="icons-01"></span><p>交通情况</p></div>
+            <!--<div class="btn-edit"><a href="javascript:void(0)"><i></i>纠错</a></div>-->
+        </div>
+    </div>
+
+    <#if (travelsList?size>0)>
+    <div class="picScroll-left" id="tuijian">
+
+        <div class="hd">
+            <a class="next"></a>
+        </div>
+        <div class="bd">
+            <ul class="picList">
+
+                <#list travelsList as item>
+
+                        <li title="${item.title}">
+                            <div class="pic" title="${item.title}"><a href="travels/detail/${item.id}.html" target="_blank">
+                                <#if item.cover_image == 'null' || !item.cover_image??>
+                                    <img src="static/images/hw_img/note-img-no.jpg" />
+                                    <#else>
+                                        <img src="${item.cover_image}" alt="${item.title}"/>
+                                </#if>
+
+                            </a></div>
+                        </li>
+
+                </#list>
+
+            </ul>
+        </div>
+        <div class="hd">
+            <a class="prev"></a>
+        </div>
+
+    </div>
+    </#if>
+    <div id="comment"></div>
+    <div class="boxw clearfix" id="scenic-comment-input">
+        <div class="scenic-comment-input clearfix">
+            <div class="user-image" id="uImg"></div>
+            <div class="user-name" id="uName"></div>
+            <dl class="clearfix">
+                <dt>总体评价</dt>
+                <dd class="star" id="all">
+                    <img src="static/images/hw_img/star3.png">
+                    <img src="static/images/hw_img/star3.png">
+                    <img src="static/images/hw_img/star3.png">
+                    <img src="static/images/hw_img/star4.png">
+                    <img src="static/images/hw_img/star4.png">
+                </dd>
+            </dl>
+            <dl class="clearfix" id="project" style="width:960px;">
+                
+            </dl>
+            <textarea name="intro" id="centent" maxlength="100" placeholder="亲！最多输入不超过100字哦！"></textarea>
+            <div style="margin-bottom: 20px;">
+            	<ul id="commentimg">
+            	</ul>
+            </div>
+            
+            <a href="javascript:void(0)" class="add-img" id="addimg"><i></i>添加图片</a>
+            <div class="btns-submit"><a href="javascript:void(0)" id="submit">发表</a></div>
+        </div>
+    </div>
+    
+</body>
+<#include "/view/base.js.html">
+<script src="static/js/jquery.SuperSlide.2.1.1.js"></script>
+<script type="text/javascript" src="http://webapi.amap.com/maps?v=1.3&key=91fb4037a134bd1c21e9c9bb76eeddd0&plugin=AMap.AdvancedInfoWindow&callback=init"></script>
+
+ <script type="text/javascript">
+    var sid = "${spot.id}";
+    var spotname="${spot.name}";
+    var spoturl="${spot.url}";
+    var spotaddress="${spot.address}";
+    var spotlevelname="${spotlevel.name}";
+    var map="";
+    var lnglat = [116.403168,39.928794];
+    var loads=false;
+    <#if (spot.longitude)??>
+    loads=true;
+    lnglat = [${spot.longitude},${spot.latitude}];
+    </#if>
+
+</script>
+<!-- 分页 -->
+<script type="text/javascript" src="static/js/plugins/layer/laypage/laypage.js"></script>
+<script src="static/js/spot/update_spot.js"></script>
+
+
+<!-- 上传图片 -->
+<script type="text/javascript" src="static/upload/plupload-2.1.8/js/plupload.full.min.js"></script>
+<script src="static/js/spot/uploadcomment.js"></script>
+</html>

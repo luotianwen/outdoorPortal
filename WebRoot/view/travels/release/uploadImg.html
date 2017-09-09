@@ -1,0 +1,215 @@
+    <link rel="stylesheet" type="text/css" href="static/css/plugins/cropper/cropper.min.css">
+	
+	<style type="text/css">
+	  .eg-wrapper{
+		  width: 100%;
+		  height: 300px;
+		  background-size: cover;
+		  background-color:#808080;
+	  }
+	  .cropper-container{
+	  	left: 0px !important;
+	  }
+	  .choolse-img-btn{
+	  	float: right;
+	  	padding: 7px 15px;
+    	background-color: rgba(255,255,255,.35);
+    	border-radius:5px;
+    	color: white;
+    	margin-right: 15px;
+    	margin-top: 10px;
+    	cursor: pointer;
+	  }
+	  
+	  .choolse-img-btn:hover{
+	  	background-color: #FF8A01;
+	  }
+	  
+	  .layui-layer-content{
+		overflow: visible !important;
+	  }
+	  
+	  .cropper-container{
+	  	overflow: visible !important;
+	  }
+	</style>
+
+  <body>
+        <div class="eg-wrapper" style="display: none;">
+        	<img class="cropper" src="" alt="Picture">
+        </div>
+  </body>
+  
+    
+  <!-- 上传图片 -->
+  <script type="text/javascript" src="static/js/plugins/ajaxUpload/ajaxfileupload.js"></script>
+  <script type="text/javascript" src="static/js/plugins/cropper/cropper.min.js"></script>
+  <script type="text/javascript">
+  $(function(){
+	  $.fn.dragImg=function(param){
+			this.param=param;
+			this.init();
+	  }
+	  
+	  $.fn.dragImg.prototype={
+	  	init:function(){
+	  		this.change();
+	  		this.layer_index=null;
+	  		this.$image=null;
+	  		this.done();
+	  		this.cancel();
+	  		this.str='<div class="eg-wrapper" style="display: none;">'
+					+'<img class="cropper" src="" alt="Picture">'
+					+'</div>';
+	  	},
+	  	/**
+	  	*监听选择图片更改事件
+	  	*/
+	  	change:function(){
+	  		var _this = this;
+	  		$("input#"+_this.param.jqId).on("change",function(){
+		  		// 先上传原图
+		  		_this.saveImg();
+		  	})
+	  	},
+	  	/**
+	  	*保存原图
+	  	*/
+	  	saveImg:function(){
+	  		var _this = this;
+	  		layer.msg("上传中...",{icon:16,shade:0.7,time:10*1000});
+			var para={
+				ext:"jpg,png,gif",//允许上传的后缀
+				isGeneraFileName:true,//生成新的文件名称
+				width:_this.param.originalImgMinWidth,// 宽度
+				height:_this.param.originalImgMinHeight,// 高度
+				pixelType:">"
+			};
+			$.ajaxFileUpload({
+				type: "POST", 
+				url:"uploadFile.json",  
+				secureuri:false,
+				fileElementId:_this.param.jqId,
+				data:para,
+				dataType:'json',
+				success:function(data){
+					data = eval("("+data+")");
+			  		layer.closeAll("dialog");
+			  		
+			  		// 重新绑定添加主图事件
+		  			_this.change();
+			  		
+					if(data.RESPONSE_STATE == "200"){
+						// 赋值原件路径
+						_this.param.target.original.val(data.savePath);
+						// 裁剪
+						_this.draftImg(data.savePath)
+					}else if(data.RESPONSE_STATE == "500"){
+						if(data.ERROR_INFO == "no_login"){
+							layerLogin.open();
+						}else{
+							layer.alert(data.ERROR_INFO,{
+								title:"错误信息",
+								icon:0,
+								shade:0.6
+							});
+						}
+					}
+				}
+			})
+	  	},
+	  	/**
+	  	* 生成裁剪图
+	  	*/
+	  	draftImg:function(url){
+	  		var _this = this;
+	  		$("img.cropper").prop("src",url);
+	  		
+	  		var img = new Image();
+			img.src = url;
+	  		img.onload = function(){
+				var w = img.width;
+					h = img.height;
+					new_w = w*300/h;
+				
+				$("img.cropper").css({
+					"width":new_w+"px",
+					"height":"300px"
+				})
+					
+				 _this.layer_index =layer.open({
+				    type: 1,
+				    title: false,
+				    closeBtn: false,
+				    shadeClose: false,
+				    shade:0.7,
+					area:[new_w+"px","300px"],
+				    content: $("div.eg-wrapper")
+				});
+				
+				_this.$image = $("img.cropper");
+				_this.$image.cropper({
+				    aspectRatio: _this.param.ratioWidth / _this.param.ratioHeight,
+				    dragCrop: true,
+				    built:function(){
+				      $("div.cropper-dragger>a.choolse-img-btn").remove();
+				      var cancel = "<a id='drag_cancel' class='choolse-img-btn'>取消</a>",
+				      	  submit = "<a id='drag_done' class='choolse-img-btn'>确定</a>";
+				      $("span.line-s").after(submit+cancel);
+				      _this.done();
+				      _this.cancel();
+				    },
+			    	minWidth: 1350,
+			    	minHeight: 480
+				  });
+	  		}
+	  	 },
+	  	 /**
+	  	 *裁剪上传按钮
+	  	 */
+		 done:function(){
+			var _this = this;
+			$("a#drag_done").on("click",function(){
+				var dataURL = _this.$image.cropper("getDataURL", "image/jpeg");
+				console.log(dataURL)
+				layer.msg("上传中...",{icon:16,shade:0.7,time:10*1000})
+				$.post("uploadImg.json",{
+					dataUrl:dataURL
+				},function(data){
+					layer.closeAll("dialog");
+					if(data){
+			 		if(data.RESPONSE_STATE == 200){
+			 			_this.param.fn(data);
+			 			$("a#drag_cancel").trigger("click");
+			 		}else{
+			 			layer.alert(data.ERROR_INFO)
+			 		}
+					}
+				})
+			})
+		},
+		/**
+		*取消
+		*/
+	  	cancel:function(){
+	  		var _this = this;
+			$("a#drag_cancel").on("click",function(){
+				layer.close(_this.layer_index)
+				_this.remove();
+			})
+	  	},
+	  	/**
+	  	*删除重新生成裁剪图片元素
+	  	*/
+	  	remove:function(){
+		  	$("div.eg-wrapper").remove();
+			$("body").append(this.str);
+		}
+	  }// prototype
+  
+  });// $(function(){})
+  </script>
+  
+  
+	<script type="text/javascript" src="static/js/travels/release/travels.release.mainImg.js"></script>
+</html>

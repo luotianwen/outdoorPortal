@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<base href="/" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>玩嘛</title>
+<#include "/view/base.css.html">
+<link rel="stylesheet" type="text/css" href="static/css/hw_css/form.css" />
+<style>
+body {
+	background: #f1f1f1;
+}
+</style>
+</head>
+<body>
+	<#include "/view/header.html">
+	<div class="boxw buy-progress clearfix">
+		<ul>
+			<li><a href="javascript:void(0)" class="selected">1.提交订单</a></li>
+			<li><a href="javascript:void(0)">2.选择付款方式</a></li>
+			<li><a href="javascript:void(0)">3.购买成功</a></li>
+		</ul>
+	</div>
+	<div class="boxw clearfix">
+		<div class="buy-form">
+			<div class="mt">
+				<h3>套餐信息</h3>
+			</div>
+			<div class="mc">
+				<div class="activity-title">${buyProjectDTO.ps_zh_name}</div>
+				<div class="venue-order">
+					<ul>
+						<li>套餐：${buyProjectDTO.psp_item_name} ${buyProjectDTO.psp_discount_price} 元/人  ${buyProjectDTO.psp_validity_date_start?string('yyyy-MM-dd')} - ${buyProjectDTO.psp_validity_date_end?string('yyyy-MM-dd')}</li>
+						<li>营业时间：<#list buyProjectDTO.businessTimeDTOList as item><#list item.businessDaysList as dayitem>${dayitem.psbd_day}<#if (dayitem_has_next)>、</#if></#list> ${item.psabd_start_date}-${item.psabd_end_date}<#if (item_has_next)>&nbsp;&nbsp;&nbsp;</#if></#list></li>
+						<li>地址：${buyProjectDTO.ps_province_id?if_exists}${buyProjectDTO.ps_city_id?if_exists}${buyProjectDTO.ps_countys_id?if_exists}${buyProjectDTO.ps_address?if_exists}</li>
+						<li>联系电话：<#list buyProjectDTO.pointServiceContactList as item>${item.psc_number}<#if (item_has_next)>、</#if></#list></li>
+					</ul>
+					<div class="price">
+						<p>
+							<span>总费用：</span><strong id="allPrice">${buyProjectDTO.psp_discount_price?number * buyProjectDTO.buyNum?number}元</strong>
+						</p>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="buy-form">
+			<div class="mt">
+				<h3>订单信息</h3>
+			</div>
+			<div class="mc">
+				<div class="cost-list">
+					<table>
+						<tr>
+							<th>套餐名称</th>
+							<th>有效期</th>
+							<th>原价（元/人）</th>
+							<th>打折价（元/人）</th>
+							<th>数量</th>
+							<th>总价</th>
+						</tr>
+						<tr>
+							<td>套餐一</td>
+							<td>${buyProjectDTO.psp_validity_date_start?string('yyyy-MM-dd')} - ${buyProjectDTO.psp_validity_date_end?string('yyyy-MM-dd')}</td>
+							<td>${buyProjectDTO.psp_item_price} 元/人</td>
+							<td>${buyProjectDTO.psp_discount_price}元/人</td>
+							<td>
+								<span class="wrap-input">
+									<span class="sub-count"></span>
+									<span class="input-area">
+										<input type="text" title="" id="txtCount" name="txtCount" value="${buyProjectDTO.buyNum}" maxlength="2">
+									</span>
+									<span class="add-count"></span>
+								</span>
+							</td>
+							<td><span id="tdPrice">${buyProjectDTO.psp_discount_price?number * buyProjectDTO.buyNum?number}</span></td>
+						</tr>
+					</table>
+				</div>
+
+			</div>
+		</div>
+	</div>
+	<div class="boxw clearfix">
+		<div class="buy-form">
+			<div class="mc">
+				<div class="buy-toolbar">
+					<p>
+						<a href="javascript:void(0)" id="submit" class="btn-next">提交订单</a>
+					</p>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+
+<#include "/view/base.js.html">
+
+<script type="text/javascript">
+	var pspId = ${buyProjectDTO.psp_id};
+	var psId = ${buyProjectDTO.ps_id};
+	var price = ${buyProjectDTO.psp_discount_price};
+	
+	$(function(){
+		//减
+		$(".wrap-input").on("click", ".sub-count", function() {
+			var $this = $(this);
+			var count = $this.parent().find("input");
+
+			if (count.val() == "1" || count.val() == "") {
+				count.val(1);
+			} else {
+				count.val(Number(count.val()) - 1);
+			}
+			
+			var num = Number(count.val())*Number(price);
+			$("#allPrice").html(num+"元");
+			$("#tdPrice").html(num);
+		})
+
+		//加
+		$(".wrap-input").on("click", ".add-count", function() {
+			var $this = $(this);
+			var count = $this.parent().find("input");
+
+			if (count.val() == "") {
+				count.val(1);
+			}else{
+				count.val(Number(count.val()) + 1);
+			}
+			
+			var num = Number(count.val())*Number(price);
+			$("#allPrice").html(num+"元");
+			$("#tdPrice").html(num);
+		})
+		
+		//只能输入数字
+		$("#txtCount").on("keyup", function() {
+			var tmptxt = $(this).val();
+			$(this).val(tmptxt.replace(/\D|^0/g, ''));
+		}).bind("paste", function() {
+			var tmptxt = $(this).val();
+			$(this).val(tmptxt.replace(/\D|^0/g, ''));
+		}).css("ime-mode", "disabled");
+	
+		//光标离开输入框，数量不能为空
+		$("#txtCount").on("blur", function() {
+			var $this = $(this);
+			
+			var tmptxt = $this.val();
+			if(tmptxt == ""){
+				$this.val(1);
+			}
+			
+			var num = Number($this.val())*Number(price);
+			$("#allPrice").html(num+"元");
+			$("#tdPrice").html(num);
+		});
+		
+		$("#submit").on("click",function(){
+			var num = $("#txtCount").val();
+			if(num==""||num==null){
+				layer.alert("数据异常，请刷新后再试！",{title:"错误信息",icon:0});
+				return;
+			}
+			window.location.href="pointServiceOrder/addOrder.html?psId="+psId+"&pspId="+pspId+"&num="+num;
+		})
+	})
+</script>
+
+</html>

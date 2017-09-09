@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="pointServiceInfoMapper">
+	<sql id="Base_Column_List">
+    psi_id,ps_id ,psi_pay_info ,psi_service ,psi_venue_type_column_value ,psi_introduce 
+    </sql>
+
+    <resultMap type="com.op.entity.pointService.PointServiceInfo" id="PointServiceInfoReturnMap">
+      <id column="psi_id" property="psi_id"/>
+      <result column="ps_id" property="ps_id"/>
+      <result column="psi_pay_info" property="psi_pay_info"/>
+      <result column="psi_service" property="psi_service"/>
+      <result column="psi_venue_type_column_value" property="psi_venue_type_column_value"/>
+      <result column="psi_introduce" property="psi_introduce"/>
+   </resultMap>
+   
+	<insert id="saveProjectAndPointServiceInfo" 
+		parameterType="com.op.dto.pointService.insert.fabu.PointServiceInfoDTO" 
+			useGeneratedKeys="true" keyColumn="psi_id" keyProperty="psi_id">
+		
+		insert into pointServiceInfo
+		(
+			 ps_id ,psi_pay_info ,psi_service ,psi_venue_type_column_value ,psi_introduce
+		)
+		values
+		(
+			 #{ps_id},#{psi_pay_info}
+			,#{psi_service },#{psi_venue_type_column_value },#{psi_introduce}
+		)
+			
+	</insert>
+	
+	<!-- 修改场馆描述信息表 -->
+	<update id="updatePointServiceInfo" parameterType="com.op.dto.pointService.insert.fabu.PointServiceInfoDTO">
+		update pointServiceInfo set
+		psi_pay_info = #{psi_pay_info},
+		psi_service = #{psi_service},
+		psi_venue_type_column_value = #{psi_venue_type_column_value},
+		psi_introduce = #{psi_introduce}
+		
+		where ps_id = #{ps_id}
+	</update>
+	
+	<resultMap type="com.op.dto.pointService.insert.fabu.PointServiceInfoDTO" id="PointServiceInfoDTOResultMap">
+		<result column="ps_id" property="ps_id"/>
+		
+		<!-- 标签集合 -->
+		<collection property="tabs" ofType="com.op.entity.pointService.PointServiceFeature" column="ps_id" select="pointServiceFeatureMapper.findPointServiceFeatureByPsId"></collection>
+	</resultMap>
+	
+	<!-- 查询场馆描述信息 -->
+	<select id="findPointServiceInfoByPsId" parameterType="String" resultMap="PointServiceInfoDTOResultMap">
+		select psi_id,ps_id ,psi_pay_info ,psi_service ,psi_venue_type_column_value ,psi_introduce 
+		from pointServiceInfo
+		where ps_id = #{id}
+	</select>
+	
+</mapper>

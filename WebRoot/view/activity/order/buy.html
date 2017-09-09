@@ -1,0 +1,591 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<base href="/" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>玩嘛</title>
+
+<#include "/view/base.css.html">
+<link rel="stylesheet" type="text/css" href="static/css/hw_css/form.css" />
+<style>
+body {
+	background: #f1f1f1;
+}
+
+</style>
+</head>
+<body>
+	<!-- header -->
+	<#include "/view/header.html">
+	<form id="myform">
+		<div class="boxw buy-progress clearfix" id="navigation">
+			<ul>
+				<li><a class="selected cs"><span>1.填写报名信息</span></a></li>
+				<li><a class="cs"><span>2.确认报名信息</span></a></li>
+				<li><a class="cs"><span>3.报名成功</span></a></li>
+			</ul>
+		</div>
+		<div class="boxw clearfix" id="page">
+			<input type="hidden" id="neednumber" value="${neednumber }" />
+			<div class="buy-form">
+				<div class="mt">
+					<h3>活动信息</h3>
+				</div>
+				<div class="mc">
+					<div class="activity-title">${queryActivity.title}</div>
+					<div class="activity-content">
+						<ul>
+							<li>出发地：${queryActivity.a_start_location!""}</li>
+							<li>目的地：${queryActivity.a_end_location!""}</li>
+							<li>出发日期：${queryActivity.activityTimeStr!""}</li>
+							<li>结束日期：${queryActivity.endTimeStr!""}</li>
+							<li>活动类型：<#list queryActivity.activeTypes as item>${item.cl_name}<#if (item_has_next)>、</#if></#list></li>
+							<li>活动等级：${queryActivity.adt_description!""}</li>
+							<li>适合人群：${queryActivity.sc_name!""}</li>
+							<li>联系电话：${queryActivity.a_phone!""}</li>
+							<li>活动景点：<#list queryActivity.activeScenic as item>${item.as_name}<#if item_has_next>、</#if></#list></li>
+							<li>交通方式：<#list queryActivity.activeTraffic as item>${item.trafficName}<#if item_has_next>+</#if></#list></li>
+							<li>集合时间：${queryActivity.gatherTimeStr!""}</li>
+							<li>集合地点：${queryActivity.a_gather_location!""}</li>
+						</ul>
+						<input type="hidden" id="asu_active_id" name="asu_active_id" value="${queryActivity.id}" />
+						<input type="hidden" id="paytype" name="paytype" value="${queryActivity.paytype}" />
+						<input type="hidden" id="isinsurance" name="isinsurance" value="${queryActivity.isinsurance!''}" />
+						<input type="hidden" id = "uEmail" name="uEmail" value="${SESSION_USER.uEmail!''}"/>
+						<div class="price">
+							<p>
+								活动费用：<span class="font-yuan"><span id="price">${queryActivity.price}</span>元/人</span>
+							</p>
+							<p>
+								其中包括预约费<span class="c1"><span id="reserveprice">${queryActivity.a_reserve_price}</span>元/人</span>
+							</p>
+							<input type="hidden" id="vprice" value="${queryActivity.price}"/>
+							<input type="hidden" id="vreserveprice" value="${queryActivity.a_reserve_price}"/>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		
+		<div class="boxw clearfix" id="bm_page">
+			<div class="buy-form">
+				<div class="mt clearfix">
+					<div class="fl">
+						<h3>报名信息</h3>
+						<span class="c1">请如实填写报名信息，以免出行中发生问题，您所填写的信息我们将会严格保密，请放心填写。</span>
+					</div>
+				</div>
+				<div class="mc">
+					<#if users?size != 0>
+						<div class="activity-linkman">
+							<div class="linkman-title">常用联系人</div>
+							<ul class="linkman-list">
+								<#list users as list>
+									<li>
+										<span class="checkbox" id="allLinkman">
+											<i class="icon-select" lsuuId="${list.lsuu_id}" name="${list.lsuu_user_name}" sex="${list.lsuu_user_sex}" phone="${list.lsuu_phone}" cardtype="${list.lsuu_cart_type!''}" cardnum="${list.lsuu_cart_num!''}"></i>
+											<em class="linkman-name">${list.lsuu_user_name}</em>
+											<em class="linkman-sex"><#if list.lsuu_user_sex=1>男<#else>女</#if></em>
+											<em class="linkman-tel">${list.lsuu_phone}</em>
+										</span>
+									</li>
+								</#list>
+							</ul>
+						</div>
+					</#if>
+					<div class="add-activity-linkman" id="addbaoming">
+					</div>
+					<div class="add-activity-linkman">
+						<div class="link-add cs">
+							<a id="addlink"><i class="iconadd"></i>增加报名人</a>
+						</div>
+					</div>
+					<div class="ice" id="linkman">
+						<div class="mt clearfix">
+							<div class="fl">
+								<h3>紧急联系人</h3>
+								<span class="c1">紧急联系人请不要填写本次参与活动的人员</span>
+							</div>
+						</div>
+						<div class="mc">
+							<div class="add-activity-linkman">
+								<div class="linkman-info">
+									<dl>
+										<dt>
+											真实姓名：
+										</dt>
+										<dd><input id="bm_linkmanname" type="text" class="wid01" name="asu_user_emergency" value="${SESSION_USER.emergencyName!''}"/></dd>
+									</dl>
+									<dl>
+										<dt>
+											与本人的关系：
+										</dt>
+										<dd>
+											<select id="bm_rslinkman" name="asu_user_relation" value="${SESSION_USER.relation!'2'}" class="wid01">
+												<option <#if SESSION_USER.relation='2'>selected</#if> value="2">配偶</option>
+												<option <#if SESSION_USER.relation='3'>selected</#if> value="3">子女</option>
+												<option <#if SESSION_USER.relation='5'>selected</#if> value="5">父母</option>
+												<option <#if SESSION_USER.relation='4'>selected</#if> value="4">朋友</option>
+												<option <#if SESSION_USER.relation='6'>selected</#if> value="6">其他</option>
+											</select>
+										</dd>
+									</dl>
+									<dl>
+										<dt>
+											手机号码：
+										</dt>
+										<dd><input id="bm_linkmanphone" name="asu_user_emergency_phone" type="text" class="wid01" value="${SESSION_USER.emergencyMobile!''}"/></dd>
+									</dl>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="more-info">
+						<a class="cs dis" id="bm_showAll">显示全部信息<i class="iconfont"></i></a>
+						<a class="cs" id="bm_showName">只显示姓名<i class="iconfont01"></i></a>
+					</div>
+				</div>
+			</div>
+		</div>
+		
+		<div class="boxw clearfix dis" id="qr_page">
+			<div class="buy-form">
+				<div class="mt clearfix">
+					<div class="fl">
+						<h3>报名信息</h3>
+					</div>
+				</div>
+				<div class="mc">
+					<div class="add-activity-linkman" id="querenAll">
+					</div>
+					<div class="ice" id="qr_linkman">
+						<div class="mt clearfix">
+							<div class="fl">
+								<h3>紧急联系人</h3>
+							</div>
+						</div>
+						<div class="mc">
+							<div class="add-activity-linkman">
+								<div class="linkman-info">
+									<dl>
+										<dt>
+											真实姓名：
+										</dt>
+										<dd><span id="qr_linkmanname"></span></dd>
+									</dl>
+									<dl>
+										<dt>
+											与本人的关系：
+										</dt>
+										<dd>
+											<span id="qr_rslinkman"></span>
+										</dd>
+									</dl>
+									<dl>
+										<dt>
+											手机号码：
+										</dt>
+										<dd><span id="qr_linkmanphone"></span></dd>
+									</dl>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="more-info">
+						<a class="cs dis" id="qr_showAll">显示全部信息<i class="iconfont"></i></a>
+						<a class="cs" id="qr_showName">只显示姓名<i class="iconfont01"></i></a>
+					</div>
+				</div>
+			</div>
+		</div>
+		
+		<#if queryActivity.contain?size!=0>
+			<div class="boxw clearfix" id="cost">
+				<div class="buy-form">
+					<div class="mt clearfix">
+						<div class="fl">
+							<h3>费用包括</h3>
+						</div>
+						<div class="fr"></div>
+					</div>
+					<div class="mc">
+						<div class="cost-list">
+							<table>
+			    				<tr>
+			    					<th width="250">费用名称</th>
+			    					<th width="250">单价</th>
+			    					<th colspan="2">费用说明</th>    		
+			    				</tr>
+			    				<#list queryActivity.contain as list>
+			    					<tr>
+						    			<td>${list.acp_cost_name}</td>
+						    			<td>${list.acp_cost} 元/人</td>
+						    			<td colspan="2">${list.acp_comment}</td>
+				    				</tr>
+			    				</#list>
+			    				<tr class="all-cost">
+			    					<td style="text-align: left;">费用个数：<span class="c1">${queryActivity.contain?size}</span></td>
+			    					<td>单价合计：<span class="c1">${queryActivity.price}元</span></td>
+			    					<td width="200">报名人数：<span class="c1" id="peoplenum">1</span></td>
+			    					<td style="text-align: right;">费用合计：<span class="font-yuan-01"><span id="fymx">${queryActivity.price}</span></span></td>
+			    				</tr>
+			    			</table>
+			    		</div>
+			    	</div>	
+				</div>
+			</div>
+		</#if>
+		
+		<#if queryActivity.optional?size!=0>
+			<div class="boxw clearfix" id="bm_kx_page">
+				<div class="buy-form">
+					<div class="mt clearfix">
+		      			<div class="fl">
+		        			<h3>可选费用</h3>
+		      			</div>
+		      			<div class="fr"></div>
+		    		</div>
+		    		<div class="mc">
+		    			<div class="cost-list">
+		    				<table>
+					    		<tr>
+						    		<th width="50">选择</th>
+						    		<th width="200">费用名称</th>
+						    		<th width="250">补差费用</th>
+						    		<th colspan="2">费用说明</th>   		
+					    		</tr>
+					    		<#list queryActivity.optional as list>
+					    			<tr>
+						    			<td><span id="kxcheckbox" acpId="${list.acp_id}" danjia="${list.acp_cost}" fymc="${list.acp_cost_name}" fysm="${list.acp_comment}" class="checkbox"><i class="icon-select"></i></span></td>
+						    			<td>${list.acp_cost_name}</td>
+						    			<td>${list.acp_cost} 元/人</td>
+						    			<td colspan="2">${list.acp_comment}</td>
+						    		</tr>
+					    		</#list>
+					    		<tr class="all-cost">
+					    			<td style="text-align: left;" colspan="2">费用个数：<span class="c1" id="kx_count">0</span></td>
+					    			<td>单价合计：<span class="c1"><span id="kx_danjia">0</span></span></td>
+					    			<td width="200">报名人数：<span class="c1" id="peoplenum">1</span></td>
+					    			<td style="text-align: right;">费用合计：<span class="font-yuan-01"><span id="kx_price">0</span></span></td>
+					    		</tr>
+					    	</table>
+		    			</div>
+		    		</div>	
+				</div>
+			</div>
+		</#if>
+		
+		<div class="boxw clearfix dis" id="qr_kx_page">
+	    	<div class="buy-form">
+	    		<div class="mt clearfix">
+	      			<div class="fl">
+	        			<h3>可选费用</h3>
+	      			</div>
+	      			<div class="fr"></div>
+	    		</div>
+	    		<div class="mc">
+					<div class="cost-list" id="qr_kx_content">
+		    				
+		    		</div>
+	    		</div>  
+	    	</div>
+		</div>
+		
+		<div class="boxw clearfix" id="bm_remark_page">
+			<div class="buy-form">
+				<div class="mt clearfix">
+					<div class="fl">
+						<h3>订单备注</h3>
+					</div>
+					<div class="fr"></div>
+				</div>
+				<div class="mc">
+					<div class="add-remark">
+						<textarea id="bm_remark" class="wid02" rows="4" cols="100" name="asu_order_area"
+							placeholder="亲！请输入你的备注。"></textarea>
+					</div>
+				</div>
+			</div>
+		</div>
+		
+		<div class="boxw clearfix dis" id="qr_remark_page">
+			<div class="buy-form">
+				<div class="mt clearfix">
+					<div class="fl">
+						<h3>订单备注</h3>
+					</div>
+					<div class="fr"></div>
+				</div>
+				<div class="mc">
+					<div class="add-remark">
+						<span id="qr_remark"></span>
+					</div>
+				</div>
+			</div>
+		</div>
+		
+		<div class="boxw clearfix" id="summary">
+			<div class="buy-form">
+				<div class="mc">
+					<div class="buy-toolbar">
+						<p class="buy-total">
+							活动费用总额:<span id="qr_allprice" class="c1">${queryActivity.price}元(${queryActivity.price}X1)</span>
+						</p>
+						<p>
+							其中包括预约费<span id="qr_allreserveprice" class="c1">${queryActivity.a_reserve_price}元(${queryActivity.a_reserve_price}X1)</span>
+						</p>
+						<p class="buy-annotation c1">为保证您的利益，请通过玩嘛网在线支付。否则，一旦活动出现问题，请与领队联系，自行承担风险。</p>
+						<div id="bm_as_page">
+							<p>
+								<span id="aggrementSign" class="checkbox now">
+									<i class="icon-select"></i>我已阅读并同意
+								</span>
+								<a class="c1 cs">《玩嘛活动报名须知》</a>
+							</p>
+							<p>
+								<a class="btn-next cs" id="baoming_next">
+									<span style="margin-right:20px;">下一步</span>确认报名信息
+								</a>
+							</p>
+						</div>
+	        			<div id="qr_as_page" class="dis">
+		        			<p>
+		        				<a class="btn-next cs" id="baoming_back">返回上一步</a>
+		        				<a class="btn-next cs" id="queren_next">
+		        					<span style="margin-right:20px;">下一步</span> 确认提交
+		        				</a>
+		        			</p>
+	        			</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div id="alldata" class="dis">
+			
+		</div>
+	</form>
+	<form method="post" class="form-horizontal" target="_blank">
+		<div class="boxw clearfix dis" id="success">
+			<div class="buy-success-form">
+				<i class="success-img"></i>
+				<div class="success-info">
+					<div class="price">
+						<#if queryActivity.paytype!=2>
+							<p>
+								活动费用：<span class="font-yuan"><span id="zf_allprice">${queryActivity.price}</span>元</span>
+							</p>
+							<p>
+								其中包括预约费<span class="c1"><span id="zf_allreserveprice">${queryActivity.a_reserve_price}</span>元</span>
+							</p>
+						<#else>
+							<p>
+								预约费：<span class="font-yuan"><span id="zf_allreserveprice">${queryActivity.a_reserve_price}</span>元</span>
+							</p>
+							<p>
+								支付预定金，剩余金额采取线下交易,总金额<span class="c1"><span id="zf_allprice">${queryActivity.price}</span>元</span>
+							</p>
+						</#if>
+					</div>
+					<h1>报名成功！请尽快支付</h1>
+					<P><span id="lasttime"></span> 前支付，支付成功名额锁定。</P>
+					<P>
+						请在 <span class="c1" id="countdown"></span> 内支付，超时后将取消订单
+					</P>
+				</div>
+				<div style="float: right;" id="showactive">
+					<a id="viewshow" target="_blank" class="c1 cs" style="margin-left:30px;">查看详情</a>
+				</div>
+				<div class="event-info">
+					<div class="activity-title">${queryActivity.title}</div>
+					<div class="activity-content dis" id="activeinfo">
+						<ul>
+							<li>出发地：${queryActivity.a_start_location!""}</li>
+							<li>目的地：${queryActivity.a_end_location!""}</li>
+							<li>出发日期：${queryActivity.activityTimeStr!""}</li>
+							<li>结束日期：${queryActivity.endTimeStr!""}</li>
+							<li>活动类型：<#list queryActivity.activeTypes as list><#if list_index!=0>、</#if>${list.cl_name}</#list></li>
+							<li>活动等级：${queryActivity.adt_description!""}</li>
+							<li>适合人群：${queryActivity.sc_name!""}</li>
+							<li>联系电话：${queryActivity.a_phone!""}</li>
+							<li>活动景点：<#list queryActivity.activeScenic as list><#if list_index!=0>、</#if>${list.as_name}</#list></li>
+							<li>交通方式：<#list queryActivity.activeTraffic as list><#if list_index!=0>+</#if>${list.trafficName}</#list></li>
+							<li>集合时间：${queryActivity.gatherTimeStr!""}</li>
+							<li>集合地点：${queryActivity.a_gather_location!""}</li>
+						</ul>
+					</div>
+				</div>
+			</div>
+		</div>
+		
+		<div class="boxw clearfix dis" id="bank">
+			<input type="hidden" name="out_trade_no" id="out_trade_no"/>
+			<div class="pay-info">
+				<div class="mt">
+					<h3>选择以下支付方式付款</h3>
+				</div>
+				<div class="mc">
+					<div class="pay-list">
+						<h3>支付平台</h3>
+						<ul>
+							<li>
+								<a>
+									<label>
+										<input type="hidden" value="ZFB" class="radio i-checks radio-primary">
+										<i></i> <img id="paybankimg" name="支付宝" src="static/images/bank/zfb.png">
+									</label>
+								</a>
+							</li>
+						</ul>
+					</div>
+					
+					<div class="pay-list">
+						<h3>银行借记卡及信用卡</h3>
+						<ul>
+							<li>
+								<a>
+									<label>
+										<input type="hidden"  value="ICBCBTB" class="radio i-checks radio-primary">
+										<i></i> <img id="paybankimg" name="工商银行" src="static/images/bank/gsyh.png">
+									</label>
+								</a>
+							</li>
+							<li>
+								<a>
+									<label>
+										<input type="hidden"  value="CCBBTB" class="radio i-checks"> 
+										<i></i> <img id="paybankimg" name="建设银行" src="static/images/bank/jsyh.png">
+									</label>
+								</a>
+							</li>
+							<li>
+								<a>
+									<label>
+										<input type="hidden"  value="CMBBTB" class="radio i-checks"> 
+										<i></i> <img id="paybankimg" name="招商银行" src="static/images/bank/zsyh.png">
+									</label>
+								</a>
+							</li>
+							<li>
+								<a>
+									<label>
+										<input type="hidden"  value="ABCBTB" class="radio i-checks"> 
+										<i></i> <img id="paybankimg" name="农业银行" src="static/images/bank/nyyh.png">
+									</label>
+								</a>
+							</li>
+							<li>
+								<a>
+									<label>
+										<input type="hidden"  value="SPDBB2B" class="radio i-checks"> 
+										<i></i> <img id="paybankimg" name="浦发银行" src="static/images/bank/pufa.png">
+									</label>
+								</a>
+							</li>
+							<li>
+								<a>
+									<label>
+										<input type="hidden"  value="BOCBTB" class="radio i-checks"> 
+										<i></i> <img id="paybankimg" name="中国银行" src="static/images/bank/zgyh.png">
+									</label>
+								</a>
+							</li>
+							<li>
+								<a>
+									<label>
+										<input type="hidden"  value="POSTGC" class="radio i-checks"> 
+										<i></i> <img id="paybankimg" name="中国邮政储蓄银行" src="static/images/bank/youzheng.png">
+									</label>
+								</a>
+							</li>
+							<li>
+								<a>
+									<label>
+										<input type="hidden"  value="CIB" class="radio i-checks"> 
+										<i></i> <img id="paybankimg" name="兴业银行" src="static/images/bank/xyyh.png">
+									</label>
+								</a>
+							</li>
+							<li>
+								<a>
+									<label>
+										<input type="hidden"  value="GDB" class="radio i-checks"> 
+										<i></i> <img id="paybankimg" name="广发银行" src="static/images/bank/gfyh.png">
+									</label>
+								</a>
+							</li>
+							<li>
+								<a>
+									<label>
+										<input type="hidden"  value="SPABANK" class="radio i-checks"> 
+										<i></i> <img id="paybankimg" name="平安银行" src="static/images/bank/payh.png">
+									</label>
+								</a>
+							</li>
+							<li>
+								<a>
+									<label>
+										<input type="hidden"  value="BJBANK" class="radio i-checks"> 
+										<i></i> <img id="paybankimg" name="北京银行" src="static/images/bank/bjyh.png">
+									</label>
+								</a>
+							</li>
+							<li>
+								<a>
+									<label>
+										<input type="hidden"  value="COMM-DEBIT" class="radio i-checks"> 
+										<i></i> <img id="paybankimg" name="交通银行" src="static/images/bank/jtyh.png">
+									</label>
+								</a>
+							</li>
+							<li>
+								<a>
+									<label>
+										<input type="hidden"  value="CEB-DEBIT" class="radio i-checks"> 
+										<i></i> <img id="paybankimg" name="中国光大银行" src="static/images/bank/gdyh.png">
+									</label>
+								</a>
+							</li>
+							<li>
+								<a>
+									<label>
+										<input type="hidden"  value="CITIC-DEBIT" class="radio i-checks"> 
+										<i></i> <img id="paybankimg" name="中信银行" src="static/images/bank/zxyh.png">
+									</label>
+								</a>
+							</li>
+							
+						</ul>
+					</div>
+				</div>
+			</div>
+		</div>
+	</form>	
+	
+	<div class="pay-success" id="paySuccess" style="display:none;">
+		<div class="mt">
+			<h1>网上支付提示</h1>
+		</div>
+		<div class="mc">
+			<div class="pay-sc">
+				<i></i>
+				<P>支付完成前，请不要关闭此支付验证窗口。</P>
+				<p>支付完成后，请根据您的支付情况点击下面的按钮。</p>
+			</div>
+			<div class="btns">
+				<a id="closePay" href="javascript:void(0)" role="button">重新支付</a><a href="activeSignup/MySignUp.html" role="button">支付完成</a>
+			</div>
+		</div>
+	</div>
+	
+	<#include "/view/base.js.html">
+
+<!-- 身份证 -->
+<script type="text/javascript" src="static/js/IDValidator/GB2260.js"></script>
+<script type="text/javascript" src="static/js/IDValidator/IDValidator.js"></script>
+
+<script type="text/javascript" src="static/js/activesignup/order.js"></script>
+<!-- 倒计时 -->
+<script type="text/javascript" src="static/js/plugins/date/jquery.downCount.js"></script>
+	
+</body>
+</html>

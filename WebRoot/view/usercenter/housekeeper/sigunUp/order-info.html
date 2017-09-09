@@ -1,0 +1,435 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<base href="/" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>玩嘛</title>
+
+<#include "/view/usercenter/base.css.html">
+<link rel="stylesheet" type="text/css" href="static/css/hw_css/form.css" />
+
+<style>
+body {
+	background: #f1f1f1;
+}
+</style>
+</head>
+<body>
+	<#include "/view/header.html">
+	<div class="boxw clearfix"  style="margin-top: 20px;">
+		<div class="buy-form">
+			<div class="mt">
+				<h3>订单详情</h3>
+			</div>
+			<div class="mc">
+				<div class="twotitle">订单信息</div>
+				<div class="order-detail">
+					<span>
+						订单编号： ${mySignUp.asu_id}
+						<input type="hidden" id="asu_id" value="${mySignUp.asu_id}" />
+						<input type="hidden" id="activityId" value="${mySignUp.activityId}" />
+					</span>
+					<#if mySignUp.asu_trade_no?exists><span>交易号： ${mySignUp.asu_trade_no!''}</span></#if>
+				</div>
+				<div class="activity-title">${queryActivity.title}</div>
+				<div class="activity-content">
+					<ul>
+						<li>出发地：${queryActivity.a_start_location!""}</li>
+						<li>目的地：${queryActivity.a_end_location!""}</li>
+						<li>出发日期：${queryActivity.activityTimeStr!""}</li>
+						<li>结束日期：${queryActivity.endTimeStr!""}</li>
+						<li>活动类型：<#list queryActivity.activeTypes as item>${item.cl_name}<#if (item_has_next)>、</#if></#list></li>
+						<li>活动等级：${queryActivity.adt_description!""}</li>
+						<li>适合人群：${queryActivity.sc_name!""}</li>
+						<li>联系电话：${queryActivity.a_phone!""}</li>
+						<li>活动景点：<#list queryActivity.activeScenic as item>${item.as_name}<#if item_has_next>、</#if></#list></li>
+						<li>交通方式：<#list queryActivity.activeTraffic as item>${item.trafficName}<#if item_has_next>+</#if></#list></li>
+						<li>集合时间：${queryActivity.gatherTimeStr!""}</li>
+						<li>集合地点：${queryActivity.a_gather_location!""}</li>
+					</ul>
+					<div class="price">
+						<p>
+							实付款：<span class="font-yuan">${mySignUp.asu_account_paid}元</span>
+						</p>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	<#if queryActivity.contain?size!=0>
+		<div class="boxw clearfix" id="cost">
+			<div class="buy-form">
+				<div class="mt clearfix">
+					<div class="fl">
+						<h3>费用包括</h3>
+					</div>
+					<div class="fr"></div>
+				</div>
+				<div class="mc">
+					<div class="cost-list">
+						<table>
+		    				<tr>
+		    					<th width="250">费用名称</th>
+		    					<th width="250">单价</th>
+		    					<th colspan="2">费用说明</th>    		
+		    				</tr>
+		    				<#list queryActivity.contain as list>
+		    					<tr>
+					    			<td>${list.acp_cost_name!''}</td>
+					    			<td>${list.acp_cost!'0'} 元/人</td>
+					    			<td colspan="2">${list.acp_comment!''}</td>
+			    				</tr>
+		    				</#list>
+		    			</table>
+		    		</div>
+		    	</div>	
+			</div>
+		</div>
+	</#if>
+	
+	<#if activeSignUpCorrelationCost?size!=0>
+		<div class="boxw clearfix" id="bm_kx_page">
+			<div class="buy-form">
+				<div class="mt clearfix">
+	      			<div class="fl">
+	        			<h3>附加费用</h3>
+	      			</div>
+	      			<div class="fr"></div>
+	    		</div>
+	    		<div class="mc">
+	    			<div class="cost-list">
+	    				<table>
+				    		<tr>
+					    		<th width="200">费用名称</th>
+					    		<th width="250">补差费用</th>
+					    		<th colspan="2">费用说明</th>   		
+				    		</tr>
+				    		<#list activeSignUpCorrelationCost as item>
+				    			<tr>
+					    			<td>${item.asp_cost_name!''}</td>
+					    			<td>${item.asp_cost!'0'} 元/人</td>
+					    			<td colspan="2">${item.asp_comment!''}</td>
+					    		</tr>
+				    		</#list>
+				    	</table>
+	    			</div>
+	    		</div>	
+			</div>
+		</div>
+	</#if>
+	
+	<#if mySignUp.asu_order_area!=null && mySignUp.asu_order_area!="">
+		<div class="boxw clearfix" id="bm_remark_page">
+			<div class="buy-form">
+				<div class="mt clearfix">
+					<div class="fl">
+						<h3>订单备注</h3>
+					</div>
+					<div class="fr"></div>
+				</div>
+				<div class="mc">
+					<div class="add-remark">
+						${mySignUp.asu_order_area }
+					</div>
+				</div>
+			</div>
+		</div>
+	</#if>
+	
+	<div class="boxw clearfix">
+		<div class="buy-form clearfix">
+			<div class="twotitle">报名人信息</div>
+			<#if mySignUp.asu_pay_state==1>
+				<#if (mySignUp.activeApplicantNormal?size>0)>
+				<div class="applicants-list" id="applicant">
+					<#list mySignUp.activeApplicantNormal as item>
+						<ul class="checkbox" aa_id="${item.aa_id}">
+							<li class="w1"><i class="icon-select"></i></li>
+							<li class="w2">${item.aa_user_name}</li>
+							<li class="w3">
+								<#if item.aa_user_sex==1>
+									男
+									<#else>
+									女
+								</#if>
+							</li>
+							<li class="w4">${item.aa_user_phone}</li>
+							<li class="w5">${item.aa_state_str!''}</li>
+						</ul>
+					</#list>
+				</div>
+				<div class="btns-area">
+					<a id="quxiao" href="javascript:void(0)" class="btns">取消订单</a>
+					<a onclick="immediatePay(${mySignUp.asu_id},${mySignUp.activityId})" target="_blank" href="javascript:void(0);" class="btns">立即支付</a>
+				</div>
+				</#if>
+				
+				<#if (mySignUp.activeApplicantRefunding?size>0)>
+					<div class="applicants-list" id="applicant">
+						<#list mySignUp.activeApplicantRefunding as item>
+							<ul class="checkbox" aa_id="${item.aa_id}">
+								<li class="w1"></li>
+								<li class="w2">${item.aa_user_name}</li>
+								<li class="w3">
+									<#if item.aa_user_sex==1>
+										男
+										<#else>
+										女
+									</#if>
+								</li>
+								<li class="w4">${item.aa_user_phone}</li>
+								<li class="w5">${item.aa_state_str!''}</li>
+								<li><#if (item.activeApplicantLog?size>0)><a class="more" id="downup" href="javascript:void(0)">退款原因<i class="down"></i></a></#if></li>
+							</ul>
+							<#if (item.activeApplicantLog?size>0)>
+								
+								<#assign zj=0>
+								<#assign ld=0>
+								<#list item.activeApplicantLog as aalitem>
+									<#if uId==aalitem.user_Id>
+										<#assign zj=zj+1>
+										<#else>
+										<#assign ld=ld+1>
+									</#if>
+								</#list>
+								<div class="refund-reason clearfix dis" id="reason">
+									<span><em></em></span>
+									<#if (zj>0)>
+										<div class="my-info.html">
+											<h3>自己</h3>
+											<#list item.activeApplicantLog as aalitem>
+												<#if uId==aalitem.user_Id>
+													<p>退款时间：<#if aalitem.aal_create_time?exists>${aalitem.aal_create_time?string('yyyy-MM-dd')}</#if></p>
+													<p>退款原因：${aalitem.aal_remark!''}</p>
+												</#if>
+											</#list>
+										</div>
+									</#if>
+									<#if (ld>0)>
+										<div <#if (zj>0)>class="admin-info"</#if>>
+											<h3>领队</h3>
+											<#list item.activeApplicantLog as aalitem>
+												<#if uId!=aalitem.user_Id>
+													<p>处理时间：<#if aalitem.aal_create_time?exists>${aalitem.aal_create_time?string('yyyy-MM-dd')}</#if></p>
+													<p>处理说明：${aalitem.aal_remark!''}</p>
+													<p>
+														退款金额：
+														<#if insurance&gt;0>
+															<#if day&gt;0>
+																${item.aa_refund_price+insurance}元(保险将在${day+1}天后受保，届时将无法退还保险费用)
+																<#else>
+																${item.aa_refund_price}元(保险已生效，无法退还保险费用)
+															</#if>
+															<#else>
+															${item.aa_refund_price}元
+														</#if>
+													</p>
+												</#if>
+											</#list>
+										</div>
+									</#if>
+								</div>
+							</#if>
+						</#list>
+					</div>
+					<div class="btns-area"></div>
+				</#if>
+			</#if>
+			<#if mySignUp.asu_pay_state==2>
+				<#if (mySignUp.activeApplicantNormal?size>0)>
+					<div class="applicants-list" id="applicant">
+						<#list mySignUp.activeApplicantNormal as item>
+							<ul class="checkbox" refund="${item.aa_refund_flag}" aa_id="${item.aa_id}">
+								<li class="w1"><i class="icon-select"></i></li>
+								<li class="w2">${item.aa_user_name}</li>
+								<li class="w3">
+									<#if item.aa_user_sex==1>
+										男
+										<#else>
+										女
+									</#if>
+								</li>
+								<li class="w4">${item.aa_user_phone}</li>
+								<li class="w5">${item.aa_state_str!''}</li>
+							</ul>
+						</#list>
+					</div>
+					<div class="btns-area">
+						<#if (mySignUp.activeApplicantRefundfail?size>0)>
+							<a id="kefu" href="javascript:void(0)" class="btns">申请客服处理</a>
+						</#if>
+						<a id="quxiao" href="javascript:void(0)" class="btns">取消订单</a>
+					</div>
+				</#if>
+				
+				<#if (mySignUp.activeApplicantRefund?size>0)>
+					<div class="applicants-list" id="applicant">
+						<#list mySignUp.activeApplicantRefund as item>
+							<ul class="checkbox" aa_id="${item.aa_id}">
+								<li class="w1"><i class="icon-select"></i></li>
+								<li class="w2">${item.aa_user_name}</li>
+								<li class="w3">
+									<#if item.aa_user_sex==1>
+										男
+										<#else>
+										女
+									</#if>
+								</li>
+								<li class="w4">${item.aa_user_phone}</li>
+								<li class="w5">${item.aa_state_str!''}</li>
+								<li><#if (item.activeApplicantLog?size>0)><a class="more" id="downup" href="javascript:void(0)">退款原因<i class="down"></i></a></#if></li>
+							</ul>
+							<#if (item.activeApplicantLog?size>0)>
+								<#assign zj=0>
+								<#assign ld=0>
+								<#list item.activeApplicantLog as aalitem>
+									<#if uId==aalitem.user_Id>
+										<#assign zj=zj+1>
+										<#else>
+										<#assign ld=ld+1>
+									</#if>
+								</#list>
+								<div class="refund-reason clearfix dis" id="reason">
+									<span><em></em></span>
+									<#if (zj>0)>
+										<div class="my-info.html">
+											<h3>自己</h3>
+											<#list item.activeApplicantLog as aalitem>
+												<#if uId==aalitem.user_Id>
+													<p>退款时间：<#if aalitem.aal_create_time?exists>${aalitem.aal_create_time?string('yyyy-MM-dd')}</#if></p>
+													<p>退款原因：${aalitem.aal_remark!''}</p>
+												</#if>
+											</#list>
+										</div>
+									</#if>
+									<#if (ld>0)>
+										<div <#if (zj>0)>class="admin-info"</#if>>
+											<h3>领队</h3>
+											<#list item.activeApplicantLog as aalitem>
+												<#if uId!=aalitem.user_Id>
+													<p>处理时间：<#if aalitem.aal_create_time?exists>${aalitem.aal_create_time?string('yyyy-MM-dd')}</#if></p>
+													<p>处理说明：${aalitem.aal_remark!''}</p>
+													<p>
+														退款金额：
+														<#if insurance&gt;0>
+															<#if day&gt;0>
+																${item.aa_refund_price+insurance}元(保险将在${day+1}天后受保，届时将无法退还保险费用)
+																<#else>
+																${item.aa_refund_price}元(保险已生效，无法退还保险费用)
+															</#if>
+															<#else>
+															${item.aa_refund_price}元
+														</#if>
+													</p>
+												</#if>
+											</#list>
+										</div>
+									</#if>
+								</div>
+							</#if>
+						</#list>
+					</div>
+					<div class="btns-area">
+						<a id="nosure" href="javascript:void(0)" class="btns">不同意退款</a>
+						<a id="sure" href="javascript:void(0)" class="btns">同意退款</a>
+					</div>
+				</#if>
+				
+				<#if (mySignUp.activeApplicantRefunding?size>0)>
+					<div class="applicants-list" id="applicant">
+						<#list mySignUp.activeApplicantRefunding as item>
+							<ul class="checkbox" aa_id="${item.aa_id}">
+								<li class="w1"></li>
+								<li class="w2">${item.aa_user_name}</li>
+								<li class="w3">
+									<#if item.aa_user_sex==1>
+										男
+										<#else>
+										女
+									</#if>
+								</li>
+								<li class="w4">${item.aa_user_phone}</li>
+								<li class="w5">${item.aa_state_str!''}</li>
+								<li><#if (item.activeApplicantLog?size>0)><a class="more" id="downup" href="javascript:void(0)">退款原因<i class="down"></i></a></#if></li>
+							</ul>
+							<#if (item.activeApplicantLog?size>0)>
+								<#assign zj=0>
+								<#assign ld=0>
+								<#list item.activeApplicantLog as aalitem>
+									<#if uId==aalitem.user_Id>
+										<#assign zj=zj+1>
+										<#else>
+										<#assign ld=ld+1>
+									</#if>
+								</#list>
+								
+								<div class="refund-reason clearfix dis" id="reason">
+									<span><em></em></span>
+									<#if (zj>0)>
+										<div class="my-info.html">
+											<h3>自己</h3>
+											<#list item.activeApplicantLog as aalitem>
+												<#if uId==aalitem.user_Id>
+													<p>退款时间：<#if aalitem.aal_create_time?exists>${aalitem.aal_create_time?string('yyyy-MM-dd')}</#if></p>
+													<p>退款原因：${aalitem.aal_remark!''}</p>
+												</#if>
+											</#list>
+										</div>
+									</#if>
+									<#if (ld>0)>
+										<div <#if (zj>0)>class="admin-info"</#if>>
+											<h3>领队</h3>
+											<#list item.activeApplicantLog as aalitem>
+												<#if uId!=aalitem.user_Id>
+													<p>处理时间：<#if aalitem.aal_create_time?exists>${aalitem.aal_create_time?string('yyyy-MM-dd')}</#if></p>
+													<p>处理说明：${aalitem.aal_remark!''}</p>
+													<p>退款金额：<#if refundstatus!=0>${item.aa_refund_price+insurance}<#else>${item.aa_refund_price}</#if>元</p>
+												</#if>
+											</#list>
+										</div>
+									</#if>
+								</div>
+							</#if>
+						</#list>
+					</div>
+					<div class="btns-area"></div>
+				</#if>
+
+			</#if>
+			
+			<#if (mySignUp.activeApplicantNormal?size==0)&&(mySignUp.activeApplicantRefund?size==0)&&(mySignUp.activeApplicantRefunding?size==0)>
+				<div class="applicants-list" id="applicant">
+					<h3>没有需处理的订单！</h3>
+				</div>
+				<div class="btns-area"></div>
+			</#if>
+		</div>
+	</div>
+	<!--退款原因 -->
+	<div class="pop-box dis" id="refund">
+		<div class="mt">
+			<h1>退款信息</h1>
+		</div>
+		<div class="mc">
+			<dl class="clearfix">
+				<dt>
+					<em class="c-red">*</em>退款原因：
+				</dt>
+				<dd>
+					<textarea class="wid07" rows="" cols="" name="" id="refundreason"
+						placeholder="最多可输入200字"></textarea>
+				</dd>
+			</dl>
+
+			<div class="btns">
+				<a id="close" class="btn-exit" href="javascript:void(0)">取消申请</a>
+				<a id="surerefund" class="btn-over" href="javascript:void(0)">确定退款</a>
+			</div>
+		</div>
+	</div>
+</body>
+
+<#include "/view/usercenter/base.js.html">
+<script type="text/javascript" src="static/js/signup/orderinfo.js"></script>
+</html>

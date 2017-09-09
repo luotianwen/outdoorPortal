@@ -1,0 +1,187 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<base href="/" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>玩嘛</title>
+<#include "/view/usercenter/base.css.html">
+<style>
+body {
+	background: #f1f1f1;
+}
+</style>
+</head>
+<body>
+	<#include "/view/header.html"/>
+
+	<div class="boxw clearfix" style="margin-top: 20px;">
+		<#include "/view/usercenter/user/user_left_menu.html"/>
+		<div class="myinfo-main">
+			<div class="myinfo-title">
+				<h1>手机验证</h1>
+			</div>
+			<form id="updatePw" action="">
+			<div class="myinfo-list">
+				<div class="payPassword-box">
+					<div class="edit-payPassword">
+						<div class="tipsMobile">已绑定手机号码${users.uPhone[0..2]}****${users.uPhone[7..]} ，获取验证码设置新密码。</div>
+						<dl class="clearfix">
+							<dt>验证码：</dt>
+							<dd>
+								<input type="text" name="captcha" id="captcha">
+								<a style="cursor:pointer;" class="btn-code" id="getCaptcha"">获取验证码</a>
+								<i></i>
+							</dd>
+						</dl>
+						<dl class="clearfix">
+							<dt>新密码：</dt>
+							<dd>
+								<input type="password" name="newPassword" id="newPassword">
+								<i></i>
+							</dd>
+						</dl>
+						<dl class="clearfix">
+							<dt>确认新密码：</dt>
+							<dd>
+								<input type="password" name="checkNewPassword" id="checkNewPassword">
+								<i></i>
+							</dd>
+						</dl>
+						<div class="btns">
+							<a class="btn-exit" href="users/userSecurity.html">取消</a>
+							<a class="btn-over" id="submit" href="javaScript:void(0)">完成设置</a>
+						</div>
+					</div>
+				</div>
+			</div>
+			</form>
+		</div>
+	</div>
+	<!-- main end -->
+	<#include "/view/usercenter/base.js.html">
+	<script type="text/javascript" src="static/js/plugins/validate/jquery.validate.min.js"></script>
+	<script type="text/javascript" src="static/js/plugins/validate/messages_zh.min.js"></script>
+	<script type="text/javascript" src="static/js/jquery.cookie.js"></script>
+	<script type="text/javascript">
+		$(function(){
+	        /*防刷新：检测是否存在cookie*/
+	        if($.cookie("passcel")){
+	            var count = $.cookie("passcel");
+	            var btn = $("#getCaptcha");
+	            btn.text(count+"秒后可重新获取").attr("disabled",true).addClass("btn-disabled");
+	            var resend = setInterval(function(){
+	                count--;
+	                if (count > 0){
+	                    btn.text(count+"秒后可重新获取").attr("disabled",true).addClass("btn-disabled");
+	                    $.cookie("passcel", count, {path: "/", expires: (1/86400)*count});
+	                }else {
+	                    clearInterval(resend);
+	                    btn.text("获取验证码").attr("disabled",false).removeClass("btn-disabled");
+	                }
+	            }, 1000);
+	        }
+		});
+		/*点击改变按钮状态，发送短信验证的代码*/
+	    $("#getCaptcha").click(function(){
+	        var btn = $(this);
+	        //发送验证码
+	        if(!btn.hasClass("btn-disabled")){
+	        	$.post("users/updatePassWordYzm.html",{type:1},function(data){
+	        		if(data.RESPONSE_STATE=="500"){
+	        			layer.alert(data.ERROR_INFO, {
+							title:"错误信息",
+							icon:0
+						});
+	        		}else if(data.RESPONSE_STATE=="200"){
+	        			var count = 60;
+	        	        var resend = setInterval(function(){
+	        	            count--;
+	        	            if (count > 0){
+	        	                btn.text(count+"秒后可重新获取");
+	        	                $.cookie("passcel", count, {path: "/", expires: (1/86400)*count});
+	        	            }else {
+	        	                clearInterval(resend);
+	        	                btn.text("获取验证码").attr("disabled",false).removeClass("btn-disabled");
+	        	            }
+	        	        }, 1000);
+	        	        btn.attr("disabled",true).addClass("btn-disabled");
+	        		}
+	        	});
+	        };
+	        
+	    });
+	
+		$("#submit").on("click",function(){
+			if($("#updatePw").valid()){
+				$.post("users/updatePassWord.html",{captcha:$("#captcha").val(),newPassword:$("#newPassword").val(),type:1},function(data){
+					if(data.RESPONSE_STATE=="200"){
+						layer.confirm(data.SUCCESS_INFO, {
+							icon :1,btn: ['确定'] //按钮
+						}, function(index){
+							window.location.replace("users/userSecurity.html");
+						}, function(index){
+							window.location.replace("users/userSecurity.html");
+						});
+					}else if(data.RESPONSE_STATE=="500"){
+						layer.alert(data.ERROR_INFO, {
+							title:"错误信息",
+							icon:0
+						});
+					}
+				});
+			}
+		});
+		
+		$.validator.setDefaults({
+			highlight : function(a) {
+				$(a).removeClass("input-success").addClass("input-error");
+				$(a).nextAll("i").removeClass("icon-success").addClass("icon-error");
+			},
+			success : function(a) {
+				a.prev("input").removeClass("input-error").addClass("input-success");
+				a.prev("i").removeClass("icon-error").addClass("icon-success");
+			},
+			errorElement : "p",
+			errorPlacement : function(a, b) {
+				a.appendTo(b.parent());
+			},
+			errorClass : "input-error",
+			validClass : "input-success"
+		});
+		// 密码验证，以字母开头，长度在8-15之间，密码至少包含一个大写字母、一个小写字母。
+		jQuery.validator.addMethod( "passwordCheck", function(value, element) {
+			return this.optional(element) || /^[A-Za-z0-9]{6,22}$/.test(value);
+		}, "请输入6-22位的密码(仅支持字母和数字)");
+
+		var validate = $("#updatePw").validate({
+			rules : {
+				captcha : {
+					required : true,
+					digits : true
+				},
+				newPassword : {
+					required : true,
+					passwordCheck : true
+				},
+				checkNewPassword : {
+					required : true,
+					equalTo : "#newPassword",
+				}
+			},
+			messages : {
+				captcha : {
+					required : "请输入验证码"
+				},
+				newPassword : {
+					required : "登录密码不能为空"
+				},
+				checkNewPassword : {
+					required : "确认密码不能为空",
+					equalTo : "两次输入密码不一致"
+
+				}
+			}
+		});
+	</script>
+</body>
+</html>

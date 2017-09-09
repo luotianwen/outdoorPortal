@@ -1,0 +1,262 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<base href="/" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>玩嘛</title>
+<#include "/view/usercenter/base.css.html">
+<style>
+body {
+	background: #f1f1f1;
+}
+</style>
+</head>
+<body>
+	<#include "/view/header.html"/>
+
+	<div class="boxw clearfix" style="margin-top: 20px;">
+		<#include "/view/usercenter/user/user_left_menu.html"/>
+		<div class="myinfo-main">
+			<div class="myinfo-title">
+				<h1>更换绑定邮箱</h1>
+			</div>
+			<div class="withdrawals-nav" id="head">
+				<ul>
+					<li class="now">1.身份验证</li>
+					<li>2.更换绑定邮箱</li>
+					<li>3.更换成功</li>
+				</ul>
+			</div>
+			<div class="myinfo-list" id="changeemail">
+				<div class="payPassword-box">
+					<div class="edit-payPassword">
+						<div class="tipsMobile">已绑定邮箱号码${email}
+							，我们将向该邮箱发送验证码，请在下方输入您看到的验证码。</div>
+						<dl class="clearfix">
+							<dt>验证方式：</dt>
+							<dd>
+								<select id="mode" style="width: 240px;height: 40px;border: 1px solid #aaa;padding: 2px 4px;font-size: 14px;color: #333;">
+									<#if email?exists><option value="email">使用${email}验证</option></#if>
+									<#if users.uPhone?exists><option value="email">使用${users.uPhone[0..2]}****${users.uPhone[7..]}验证</option></#if>
+								</select>
+								<a href="javascript:getCaptchaEmail()" target="_blank" class="btn-code" id="getCaptcha">获取验证码</a>
+							</dd>
+							<dd class="tips-error" id="error"></dd>
+
+						</dl>
+						<dl class="clearfix">
+							<dt>验证码：</dt>
+							<dd>
+								<input type="text" name="captcha" id="captcha">
+							</dd>
+						</dl>
+
+						<div class="btns">
+							<a class="btn-over" id="submitone" href="javascript:void(0)">下一步</a>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- main end -->
+	<#include "/view/usercenter/base.js.html">
+	<script src="static/js/jquery.cookie.js" type="text/javascript"></script>
+	<script type="text/javascript">
+		$(function(){
+	        /*防刷新：检测是否存在cookie*/
+	        if($.cookie("changeEmail")){
+	            var count = $.cookie("changeEmail");
+	            var btn = $("#getCaptcha");
+	            btn.text(count+"秒后可重新获取").attr("disabled",true).addClass("btn-disabled");
+	            var resend = setInterval(function(){
+	                count--;
+	                if (count > 0){
+	                    btn.text(count+"秒后可重新获取").attr("disabled",true).addClass("btn-disabled");
+	                    $.cookie("changeEmail", count, {path: "/", expires: (1/86400)*count});
+	                }else {
+	                    clearInterval(resend);
+	                    btn.text("获取验证码").attr("disabled",false).removeClass("btn-disabled");
+	                }
+	            }, 1000);
+	        }
+		});
+	
+		/*点击改变按钮状态，发送短信验证的代码*/
+	    function getCaptchaPhone(){
+	        var btn = $("#getCaptcha");
+	        //发送验证码
+	        if(!btn.hasClass("btn-disabled")){
+	        	$.post("users/changeEmailCaptcha.html?type=1",function(data){
+	        		if(data.RESPONSE_STATE=="500"){
+	        			layer.alert(data.ERROR_INFO, {
+							title:"错误信息",
+							icon:0
+						});
+	        		}else{
+	        			var count = 60;
+	        	        var resend = setInterval(function(){
+	        	            count--;
+	        	            if (count > 0){
+	        	                btn.text(count+"秒后可重新获取");
+	        	                $.cookie("changeEmail", count, {path: "/", expires: (1/86400)*count});
+	        	            }else {
+	        	                clearInterval(resend);
+	        	                btn.text("获取验证码").attr("disabled",false).removeClass("btn-disabled");
+	        	            }
+	        	        }, 1000);
+	        	        btn.attr("disabled",true).addClass("btn-disabled");
+	        		}
+	        	});
+	        };
+	        
+	    }
+		
+	    function getCaptchaEmail(){
+	        var btn = $("#getCaptcha");
+	        //发送验证码
+	        if(!btn.hasClass("btn-disabled")){
+	        	$.post("users/changeEmailCaptcha.html?type=2",function(data){
+	        		if(data.RESPONSE_STATE=="500"){
+	        			layer.alert(data.ERROR_INFO, {
+							title:"错误信息",
+							icon:0
+						});
+	        		}else if(data.RESPONSE_STATE=="200"){
+	        			layer.alert(data.SUCCESS_INFO, {
+							title:"成功信息",
+							icon:1
+						});
+	    	        	
+	    	        	$("#getCaptcha").attr("href",data.url);
+	    	        	$("#getCaptcha").text("前往邮箱");
+	        		}
+	        	});
+	        };
+	        
+	    }
+		
+	    var type = 2;
+	    $("#mode").on("change",function(){
+	    	var mode = $(this).val();
+	    	if(mode=="email"){
+	    		type = 1;
+	    		$("#getCaptcha").attr("href","javascript:getCaptchaPhone()");
+	    	}else if(mode=="email"){
+	    		type = 2;
+	    		$("#getCaptcha").attr("href","javascript:getCaptchaEmail()");
+	    	}else{
+	    		type = 3;
+	    	}
+	    });
+	    
+	    function getCaptchaNew(){
+	    	var newemail = $("#changeemail #newemail").val();
+	    	
+	        if(pdEmail(newemail)){
+	        	$("#emailerro").text("");
+	        	var btn = $(this);
+		        //发送验证码
+		        if(!btn.hasClass("btn-disabled")){
+		        	$.post("users/newEmailCaptcha.html",{email:newemail},function(data){
+		        		if(data.RESPONSE_STATE=="500"){
+		        			layer.alert(data.ERROR_INFO, {
+								title:"错误信息",
+								icon:0
+							});
+		        		}else if(data.RESPONSE_STATE=="200"){
+		        			layer.alert(data.SUCCESS_INFO, {
+								title:"成功信息",
+								icon:1
+							});
+		    	        	
+		    	        	$("#getCaptchaNew").attr("href",data.url);
+		    	        	$("#getCaptchaNew").text("前往邮箱");
+		        		}
+		        	});
+		        };
+		        
+	        }
+	    }
+		
+	    $("#submitone").on("click",function(){
+			var captcha = $("#captcha").val();
+			if(captcha==''||captcha==null){
+				$("#error").text("验证码不能为空");
+			}else{
+				$.post("users/captchaVerificationEmail.html",{yzm:captcha,type:type},function(data){
+	        		if(data.RESPONSE_STATE=="500"){
+	        			layer.alert(data.ERROR_INFO, {
+							title:"错误信息",
+							icon:0
+						});
+	        		}else if(data.RESPONSE_STATE=="200"){
+	        			$("#head ul li").each(function(index,element){
+	        				if(index==0){
+	        					$(this).removeClass("now");
+	        				}else if(index==1){
+	        					$(this).addClass("now");
+	        				}
+	        			});
+	        			
+	        			$("#changeemail").html(data.html);
+	        		}else{
+	        			layer.alert("系统异常，请稍后再试！", {
+							title:"错误信息",
+							icon:0
+						});
+	        		}
+	        	});
+			}
+		});
+	    
+	    $("#changeemail").on("click","#submittwo",function(){
+			var yzm = $("#yzm").val();
+			if(yzm==''||yzm==null){
+				$("#yzmerror").text("验证码不能为空");
+			}else{
+				var newemail = $("#changeemail #newemail").val();
+				$.post("users/newcaptchaVerificationEmail.html",{yzm:yzm,email:newemail},function(data){
+	        		if(data.RESPONSE_STATE=="500"){
+	        			layer.alert(data.ERROR_INFO, {
+							title:"错误信息",
+							icon:0
+						});
+	        		}else if(data.RESPONSE_STATE=="200"){
+	        			$("#head ul li").each(function(index,element){
+	        				if(index==1){
+	        					$(this).removeClass("now");
+	        				}else if(index==2){
+	        					$(this).addClass("now");
+	        				}
+	        			});
+	        			
+	        			$("#changeemail").html(data.html);
+	        		}else{
+	        			layer.alert("系统异常，请稍后再试！", {
+							title:"错误信息",
+							icon:0
+						});
+	        		}
+	        	});
+			}
+		});
+		
+	    function pdEmail(newEmail){
+	    	if(newEmail.trim()==""){
+	    		$("#emailerro").text("* 请输入邮箱号码");
+    			return false;
+	    	}else{
+	    		var re= /^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+((\.[a-zA-Z0-9_-]{2,3}){1,2})$/;
+	    		if(!re.test(newEmail)){
+	    			$("#emailerro").text("* 邮箱号码格式不正确");
+	    			return false;
+	    		}else{
+	    			$("#emailerro").text("");
+	    			return true;
+	    		}
+	    	}
+	    }
+	</script>
+</body>
+</html>

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="complaintLeadMapper">
+	
+	<!-- 投诉领队 -->
+	<insert id="insertComplaintLead" parameterType="map" useGeneratedKeys="true" keyProperty="cl_id">
+		insert into ComplaintLead(plaintiff,orderId,orderType,phone,conent,state)
+		values(#{plaintiff},#{orderId},#{orderType},#{phone},#{conent},#{state})
+	</insert>
+	
+	<!-- 根据订单id,查询该订单的投诉信息 -->
+	<select id="selectOrderId" parameterType="map" resultType="map">
+		select state,handleResults,handlingTime,uname from ComplaintLead left join Users on ComplaintLead.OPERATOR=Users.U_ID
+		where orderid=#{orderId} and plaintiff=#{plaintiff}
+	</select>
+</mapper>

@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="activeEquipmentMapper">
+	<sql id="Base_Column_List">
+    ae_id,ae_name ,ae_description ,ae_activeId ,ae_create_time ,ae_create_user 
+    </sql>
+
+    <resultMap type="com.op.entity.activity.equipment.ActiveEquipment" id="ActiveEquipmentReturnMap">
+      <id column="ae_id" property="ae_id"/>
+      <result column="ae_name" property="ae_name"/>
+      <result column="ae_description" property="ae_description"/>
+      <result column="ae_activeId" property="ae_activeId"/>
+      <result column="ae_create_time" property="ae_create_time"/>
+      <result column="ae_create_user" property="ae_create_user"/>
+   </resultMap>
+   
+   <!-- 根据活动ID查询装备需求 -->
+   <select id="findByActiveId" parameterType="String" resultMap="ActiveEquipmentReturnMap" useCache="false" >
+   select <include refid="Base_Column_List"></include>
+   from ActiveEquipment where ae_activeId=#{ae_activeId}
+   </select>
+   
+   <!-- 生成装备数据同时生成活动ID -->
+   <insert id="insertGenerateActiveId" parameterType="com.op.dto.activity.equipment.InsertEquipmentDTO" >
+   	  insert into ActiveEquipment(ae_activeId ,ae_create_user ,ae_name ,ae_description)
+   
+	  VALUES
+	  <foreach collection="aes" item="item" index="index" separator=",">
+	  (
+		#{activityId},#{userId},#{aes[${index}].ae_name}, #{aes[${index}].ae_description}
+	  )
+	  </foreach>
+   </insert>
+   
+   <!-- 生成装备数据 -->
+   <insert id="insert" parameterType="com.op.dto.activity.equipment.InsertEquipmentDTO" >
+   	  insert into ActiveEquipment(ae_activeId ,ae_create_user ,ae_name ,ae_description)
+ 	  VALUES
+ 	  <foreach collection="aes" item="item" index="index" separator=",">
+ 	  (
+ 	  	#{activityId},#{userId},#{aes[${index}].ae_name}, #{aes[${index}].ae_description}
+ 	  )
+ 	  </foreach>
+   </insert>
+	
+	<!-- 根据活动ID和用户ID删除历史数据 -->
+	<delete id="deleteByActivityAndUserId" parameterType="com.op.dto.activity.equipment.InsertEquipmentDTO">
+	delete from ActiveEquipment where ae_activeId=#{activityId} and ae_create_user=#{userId}
+	</delete>
+</mapper>

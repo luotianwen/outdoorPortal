@@ -1,0 +1,1100 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+
+<base href="/" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>玩嘛</title>
+
+<!-- base -->
+<#include "/view/base.css.html">
+
+<!-- 发布 -->
+<link rel="stylesheet" type="text/css" href="static/css/hw_css/release.css" />
+
+<!-- 多选 -->
+<link rel="stylesheet" href="static/css/plugins/chosen/chosen.css" >
+
+<!-- 弹窗 -->
+<link rel="stylesheet" href="static/js/plugins/sweet-alert/sweet-alert.css"/>
+
+<style>
+body {
+	background: #f1f1f1;
+}
+</style>
+</head>
+<body onbeforeunload="checkLeave()" id="body">
+
+<!-- header -->
+<#include "/view/header.html">
+
+<div class="release-btns-box">
+  <div class="boxw clearfix">
+  	<div class="fl">
+	    <div class="finishing">
+	    	发布完成度
+	    	<input type="hidden" id="active_finish_num" value="0"/>
+	    	<span class="finishing-bar">
+	    		<i class="finished-bar" style="width:0%" id="activeFinish"></i>
+	    	</span>
+	    	<span class="c3" id="activeFinish">0%</span>
+	    </div>
+	</div>
+    <div class="fr">
+    	<#if draftNum != 0>
+			<a class="btn-dra" href="javascript:void(0)" id="my_draft">
+				<i></i>我的草稿箱(${draftNum})
+			</a>
+    	</#if>
+		<a class="btn-pre" href="javascript:void(0)" id="active_yl">预览</a>
+		<a class="btn-pre" href="javascript:void(0)" id="submit_audit">提交审核</a>
+    </div>
+  </div>
+</div>
+<!--banner begin-->
+<form action="huodong/baseInfo.json" >
+	<div class="bannerImg" id="bannerImg">
+	  <div class="boxw event-area">
+	    <div class="set-main-img">
+	      <div class="set-box01"> 
+	      	<a href="javascript:void(0)">设置发布的主图</a>
+	        <p>图片建议选择尺寸大于1680px的高清大图，如相机原图</p>
+	      </div>
+	      <div class="set-box02">
+	        <ul>
+	          <li>
+	          	<a href="javascript:void(0)" class="file">
+	          		设置发布的主图
+	          		<input type="file" name="file" id="activity_img"/>
+	          		<input name="a_active_img" type="hidden"/>
+	          	</a>
+	          </li><!-- 
+	          <li><a href="javascript:void(0)">重新上传主图</a></li>
+	          <li><a href="javascript:void(0)">重新编辑主图</a></li> -->
+	        </ul>
+	      </div>
+	    </div>
+	    <div class="event-info">
+	      <div class="event-title">
+	      	<input type="hidden" name="addOrUpdate" finish-num="20" value="add" />
+	        <textarea cols="1" rows="2" name="title" style="width:450px;" maxlength="30" placeholder="填写本次活动标题" id="activeTitle" ></textarea>
+	        <div class="res-txt">亲！最多可输入<b class="c2">30</b>个字哦！</div>
+	      </div>
+	      <div class="event-content">
+	        <ul>
+	          <li class="w1">开始时间：
+	            <input name="activityTime" id="activityTime" type="text" class="layer-time-height laydate-icon" placeholder="开始时间" readonly="readonly" />
+	          </li>
+	          <li class="w1">结束时间：
+	            <input name="endTime" id="endTime" type="text" class="layer-time-height laydate-icon" placeholder="结束时间" readonly="readonly" />
+	          </li>
+	          <li class="w1">报名截止：
+	            <input name="a_enroll_end_time" id="a_enroll_end_time" type="text" class="layer-time-height laydate-icon" placeholder="报名截止时间" readonly="readonly" />
+	          </li>
+	          <li class="w1">联系手机：
+	            <input name="a_phone" type="text" class="wid01"  placeholder="联系手机" maxlength="11" onkeyup="this.value=this.value.replace(/\D/g,'')" onafterpaste="this.value=this.value.replace(/\D/g,'')"    />
+	          </li>
+	          <li class="w1">
+	            <label class="lets3">出发地</label>：
+	            <input name="a_start_location" type="text" class="wid01" placeholder="出发地点" maxlength="20" />
+	          </li>
+	          <li class="w1">
+	            <label class="lets3">目的地</label>：
+	            <input name="a_end_location" type="text" class="wid01" placeholder="目的地点" maxlength="20" />
+	          </li>
+	          <li class="w1">适合人群：
+		        <select class="wid01" name="sc_id" onchange="chooseUserType(this)" >
+					<#list listSuitableCrowd as item>
+					<option value="${item.sc_id }">${item.sc_name }</option>
+					</#list>
+				</select>
+	          </li>
+	          <li class="w1">儿童年龄：
+		        <select class="wid01" name="a_children_age" disabled="disabled" style="background-color: #E9E3E3;" >
+					<#list listActiveChildrenAge as item>
+					<option value="${item.aca_id }">${item.aca_age_min }&nbsp;-&nbsp;${item.aca_age_max }(${item.aca_description })</option>
+					</#list>
+				</select>
+	          </li>
+	          <li class="w1">活动等级：
+				<select class="wid01" name="a_difficulty_type" >
+					<#list listActiveDifficultyType as item>
+					<option value="${item.adt_id }">${item.adt_description }</option>
+					</#list>
+				</select>
+	          </li>
+	          <li class="w1">集合时间：
+	            <input name="a_gather_time" id="gatherTime" type="text" class="layer-time-height laydate-icon" placeholder="集合时间" readonly="readonly" />
+	          </li>
+	          <li class="w1">
+	            <label class="lets2">频道</label>：
+	            <select name="ch_id" class="select-wid01">
+		            <#list listChannels as item>
+		              <option value="${item.ch_id}">${item.ch_name}</option>
+		            </#list>
+	            </select>
+	          </li>
+	          <li class="w1">活动人数：
+	            <input name="needUserNum" type="text" class="wid01" placeholder="活动人数" min="0" maxlength="5" onkeyup="this.value=this.value.replace(/\D/g,'')" onafterpaste="this.value=this.value.replace(/\D/g,'')" />
+	          </li>
+	          <li class="w1">活动价格：
+	           <input name="price" type="text" class="wid01" placeholder="活动价格(元)" min="0" maxlength="8" onkeyup="this.value=this.value.replace(/\D/g,'')" onafterpaste="this.value=this.value.replace(/\D/g,'')" value="${dto.price}"  />
+	          </li>
+	          <li class="w3">活动景点：
+	            <input name="activeScenic" type="text" class="active-tag" placeholder="景点1" maxlength="20" />
+	            <input name="activeScenic" type="text" class="active-tag" placeholder="景点2" maxlength="20" />
+	            <input name="activeScenic" type="text" class="active-tag" placeholder="景点3" maxlength="20" />
+	            <input name="activeScenic" type="text" class="active-tag" placeholder="景点4" maxlength="20" />
+	            <input name="activeScenic" type="text" class="active-tag" placeholder="景点5" maxlength="20" />
+	          </li>
+	          <li class="w3">活动标签：
+	            <input name="activeTag" type="text" class="active-tag" placeholder="标签1" maxlength="20" />
+	            <input name="activeTag" type="text" class="active-tag" placeholder="标签2" maxlength="20" />
+	            <input name="activeTag" type="text" class="active-tag" placeholder="标签3" maxlength="20" />
+	            <input name="activeTag" type="text" class="active-tag" placeholder="标签4" maxlength="20" />
+	            <input name="activeTag" type="text" class="active-tag" placeholder="标签5" maxlength="20" />
+	          </li>
+	          <li class="w3">集合地点：
+	            <input name="a_gather_location" type="text" class="wid03" placeholder="集合地点" maxlength="100" />
+	          </li>
+	          <li class="w3">活动类型：
+		         <select name="types" data-placeholder="输入活动类型试试~~" class="chosen-select" multiple >
+		         	  <#list listClassification as item>
+		              <option value="${item.cl_id}" >${item.cl_name}</option>
+		              </#list>
+		         </select>
+	          </li>
+	          <li class="w3">交通方式：
+		         <select name="a_traffic_id" data-placeholder="选择交通出行方式~~" class="chosen-select" multiple >
+	            	<#list listTraffic as item>
+	            		<option value="${item.t_id}" >${item.t_content}</option>
+	            	</#list>
+	            </select>
+	          </li>
+	        </ul>
+	      </div>
+	      <div class="event-btns"> 
+	      	<!-- <a href="javascript:void(0)" class="btn01">编辑</a> --> 
+	      	<a href="javascript:void(0)" class="btn02" id="saveActiveInfo" handle-finish-num >保存<span style="color:red;">(完成度：+20%)</span></a>
+	      </div>
+	    </div>
+
+		<!-- <div class="event-lead">
+			<div class="lead-box clearfix">
+				<div class="main-leader nobg">
+					<div class="leader-pic">
+						<a href="javascript:void(0)"><img src="static/images/hw_img/photo.jpg"
+							width="50" height="50" />
+						</a>
+						<p class="na">
+							<a href="javascript:void(0)">走南闯北</a>
+						</p>
+						<p class="ba">电话：15001216284</p>
+					</div>
+				</div>
+				<div class="main-leader" style="display:none;">
+					<div class="leader-pic">
+						<a href="javascript:void(0)"><img src="static/images/hw_img/photo.jpg"
+							width="50" height="50" />
+						</a>
+						<p class="na">
+							<a href="javascript:void(0)">走南闯北</a>
+						</p>
+						<p class="ba">主领队</p>
+					</div>
+					<p>电话：123456478910</p>
+					<p>带队次数：386</p>
+					<p>带队人数：6829</p>
+					<p>好评率：89%（已有2081人评论）</p>
+				</div>
+				<div class="vice-leader">
+					<a href="javascript:void(0)" class="leader">
+						<img src="static/images/hw_img/photo.jpg" width="50" height="50" />走南闯北
+					</a>
+					<a href="javascript:alert('待完善')" class="leader">
+						<i></i>添加副领队
+					</a>
+				</div>
+			</div>
+		</div> -->
+
+		</div>
+	</div>
+</form>
+<!--banner end -->
+
+
+
+<div class="detail-info clearfix">
+<div class="detail-main-title" >
+      <div class="txt bg">活动描述</div>
+      <div class="line"></div>
+    </div>
+  <div class="detail-title" >活动介绍 </div>
+  <!--add area begin -->
+  <form action="huodong/restsInfo.json">
+        <input name="dc" value="details" type="hidden" />
+     	<input type="hidden" name="addOrUpdate" finish-num="10" value="add" />
+	<div class="container activity-info">
+		<div class="add-content-box">
+			<div class="mt">
+				<div class="fl mleft">
+					<a href="javascript:void(0)" class="add">
+						<i class="iconadd"></i>添加对活动的描述<span style="color:red;">(完成度：+10%)</span>
+					</a>
+					<span class="txt" style="display:none;">活动描述<span style="color:red;">(完成度：+10%)</span></span>
+				</div>
+				<div class="fr" style="display:none;">
+					<a href="javascript:void(0)" class="btn-edit-box">编辑</a>
+					<a href="javascript:void(0)" class="btn-box">删除</a>
+					<a href="javascript:void(0)" id="saveActiveInfo"  handle-finish-num class="btn-box">保存</a>
+				</div>
+			</div>
+			<div class="mc" style="display:none;position: relative;">
+				<pre class="pre-val"></pre>
+				<textarea name="details" cols="" rows="" class="wid07" maxlength="2000"></textarea>
+				<div style="position: absolute;right: 24px;top: 120px;" show-textarea-num>剩余<span style="color: red;" id="show_textarea_num">2000</span>个字</div>
+				<p class="btn-over">
+					<a href="javascript:void(0)" class="btn-box">完成</a>
+				</p>
+			</div>
+		</div>
+	</div>
+	</form>
+	<!--add area end --> 
+  <!--add area begin -->
+  <form action="huodong/restsInfo.do">
+    <input name="dc" value="characteristic" type="hidden" />
+    <input type="hidden" name="addOrUpdate" finish-num="10" value="add" />
+
+  
+  <div class="container activity-info">
+	<div class="add-content-box">
+		<div class="mt">
+			<div class="fl mleft">
+				<a href="javascript:void(0)" class="add" >
+					<i class="iconadd"></i>添加对路线特色的描述<span style="color:red;">(完成度：+10%)</span>
+				</a>
+				<span class="txt" style="display:none;">路线特色描述<span style="color:red;">(完成度：+10%)</span></span>
+			</div>
+			<div class="fr" style="display:none;">
+				<a href="javascript:void(0)" class="btn-edit-box">编辑</a>
+				<a href="javascript:void(0)" class="btn-box">删除</a>
+				<a href="javascript:void(0)" id="saveActiveInfo"  handle-finish-num class="btn-box">保存</a>
+			</div>
+		</div>
+		<div class="mc" style="display:none;position: relative;">
+			<pre class="pre-val"></pre>
+			<textarea name="characteristic" cols="" rows="" class="wid07" maxlength="2000"></textarea>
+			<div style="position: absolute;right: 24px;top: 120px;" show-textarea-num>剩余<span style="color: red;" id="show_textarea_num">2000</span>个字</div>
+			<p class="btn-over">
+				<a href="javascript:void(0)" class="btn-box">完成</a>
+			</p>
+		</div>
+	</div>
+</div>
+</form>
+ <!--add area end -->
+	<!--add area begin -->
+	<form action="huodong/restsInfo.do">
+    <input name="dc" value="tripWatchFocus" type="hidden" />
+    <input type="hidden" name="addOrUpdate" finish-num="10" value="add" />
+	
+  
+	<div class="container activity-info">
+		<div class="add-content-box">
+			<div class="mt">
+				<div class="fl mleft">
+					<a href="javascript:void(0)" class="add">
+						<i class="iconadd"></i>添加对行程看点的描述<span style="color:red;">(完成度：+10%)</span>
+					</a>
+					<span class="txt" style="display:none;">行程看点描述<span style="color:red;">(完成度：+10%)</span></span>
+				</div>
+				<div class="fr" style="display:none;">
+					<a href="javascript:void(0)" class="btn-edit-box">编辑</a>
+					<a href="javascript:void(0)" class="btn-box">删除</a>
+					<a href="javascript:void(0)" id="saveActiveInfo"  handle-finish-num class="btn-box">保存</a>
+				</div>
+			</div>
+			<div class="mc" style="display:none;position: relative;">
+				<pre class="pre-val"></pre>
+				<textarea name="tripWatchFocus" cols="" rows="" class="wid07" maxlength="2000"></textarea>
+				<div style="position: absolute;right: 24px;top: 120px;" show-textarea-num>剩余<span style="color: red;" id="show_textarea_num">2000</span>个字</div>
+				<p class="btn-over">
+					<a href="javascript:void(0)" class="btn-box">完成</a>
+				</p>
+			</div>
+		</div>
+	</div>
+	</form>
+	<!--add area end -->
+</div>
+
+<div class="detail-info no-margin clearfix journey" id="journey_div">
+  <div class="detail-title" > 行程介绍<span style="color:red;">(完成度：+20%)</span> </div>
+  <div class="unit-area" id="journey_unit">
+  	<span class="current" type="day">行程以天为单位</span>
+  	<span type="hour">行程以小时为单位</span>
+  </div> 
+  <input type="hidden" name="addOrUpdate" finish-num="20"  value="add" />
+</div>
+<form action="huodong/insertLine.do" >
+<input name="journey_type" value="day" type="hidden" />
+
+<div class="detail-info no-margin clearfix journey" id="journey_div">
+  <!--add area begin -->
+  <input name="handletype" type="hidden" value="line" />
+  <div class="container">
+    <div class="add-content-box">
+	<div class="mt">
+		<div class="fl mleft" id="day_or_hour">
+			<span class="txt" id="show_time_or_day_span">第1天</span>
+		</div>
+		<div class="fr">
+			<a href="javascript:void(0)" id="reset" class="btn-box">清空</a>
+			<a href="javascript:void(0)" id="saveActiveInfo"  handle-finish-num class="btn-box" >保存</a>
+			<a href="javascript:void(0)" id="deleteJourney" class="btn-box" >删除</a>
+		</div>
+	</div>
+	  <div class="mc">
+        <div class="day-txt">
+          <dl>
+            <dt>地　　点：</dt>
+            <dd>
+				<label class="input-box"><input name="didian[0].la_address_name" type="text" class="wid02" placeholder="起点" maxlength="20" /></label> - 
+				<label class="input-box"><input name="didian[1].la_address_name" type="text" class="wid02" placeholder="终点" maxlength="20"/></label> 
+				<i id="addAddress" class="input-icon-add"></i>
+            </dd>
+          </dl>
+          <dl class="dl-w01">
+            <dt>出行方式：</dt>
+            <dd>
+              <input name="l_vehicle" type="text" class="journey-wid" placeholder="出行方式" maxlength="20" />
+            </dd>
+          </dl>
+          <dl class="dl-w01">
+            <dt>日　　期：</dt>
+            <dd>
+              <input id="laydate" name="l_time_day" time-day-hour type="text" class="laydate-icon"  placeholder="日期"/>
+            </dd>
+          </dl>
+          <dl class="dl-w01">
+            <dt>餐　　饮：</dt>
+            <dd>
+              <input name="l_diet" type="text" class="journey-wid" placeholder="餐饮" maxlength="20"/>
+            </dd>
+          </dl>
+          <dl class="dl-w01">
+            <dt>住　　宿：</dt>
+            <dd>
+              <input name="l_accommodation" type="text" class="journey-wid" placeholder="住宿" maxlength="20" />
+            </dd>
+          </dl>
+          <dl>
+            <dt>活动介绍：</dt>
+            <dd style="position: relative;">
+              <textarea name="l_active_description" class="wid08" maxlength="2000" placeholder="活动介绍"></textarea>
+              <div style="position: absolute;right: 24px;bottom: 13px;" show-textarea-num>剩余<span style="color: red;" id="show_textarea_num">2000</span>个字</div>
+            </dd>
+          </dl>
+          <dl>
+            <dt>温馨提示：</dt>
+            <dd style="position: relative;">
+              <textarea name="l_prompt" class="wid08" maxlength="2000" placeholder="温馨提示"></textarea>
+              <div style="position: absolute;right: 24px;bottom: 13px;" show-textarea-num>剩余<span style="color: red;" id="show_textarea_num">2000</span>个字</div>
+            </dd>
+          </dl>
+        </div>        
+      </div>
+    </div>
+  </div>
+  <!--add area end --> 
+  <!--add area begin -->
+  <div class="container" style="margin-top:20px;">
+    <div class="add-content-box">
+		<div class="mt">
+			<div class="mleft" >
+				<a href="javascript:void(0)" class="add" id="addLineMap">
+					<i class="iconadd"></i>增加第1天的路线
+				</a>
+			</div>
+			<div class="mleft route-all" show-line-address id="${.now?string('yyyyMMddHHmmss')}_line" style="display: none;">
+				<span></span>
+				<input type="hidden" name="l_line_coordinate" />
+				<a href="javascript:void(0)" class="btn-edit-box" id="editAlreadyMapLine" >编辑</a>
+			</div>
+		</div>
+	
+	</div>
+  </div>
+  <!--add area end --> 
+</div>
+
+
+<div class="route-img" id="route_img">
+  <div class="add-img-box" id="add_img_box">
+    <div class="set-main-img" id="set_main_img">
+      <div class="set-box01"> 
+      	<a href="javascript:void(0)">设置该路段的图片</a>
+        <p>图片建议选择尺寸大于1680px的高清大图，如相机原图</p>
+      </div>
+      <div class="set-box02">
+        <ul>
+          <li>
+          	<a href="javascript:void(0)" class="file">
+          		设置线路的主图
+          		<#assign id=.now?string('yyyyMMddHHmmss')>
+          		<input type="file"  name="file" id="${id}_img" />
+          	</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+    <div id="img_list_div" class="img-list" style="display: none;">
+      <ul>
+        <li li-type="add-img">
+        	<a href="javascript:void(0)" class="btn-add-img" >
+        		<#assign attachId=.now?string('yyyyMMddHHmmss')>
+        		<input type="file" name="file" id="${attachId}_imgs"/>
+        		<img src="static/images/hw_img/img-add.png" width="200" height="150" />
+        	</a>
+        </li>
+      </ul>
+    </div>
+  </div>
+  <div class="img-txt" id="img_txt" style="display: none;" >
+    <div class="txt">
+    	<textarea  index="0" name="images[0].li_description" maxlength="200" placeholder="亲！添加您对这张照片当时的美好记忆！" ></textarea>
+    </div>
+  </div>
+</div>
+
+<div id="get_bottom"></div>
+</form>
+
+
+<div class="detail-info clearfix" id="add_new_line_div">
+  <!--add area begin -->
+  <div class="container"  style="margin-top:20px;">
+    <div class="add-content-box">
+		<div class="mt">
+			<div class="fl mleft">
+				<a href="javascript:void(0)" class="add" id="add_new_line">
+					<i class="iconadd"></i>增加新的一天
+				</a>
+				<span class="txt" style="display:none;">第一天的路线</span>
+			</div>
+			<div class="fr"></div>
+		</div>
+	</div>
+  </div>
+  <!--add area end --> 
+  
+</div>
+
+<div class="detail-info no-margin clearfix">
+	<div class="detail-title" >装备需求</div>
+	<!--add area begin -->
+	<form action="activeEquipment/equipment.do">
+	<div class="container" id="equipment_div">
+		<div class="add-content-box">
+			<div class="mt">
+				<div class="fl mleft">
+					<span class="txt">装备需求</span>
+				</div>
+				<div class="fr">
+					<a href="javascript:void(0)" id="saveActiveInfo" class="btn-box">保存</a>
+				</div>
+			</div>
+			<div class="mc">
+				<div class="cost-detail">
+			        <table>
+				        <thead>
+						  <tr>
+						    <th>装备名称</th>
+						    <th>装备说明</th>
+						    <th>操作</th>
+						  </tr>
+				        </thead>
+				        <tbody>
+						  <tr>
+						    <td>
+						    	<input name="aes[0].ae_name" type="text" maxlength="50" placeholder="装备名称"/>
+						    </td>
+						    <td>
+						    	<input name="aes[0].ae_description" type="text" maxlength="100" class="wid03" placeholder="装备说明"/>
+						    </td>
+						    <td>
+						    	<i class="btn-del"></i>
+						    </td>
+						  </tr>
+						  <tr>
+					    	  <td colspan="5" class="add-cost-item">
+					    	  	<a href="javascript:void(0)" id="add_equipment" >
+					    	  		<i class="iconadd"></i>添加装备
+					    	  	</a>
+					    	  </td>
+						  </tr>
+					  </tbody>
+					</table>
+				</div>
+			</div>
+			<input id="index_num" value="1" type="hidden" />
+		</div>
+	</div>
+	</form>
+	<!--add area end -->
+</div>
+
+
+<!-- pay type start -->
+	<div class="detail-info no-margin clearfix" id="payType">
+		<div class="detail-main-title">
+			<div class="txt bg">支付方式</div>
+			<div class="line"></div>
+		</div>
+		<form action="huodong/restsInfo.do">
+			<input type="hidden" name="addOrUpdate" finish-num="10" value="add"  /> 
+			<div class="container" id="cost-detail">
+				<div class="add-content-box">
+					<div class="mt">
+						<div class="fl mleft">
+							<span class="txt">支付方式
+								<span style="color:red;">
+									(完成度：+10%)
+								</span>
+							</span>
+						</div>
+						<div class="fr">
+							<a href="javascript:void(0)" id="saveActiveInfo" handle-finish-num class="btn-box">保存</a>
+						</div>
+					</div>
+					<div class="mc" style="padding:10px 0;">
+						<div class="cost-detail">
+							<table>
+								<thead>
+									<tr>
+										<th>
+											选择
+										</th>
+										<th>支付方式</th>
+										<th>预定金额</th>
+										<th style="width: 600px;">支付说明</th>
+									</tr>
+								</thead>
+								<tbody>
+									<#if user.uType = 1>
+									<tr>
+										<td>
+											<span class="radio now">
+												<i class="icon-select"></i>
+												<input type="radio" name="payType" value="1" checked="checked" style="display: none;"/>
+											</span>
+										</td>
+										<td>平台交易(认证活动)</td>
+										<td><input type="hidden" placeholder="预定金额" name="a_reserve_price" value="0" maxlength="4" onkeyup="this.value=this.value.replace(/\D/g,'')" onafterpaste="this.value=this.value.replace(/\D/g,'')" /></td>
+										<td>用户支付的金额将暂时冻结，确认交易后转为提现金额</td>
+									</tr>
+									<tr>
+										<td>
+											<span class="radio">
+												<i class="icon-select"></i>
+												<input type="radio" name="payType" value="2" style="display: none;"/>
+											</span>
+										</td>
+										<td>当面交易(非认证活动)</td>
+										<td><input type="text" placeholder="预定金额" name="a_reserve_price" disabled="disabled" style="cursor: no-drop;"  maxlength="4" onkeyup="this.value=this.value.replace(/\D/g,'')" onafterpaste="this.value=this.value.replace(/\D/g,'')" /></td>
+										<td>用户支付预定金（可提现），剩余金额采取线下交易</td>
+									</tr>
+									<#else>
+									<tr>
+										<td>
+											<span class="radio now">
+												<i class="icon-select"></i>
+												<input type="radio" name="payType" value="1" checked="checked" style="display: none;"/>
+											</span>
+										</td>
+										<td>平台交易(认证活动)</td>
+										<td><input type="text" placeholder="预定金额"  name="a_reserve_price"  maxlength="4" onkeyup="this.value=this.value.replace(/\D/g,'')" onafterpaste="this.value=this.value.replace(/\D/g,'')"/> </td>
+										<td>用户支付预定金（可提现），剩余金额用户确认交易后转为可提现金额</td>
+									</tr>
+									<tr>
+										<td>
+											<span class="radio">
+												<i class="icon-select"></i>
+												<input type="radio" name="payType" value="2" style="display: none;"/>
+											</span>
+										</td>
+										<td>当面交易(非认证活动)</td>
+										<td><input type="text" placeholder="预定金额" type="number"  name="a_reserve_price" disabled="disabled" style="cursor: no-drop;"maxlength="4" onkeyup="this.value=this.value.replace(/\D/g,'')" onafterpaste="this.value=this.value.replace(/\D/g,'')"   /> </td>
+										<td>用户支付预定金（可提现），剩余金额采取线下交易</td>
+									</tr>
+									</#if>
+								</tbody>
+							</table>
+						</div>
+					</div>
+				</div>
+			</div>
+		</form>
+	</div>
+
+	<!-- pay type end -->
+
+
+<div class="detail-info no-margin clearfix">
+  <div class="detail-main-title" >
+      <div class="txt bg">费用说明</div>
+      <div class="line"></div>
+    </div>
+  <!--add area begin -->
+  <form action="huodong/insertCost.do">    
+  <input name="acp_type" type="hidden" value="0" />
+  
+  <div class="container" id="cost-detail">
+    <div class="add-content-box">
+		<div class="mt">
+			<div class="fl mleft">
+				<a href="javascript:void(0)" class="add" style="display:none;">
+					<i class="iconadd"></i>添加费用包括的内容
+				</a>
+				<span class="txt">费用包括</span>
+			</div>
+			<div class="fr">
+				<!-- <a href="javascript:void(0)" class="btn-edit-box">编辑</a>
+				<a href="javascript:void(0)" class="btn-box">删除</a> -->
+				<a href="javascript:void(0)" id="saveActiveInfo"   handle-finish-num class="btn-box">保存</a>
+			</div>
+		</div>
+		<div class="mc" style="padding:10px 0;">
+      <div class="cost-detail">
+        <table>
+	        <thead>
+			  <tr>
+			    <th>
+			    	<label class="checkbox">
+			    		<i class="icon-select"></i>
+			    	</label>
+			    </th>
+			    <th>费用名称</th>
+			    <th>单价</th>
+			    <th>费用说明</th>
+			    <th>操作</th>
+			  </tr>
+	        </thead>
+	        <tbody>
+		  <#assign bkfy=0 />
+		  <#list cost as item>
+		  	<#if (item.cc_type = 0)>
+			  <tr>
+			    <td>
+			    	<label class="checkbox">
+			    		<i class="icon-select"></i>
+			    	</label>
+			    	<input type="hidden" name="costs[${bkfy}].isSave" value="false" />
+			    </td>
+			    <td>
+			    	${item.cc_name}
+			    	<input name="costs[${bkfy}].acp_cost_name" type="hidden" value="${item.cc_name}" />
+			    </td>
+			    <td>
+			    	<input name="costs[${bkfy}].acp_cost" type="text"  min="0" class="wid04" placeholder="输入金额" maxlength="6" value="${item.acp_cost}"  /> 元/人
+			    </td>
+			    <td>
+			    	<input name="costs[${bkfy}].acp_comment" maxlength="50" type="text" class="wid03" placeholder="亲！输入您的费用说明"/>
+			    </td>
+			    <td>
+			    	<i class="btn-del"></i>
+			    </td>
+			  </tr>
+		  	<#assign bkfy=bkfy+1 />
+		  	</#if>
+		  </#list>
+		  <tr>
+	    	  <td colspan="5" class="add-cost-item">
+	    	  	<a href="javascript:void(0)" id="add_cost" >
+	    	  		<i class="iconadd"></i>添加其它费用
+	    	  	</a>
+	    	  </td>
+		  </tr>
+		  </tbody>
+		</table>
+	</div>
+ 	<div class="cost-all">费用小计：<span id="cost_sum">0</span></div>
+   </div>
+     
+  </div>
+  
+  <input type="hidden" id="cost_num" value="${bkfy}"/>
+  </div>
+  </form>
+  
+  <!--add area end -->
+  <!--add area begin -->
+  <form action="huodong/insertCost.do">
+  <input name="acp_type" type="hidden" value="1" />
+  <div class="container" id="cost-detail">
+    <div class="add-content-box">
+	<div class="mt">
+		<div class="fl mleft">
+			<span class="txt">可选费用</span>
+		</div>
+		<div class="fr">
+			<!-- <a href="javascript:void(0)" class="btn-edit-box">编辑</a>
+			<a href="javascript:void(0)" class="btn-box">删除</a> -->
+			<a href="javascript:void(0)" id="saveActiveInfo" class="btn-box">保存</a>
+		</div>
+	</div>
+	<div class="mc" style="padding:10px 0;">
+      <div class="cost-detail">
+        <table>
+          <thead>
+			  <tr>
+			    <td>
+			    	<label class="checkbox">
+			    		<i class="icon-select"></i>
+			    	</label>
+			    </td>
+			    <th>费用名称</th>
+			    <th>补差费用<span class="c1">（在原费用上添加差价）</span></th>
+			    <th>费用说明</th>
+			    <th>操作</th>
+			  </tr>
+          </thead>
+          <tbody>
+		  <#assign kxfy=0 />
+		  <#list cost as item>
+		  	<#if (item.cc_type = 1)>
+			  <tr>
+			    <td>
+			    	<label class="checkbox">
+			    		<i class="icon-select"></i>
+			    	</label>
+			    	<input type="hidden" name="costs[${kxfy}].isSave" value="false" />
+			    </td>
+			    <td>
+			    	${item.cc_name}
+			    	<input type="hidden" name="costs[${kxfy}].acp_cost_name" value="${item.cc_name}" />
+			    </td>
+			    <td>
+			    	<input name="costs[${kxfy}].acp_cost" type="text"min="0" class="wid04" placeholder="输入金额" maxlength="6" value="${item.acp_cost}" /> 元/人
+			    </td>
+			    <td>
+			    	<input name="costs[${kxfy}].acp_comment" maxlength="50" type="text" class="wid03" placeholder="亲！输入您的费用说明"/>
+			    </td>
+			    <td>
+			    	<i class="btn-del"></i>
+			    </td>
+			  </tr>
+		  	<#assign kxfy=kxfy+1 />
+		  	</#if>
+		  </#list>
+		  
+		  <tr>
+			  <td colspan="5" class="add-cost-item">
+				  <a href="javascript:void(0)" id="add_cost">
+				  	<i class="iconadd"></i>添加其它费用
+				  </a>
+			  </td>
+		  </tr>
+		  </tbody>
+		</table>
+	  </div>
+	  <div class="cost-all">费用小计：<span id="cost_sum">0</span></div>
+     </div>
+   </div>
+  <input type="hidden" id="cost_num" value="${kxfy}"/>
+  </div>
+  </form>
+  <!--add area end -->  
+  <!--add area begin -->
+  <form action="huodong/restsInfo.do">
+    <input name="dc" value="a_price_deatil_off" type="hidden" />
+	<div class="container activity-info">
+	<div class="add-content-box">
+		<div class="mt">
+			<div class="fl mleft">
+				<a href="javascript:void(0)" class="add">
+					<i class="iconadd"></i>添加费用不包括的内容
+				</a>
+				<span class="txt" style="display:none;">费用不包括</span>
+			</div>
+			<div class="fr" style="display:none;">
+				<a href="javascript:void(0)" class="btn-edit-box">编辑</a>
+				<a href="javascript:void(0)" class="btn-box">删除</a>
+				<a href="javascript:void(0)" id="saveActiveInfo" class="btn-box">保存</a>
+			</div>
+		</div>
+		<div class="mc" style="display:none;position: relative;">
+			<pre class="pre-val"></pre>
+			<textarea name="a_price_deatil_off" cols="" rows="" class="wid07" maxlength="2000"></textarea>
+			<div style="position: absolute;right: 24px;top: 120px;" show-textarea-num>剩余<span style="color: red;" id="show_textarea_num">2000</span>个字</div>
+			<p class="btn-over">
+				<a href="javascript:void(0)" class="btn-box">完成</a>
+			</p>
+		</div>
+	</div>
+</div>
+</form>
+<!--add area end --> 
+<!--add area begin -->
+<form action="huodong/restsInfo.do">
+    <input name="dc" value="refundCondition" type="hidden" />
+    <input type="hidden" name="addOrUpdate" finish-num="10" value="add" />
+	<div class="container activity-info">
+	<div class="add-content-box">
+		<div class="mt">
+			<div class="fl mleft">
+				<a href="javascript:void(0)" class="add">
+					<i class="iconadd"></i>添加支付和退款说明<span style="color:red;">(完成度：+10%)</span>
+				</a>
+				<span class="txt" style="display:none;">支付和退款说明<span style="color:red;">(完成度：+10%)</span></span>
+			</div>
+			<div class="fr" style="display:none;">
+				<a href="javascript:void(0)" class="btn-edit-box">编辑</a>
+				<a href="javascript:void(0)" class="btn-box">删除</a>
+				<a href="javascript:void(0)" id="saveActiveInfo"  handle-finish-num class="btn-box">保存</a>
+			</div>
+		</div>
+		<div class="mc" style="display:none;position: relative;">
+			<pre class="pre-val"></pre>
+			<textarea name="refundCondition" cols="" rows="" class="wid07" maxlength="2000"></textarea>
+			<div style="position: absolute;right: 24px;top: 120px;" show-textarea-num>剩余<span style="color: red;" id="show_textarea_num">2000</span>个字</div>
+			<p class="btn-over">
+				<a href="javascript:void(0)" class="btn-box">完成</a>
+			</p>
+		</div>
+	</div>
+</div>
+</form>
+<!--add area end --> 
+</div>
+
+
+
+
+<div class="detail-info clearfix" id="insurance">
+	<div class="detail-main-title" >
+		<div class="txt bg">活动保险</div>
+		<div class="line"></div>
+	</div>
+  <form action="activityInsurance/insurance.do">
+  	<input name="insuranceId" value="" type="hidden" />
+  	<input name="chanpin" value="" type="hidden" />
+  	<input name="jihua" value="" type="hidden" />
+  	<input name="qixian" value="" type="hidden" />
+  	<input name="jiage" value="" type="hidden" />
+	<div class="container">
+		<div class="add-content-box">
+			<div class="mt">
+				<div class="fl mleft">
+					<a href="javascript:void(0)" class="add" id="add_insurance">
+						<i class="iconadd"></i>添加活动保险(由玩嘛平台代购)
+					</a>
+					<a style="display: none;" id="listtener_insurance"></a>
+					<span class="txt" id="title" style="display:none;">活动保险(由玩嘛平台代购)</span>
+				</div>
+				<div class="fr" style="display:none;" id="cud">
+					<a href="javascript:void(0)" class="btn-edit-box" id="edit">编辑</a>
+					<a href="javascript:void(0)" class="btn-box" id="delete">删除</a>
+					<a href="javascript:void(0)" id="saveActiveInfo" class="btn-box">保存</a>
+				</div>
+			</div>
+			<div class="mc">
+				<p id="show"></p>
+			</div>
+		</div>
+	</div>
+  </form>
+</div>
+
+
+<div class="detail-info clearfix">
+<div class="detail-main-title" >
+	<div class="txt bg">活动须知</div>
+	<div class="line"></div>
+</div>
+  
+  <!--add area begin -->
+  <form action="huodong/restsInfo.do">
+    <input name="dc" value="a_careful" type="hidden" />
+    <input type="hidden" name="addOrUpdate" finish-num="10" value="add" />
+	<div class="container activity-info">
+		<div class="add-content-box">
+			<div class="mt">
+				<div class="fl mleft">
+					<a href="javascript:void(0)" class="add">
+						<i class="iconadd"></i>添加活动须知的内容<span style="color:red;">(完成度：+10%)</span>
+					</a>
+					<span class="txt" style="display:none;">活动须知<span style="color:red;">(完成度：+10%)</span></span>
+				</div>
+				<div class="fr" style="display:none;">
+					<a href="javascript:void(0)" class="btn-edit-box">编辑</a>
+					<a href="javascript:void(0)" class="btn-box">删除</a>
+					<a href="javascript:void(0)" id="saveActiveInfo"   handle-finish-num class="btn-box">保存</a>
+				</div>
+			</div>
+			<div class="mc" style="display:none;position: relative;">
+				<pre class="pre-val"></pre>
+				<textarea name="a_careful" cols="" rows="" class="wid07" maxlength="2000"></textarea>
+			<div style="position: absolute;right: 24px;top: 120px;" show-textarea-num>剩余<span style="color: red;" id="show_textarea_num">2000</span>个字</div>
+				<p class="btn-over">
+					<a href="javascript:void(0)" class="btn-box">完成</a>
+				</p>
+			</div>
+		</div>
+	</div>
+  </form>
+<!--add area end --> 
+
+</div>
+
+<#include "/view/base.js.html">
+<script type="text/javascript">
+var activityId="${activeId!""}",
+	finishNum="${a_finish_num!"0"}",
+	beforeunload=true,
+	draftNum=${draftNum!if_exists};
+</script>
+<!-- sweet-alert -->
+<script type="text/javascript" src="static/js/plugins/sweet-alert/sweet-alert.min.js"></script>
+<!-- 上传图片 -->
+<script type="text/javascript" src="static/js/plugins/ajaxUpload/ajaxfileupload.js"></script>
+<!-- 日期插件 -->
+<script type="text/javascript" src="static/js/plugins/layer/laydate/laydate.js"></script>
+<!-- 多选 -->	    
+<script type="text/javascript" src="static/js/plugins/chosen/chosen.jquery.js" ></script>
+<!-- 活动基本信息 -->
+<script type="text/javascript" src="static/js/activity/release/release.baseinfo.js"></script>
+<!-- 活动其他信息，crud(添加、完成、编辑、删除、保存)效果 -->
+<script type="text/javascript" src="static/js/activity/release/release.restsInfo.js"></script>
+<!-- 通用保存接口 -->
+<script type="text/javascript" src="static/js/activity/release/release.save.js"></script>
+<!-- 行程介绍 -->
+<script type="text/javascript" src="static/js/activity/release/release.journey.js"></script>
+<!-- 额外费用 -->
+<script type="text/javascript" src="static/js/activity/release/release.cost.js"></script>
+<!-- 行程单位（天/时间点） -->
+<script type="text/javascript" src="static/js/activity/release/release.journey.unit.js"></script>
+<!-- 保险 -->
+<script type="text/javascript" src="static/js/activity/release/release.insurance.js"></script>
+<!-- 装备 -->
+<script type="text/javascript" src="static/js/activity/release/release.equipment.js"></script>
+<!-- 支付方式 -->
+<script type="text/javascript" src="static/js/activity/release/release.paytype.js"></script>
+<!-- textarea字数提示 -->
+<script type="text/javascript" src="static/js/activity/release/release.show.textarea.num.js"></script>
+<#include "/view/activity/uploadImg.html">
+
+<script type="text/javascript">
+$(function(){
+  // 活动主图
+  new $.fn.dragImg({
+  	jq:$("input#activity_img"),
+  	width:3.2,
+  	height:1,
+  	fn:function(data){
+		$('div#bannerImg').css({'background':'url('+data.savePath+') no-repeat center top','background-size': 'cover'});
+		$('input[name=a_active_img]').val(data.savePath);
+  	}
+  });
+  
+  // 线路主图
+  new $.fn.dragImg({
+  	jq:$("input#${id}_img"),
+  	width:2.26,
+  	height:1,
+  	fn:function(data){
+  		var $img = $("input#${id}_img");
+		$id=$img.prop("id"),
+		$routeImg = $img.closest("div#route_img"),
+		$setMainImg = $img.closest("div#set_main_img"),
+		$imgList = $setMainImg.next(),
+		$imgIndex=$img.closest("ul>li").length,
+		$imgTxt=$img.closest("div#add_img_box").next(),
+		times = new Date().getTime();
+  		
+		// 生成新的缩略图
+		var str = '<li index="0">'
+			+'<div class="edit-img-box">'
+			+'<a href="javascript:void(0)" id="edit_img_a" >编辑</a>'
+			+'<input type="file" upload-img name="file" id="'+times+'_edit_img" style="display:none;" />'
+			+'<a href="javascript:void(0)" id="del_img_a" >删除</a>'
+			+'</div>'
+			+'<img src="'+data.savePath+'" id="img_slt" width="200" height="150" />'
+			+'<input id="li_local_url" type="hidden" name="images[0].li_local_url" value="'+data.savePath+'" />'
+			+'</li>';
+  		
+  		$routeImg.css({"background":"url("+data.savePath+") no-repeat center top","background-size": "cover"});
+			
+		// 添加缩略图
+		$setMainImg.next().find("ul").prepend(str);
+		
+		// 展示该图片的描述框
+		$imgTxt.show();
+		
+		// 添加附图
+		$imgList.show();
+		
+		// 删除增加主图入口
+		$setMainImg.remove();
+  	}
+  });
+  
+  // 线路附图
+  new $.fn.dragImg({
+  	jq:$("input#${attachId}_imgs"),
+  	width:2.26,
+  	height:1,
+  	fn:function(data){
+		var $obj = $("input#${attachId}_imgs"),
+		$id=$obj.prop("id"),
+		$routeImg = $obj.closest("div#route_img"),
+		$imgUl = $obj.closest("ul"),
+		$imgIndex="",
+		$imgNumber=$imgUl.find("li[li-type!=add-img]").length,
+		$imgTxt=$obj.closest("div#add_img_box").next(),
+		$divTxt = $imgTxt.children(),
+		$textareas=$divTxt.children(),
+		time = new Date().getTime();
+		
+		// 判断当前图片下标
+		if($imgUl.find("li[li-type!=add-img]").length == 0){
+			$imgIndex=0;
+		}else{
+			$imgIndex=parseInt($imgUl.find("li[li-type!=add-img]:last").attr("index"))+1;
+		}
+		
+		// 替换背景图片
+		$routeImg.css({"background":"url("+data.savePath+") no-repeat center top","background-size": "cover"});
+		
+		// 生成新的缩略图
+		var str = '<li index="'+$imgIndex+'">'
+			+'<div class="edit-img-box">'
+			+'<a href="javascript:void(0)" id="edit_img_a" >编辑</a>'
+			+'<input type="file" upload-img name="file" id="'+time+'_edit_img" style="display:none;" />'
+			+'<a href="javascript:void(0)" id="del_img_a" >删除</a>'
+			+'</div>'
+			+'<img src="'+data.savePath+'" id="img_slt" width="200" height="150" />'
+			+'<input id="li_local_url" type="hidden" name="images['+$imgIndex+'].li_local_url" value="'+data.savePath+'" />'
+			+'</li>';
+		// 添加缩略图
+		$("#"+$id).closest("li").before(str);
+		
+		// 生成对该图片的描述
+		$textareas.hide();
+		var textareas = '<textarea  index="'+$imgIndex+'" name="images['+$imgIndex+'].li_description" maxlength="200" placeholder="亲！添加您对这张照片当时的美好记忆！"></textarea>';
+		$divTxt.append(textareas);
+		
+		// 目前最多支持五张图片
+		if($imgNumber >= 4){
+			$imgUl.find("li[li-type=add-img]").remove();
+		}
+	
+  	}
+  });
+})
+</script>
+</body>
+</html>

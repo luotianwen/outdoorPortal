@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="activeCorrelationCostMapper">
+	<sql id="Base_Column_List">
+    acp_id,acp_cost_name ,acp_cost ,acp_comment ,acp_type ,acp_create_user ,acp_create_time ,acp_activity_id 
+    </sql>
+
+    <resultMap type="com.op.entity.activity.cost.ActiveCorrelationCost" id="ActiveCorrelationCostReturnMap">
+      <id column="acp_id" property="acp_id"/>
+      <result column="acp_cost_name" property="acp_cost_name"/>
+      <result column="acp_cost" property="acp_cost"/>
+      <result column="acp_comment" property="acp_comment"/>
+      <result column="acp_type" property="acp_type"/>
+      <result column="acp_create_user" property="acp_create_user"/>
+      <result column="acp_create_time" property="acp_create_time"/>
+      <result column="acp_activity_id" property="acp_activity_id"/>
+   </resultMap>
+   
+   <!-- 根据活动id和用户id删除费用信息 -->
+   <delete id="deleteByActiveIdAndUserId" parameterType="com.op.dto.activity.insertActivity.cost.ActivityCostDTO">
+   delete from ActiveCorrelationCost
+   where acp_activity_id=#{activityId} AND acp_create_user=#{acp_create_user} AND acp_type=#{acp_type}
+   and acp_order != 0<!-- 排除保险 -->
+   </delete>
+   
+   <!-- 保存活动费用信息 -->
+   <insert id="insertDataAlreadyActivityId" parameterType="com.op.dto.activity.insertActivity.cost.ActivityCostDTO" >
+		insert into ActiveCorrelationCost
+		(
+			acp_activity_id,acp_create_user,acp_type,acp_cost_name ,acp_cost ,acp_comment
+		)
+		VALUES
+		<foreach collection="costs" item="item" index="index" separator=",">
+			(
+				#{activityId},#{acp_create_user},#{acp_type},
+				#{item.acp_cost_name}, #{item.acp_cost}, #{item.acp_comment}
+			)
+		</foreach>
+   </insert>
+   
+	<!-- 保存活动费用信息 -->
+	<insert id="insertDataNoActivityId" parameterType="com.op.dto.activity.insertActivity.cost.ActivityCostDTO" >
+		insert into ActiveCorrelationCost(acp_activity_id,acp_create_user,acp_type,acp_cost_name ,acp_cost ,acp_comment)
+		values
+		<foreach collection="costs" item="item" separator=",">
+		(
+			#{activityId},#{acp_create_user},#{acp_type},
+			#{costs[${index}].acp_cost_name}, #{costs[${index}].acp_cost}, #{costs[${index}].acp_comment}
+		)
+		</foreach>
+   </insert>
+   
+	<!-- 根据活动ID查询所有包括费用 -->
+	<select id="findContainByActiveId" parameterType="int" resultType="com.op.entity.activity.cost.ActiveCorrelationCost">
+		select <include refid="Base_Column_List"/> from activeCorrelationCost 
+		where acp_type=0 
+		and acp_activity_id = #{id}
+		order by acp_order
+	</select>
+	
+	<!-- 根据活动ID查询所有可选费用 -->
+	<select id="findOptionalByActiveId" parameterType="int" resultType="com.op.entity.activity.cost.ActiveCorrelationCost">
+		select <include refid="Base_Column_List"/> from activeCorrelationCost 
+		where acp_type=1 
+		and acp_activity_id = #{id}
+	</select>
+	
+	
+	<!-- 根据活动ID查询所有费用 -->
+	<select id="findByActiveId" parameterType="String" resultType="com.op.entity.activity.cost.ActiveCorrelationCost" useCache="false" >
+	select 
+	acp_id,acp_cost_name ,acp_cost ,acp_comment 
+	,acp_type ,acp_create_user 
+	,acp_create_time ,acp_activity_id ,acp_order 
+	from activeCorrelationCost 
+	where acp_activity_id = #{id} 
+	order by acp_order
+	</select>
+	
+	
+	<!-- 编辑活动根据活动ID查询所有费用 -->
+	<select id="editActiveFindByActiveId" parameterType="String" resultType="com.op.entity.activity.cost.ActiveCorrelationCost" useCache="false" >
+	select 
+	acp_id,acp_cost_name ,acp_cost ,acp_comment 
+	,acp_type ,acp_create_user 
+	,acp_create_time ,acp_activity_id ,acp_order 
+	from activeCorrelationCost 
+	where acp_activity_id = #{id} and acp_order = 1
+	</select>
+	
+	<!-- 根据活动ID删除 -->
+	<delete id="deleteByActiveId" parameterType="String">
+	delete from ACTIVECORRELATIONCOST where ACP_ACTIVITY_ID =#{id}
+	</delete>
+	
+	<!-- 查询该活动费用包括的总价 -->
+	<select id="findActivitySumCost" parameterType="java.lang.String" resultType="java.lang.Double">
+	select SUM(acp_cost) sum from activeCorrelationCost where acp_activity_id=#{id} and acp_type=0
+	</select>
+	
+	<!-- 保存保险信息 -->
+	<insert id="saveInsuranceGeneraActivityId" parameterType="com.op.dto.activity.baoxian.BaoxianDTO" useGeneratedKeys="true" keyColumn="acp_activity_id" keyProperty="activityId">
+	insert into activeCorrelationCost
+	
+	(acp_cost_name,acp_cost,acp_comment,acp_type,
+	acp_create_user,acp_activity_id,acp_chanpin,acp_jihua,acp_qixian,acp_order)
+	
+	values
+	
+	('保险',#{jiage},#{acp_comment},0,
+	#{userId},#{activityId},#{chanpin},#{jihua},#{qixian},0)
+	
+	</insert>
+	
+	<!-- 保存保险信息 -->
+	<insert id="saveInsurance" parameterType="com.op.dto.activity.baoxian.BaoxianDTO" >
+	insert into activeCorrelationCost
+	
+	(acp_cost_name,acp_cost,acp_comment,acp_type,
+	acp_create_user,acp_activity_id,acp_chanpin,acp_jihua,acp_qixian,acp_order)
+	
+	values
+	
+	('保险',#{jiage},#{acp_comment},0,
+	#{userId},#{activityId},#{chanpin},#{jihua},#{qixian},0)
+	
+	</insert>
+	
+	<delete id="deleteInsuranceBaoxian" parameterType="com.op.dto.activity.baoxian.BaoxianDTO">
+	delete from activeCorrelationCost where acp_order=0 and acp_activity_id=#{activityId}
+	</delete>
+	
+	<!-- 查询保险信息 -->
+	<select id="selectInsuranceInfoByActiveId" parameterType="String" resultMap="ActiveCorrelationCostReturnMap">
+		select acp_id,acp_cost_name ,acp_cost ,acp_comment ,acp_type ,acp_create_user ,acp_create_time ,acp_activity_id 
+		from activeCorrelationCost
+		where acp_activity_id=#{asu_active_id} and ACP_ORDER=0
+	</select>
+	
+	
+	<select id="selectSumCostPrice" parameterType="java.lang.String" resultType="java.lang.Double">
+	select sum(acp_cost) from activeCorrelationCost where acp_order=1 and acp_type=0 and acp_activity_id=#{id}
+	</select>
+	
+</mapper>

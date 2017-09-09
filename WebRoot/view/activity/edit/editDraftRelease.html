@@ -1,0 +1,1699 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+
+<base href="/" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>玩嘛</title>
+
+<!-- base -->
+<#include "/view/base.css.html">
+
+<!-- 发布 -->
+<link rel="stylesheet" type="text/css" href="static/css/hw_css/release.css" />
+
+<!-- 多选 -->
+<link rel="stylesheet" href="static/css/plugins/chosen/chosen.css" >
+
+<!-- 弹窗 -->
+<link rel="stylesheet" href="static/js/plugins/sweet-alert/sweet-alert.css"/>
+
+<style>
+body {
+	background: #f1f1f1;
+}
+</style>
+</head>
+<body onbeforeunload="checkLeave()">
+
+<!-- header -->
+<#include "/view/header.html">
+
+<div class="release-btns-box">
+  <div class="boxw clearfix">
+  	<div class="fl">
+	    <div class="finishing">
+	    	发布完成度
+	    	<input type="hidden" id="active_finish_num" value="0"/>
+	    	<span class="finishing-bar">
+	    		<i class="finished-bar" style="width:0%" id="activeFinish"></i>
+	    	</span>
+	    	<span class="c3" id="activeFinish">0%</span>
+	    </div>
+	</div>
+    <div class="fr">
+    	<#if draftNum != 0>
+			<a class="btn-dra" href="javascript:void(0)" id="my_draft">
+				<i></i>我的草稿箱(${draftNum})
+			</a>
+    	</#if>
+		<a class="btn-pre" href="javascript:void(0)" id="active_yl">预览</a>
+		<a class="btn-pre" href="javascript:void(0)" id="submit_audit">提交审核</a>
+    </div>
+  </div>
+</div>
+<!--banner begin-->
+<form action="huodong/baseInfo.do" >
+	<div class="bannerImg" id="bannerImg" style="background-size: cover;<#if dto.a_active_img??>background-image: url(${dto.a_active_img});</#if>" >
+	  <div class="boxw event-area">
+	    <div class="set-main-img">
+	      <div class="set-box01" > 
+	      	<a href="javascript:void(0)">设置发布的主图</a>
+	        <p>图片建议选择尺寸大于1680px的高清大图，如相机原图</p>
+	      </div>
+	      <div class="set-box02">
+	        <ul>
+	          <li>
+	          	<a href="javascript:void(0)" class="file">
+	          		设置发布的主图
+	          		<input type="file" name="file" id="activity_img" />
+	          		<input name="a_active_img" type="hidden" value="${dto.a_active_img}" />
+	          	</a>
+	          </li><!-- 
+	          <li><a href="javascript:void(0)">重新上传主图</a></li>
+	          <li><a href="javascript:void(0)">重新编辑主图</a></li> -->
+	        </ul>
+	      </div>
+	    </div>
+	    <div class="event-info">
+	      <div class="event-title">
+	      	<input type="hidden" name="addOrUpdate" finish-num="20" value="
+			<#if dto.title??>
+			update
+			<#else>
+			add
+			</#if>
+			" />
+	        <textarea cols="1" rows="2" name="title" style="width:450px;" maxlength="30" placeholder="填写本次活动标题" id="activeTitle" >${dto.title}</textarea>
+	        <div class="res-txt">亲！最多可输入<b class="c2">30</b>个字哦！</div>
+	      </div>
+	      <div class="event-content">
+	        <ul>
+	          <li class="w1">开始时间：
+	            <input name="activityTime" id="activityTime" type="text" class="layer-time-height laydate-icon" placeholder="开始时间" readonly="readonly" value="<#if dto.activityTime??>${dto.activityTime?string('yyyy-MM-dd HH:mm')}</#if>" />
+	          </li>
+	          <li class="w1">结束时间：
+	            <input name="endTime" id="endTime" type="text" class="layer-time-height laydate-icon" placeholder="结束时间" readonly="readonly" value="<#if dto.endTime??>${dto.endTime?string('yyyy-MM-dd HH:mm')}</#if>" />
+	          </li>
+	          <li class="w1">报名截止：
+	            <input name="a_enroll_end_time" id="a_enroll_end_time" type="text" class="layer-time-height laydate-icon" placeholder="报名截止时间" readonly="readonly"  value="<#if dto.a_enroll_end_time??>${dto.a_enroll_end_time?string('yyyy-MM-dd HH:mm')}</#if>" />
+	          </li>
+	          <li class="w1">联系手机：
+	            <input name="a_phone" type="text" class="wid01" placeholder="联系手机" value="${dto.a_phone}" maxlength="11" onkeyup="this.value=this.value.replace(/\D/g,'')" onafterpaste="this.value=this.value.replace(/\D/g,'')"/>
+	          </li>
+	          <li class="w1">
+	            <label class="lets3">出发地</label>：
+	            <input name="a_start_location" type="text" class="wid01" placeholder="出发地点" maxlength="20" value="${dto.a_start_location}" />
+	          </li>
+	          <li class="w1">
+	            <label class="lets3">目的地</label>：
+	            <input name="a_end_location" type="text" class="wid01" placeholder="目的地点" maxlength="20" value="${dto.a_end_location}" />
+	          </li>
+	          <li class="w1">适合人群：
+		        <select class="wid01" name="sc_id"  onchange="chooseUserType(this)" >
+					<#list listSuitableCrowd as item>
+					<option <#if dto.sc_id?? && dto.sc_id=item.sc_id>selected</#if> value="${item.sc_id }">${item.sc_name }</option>
+					</#list>
+				</select>
+	          </li>
+	          <li class="w1">儿童年龄：
+		        <select class="wid01" name="a_children_age" disabled="disabled" style="background-color: #E9E3E3;" >
+					<#list listActiveChildrenAge as item>
+					<option <#if dto.a_children_age?? && dto.a_children_age=item.aca_id>selected</#if> value="${item.aca_id }">${item.aca_age_min }&nbsp;-&nbsp;${item.aca_age_max }(${item.aca_description })</option>
+					</#list>
+				</select>
+	          </li>
+	          <li class="w1">活动等级：
+				<select class="wid01" name="a_difficulty_type" >
+					<#list listActiveDifficultyType as item>
+					<option <#if dto.a_difficulty_type?? && dto.a_difficulty_type=item.adt_id>selected</#if> value="${item.adt_id }">${item.adt_description }</option>
+					</#list>
+				</select>
+	          </li>
+	          <li class="w1">集合时间：
+	            <input name="a_gather_time" id="gatherTime" type="text" class="layer-time-height laydate-icon" placeholder="集合时间" readonly="readonly" value="<#if dto.a_gather_time??>${dto.a_gather_time?string('yyyy-MM-dd HH:mm')}</#if>" />
+	          </li>
+	          <li class="w1">
+	            <label class="lets2">频道</label>：
+	            <select name="ch_id" class="select-wid01">
+		            <#list listChannels as item>
+		              <option <#if dto.ch_id?? && dto.ch_id=item.ch_id>selected</#if> value="${item.ch_id}">${item.ch_name}</option>
+		            </#list>
+	            </select>
+	          </li>
+	          <li class="w1">活动人数：
+	            <input name="needUserNum" type="text" class="wid01"  placeholder="活动人数" min="0" maxlength="5" onkeyup="this.value=this.value.replace(/\D/g,'')" onafterpaste="this.value=this.value.replace(/\D/g,'')" value="${dto.needUserNum}" />
+	          </li>
+	          <li class="w1">活动价格：
+	           <input name="price" type="text" class="wid01" placeholder="活动价格(元)"  min="0" maxlength="8" onkeyup="this.value=this.value.replace(/\D/g,'')" onafterpaste="this.value=this.value.replace(/\D/g,'')" value="${dto.price}" />
+	          </li>
+	          <li class="w3">活动景点：
+	          	<#if dto.activeScenic??>
+	            <input name="activeScenic" class="active-tag" placeholder="景点1" value="<#if dto.activeScenic?size gt 0>${dto.activeScenic[0]}</#if>" maxlength="20" />
+	            <input name="activeScenic" class="active-tag" placeholder="景点2" value="<#if dto.activeScenic?size gt 1>${dto.activeScenic[1]}</#if>" maxlength="20" />
+	            <input name="activeScenic" class="active-tag" placeholder="景点3" value="<#if dto.activeScenic?size gt 2>${dto.activeScenic[2]}</#if>" maxlength="20" />
+	            <input name="activeScenic" class="active-tag" placeholder="景点4" value="<#if dto.activeScenic?size gt 3>${dto.activeScenic[3]}</#if>" maxlength="20" />
+	            <input name="activeScenic" class="active-tag" placeholder="景点5" value="<#if dto.activeScenic?size gt 4>${dto.activeScenic[4]}</#if>" maxlength="20" />
+	          	<#else>
+	            <input name="activeScenic" class="active-tag" placeholder="景点1" maxlength="20" />
+	            <input name="activeScenic" class="active-tag" placeholder="景点2" maxlength="20" />
+	            <input name="activeScenic" class="active-tag" placeholder="景点3" maxlength="20" />
+	            <input name="activeScenic" class="active-tag" placeholder="景点4" maxlength="20" />
+	            <input name="activeScenic" class="active-tag" placeholder="景点5" maxlength="20" />
+	          	</#if>
+	          </li>
+	          <li class="w3">活动标签：
+	          	<#if dto.activeTag??>
+	            <input name="activeTag" class="active-tag" placeholder="标签1" value="<#if dto.activeTag?size gt 0>${dto.activeTag[0]}</#if>" maxlength="20" />
+	            <input name="activeTag" class="active-tag" placeholder="标签2" value="<#if dto.activeTag?size gt 1>${dto.activeTag[1]}</#if>" maxlength="20" />
+	            <input name="activeTag" class="active-tag" placeholder="标签3" value="<#if dto.activeTag?size gt 2>${dto.activeTag[2]}</#if>" maxlength="20" />
+	            <input name="activeTag" class="active-tag" placeholder="标签4" value="<#if dto.activeTag?size gt 3>${dto.activeTag[3]}</#if>" maxlength="20" />
+	            <input name="activeTag" class="active-tag" placeholder="标签5" value="<#if dto.activeTag?size gt 4>${dto.activeTag[4]}</#if>" maxlength="20" />
+	            <#else>
+	            <input name="activeTag" class="active-tag" placeholder="标签1" maxlength="20" />
+	            <input name="activeTag" class="active-tag" placeholder="标签2" maxlength="20" />
+	            <input name="activeTag" class="active-tag" placeholder="标签3" maxlength="20" />
+	            <input name="activeTag" class="active-tag" placeholder="标签4" maxlength="20" />
+	            <input name="activeTag" class="active-tag" placeholder="标签5" maxlength="20" />
+	            </#if>
+	          </li>
+	          <li class="w3">集合地点：
+	            <input name="a_gather_location" type="text" class="wid03" placeholder="集合地点" maxlength="100" value="${dto.a_gather_location}" />
+	          </li>
+	          <li class="w3">活动类型：
+		         <select name="types" data-placeholder="选择活动类型试试~~" class="chosen-select" multiple >
+		         	  <#list listClassification as item>
+		         	    <#if dto.types??>
+		         	    	<#assign cl_id=''>
+		         	    	<#list dto.types as type>
+		         	    		<#if type == item.cl_id+''>
+		         	    		<#assign cl_id='selected'>
+		         	    		</#if>
+		         	    	</#list>
+		         	    </#if>
+		         	    
+		         	    <option ${cl_id} value="${item.cl_id}">${item.cl_name}</option>
+		              </#list>
+		         </select>
+	          </li>
+	          <li class="w3">交通方式：
+		         <select name="a_traffic_id" data-placeholder="选择交通出行方式~~" class="chosen-select" multiple >
+	            	<#list listTraffic as item>
+		         	    <#if dto.a_traffic_id??>
+		         	    	<#assign a_traffic_id=''>
+		         	    	<#list dto.a_traffic_id as id>
+		         	    		<#if id == item.t_id+''>
+		         	    		<#assign a_traffic_id='selected'>
+		         	    		</#if>
+		         	    	</#list>
+		         	    </#if>
+		         	    
+	            		<option ${a_traffic_id} value="${item.t_id}" >${item.t_content}</option>
+	            	</#list>
+	            </select>
+	          </li>
+	        </ul>
+	      </div>
+	      <div class="event-btns"> 
+	      	<!-- <a href="javascript:void(0)" class="btn01">编辑</a> --> 
+	      	<a href="javascript:void(0)" class="btn02" id="saveActiveInfo"	<#if dto.title??>style="background:#A9A9A9;" </#if>handle-finish-num >
+	      	<#if dto.title??>
+	      	修改
+	      	<#else>
+	      	保存<span style="color:red;">(完成度：+20%)</span>
+	      	</#if>
+	      	</a>
+	      </div>
+	    </div>
+
+		<!-- <div class="event-lead">
+			<div class="lead-box clearfix">
+				<div class="main-leader nobg">
+					<div class="leader-pic">
+						<a href="javascript:void(0)"><img src="static/images/hw_img/photo.jpg"
+							width="50" height="50" />
+						</a>
+						<p class="na">
+							<a href="javascript:void(0)">走南闯北</a>
+						</p>
+						<p class="ba">电话：15001216284</p>
+					</div>
+				</div>
+				<div class="main-leader" style="display:none;">
+					<div class="leader-pic">
+						<a href="javascript:void(0)"><img src="static/images/hw_img/photo.jpg"
+							width="50" height="50" />
+						</a>
+						<p class="na">
+							<a href="javascript:void(0)">走南闯北</a>
+						</p>
+						<p class="ba">主领队</p>
+					</div>
+					<p>电话：123456478910</p>
+					<p>带队次数：386</p>
+					<p>带队人数：6829</p>
+					<p>好评率：89%（已有2081人评论）</p>
+				</div>
+				<div class="vice-leader">
+					<a href="javascript:void(0)" class="leader">
+						<img src="static/images/hw_img/photo.jpg" width="50" height="50" />走南闯北
+					</a>
+					<a href="javascript:alert('待完善')" class="leader">
+						<i></i>添加副领队
+					</a>
+				</div>
+			</div>
+		</div> -->
+
+		</div>
+	</div>
+</form>
+<!--banner end -->
+
+
+
+<div class="detail-info clearfix">
+<div class="detail-main-title" >
+      <div class="txt bg">活动描述</div>
+      <div class="line"></div>
+    </div>
+  <div class="detail-title" >活动介绍 </div>
+  <!--add area begin -->
+  <form action="huodong/restsInfo.do">
+        <input name="dc" value="details" type="hidden" />
+     	<input type="hidden" name="addOrUpdate" finish-num="10" value="
+		<#if dto.details??>
+		<#assign info_has=true>
+		update
+		<#else>
+		<#assign info_has=false>
+		add
+		</#if>
+		" />
+	<div class="container activity-info">
+		<div class="add-content-box">
+			<div class="mt">
+				<div class="fl mleft">
+					<a href="javascript:void(0)" class="add" <#if info_has>style="display:none;"</#if>>
+						<i class="iconadd"></i>添加对活动的描述<span style="color:red;">(完成度：+10%)</span>
+					</a>
+					<span class="txt" <#if !info_has>style="display:none;"</#if>>活动描述<span style="color:red;">(完成度：+10%)</span></span>
+				</div>
+				<div class="fr" <#if !info_has>style="display:none;"</#if>>
+					<a href="javascript:void(0)" class="btn-edit-box">编辑</a>
+					<a href="javascript:void(0)" class="btn-box">删除</a>
+					<a href="javascript:void(0)" id="saveActiveInfo"  handle-finish-num class="btn-box" 
+					<#if info_has>style="background:#A9A9A9;"</#if>>
+					<#if info_has>修改<#else>保存</#if>
+					</a>
+				</div>
+			</div>
+			<div class="mc" style="position: relative;<#if !info_has>display:none;</#if>">
+				<pre class="pre-val" style="display:<#if !info_has>none<#else>block</#if>;" >${dto.details}</pre>
+				
+				<textarea name="details" cols="" rows="" class="wid07" maxlength="2000" <#if info_has>style="display:none;"</#if>>${dto.details}</textarea>
+				<div style="position: absolute;right: 24px;top: 120px;<#if info_has>display:none;</#if>" show-textarea-num >剩余<span style="color: red;" id="show_textarea_num">${2000-dto.details?length}</span>个字</div>
+				<p class="btn-over" <#if info_has>style="display:none;"</#if>>
+					<a href="javascript:void(0)" class="btn-box">完成</a>
+				</p>
+			</div>
+		</div>
+	</div>
+	</form>
+	<!--add area end --> 
+  <!--add area begin -->
+  <form action="huodong/restsInfo.do">
+    <input name="dc" value="characteristic" type="hidden" />
+    <input type="hidden" name="addOrUpdate" finish-num="10" value="
+	<#if dto.characteristic??>
+		<#assign info_has=true>
+		update
+		<#else>
+		<#assign info_has=false>
+		add
+	</#if>
+	
+	" />
+
+  
+  <div class="container activity-info">
+	<div class="add-content-box">
+		<div class="mt">
+			<div class="fl mleft">
+				<a href="javascript:void(0)" class="add" <#if info_has>style="display:none;"</#if>>
+					<i class="iconadd"></i>添加对路线特色的描述<span style="color:red;">(完成度：+10%)</span>
+				</a>
+				<span class="txt"  <#if !info_has>style="display:none;"</#if>>路线特色描述<span style="color:red;">(完成度：+10%)</span></span>
+			</div>
+			<div class="fr" <#if !info_has>style="display:none;"</#if>>
+				<a href="javascript:void(0)" class="btn-edit-box">编辑</a>
+				<a href="javascript:void(0)" class="btn-box">删除</a>
+				<a href="javascript:void(0)" id="saveActiveInfo"  handle-finish-num class="btn-box" <#if info_has>style="background:#A9A9A9;"</#if>>
+				<#if info_has>修改<#else>保存</#if>
+				</a>
+			</div>
+		</div>
+		<div class="mc" style="position: relative;<#if !info_has>display:none;</#if>">
+			<pre class="pre-val" style="display:<#if !info_has>none<#else>block</#if>;">${dto.characteristic}</pre>
+			
+			<textarea name="characteristic" cols="" rows="" class="wid07" maxlength="2000" <#if info_has>style="display:none;"</#if>>${dto.characteristic}</textarea>
+			<div style="position: absolute;right: 24px;top: 120px;<#if info_has>display:none;</#if>" show-textarea-num>剩余<span style="color: red;" id="show_textarea_num">${2000-dto.characteristic?length}</span>个字</div>
+			<p class="btn-over" <#if info_has>style="display:none;"</#if>>
+				<a href="javascript:void(0)" class="btn-box">完成</a>
+			</p>
+		</div>
+	</div>
+</div>
+</form>
+ <!--add area end -->
+	<!--add area begin -->
+	<form action="huodong/restsInfo.do">
+    <input name="dc" value="tripWatchFocus" type="hidden" />
+    <input type="hidden" name="addOrUpdate" finish-num="10" value="
+	<#if dto.tripWatchFocus??>
+		<#assign info_has=true>
+		update
+		<#else>
+		<#assign info_has=false>
+		add
+	</#if>
+	
+	" />
+	
+  
+	<div class="container activity-info">
+		<div class="add-content-box">
+			<div class="mt">
+				<div class="fl mleft">
+					<a href="javascript:void(0)" class="add" <#if info_has>style="display:none;"</#if>>
+						<i class="iconadd"></i>添加对行程看点的描述<span style="color:red;">(完成度：+10%)</span>
+					</a>
+					<span class="txt" <#if !info_has>style="display:none;"</#if>>行程看点描述<span style="color:red;">(完成度：+10%)</span></span>
+				</div>
+				<div class="fr" <#if !info_has>style="display:none;"</#if>>
+					<a href="javascript:void(0)" class="btn-edit-box">编辑</a>
+					<a href="javascript:void(0)" class="btn-box">删除</a>
+					<a href="javascript:void(0)" id="saveActiveInfo"  handle-finish-num class="btn-box"
+					<#if info_has>style="background:#A9A9A9;"</#if>>
+					<#if info_has>修改<#else>保存</#if>
+					</a>
+				</div>
+			</div>
+			<div class="mc" style="position: relative;<#if !info_has>display:none;</#if>">
+				<pre class="pre-val" style="display:<#if !info_has>none<#else>block</#if>;">${dto.tripWatchFocus}</pre>
+				
+				<textarea name="tripWatchFocus" cols="" rows="" class="wid07" maxlength="2000" <#if info_has>style="display:none;"</#if>>${dto.tripWatchFocus}</textarea>
+				<div style="position: absolute;right: 24px;top: 120px;<#if info_has>display:none;</#if>" show-textarea-num>剩余<span style="color: red;" id="show_textarea_num">${2000-dto.tripWatchFocus?length}</span>个字</div>
+				<p class="btn-over" <#if info_has>style="display:none;"</#if>>
+					<a href="javascript:void(0)" class="btn-box">完成</a>
+				</p>
+			</div>
+		</div>
+	</div>
+	</form>
+	<!--add area end -->
+</div>
+
+
+<#if dto.lines?size gt 0>
+
+	<#list dto.lines as item>
+	
+	<#if item_index == 0>
+		<div class="detail-info no-margin clearfix journey" id="journey_div">
+			<div class="detail-title" > 
+				行程介绍
+				<span style="color:red;">(完成度：+20%)</span> 
+			</div>
+			<div class="unit-area" id="journey_unit">
+				<span <#if item.journey_type == 'day'> class="current" </#if>type="day">行程以天为单位</span>
+				<span <#if item.journey_type == 'hour'> class="current" </#if>type="hour">行程以小时为单位</span>
+			</div>
+			<input type="hidden" name="addOrUpdate" finish-num="20"  value="update" />
+		</div>
+	</#if>
+	
+	
+	<form action="huodong/insertLine.do" >
+		<input name="journey_type" value="${item.journey_type}" type="hidden" />
+		
+		<div class="detail-info no-margin clearfix journey" id="journey_div">
+		  <!--add area begin -->
+		  <input name="handletype" type="hidden" value="line" />
+		  <div class="container">
+		    <div class="add-content-box">
+			<div class="mt">
+				<div class="fl mleft" id="day_or_hour">
+					<span class="txt" id="show_time_or_day_span">
+					<#if item.journey_type == 'day'>
+					第${item_index+1}天
+					<#else>
+					${item.l_time?string('yyyy-MM-dd HH:mm')}&nbsp;-&nbsp;${item.l_to_time?string('yyyy-MM-dd HH:mm')}
+					</#if>
+					</span>
+				</div>
+				<div class="fr">
+					<a href="javascript:void(0)" id="reset" class="btn-box">清空</a>
+					<a href="javascript:void(0)" id="saveActiveInfo"  handle-finish-num class="btn-box" style="background:#A9A9A9;">修改</a>
+					<a href="javascript:void(0)" id="deleteJourney" class="btn-box" >删除</a>
+				</div>
+			</div>
+		    <div class="mc">
+		       <div class="day-txt">
+		         <dl>
+		           <dt>地　　点：</dt>
+		           <dd>
+		           
+		           <#list item.didian as address>
+					<label class="input-box">
+						<#if address_index!=0>
+						&nbsp;-&nbsp;
+						</#if>
+						<input name="didian[${address_index}].la_address_name" type="text" class="wid02" value="${address.la_address_name}" 
+						<#if address_index == 0>
+						placeholder="起点"
+						<#elseif !address_has_next>
+						placeholder="终点"
+						<#else>
+						placeholder="经过地点"
+						</#if>
+						/>
+						<#if address_index gt 1>
+							<i class="input-icon-del"></i>
+						</#if>
+					</label>
+		           </#list>
+		           
+					<i id="addAddress" class="input-icon-add"></i>
+		           </dd>
+		         </dl>
+		         <dl class="dl-w01">
+		           <dt>出行方式：</dt>
+		           <dd>
+		             <input name="l_vehicle" type="text" class="journey-wid" placeholder="出行方式" value="${item.l_vehicle}"/>
+		           </dd>
+		         </dl>
+		         <dl class="dl-w01">
+		           <dt>日　　期：</dt>
+		           <dd>
+		             <input id="laydate_${item_index}" name="l_time_day" time-day-hour type="text" class="laydate-icon"  placeholder="日期" value="${item.l_time?string('yyyy-MM-dd')}"/>
+		             <#if item.journey_type == 'hour'>
+		             &nbsp;-&nbsp;
+		             <input id="laydate_to_${item_index}" name="l_to_time" type="text" class="laydate-icon" placeholder="日期" value="${item.l_to_time?string('yyyy-MM-dd HH:mm')}" />
+		             </#if>
+		           </dd>
+		         </dl>
+		         <dl class="dl-w01">
+		           <dt>餐　　饮：</dt>
+		           <dd>
+		             <input name="l_diet" type="text" class="journey-wid" placeholder="餐饮" value="${item.l_diet}"/>
+		           </dd>
+		         </dl>
+		         <dl class="dl-w01">
+		           <dt>住　　宿：</dt>
+		           <dd>
+		             <input name="l_accommodation" type="text" class="journey-wid" placeholder="住宿" value="${item.l_accommodation}" />
+		           </dd>
+		         </dl>
+		         <dl>
+		           <dt>活动介绍：</dt>
+		           <dd>
+		           </dd>
+		           <dd style="position: relative;">
+		              <textarea name="l_active_description" class="wid08" maxlength="2000" placeholder="活动介绍">${item.l_active_description}</textarea>
+		              <div style="position: absolute;right: 24px;bottom: 13px;" show-textarea-num>剩余<span style="color: red;" id="show_textarea_num">${2000-item.l_active_description?length}</span>个字</div>
+		           </dd>
+		         </dl>
+		         <dl>
+		           <dt>温馨提示：</dt>
+		           <dd style="position: relative;">
+		              <textarea name="l_prompt" class="wid08" maxlength="2000" placeholder="温馨提示">${item.l_prompt}</textarea>
+		              <div style="position: absolute;right: 24px;bottom: 13px;" show-textarea-num>剩余<span style="color: red;" id="show_textarea_num">${2000-item.l_prompt?length}</span>个字</div>
+		           </dd>
+		         </dl>
+		       </div>        
+		     </div>
+		    </div>
+		  </div>
+		  <!--add area end --> 
+		  <!--add area begin -->
+		  <div class="container" style="margin-top:20px;">
+		    <div class="add-content-box">
+				<div class="mt">
+					<div class="mleft" style="display: none;">
+						<a href="javascript:void(0)" class="add" id="addLineMap">
+							<i class="iconadd"></i>增加第1天的路线
+						</a>
+					</div>
+					<div class="mleft route-all" show-line-address id="${.now?string('yyyyMMddHHmmss')}_${item.l_id}_line" 	>
+						<span id="line_start_end" start="${item.start}" end="${item.end}"></span>
+						<input type="hidden" name="l_line_coordinate" value="${item.l_line_coordinate}" />
+						<a href="javascript:void(0)" class="btn-edit-box" id="editAlreadyMapLine" start="${item.start}" end="${item.end}">编辑</a>
+					</div>
+				</div>
+			
+			</div>
+		  </div>
+		  <!--add area end --> 
+		</div>
+		
+		
+		<div class="route-img" id="route_img" style="background: url(${item.images[0].li_local_url}) no-repeat center top;background-size:cover;">
+		  <div class="add-img-box" id="add_img_box">
+		    <div id="img_list_div" class="img-list">
+		      <ul>
+		      
+		      <#list item.images as img>
+			      <li index="${img_index}">
+					<div class="edit-img-box">
+					<a href="javascript:void(0)" id="edit_img_a" >编辑</a>
+					<input type="file" upload-img name="file" id="${.now?string('HHmmss')}_${img_index}_edit_img" style="display:none;" />
+					<a href="javascript:void(0)" id="del_img_a" >删除</a>
+					</div>
+					<img src="${img.li_local_url}" id="img_slt" width="200" height="150" />
+					<input id="li_local_url" type="hidden" name="images[${img_index}].li_local_url" value="${img.li_local_url}" />
+				  </li>
+		      </#list>
+		      
+		      
+		      <#if item.images?size lt 5>
+		        <li li-type="add-img">
+		        	<a href="javascript:void(0)" class="btn-add-img" >
+		        		<input type="file" name="file" id="${.now?string('yyyyMMddHHmmss')}_${item.l_id}_${item_index}_imgs" />
+		        		<img src="static/images/hw_img/img-add.png" width="200" height="150" />
+		        	</a>
+		        </li>
+		      </#if>
+		      
+		      </ul>
+		    </div>
+		  </div>
+		  <div class="img-txt" id="img_txt">
+		    <div class="txt">
+		      
+		      <#list item.images as img>
+		      	<textarea  index="${img_index}" name="images[${img_index}].li_description" placeholder="${img.li_description}"
+		      	<#if img_index gt 0>
+		      	style="display:none;"
+		      	</#if>
+		      	></textarea>
+		      </#list>
+		    	
+		    </div>
+		  </div>
+		</div>
+		
+		<div id="get_bottom"></div>
+		<input name="l_id" type="hidden" value="${item.l_id}" />
+		</form>
+	
+	
+	</#list>
+
+
+
+<#else>
+	<div class="detail-info no-margin clearfix journey" id="journey_div">
+		<div class="detail-title" > 行程介绍
+			<span style="color:red;">(完成度：+20%)</span> 
+		</div>
+		<div class="unit-area" id="journey_unit">
+			<span class="current" type="day">行程以天为单位</span>
+			<span type="hour">行程以小时为单位</span>
+		</div> 
+		<input type="hidden" name="addOrUpdate" finish-num="20"  value="add" />
+	</div>
+	
+	<form action="huodong/insertLine.do" >
+		<input name="journey_type" value="day" type="hidden" />
+		<div class="detail-info no-margin clearfix journey" id="journey_div">
+		  <!--add area begin -->
+		  <input name="handletype" type="hidden" value="line" />
+		  <div class="container">
+		    <div class="add-content-box">
+			<div class="mt">
+				<div class="fl mleft" id="day_or_hour">
+					<span class="txt" id="show_time_or_day_span">第1天</span>
+				</div>
+				<div class="fr">
+					<a href="javascript:void(0)" id="reset" class="btn-box">清空</a>
+					<a href="javascript:void(0)" id="saveActiveInfo"  handle-finish-num class="btn-box" >保存</a>
+					<a href="javascript:void(0)" id="deleteJourney" class="btn-box" >删除</a>
+				</div>
+			</div>
+		    <div class="mc">
+		       <div class="day-txt">
+		         <dl>
+		           <dt>地　　点：</dt>
+		           <dd>
+					<label class="input-box"><input name="didian[0].la_address_name" type="text" class="wid02" placeholder="起点"/></label> - 
+					<label class="input-box"><input name="didian[1].la_address_name" type="text" class="wid02" placeholder="终点"/></label> 
+					<i id="addAddress" class="input-icon-add"></i>
+		           </dd>
+		         </dl>
+		         <dl class="dl-w01">
+		           <dt>出行方式：</dt>
+		           <dd>
+		             <input name="l_vehicle" type="text" class="journey-wid" placeholder="出行方式"/>
+		           </dd>
+		         </dl>
+		         <dl class="dl-w01">
+		           <dt>日　　期：</dt>
+		           <dd>
+		             <input id="laydate" name="l_time_day" time-day-hour type="text" class="laydate-icon"  placeholder="日期"/>
+		           </dd>
+		         </dl>
+		         <dl class="dl-w01">
+		           <dt>餐　　饮：</dt>
+		           <dd>
+		             <input name="l_diet" type="text" class="journey-wid" placeholder="餐饮"/>
+		           </dd>
+		         </dl>
+		         <dl class="dl-w01">
+		           <dt>住　　宿：</dt>
+		           <dd>
+		             <input name="l_accommodation" type="text" class="journey-wid" placeholder="住宿" />
+		           </dd>
+		         </dl>
+		         <dl>
+		           <dt>活动介绍：</dt>
+		           <dd style="position: relative;">
+		              <textarea name="l_active_description" class="wid08" maxlength="2000" placeholder="活动介绍"></textarea>
+		              <div style="position: absolute;right: 24px;bottom: 13px;" show-textarea-num>剩余<span style="color: red;" id="show_textarea_num">2000</span>个字</div>
+		           </dd>
+		         </dl>
+		         <dl>
+		           <dt>温馨提示：</dt>
+		           <dd style="position: relative;">
+		              <textarea name="l_prompt" class="wid08" maxlength="2000" placeholder="温馨提示"></textarea>
+		              <div style="position: absolute;right: 24px;bottom: 13px;" show-textarea-num>剩余<span style="color: red;" id="show_textarea_num">2000</span>个字</div>
+		           </dd>
+		         </dl>
+		       </div>        
+		     </div>
+		    </div>
+		  </div>
+		  <!--add area end --> 
+		  <!--add area begin -->
+		  <div class="container" style="margin-top:20px;">
+		    <div class="add-content-box">
+				<div class="mt">
+					<div class="mleft" >
+						<a href="javascript:void(0)" class="add" id="addLineMap">
+							<i class="iconadd"></i>增加第1天的路线
+						</a>
+					</div>
+					<div class="mleft route-all" show-line-address id="${.now?string('yyyyMMddHHmmss')}_${item.l_id}_line" style="display: none;">
+						<span></span>
+						<input type="hidden" name="l_line_coordinate" />
+						<a href="javascript:void(0)" class="btn-edit-box" id="editAlreadyMapLine">编辑</a>
+					</div>
+				</div>
+			
+			</div>
+		  </div>
+		  <!--add area end --> 
+		</div>
+		
+		
+		<div class="route-img" id="route_img">
+		  <div class="add-img-box" id="add_img_box">
+		    <div class="set-main-img" id="set_main_img">
+		      <div class="set-box01"> 
+		      	<a href="javascript:void(0)">设置该路段的图片</a>
+		        <p>图片建议选择尺寸大于1680px的高清大图，如相机原图</p>
+		      </div>
+		      <div class="set-box02">
+		        <ul>
+		          <li>
+		          	<a href="javascript:void(0)" class="file">
+		          		设置线路的主图
+		          		<#assign id=.now?string('yyyyMMddHHmmss')>
+		          		<input type="file"  name="file" id="${id}_img" />
+		          	</a>
+		          </li>
+		        </ul>
+		      </div>
+		    </div>
+		    <div id="img_list_div" class="img-list" style="display: none;">
+		      <ul>
+		        <li li-type="add-img">
+		        	<a href="javascript:void(0)" class="btn-add-img" >
+		        		<#assign attachId=.now?string('yyyyMMddHHmmss')>
+		        		<input type="file" name="file" id="${attachId}_imgs"/>
+		        		<img src="static/images/hw_img/img-add.png" width="200" height="150" />
+		        	</a>
+		        </li>
+		      </ul>
+		    </div>
+		  </div>
+		  <div class="img-txt" id="img_txt" style="display: none;" >
+		    <div class="txt">
+		    	<textarea  index="0" name="images[0].li_description" placeholder="亲！添加您对这张照片当时的美好记忆！" ></textarea>
+		    </div>
+		  </div>
+		</div>
+		
+		<div id="get_bottom"></div>
+		</form>
+
+
+
+</#if>
+
+
+<div class="detail-info clearfix" id="add_new_line_div">
+  <!--add area begin -->
+  <div class="container"  style="margin-top:20px;">
+    <div class="add-content-box">
+		<div class="mt">
+			<div class="fl mleft">
+				<a href="javascript:void(0)" class="add" id="add_new_line">
+					<i class="iconadd"></i>增加新的一天
+				</a>
+				<span class="txt" style="display:none;">第一天的路线</span>
+			</div>
+			<div class="fr"></div>
+		</div>
+	</div>
+  </div>
+  <!--add area end --> 
+  
+</div>
+
+<div class="detail-info no-margin clearfix">
+	<div class="detail-title" > 装备需求 </div>
+	<!--add area begin -->
+	<form action="activeEquipment/equipment.do">
+	<#if dto.aes?size gt 0>
+	<#assign hasAes=true >
+	<#else>
+	<#assign hasAes=false >
+	</#if>
+	<div class="container" id="equipment_div">
+		<div class="add-content-box">
+			<div class="mt">
+				<div class="fl mleft">
+					<span class="txt">装备需求</span>
+				</div>
+				<div class="fr">
+					<a href="javascript:void(0)" id="saveActiveInfo" class="btn-box"
+							<#if hasAes>style="background:#A9A9A9;"</#if>>
+							<#if hasAes>修改<#else>保存</#if>
+							</a>
+				</div>
+			</div>
+			<div class="mc">
+				<div class="cost-detail">
+			        <table>
+				        <thead>
+						  <tr>
+						    <th>装备名称</th>
+						    <th>装备说明</th>
+						    <th>操作</th>
+						  </tr>
+				        </thead>
+				        <tbody>
+				        <#assign aes_index_num=1>
+				        <#if hasAes>
+				        
+				        <#list dto.aes as item>
+						  <tr>
+						    <td>
+						    	<input name="aes[${item_index}].ae_name" type="text" maxlength="50" placeholder="装备名称" value="${item.ae_name}" />
+						    </td>
+						    <td>
+						    	<input name="aes[${item_index}].ae_description" type="text" maxlength="100" class="wid03" placeholder="装备说明" value="${item.ae_description}" />
+						    </td>
+						    <td>
+						    	<i class="btn-del"></i>
+						    </td>
+						  </tr>
+				          <#assign aes_index_num=item_index+1>
+				        </#list>
+				        
+				        <#else>
+						  <tr>
+						    <td>
+						    	<input name="aes[0].ae_name" type="text" maxlength="50" placeholder="装备名称"/>
+						    </td>
+						    <td>
+						    	<input name="aes[0].ae_description" type="text" maxlength="100" class="wid03" placeholder="装备说明"/>
+						    </td>
+						    <td>
+						    	<i class="btn-del"></i>
+						    </td>
+						  </tr>
+				        </#if>
+				        
+						  <tr>
+					    	  <td colspan="5" class="add-cost-item">
+					    	  	<a href="javascript:void(0)" id="add_equipment" >
+					    	  		<i class="iconadd"></i>添加装备
+					    	  	</a>
+					    	  </td>
+						  </tr>
+					  </tbody>
+					</table>
+				</div>
+			</div>
+			<input id="index_num" value="${aes_index_num}" type="hidden" />
+		</div>
+	</div>
+	</form>
+	<!--add area end -->
+</div>
+
+
+<!-- pay type start -->
+	<div class="detail-info no-margin clearfix" id="payType">
+		<div class="detail-main-title">
+			<div class="txt bg">支付方式</div>
+			<div class="line"></div>
+		</div>
+		<form action="huodong/restsInfo.do">
+			<input type="hidden" name="addOrUpdate" value="<#if dto.payType gt 0>update<#else>add</#if>" finish-num="10" /> 
+			<div class="container" id="cost-detail">
+				<div class="add-content-box">
+					<div class="mt">
+						<div class="fl mleft">
+							<span class="txt">支付方式
+								<span style="color:red;">
+									(完成度：+10%)
+								</span>
+							</span>
+						</div>
+						<div class="fr">
+							<a href="javascript:void(0)" id="saveActiveInfo" handle-finish-num class="btn-box"
+							<#if dto.payType gt 0>style="background:#A9A9A9;"</#if>>
+							<#if dto.payType gt 0>修改<#else>保存</#if>
+							</a>
+						</div>
+					</div>
+					<div class="mc" style="padding:10px 0;">
+						<div class="cost-detail">
+							<table>
+								<thead>
+									<tr>
+										<th>
+											选择
+										</th>
+										<th>支付方式</th>
+										<th>预定金额</th>
+										<th style="width: 600px;">支付说明</th>
+									</tr>
+								</thead>
+								<tbody>
+									<#assign payOne=true>
+									<#if dto.payType != 1>
+										<#assign payOne=false>
+									</#if>
+									
+									<#if user.uType = 1>
+									<tr>
+										<td>
+											<span class="radio <#if payOne>now</#if>">
+												<i class="icon-select"></i>
+												<input type="radio" name="payType" value="1" <#if payOne>checked="checked"</#if> style="display: none;"/>
+											</span>
+										</td>
+										<td>平台交易(认证活动)</td>
+										<td><input type="hidden" placeholder="预定金额" name="a_reserve_price" maxlength="4" onkeyup="this.value=this.value.replace(/\D/g,'')" onafterpaste="this.value=this.value.replace(/\D/g,'')"  value="0" <#if !payOne>disabled="disabled"</#if> /></td>
+										<td>用户支付的金额将暂时冻结，确认交易后转为提现金额</td>
+									</tr>
+									<tr>
+										<td>
+											<span class="radio <#if !payOne>now</#if>">
+												<i class="icon-select"></i>
+												<input type="radio" name="payType" value="2" <#if !payOne>checked="checked"</#if> style="display: none;"/>
+											</span>
+										</td>
+										<td>当面交易(非认证活动)</td>
+										<td><input type="text" placeholder="预定金额" name="a_reserve_price" maxlength="4" onkeyup="this.value=this.value.replace(/\D/g,'')" onafterpaste="this.value=this.value.replace(/\D/g,'')"  <#if payOne>disabled="disabled" style="cursor: no-drop;"<#else>value="${dto.a_reserve_price}"</#if> /></td>
+										<td>用户支付预定金（可提现），剩余金额采取线下交易</td>
+									</tr>
+									<#else>
+									<tr>
+										<td>
+											<span class="radio <#if payOne>now</#if>">
+												<i class="icon-select"></i>
+												<input type="radio" name="payType" value="1" <#if payOne>checked="checked"</#if> style="display: none;"/>
+											</span>
+										</td>
+										<td>平台交易(认证活动)</td>
+										<td><input type="text" placeholder="预定金额" name="a_reserve_price" maxlength="4" onkeyup="this.value=this.value.replace(/\D/g,'')" onafterpaste="this.value=this.value.replace(/\D/g,'')"  <#if !payOne>disabled="disabled" style="cursor: no-drop;"<#else>value="${dto.a_reserve_price}"</#if> /> </td>
+										<td>用户支付预定金（可提现），剩余金额用户确认交易后转为可提现金额</td>
+									</tr>
+									<tr>
+										<td>
+											<span class="radio <#if !payOne>now</#if>">
+												<i class="icon-select"></i>
+												<input type="radio" name="payType" value="2" <#if !payOne>checked="checked"</#if> style="display: none;"/>
+											</span>
+										</td>
+										<td>当面交易(非认证活动)</td>
+										<td><input type="text" placeholder="预定金额" name="a_reserve_price" maxlength="4" onkeyup="this.value=this.value.replace(/\D/g,'')" onafterpaste="this.value=this.value.replace(/\D/g,'')" <#if payOne>disabled="disabled" style="cursor: no-drop;"<#else>value="${dto.a_reserve_price}"</#if> /> </td>
+										<td>用户支付预定金（可提现），剩余金额采取线下交易</td>
+									</tr>
+									</#if>
+								</tbody>
+							</table>
+						</div>
+					</div>
+				</div>
+			</div>
+		</form>
+	</div>
+
+	<!-- pay type end -->
+
+
+<div class="detail-info no-margin clearfix">
+  <div class="detail-main-title" >
+      <div class="txt bg">费用说明</div>
+      <div class="line"></div>
+  </div>
+  <form action="huodong/insertCost.do">    
+  <input name="acp_type" type="hidden" value="0" />
+  <#if dto.accs?size gt 0>
+	<#assign hasCost = true>
+  <#else>
+	<#assign hasCost = false>
+  </#if>
+  <div class="container" id="cost-detail">
+    <div class="add-content-box">
+		<div class="mt">
+			<div class="fl mleft">
+				<a href="javascript:void(0)" class="add" style="display:none;">
+					<i class="iconadd"></i>添加费用包括的内容
+				</a>
+				<span class="txt">费用包括</span>
+			</div>
+			<div class="fr">
+				<!-- <a href="javascript:void(0)" class="btn-edit-box">编辑</a>
+				<a href="javascript:void(0)" class="btn-box">删除</a> -->
+				<a href="javascript:void(0)" id="saveActiveInfo"   handle-finish-num class="btn-box"
+				<#if hasCost>style="background:#A9A9A9;"</#if>>
+				<#if hasCost>修改<#else>保存</#if>
+				</a>
+			</div>
+		</div>
+		<div class="mc" style="padding:10px 0;">
+      <div class="cost-detail">
+        <table>
+	        <thead>
+			  <tr>
+			    <th>
+			    	<label class="checkbox">
+			    		<i class="icon-select"></i>
+			    	</label>
+			    </th>
+			    <th>费用名称</th>
+			    <th>单价</th>
+			    <th>费用说明</th>
+			    <th>操作</th>
+			  </tr>
+	        </thead>
+	        <tbody>
+	        <#assign cost_sum=0>
+	        <#assign bkfy=0 />
+	  		<#if hasCost>
+	  			<#list dto.accs as item>
+	  				<#if item.acp_type == '0' && item.acp_order == 1>
+			  			<tr>
+						    <td>
+						    	<label class="checkbox now">
+						    		<i class="icon-select"></i>
+						    	</label>
+						    	<input type="hidden" name="costs[${bkfy}].isSave" value="true" />
+						    </td>
+						    <td>
+						    	${item.acp_cost_name}
+						    	<input name="costs[${bkfy}].acp_cost_name" type="hidden" value="${item.acp_cost_name}" />
+						    </td>
+						    <td>
+						    	<#assign cost_sum=cost_sum+item.acp_cost>
+						    	<input name="costs[${bkfy}].acp_cost" type="text"  min="0" class="wid04" placeholder="输入金额"  maxlength="6" onkeyup="this.value=this.value.replace(/\D/g,'')" onafterpaste="this.value=this.value.replace(/\D/g,'')" value="${item.acp_cost}"/> 元/人
+						    </td>
+						    <td>
+						    	<input name="costs[${bkfy}].acp_comment" type="text" class="wid03" placeholder="亲！输入您的费用说明" value="${item.acp_comment}"/>
+						    </td>
+						    <td>
+						    	<i class="btn-del"></i>
+						    </td>
+					    </tr>
+	  				</#if>
+		  		<#assign bkfy=bkfy+1 />
+	  			</#list>
+	  		</#if>
+	  		
+	        
+		  <#list cost as item>
+		  	<#if item.cc_type = 0>
+		  	  
+			  	<#assign isWrite = true>
+			  	<#list dto.accs as cost>
+			  		<#if item.cc_name == cost.acp_cost_name>
+			  			<#assign isWrite = false>
+			  		</#if>
+			  	</#list>
+			  	
+			  	<#if isWrite>
+				  <tr>
+				    <td>
+				    	<label class="checkbox">
+				    		<i class="icon-select"></i>
+				    	</label>
+				    	<input type="hidden" name="costs[${bkfy}].isSave" value="false" />
+				    </td>
+				    <td>
+				    	${item.cc_name}
+				    	<input name="costs[${bkfy}].acp_cost_name" type="hidden" value="${item.cc_name}" />
+				    </td>
+				    <td>
+				    	<input name="costs[${bkfy}].acp_cost" type="text" min="0" class="wid04" placeholder="输入金额" maxlength="6" onkeyup="this.value=this.value.replace(/\D/g,'')" onafterpaste="this.value=this.value.replace(/\D/g,'')" value="${item.acp_cost}" /> 元/人
+				    </td>
+				    <td>
+				    	<input name="costs[${bkfy}].acp_comment" type="text" class="wid03" placeholder="亲！输入您的费用说明"/>
+				    </td>
+				    <td>
+				    	<i class="btn-del"></i>
+				    </td>
+				  </tr>
+			  	<#assign bkfy=bkfy+1 />
+			  	</#if>
+		  	</#if>
+		  </#list>
+		  
+		  
+		  <tr>
+	    	  <td colspan="5" class="add-cost-item">
+	    	  	<a href="javascript:void(0)" id="add_cost" >
+	    	  		<i class="iconadd"></i>添加其它费用
+	    	  	</a>
+	    	  </td>
+		  </tr>
+		  
+		  </tbody>
+		</table>
+	</div>
+ 	<div class="cost-all">费用小计：<span id="cost_sum">${cost_sum?string(',##0.00')}</span></div>
+   </div>
+  </div>
+  <input type="hidden" id="cost_num" value="${bkfy}"/>
+  </div>
+  </form>
+  
+  <!--add area end -->
+  <!--add area begin -->
+  <form action="huodong/insertCost.do">
+  <input name="acp_type" type="hidden" value="1" />
+  <div class="container" id="cost-detail">
+	<#if dto.accs?size gt 0>
+		<#assign hasCost = true>
+	<#else>
+		<#assign hasCost = false>
+	</#if>
+    <div class="add-content-box">
+	<div class="mt">
+		<div class="fl mleft">
+			<span class="txt">可选费用</span>
+		</div>
+		<div class="fr">
+			<!-- <a href="javascript:void(0)" class="btn-edit-box">编辑</a>
+			<a href="javascript:void(0)" class="btn-box">删除</a> -->
+			<a href="javascript:void(0)" id="saveActiveInfo" class="btn-box"
+			<#if hasCost>style="background:#A9A9A9;"</#if>>
+			<#if hasCost>修改<#else>保存</#if>
+			</a>
+		</div>
+	</div>
+	<div class="mc" style="padding:10px 0;">
+      <div class="cost-detail">
+        <table>
+          <thead>
+			  <tr>
+			    <td>
+			    	<label class="checkbox">
+			    		<i class="icon-select"></i>
+			    	</label>
+			    </td>
+			    <th>费用名称</th>
+			    <th>补差费用<span class="c1">（在原费用上添加差价）</span></th>
+			    <th>费用说明</th>
+			    <th>操作</th>
+			  </tr>
+          </thead>
+          <tbody>
+          
+          
+          	<#assign cost_sum=0>
+			<#assign kxfy=0 />
+	  		<#if hasCost>
+	  			<#list dto.accs as item>
+	  				<#if item.acp_type == '1' && item.acp_order == 1>
+			  			<tr>
+						    <td>
+						    	<label class="checkbox now">
+						    		<i class="icon-select"></i>
+						    	</label>
+						    	<input type="hidden" name="costs[${kxfy}].isSave" value="true" />
+						    </td>
+						    <td>
+						    	${item.acp_cost_name}
+						    	<input name="costs[${kxfy}].acp_cost_name" type="hidden" value="${item.acp_cost_name}" />
+						    </td>
+						    <td>
+						    	<#assign cost_sum=cost_sum+item.acp_cost>
+						    	<input name="costs[${kxfy}].acp_cost" type="text" min="0" class="wid04" maxlength="6" onkeyup="this.value=this.value.replace(/\D/g,'')" onafterpaste="this.value=this.value.replace(/\D/g,'')" value="${item.acp_cost}" /> 元/人
+						    </td>
+						    <td>
+						    	<input name="costs[${kxfy}].acp_comment" type="text" class="wid03" placeholder="亲！输入您的费用说明" value="${item.acp_comment}"/>
+						    </td>
+						    <td>
+						    	<i class="btn-del"></i>
+						    </td>
+					    </tr>
+	  				</#if>
+		  		<#assign kxfy=kxfy+1 />
+	  			</#list>
+	  		</#if>
+          
+		  <#list cost as item>
+		  	<#if (item.cc_type = 1)>
+		  	
+			  	<#assign isWrite = true>
+			  	<#list dto.accs as cost>
+			  		<#if item.cc_name == cost.acp_cost_name>
+			  			<#assign isWrite = false>
+			  		</#if>
+			  	</#list>
+			  	
+			  <#if isWrite>
+			  <tr>
+			    <td>
+			    	<label class="checkbox">
+			    		<i class="icon-select"></i>
+			    	</label>
+			    	<input type="hidden" name="costs[${kxfy}].isSave" value="false" />
+			    </td>
+			    <td>
+			    	${item.cc_name}
+			    	<input type="hidden" name="costs[${kxfy}].acp_cost_name" value="${item.cc_name}" />
+			    </td>
+			    <td>
+			    	<input name="costs[${kxfy}].acp_cost" type="text" min="0" class="wid04" placeholder="输入金额" maxlength="6" onkeyup="this.value=this.value.replace(/\D/g,'')" onafterpaste="this.value=this.value.replace(/\D/g,'')" value="${item.acp_cost}" /> 元/人
+			    </td>
+			    <td>
+			    	<input name="costs[${kxfy}].acp_comment" type="text" class="wid03" placeholder="亲！输入您的费用说明"/>
+			    </td>
+			    <td>
+			    	<i class="btn-del"></i>
+			    </td>
+			  </tr>
+		  	  <#assign kxfy=kxfy+1 />
+			  </#if>
+		  	</#if>
+		  </#list>
+		  
+		  <tr>
+			  <td colspan="5" class="add-cost-item">
+				  <a href="javascript:void(0)" id="add_cost">
+				  	<i class="iconadd"></i>添加其它费用
+				  </a>
+			  </td>
+		  </tr>
+		  
+		  </tbody>
+		</table>
+	  </div>
+	  
+	  <div class="cost-all">费用小计：<span id="cost_sum">${cost_sum?string(',##0.00')}</span></div>
+	  
+     </div>
+   </div>
+  	  <input type="hidden" id="cost_num" value="${kxfy}"/>
+  </div>
+  </form>
+  
+  
+  
+  <!--add area end -->  
+  <!--add area begin -->
+  <form action="huodong/restsInfo.do">
+    <input name="dc" value="a_price_deatil_off" type="hidden" />
+	<#if dto.a_price_deatil_off??>
+		<#assign info_has=true>
+		<#else>
+		<#assign info_has=false>
+	</#if>
+	<div class="container activity-info">
+	<div class="add-content-box">
+		<div class="mt">
+			<div class="fl mleft">
+				<a href="javascript:void(0)" class="add" <#if info_has>style="display:none;"</#if>>
+					<i class="iconadd"></i>添加费用不包括的内容
+				</a>
+				<span class="txt" <#if !info_has>style="display:none;"</#if>>费用不包括</span>
+			</div>
+			<div class="fr" <#if !info_has>style="display:none;"</#if>>
+				<a href="javascript:void(0)" class="btn-edit-box">编辑</a>
+				<a href="javascript:void(0)" class="btn-box">删除</a>
+				<a href="javascript:void(0)" id="saveActiveInfo" class="btn-box"
+				<#if info_has>style="background:#A9A9A9;"</#if>>
+				<#if info_has>修改<#else>保存</#if>
+				</a>
+			</div>
+		</div>
+		<div class="mc" style="position: relative;<#if !info_has>display:none;</#if>">
+			<p   style="word-wrap: break-word;<#if !info_has>display:none;</#if>">${dto.a_price_deatil_off}</p>
+			
+			<textarea name="a_price_deatil_off" cols="" rows="" class="wid07" maxlength="2000" <#if info_has>style="display:none;"</#if>>${dto.a_price_deatil_off}</textarea>
+			<div style="position: absolute;right: 24px;top: 120px;<#if info_has>display:none;</#if>" show-textarea-num>剩余<span style="color: red;" id="show_textarea_num">${2000-dto.a_price_deatil_off?length}</span>个字</div>
+			<p class="btn-over" <#if info_has>style="display:none;"</#if>>
+				<a href="javascript:void(0)" class="btn-box">完成</a>
+			</p>
+		</div>
+	</div>
+	
+</div>
+</form>
+<!--add area end --> 
+<!--add area begin -->
+<form action="huodong/restsInfo.do">
+    <input name="dc" value="refundCondition" type="hidden" />
+    <input type="hidden" name="addOrUpdate" finish-num="10" value="
+	<#if dto.refundCondition??>
+		<#assign info_has=true>
+		update
+		<#else>
+		<#assign info_has=false>
+		add
+	</#if>
+	" />
+	<div class="container activity-info">
+	<div class="add-content-box">
+		<div class="mt">
+			<div class="fl mleft">
+				<a href="javascript:void(0)" class="add" <#if info_has>style="display:none;"</#if>>
+					<i class="iconadd"></i>添加支付和退款说明<span style="color:red;">(完成度：+10%)</span>
+				</a>
+				<span class="txt"  <#if !info_has>style="display:none;"</#if>>支付和退款说明<span style="color:red;">(完成度：+10%)</span></span>
+			</div>
+			<div class="fr" <#if !info_has>style="display:none;"</#if>>
+				<a href="javascript:void(0)" class="btn-edit-box">编辑</a>
+				<a href="javascript:void(0)" class="btn-box">删除</a>
+				<a href="javascript:void(0)" id="saveActiveInfo"  handle-finish-num class="btn-box"
+				<#if info_has>style="background:#A9A9A9;"</#if>>
+				<#if info_has>修改<#else>保存</#if>
+				</a>
+			</div>
+		</div>
+		<div class="mc" <#if !info_has>style="display:none;"</#if>>
+			<pre class="pre-val" style="display:<#if !info_has>none<#else>block</#if>;">${dto.refundCondition}</pre>
+			<textarea name="refundCondition" cols="" rows="" class="wid07" maxlength="2000" <#if info_has>style="display:none;"</#if>>${dto.refundCondition}</textarea>
+			<p class="btn-over" <#if info_has>style="display:none;"</#if>>
+				<a href="javascript:void(0)" class="btn-box">完成</a>
+			</p>
+		</div>
+	</div>
+</div>
+</form>
+<!--add area end --> 
+</div>
+
+
+
+
+<div class="detail-info clearfix" id="insurance">
+	<div class="detail-main-title" >
+		<div class="txt bg">活动保险</div>
+		<div class="line"></div>
+	</div>
+  <form action="activityInsurance/insurance.do">
+  	<#if dto.insurance??>
+  	<#assign hasinsurance=true>
+  	<#else>
+  	<#assign hasinsurance=false>
+  	</#if>
+  	<input name="insuranceId" value="<#if hasinsurance>${dto.insurance.id}</#if>" type="hidden" />
+  	<input name="chanpin" value="<#if hasinsurance>${dto.insurance.productName}</#if>" type="hidden" />
+  	<input name="jihua" value="<#if hasinsurance>${dto.insurance.planName}</#if>" type="hidden" />
+  	<input name="qixian" value="<#if hasinsurance>${dto.insurance.minDeadline}<#if dto.insurance.maxDeadline?exists>&nbsp;-&nbsp;${dto.insurance.maxDeadline}</#if><#if dto.insurance.unit == '1'>天<#else>年</#if></#if>" type="hidden" />
+  	<input name="jiage" value="<#if hasinsurance>${dto.insurance.price}</#if>" type="hidden" />
+	<div class="container">
+		<div class="add-content-box">
+			<div class="mt">
+				<div class="fl mleft">
+					<a href="javascript:void(0)" class="add" id="add_insurance" <#if hasinsurance>style="display:none;"</#if>>
+						<i class="iconadd"></i>添加活动保险(由玩嘛平台代购)
+					</a>
+					<a style="display: none;" id="listtener_insurance"></a>
+					<span class="txt" id="title" <#if !hasinsurance>style="display:none;"</#if>>活动保险(由玩嘛平台代购)</span>
+				</div>
+				<div class="fr"  <#if !hasinsurance>style="display:none;"</#if> id="cud">
+					<a href="javascript:void(0)" class="btn-edit-box" id="edit">编辑</a>
+					<a href="javascript:void(0)" class="btn-box" id="delete">删除</a>
+					<a href="javascript:void(0)" class="btn-box" id="saveActiveInfo"
+					<#if hasinsurance>style="background:#A9A9A9;"</#if>>
+					<#if hasinsurance>修改<#else>保存</#if>
+					</a>
+				</div>
+			</div>
+			<div class="mc">
+				<p id="show">
+				<#if hasinsurance>
+				产品名称：${dto.insurance.productName}<br/>
+				计划名称：${dto.insurance.planName}<br/>
+				保险期限：${dto.insurance.minDeadline}<br/>
+				价&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;格：${dto.insurance.price?string(",##0.00")}元<br/>
+				</#if>
+				</p>
+			</div>
+		</div>
+	</div>
+  </form>
+</div>
+
+
+
+<div class="detail-info clearfix">
+<div class="detail-main-title" >
+	<div class="txt bg">活动须知</div>
+	<div class="line"></div>
+</div>
+  
+  <!--add area begin -->
+  <form action="huodong/restsInfo.do">
+    <input name="dc" value="a_careful" type="hidden" />
+    <input type="hidden" name="addOrUpdate" finish-num="10" value="
+	<#if dto.a_careful??>
+		<#assign info_has=true>
+		update
+		<#else>
+		<#assign info_has=false>
+		add
+	</#if>
+	
+	" />
+	<div class="container activity-info">
+		<div class="add-content-box">
+			<div class="mt">
+				<div class="fl mleft">
+					<a href="javascript:void(0)" class="add" <#if info_has>style="display:none;"</#if>>
+						<i class="iconadd"></i>添加活动须知的内容<span style="color:red;">(完成度：+10%)</span>
+					</a>
+					<span class="txt" <#if !info_has>style="display:none;"</#if>>活动须知<span style="color:red;">(完成度：+10%)</span></span>
+				</div>
+				<div class="fr" <#if !info_has>style="display:none;"</#if>>
+					<a href="javascript:void(0)" class="btn-edit-box">编辑</a>
+					<a href="javascript:void(0)" class="btn-box">删除</a>
+					<a href="javascript:void(0)" id="saveActiveInfo"   handle-finish-num class="btn-box"
+					<#if info_has>style="background:#A9A9A9;"</#if>>
+					<#if info_has>修改<#else>保存</#if>
+					</a>
+				</div>
+			</div>
+			<div class="mc" style="position: relative;<#if !info_has>display:none;</#if>">
+				<pre class="pre-val" style="display:<#if !info_has>none<#else>block</#if>;">${dto.a_careful}</pre>
+				<textarea name="a_careful" cols="" rows="" class="wid07" maxlength="2000" <#if info_has>style="display:none;"</#if>>${dto.a_careful}</textarea>
+				<div style="position: absolute;right: 24px;top: 120px;<#if info_has>display:none;</#if>" show-textarea-num>剩余<span style="color: red;" id="show_textarea_num">${2000-dto.a_careful?length}</span>个字</div>
+				<p class="btn-over" <#if info_has>style="display:none;"</#if>>
+					<a href="javascript:void(0)" class="btn-box">完成</a>
+				</p>
+			</div>
+		</div>
+	</div>
+  </form>
+<!--add area end --> 
+
+</div>
+
+<#include "/view/base.js.html">
+<script type="text/javascript">
+var activityId="${dto.activityId}",finishNum="${a_finish_num!"0"}";
+</script>
+<!-- sweet-alert -->
+<script type="text/javascript" src="static/js/plugins/sweet-alert/sweet-alert.min.js"></script>
+<!-- 上传图片 -->
+<script type="text/javascript" src="static/js/plugins/ajaxUpload/ajaxfileupload.js"></script>
+<!-- 日期插件 -->
+<script type="text/javascript" src="static/js/plugins/layer/laydate/laydate.js"></script>
+<!-- 多选 -->	    
+<script type="text/javascript" src="static/js/plugins/chosen/chosen.jquery.js" ></script>
+<!-- 活动基本信息 -->
+<script type="text/javascript" src="static/js/activity/release/release.baseinfo.js"></script>
+<!-- 活动其他信息，crud(添加、完成、编辑、删除、保存)js效果 -->
+<script type="text/javascript" src="static/js/activity/release/release.restsInfo.js"></script>
+<!-- 通用保存接口 -->
+<script type="text/javascript" src="static/js/activity/release/release.save.js"></script>
+<!-- 行程介绍 -->
+<script type="text/javascript" src="static/js/activity/release/release.edit.journey.js"></script>
+<!-- 额外费用 -->
+<script type="text/javascript" src="static/js/activity/release/release.cost.js"></script>
+<!-- 行程单位（天/时间点） -->
+<script type="text/javascript" src="static/js/activity/release/release.journey.unit.js"></script>
+<!-- 保险 -->
+<script type="text/javascript" src="static/js/activity/release/release.insurance.js"></script>
+<!-- 装备 -->
+<script type="text/javascript" src="static/js/activity/release/release.equipment.js"></script>
+<!-- 支付方式 -->
+<script type="text/javascript" src="static/js/activity/release/release.paytype.js"></script>
+<!-- textarea字数提示 -->
+<script type="text/javascript" src="static/js/activity/release/release.show.textarea.num.js"></script>
+<!-- 地图 -->
+<#include "/view/webapi.js.html">
+<!-- 解析线路起点终点 -->
+<script type="text/javascript" src="static/js/activity/release/release.parse.line.js"></script>
+<#include "/view/activity/uploadImg.html">
+
+<script type="text/javascript">
+$(function(){
+
+  // 统计完成度
+	var _init_finish=0,
+		$target = $("a#saveActiveInfo[handle-finish-num]");
+	
+	// 循环所有可统计的元素
+	$target.each(function(index){
+		var $state;
+		
+		if($(this).closest("div#journey_div").length==0){
+			$state = $(this).closest("form").find("input[name=addOrUpdate]:hidden");
+		}else{
+			if($("div#journey_div").index($(this).closest("div#journey_div"))==1){
+				$state = $("div#journey_div").eq(0).find("input[name=addOrUpdate]:hidden");
+			}else{
+				return;
+			}
+		}
+		if($state.length == 0){
+			return;
+		}
+		if($state.val().trim()=="update"){
+			_init_finish+=($state.attr("finish-num")*1);
+		}
+		
+		if(index == $target.length-1){
+			$("i#activeFinish").css({"width":_init_finish+"%"});
+			$("span#activeFinish").text(_init_finish+"%");
+			$("input#active_finish_num:hidden").val(_init_finish);
+			if(_init_finish == 100){
+				return;
+			}
+			layer.confirm("欢迎您继续编辑，当前完成度为：<span style='color:red;'>"+_init_finish+"%</span>，是否直接定位到未编辑区域?",
+				{
+					shade:0.3,
+					icon:6,
+					btn:['定位','不需要']
+				},function(layer_confirm_index){
+					layer.close(layer_confirm_index);
+				
+					// 跳转未完成的地方
+					$("input[finish-num]").each(function(index){
+						if($(this).val().trim() == "update"){
+							return;
+						}
+						var saveElement = $(this).closest("form").find("a[handle-finish-num]").closest("div").css("display")!="none"? $(this).closest("form").find("a[handle-finish-num]"): $(this).closest("form").find("a.add");
+						layer.tips("发布完成度不是100%哦！,请保存带有<span style='color:red;'>完成度</span>标识的元素！", saveElement, {
+							  time:3*1000
+						});
+						$("body,html").animate({scrollTop:$(this).parent().offset().top});
+						return false;
+					})
+					
+					
+			})
+		}
+	})
+
+  
+  // 活动主图
+  new $.fn.dragImg({
+  	jq:$("input#activity_img"),
+  	width:3.2,
+  	height:1,
+  	fn:function(data){
+		$('div#bannerImg').css({'background':'url('+data.savePath+') no-repeat center top','background-size': 'cover'});
+		$('input[name=a_active_img]').val(data.savePath);
+  	}
+  });
+  
+  <#if dto.lines?size gt 0>
+  for(var i=0,len=$("a.btn-add-img").length;i<len;i++){
+	  // 线路附图
+	  new $.fn.dragImg({
+	  	jq:$("a.btn-add-img:eq("+i+")").find("input[name=file]"),
+	  	width:2.26,
+	  	height:1,
+	  	fn:function(data,jq){
+			var $obj = jq,
+			$id=$obj.prop("id"),
+			$routeImg = $obj.closest("div#route_img"),
+			$imgUl = $obj.closest("ul"),
+			$imgIndex="",
+			$imgNumber=$imgUl.find("li[li-type!=add-img]").length,
+			$imgTxt=$obj.closest("div#add_img_box").next(),
+			$divTxt = $imgTxt.children(),
+			$textareas=$divTxt.children(),
+			time = new Date().getTime();
+			// 判断当前图片下标
+			if($imgUl.find("li[li-type!=add-img]").length == 0){
+				$imgIndex=0;
+			}else{
+				$imgIndex=parseInt($imgUl.find("li[li-type!=add-img]:last").attr("index"))+1;
+			}
+			
+			// 替换背景图片
+			$routeImg.css({"background":"url("+data.savePath+") no-repeat center top","background-size": "cover"});
+			
+			// 生成新的缩略图
+			var str = '<li index="'+$imgIndex+'">'
+				+'<div class="edit-img-box">'
+				+'<a href="javascript:void(0)" id="edit_img_a" >编辑</a>'
+				+'<input type="file" upload-img name="file" id="'+time+'_edit_img" style="display:none;" />'
+				+'<a href="javascript:void(0)" id="del_img_a" >删除</a>'
+				+'</div>'
+				+'<img src="'+data.savePath+'" id="img_slt" width="200" height="150" />'
+				+'<input id="li_local_url" type="hidden" name="images['+$imgIndex+'].li_local_url" value="'+data.savePath+'" />'
+				+'</li>';
+			// 添加缩略图
+			$("#"+$id).closest("li").before(str);
+			
+			// 生成对该图片的描述
+			$textareas.hide();
+			var textareas = '<textarea  index="'+$imgIndex+'" name="images['+$imgIndex+'].li_description" placeholder="亲！添加您对这张照片当时的美好记忆！"></textarea>';
+			$divTxt.append(textareas);
+			
+			// 目前最多支持五张图片
+			if($imgNumber >= 4){
+				$imgUl.find("li[li-type=add-img]").remove();
+			}
+		
+	  	}
+	  });
+  }
+  
+  <#else>
+  // 线路主图
+  new $.fn.dragImg({
+  	jq:$("input#${id}_img"),
+  	width:2.26,
+  	height:1,
+  	fn:function(data,jq){
+  		var $img = jq;
+		$id=$img.prop("id"),
+		$routeImg = $img.closest("div#route_img"),
+		$setMainImg = $img.closest("div#set_main_img"),
+		$imgList = $setMainImg.next(),
+		$imgIndex=$img.closest("ul>li").length,
+		$imgTxt=$img.closest("div#add_img_box").next(),
+		times = new Date().getTime();
+  		
+		// 生成新的缩略图
+		var str = '<li index="0">'
+			+'<div class="edit-img-box">'
+			+'<a href="javascript:void(0)" id="edit_img_a" >编辑</a>'
+			+'<input type="file" upload-img name="file" id="'+times+'_edit_img" style="display:none;" />'
+			+'<a href="javascript:void(0)" id="del_img_a" >删除</a>'
+			+'</div>'
+			+'<img src="'+data.savePath+'" id="img_slt" width="200" height="150" />'
+			+'<input id="li_local_url" type="hidden" name="images[0].li_local_url" value="'+data.savePath+'" />'
+			+'</li>';
+  		
+  		$routeImg.css({"background":"url("+data.savePath+") no-repeat center top","background-size": "cover"});
+			
+		// 添加缩略图
+		$setMainImg.next().find("ul").prepend(str);
+		
+		// 展示该图片的描述框
+		$imgTxt.show();
+		
+		// 添加附图
+		$imgList.show();
+		
+		// 删除增加主图入口
+		$setMainImg.remove();
+  	}
+  });
+  
+  
+  // 线路附图
+  new $.fn.dragImg({
+  	jq:$("input#${attachId}_imgs"),
+  	width:2.26,
+  	height:1,
+  	fn:function(data){
+		var $obj = $("input#${attachId}_imgs"),
+		$id=$obj.prop("id"),
+		$routeImg = $obj.closest("div#route_img"),
+		$imgUl = $obj.closest("ul"),
+		$imgIndex="",
+		$imgNumber=$imgUl.find("li[li-type!=add-img]").length,
+		$imgTxt=$obj.closest("div#add_img_box").next(),
+		$divTxt = $imgTxt.children(),
+		$textareas=$divTxt.children(),
+		time = new Date().getTime();
+		
+		// 判断当前图片下标
+		if($imgUl.find("li[li-type!=add-img]").length == 0){
+			$imgIndex=0;
+		}else{
+			$imgIndex=parseInt($imgUl.find("li[li-type!=add-img]:last").attr("index"))+1;
+		}
+		
+		// 替换背景图片
+		$routeImg.css({"background":"url("+data.savePath+") no-repeat center top","background-size": "cover"});
+		
+		// 生成新的缩略图
+		var str = '<li index="'+$imgIndex+'">'
+			+'<div class="edit-img-box">'
+			+'<a href="javascript:void(0)" id="edit_img_a" >编辑</a>'
+			+'<input type="file" upload-img name="file" id="'+time+'_edit_img" style="display:none;" />'
+			+'<a href="javascript:void(0)" id="del_img_a" >删除</a>'
+			+'</div>'
+			+'<img src="'+data.savePath+'" id="img_slt" width="200" height="150" />'
+			+'<input id="li_local_url" type="hidden" name="images['+$imgIndex+'].li_local_url" value="'+data.savePath+'" />'
+			+'</li>';
+		// 添加缩略图
+		$("#"+$id).closest("li").before(str);
+		
+		// 生成对该图片的描述
+		$textareas.hide();
+		var textareas = '<textarea  index="'+$imgIndex+'" name="images['+$imgIndex+'].li_description" placeholder="亲！添加您对这张照片当时的美好记忆！"></textarea>';
+		$divTxt.append(textareas);
+		
+		// 目前最多支持五张图片
+		if($imgNumber >= 4){
+			$imgUl.find("li[li-type=add-img]").remove();
+		}
+	
+  	}
+  });
+  
+  </#if>
+  
+})
+</script>
+</body>
+</html>

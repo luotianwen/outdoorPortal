@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="withdrawalsAccountMapper">
+	<sql id="Base_Column_List">
+    id,user_id ,wt_id ,account_name ,account_number ,isDefault ,create_time 
+    </sql>
+
+    <resultMap type="com.op.entity.withdrawals.WithdrawalsAccount" id="WithdrawalsAccountReturnMap">
+		<!-- id -->
+      <id column="id" property="id"/>
+		<!-- 用户ID -->
+      <result column="user_id" property="user_id"/>
+		<!-- 提现类型ID -->
+      <result column="wt_id" property="wt_id"/>
+		<!-- 账户姓名 -->
+      <result column="account_name" property="account_name"/>
+		<!-- 账户账号 -->
+      <result column="account_number" property="account_number"/>
+		<!-- 默认提现账户（1：是；2：否） -->
+      <result column="isDefault" property="isDefault"/>
+		<!-- 添加时间 -->
+      <result column="create_time" property="create_time"/>
+   </resultMap>
+    
+   <!-- 根据账户ID获取详细信息 -->
+   <select id="findWithdrawalsAccountById" parameterType="map" resultType="com.op.entity.withdrawals.WithdrawalsAccount" >
+	  SELECT 
+	  id,account_name ,account_number ,wt_id
+	  FROM withdrawalsAccount wa
+	  WHERE  
+      wa.id =  #{id}
+      and user_id = #{user_id}
+   </select>
+   
+   <!-- 根据User ID获取详细信息 -->
+   <select id="findWithdrawalsAccountByUserId" parameterType="String" resultType="com.op.entity.withdrawals.WithdrawalsAccount" >
+	  SELECT 
+	  wa.id,account_name,account_number,type_name,isDefault
+	  FROM withdrawalsAccount wa
+      LEFT JOIN withdrawalsType wt ON wt.id = wt_id
+	  WHERE
+      wa.user_id =  #{user_id}
+      order by isDefault , create_time desc
+   </select>   
+   
+   
+  <!-- 保存提现账户 -->
+   <insert id="saveWithdrawalsAccount" parameterType="com.op.entity.withdrawals.WithdrawalsAccount">
+	   insert into withdrawalsAccount(user_id ,wt_id ,account_name ,account_number,create_time)
+	   values (#{user_id},#{wt_id},#{account_name},#{account_number},now())
+   </insert>
+   
+    <!-- 取消默认账户 -->
+   <update id="cancelDefaultAccount"  parameterType="map"><!-- java.util.HashMap -->
+    update withdrawalsAccount set isDefault = 2 where user_id =  #{user_id} and isDefault = 1
+   </update>
+  <!--  设置默认账户 -->
+   <update id="setDefaultAccount"  parameterType="map">
+    	update withdrawalsAccount set isDefault = 1 where user_id =  #{user_id}  and id = #{id}
+   </update>
+   
+   <delete id="deletewAccount" parameterType="map">
+   		delete from withdrawalsAccount where user_id =  #{user_id}  and id = #{id}
+   </delete>
+   
+   
+  <!--  修改账户 -->
+   <update id="updateWithdrawalsAccount"  parameterType="com.op.entity.withdrawals.WithdrawalsAccount">
+    	update withdrawalsAccount set
+    	wt_id = #{wt_id} ,account_name = #{account_name}  ,account_number = #{account_number} 
+    	where user_id =  #{user_id}  and id = #{id}
+   </update>
+	
+</mapper>

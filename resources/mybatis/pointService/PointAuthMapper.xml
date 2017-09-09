@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="pointAuthMapper">
+	<sql id="Base_Column_List">
+	    pa_id,user_id ,ps_id ,contactName ,idCard ,mobile ,email ,idCard_p_src ,
+	    idCard_i_src2 ,auditor_state ,organizationCode ,companyName ,location ,
+	    detailedAddress ,establish_time ,business_end_time ,business_start_time ,
+	    registerCapital ,businessScope ,auditor_remark ,organizationCode_src ,
+	    taxpayer_identity_number ,tax_registration_certificate ,
+	    tax_registration_certificate_s ,license_number ,license_src ,
+	    application_time ,auditor_id ,auditor_time,threeinone
+    </sql>
+
+    <resultMap type="com.op.entity.pointService.auth.PointAuth" id="PointAuthReturnMap">
+		<!-- 认证id -->
+		<id column="pa_id" property="pa_id" />
+		<!-- 用户id -->
+		<result column="user_id" property="user_id" />
+		<!-- 地点服务id -->
+		<result column="ps_id" property="ps_id" />
+		<!-- 真实姓名 -->
+		<result column="contactName" property="contactName" />
+		<!-- 身份证号 -->
+		<result column="idCard" property="idCard" />
+		<!-- 手机号 -->
+		<result column="mobile" property="mobile" />
+		<!-- 邮箱 -->
+		<result column="email" property="email" />
+		<!-- 身份证扫描(正面)图片地址 -->
+		<result column="idCard_p_src" property="idCard_p_src" />
+		<!-- 身份证扫描(反面)图片地址 -->
+		<result column="idCard_i_src2" property="idCard_i_src2" />
+		<!-- 审核结果（1：提交待审核；2：审核中；3：审核成功；4：审核失败；） -->
+		<result column="auditor_state" property="auditor_state" />
+		<!-- 组织机构代码 -->
+		<result column="organizationCode" property="organizationCode" />
+		<!-- 公司名称 -->
+		<result column="companyName" property="companyName" />
+		<!-- 注册所在地 -->
+		<result column="location" property="location" />
+		<!-- 详细地址 -->
+		<result column="detailedAddress" property="detailedAddress" />
+		<!-- 成立日期 -->
+		<result column="establish_time" property="establish_time" />
+		<!-- 营业结束时间 -->
+		<result column="business_end_time" property="business_end_time" />
+		<!-- 营业开始时间 -->
+		<result column="business_start_time" property="business_start_time" />
+		<!-- 注册资本 -->
+		<result column="registerCapital" property="registerCapital" />
+		<!-- 经营范围 -->
+		<result column="businessScope" property="businessScope" />
+		<!-- 审核备注 -->
+		<result column="auditor_remark" property="auditor_remark" />
+		<!-- 组织机构代码证图片地址 -->
+		<result column="organizationCode_src" property="organizationCode_src" />
+		<!-- 纳税人识别号 -->
+		<result column="taxpayer_identity_number" property="taxpayer_identity_number" />
+		<!-- 税务登记证 -->
+		<result column="tax_registration_certificate" property="tax_registration_certificate" />
+		<!-- 一般纳税人资格证图片地址 -->
+		<result column="tax_registration_certificate_s" property="tax_registration_certificate_s" />
+		<!-- 营业执照注册号 -->
+		<result column="license_number" property="license_number" />
+		<!-- 营业执照扫描件图片地址 -->
+		<result column="license_src" property="license_src" />
+		<!-- 三证合一(0：有；1：无) -->
+		<result column="threeinone" property="threeinone"/>
+		<!-- 申请认证时间 -->
+		<result column="application_time" property="application_time" />
+		<!-- 审核人 -->
+		<result column="auditor_id" property="auditor_id" />
+		<!-- 审核时间 -->
+		<result column="auditor_time" property="auditor_time" />
+	</resultMap>
+	
+	<!-- 根据地点服务id查询商户信息 -->
+	<select id="findByPointServiceId" parameterType="java.lang.String" resultType="com.op.entity.pointService.auth.PointAuth">
+		select user_id,auditor_state
+		from pointAuth where ps_id=#{id}
+	</select>
+	
+	<insert id="insertAuth" parameterType="com.op.dto.pointService.auth.InsertPointAuthDTO" 
+		useGeneratedKeys="true" keyColumn="pa_id" keyProperty="pa_id">
+	
+	insert into pointAuth
+	(
+		user_id ,ps_id ,contactName ,idCard ,mobile ,email ,idCard_p_src ,idCard_i_src2
+		,license_number ,license_src ,application_time ,AUDITOR_STATE,
+		organizationCode,organizationCode_src,taxpayer_identity_number,tax_registration_certificate,
+		threeinone
+	)
+	values
+	(
+		#{user_id },#{ps_id },#{contactName },#{idCard },#{mobile },#{email },#{idCard_p_src },
+		#{idCard_i_src2 },#{license_number },#{license_src },#{application_time},1,
+		#{organizationCode},#{organizationCode_src},#{taxpayer_identity_number},#{tax_registration_certificate},
+		#{threeinone}
+	)
+	</insert>
+	
+	<!-- 修改认证信息 -->
+	<update id="updateAuth" parameterType="com.op.dto.pointService.auth.InsertPointAuthDTO">
+		update pointAuth set
+		contactName = #{contactName},
+		idCard = #{idCard},
+		mobile = #{mobile},
+		email = #{email},
+		license_number = #{license_number},
+		organizationCode = #{organizationCode},
+		taxpayer_identity_number = #{taxpayer_identity_number}
+		where user_id = #{user_id} and pa_id = #{pa_id}
+	</update>
+	
+	
+	<!-- 查询场馆认证信息 -->
+	<select id="findPointServiceAuth" parameterType="java.util.Map" resultType="com.op.dto.pointService.auth.InsertPointAuthDTO">
+		select
+			pa_id,user_id ,pa.ps_id ,contactName ,idCard ,mobile ,email ,idCard_p_src ,
+		    idCard_i_src2 ,license_number ,license_src ,application_time ,auditor_id ,
+		    auditor_time ,auditor_remark ,auditor_state ,threeinone
+		from pointAuth pa
+		left join pointService ps on ps.ps_create_user_id = user_id
+		where USER_ID = #{userId} and ps.ps_id = pa.ps_id and AUDITOR_STATE = 3
+	</select>
+	
+	
+</mapper>

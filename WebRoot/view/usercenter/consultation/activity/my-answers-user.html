@@ -1,0 +1,117 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<base href="/" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>玩嘛</title>
+
+<#include "/view/usercenter/base.css.html">
+
+<style>
+body {
+	background: #f1f1f1;
+}
+.laypageskin_molv a {
+    background-color: #f1eff0 !important;
+}
+</style>
+</head>
+<body>
+
+<#include "/view/usercenter/header.html">
+
+	<div class="boxw clearfix">
+		
+		<#include "/view/usercenter/consultation/menu_left.html">
+		
+		<div class="mainQuestion-box">
+
+			<div class="question-nav" id="question-nav">
+				<ul>
+					<li 
+					<#if !uct?exists>
+					class="now"
+					</#if>
+					>
+						<p class="num">${numDTO.allNum}</p>
+						<p>所有问题</p>
+					</li>
+					<li
+					<#if uct?exists && uct == '0'>
+					class="now"
+					</#if>
+					type="0">
+						<p class="num">${numDTO.waitNum}</p>
+						<p>待回复的</p>
+					</li>
+					<li
+					<#if uct?exists && uct = '1'>
+					class="now"
+					</#if>
+					type="1">
+						<p class="num">${numDTO.replyNum}</p>
+						<p>已回复的</p>
+					</li>
+				</ul>
+			</div>
+			<#list list as item>
+			<div class="question-list" id="question-list" replyType="${uct?if_exists}" activityId="${item.id}">
+				<ul>
+					<li>
+						<div class="activity-info">
+							<div class="fl">
+								<a href="huodong/info/${item.id}.html" target="_blank" class="act-name">${item.title}</a><span
+									class="act-date">${item.activityTime?string("yyyy-MM-dd HH:mm:ss")}</span>
+							</div>
+							<div class="fr">
+								<a href="javascript:void(0)" class="act-num">
+									<em>${item.num}</em>个问答
+									<i load="0" class="down" id="down_up"></i>
+								</a>
+							</div>
+						</div>
+						<div class="activity-item" id="activity-item">
+						</div>
+						<div style="width: 100%;text-align: center;" id="page">
+						</div>
+					</li>
+				</ul>
+			</div>
+			</#list>
+				
+		  <div style="width: 100%;text-align: center;margin-top: 20px;" id="activePage">
+		  </div>
+		</div>
+	</div>
+
+	<!-- main end -->
+	
+	<#include "/view/usercenter/base.js.html">
+	<!-- 分页 -->
+	<script type="text/javascript" src="static/js/plugins/layer/laypage/laypage.js"></script>
+	<script type="text/javascript" src="static/js/page.js"></script>
+	<script type="text/javascript">
+	var userId='${users.uId}',
+		currentUserId='${SESSION_USER.uId}';
+	$(function(){
+		$("div#question-nav li").on("click",function(){
+			if($(this).attr("type")){
+				window.location.href="activeConsultation/consultation.html?id="+userId+"&type=3&uct="+$(this).attr("type");
+			}else{
+				window.location.href="activeConsultation/consultation.html?id="+userId+"&type=3";
+			}
+		})
+		
+		$("div#activePage").page({
+			totalPage:${page.totalPage},
+			currentPage:${page.currentPage},
+			param:{
+				uct:'${uct!""}'
+			},
+			link:"activeConsultation/consultation.html?id="+userId+"&type=3"
+		})
+   	})
+	</script>
+	<script type="text/javascript" src="static/js/usercenter/consultation/activity/answers.user.js"></script>
+</body>
+</html>

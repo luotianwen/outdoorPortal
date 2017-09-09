@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>testAJAX.html</title>
+	
+	<base href="/" />
+	
+    <meta http-equiv="keywords" content="keyword1,keyword2,keyword3">
+    <meta http-equiv="description" content="this is my page">
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    
+    <!--<link rel="stylesheet" type="text/css" href="./styles.css">-->
+	<script type="text/javascript" src="static/js/jquery-2.1.1.min.js"></script>
+  </head>
+  
+  <body>
+    This is my HTML page. <br>
+  </body>
+  
+  <script type="text/javascript">
+  $.get("huodong/test.do",function(data){
+  	alert("get:"+data);
+  })
+  
+  $.post("huodong/test.do",function(data){
+  	alert("post:"+data.username);
+  },"json");
+  
+  $.getJSON("huodong/test.do",function(data){
+  	alert("getJSON:"+data);
+  })
+  
+  $.ajax({
+  	url:"huodong/test.do",
+  	type:"POST",
+  	dataType:"json",
+  	success:function(data){
+  		alert("ajax:"+data);
+  	}
+  })
+  </script>
+</html>

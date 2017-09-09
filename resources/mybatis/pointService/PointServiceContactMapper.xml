@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="pointServiceContactMapper">
+	<sql id="Base_Column_List">
+    psc_id,psc_point_service_id ,psc_number 
+    </sql>
+   
+   <insert id="insertPointServiceContact" parameterType="com.op.dto.pointService.insert.ruzhu.InsertPointServiceDTO" useGeneratedKeys="false">
+   insert into pointServiceContactDeputy
+   ( psc_point_service_id ,psc_number )
+	  
+   values
+    <foreach collection="contact" item="item"   separator=",">
+        (#{ps_id},
+        #{item}
+        )
+    </foreach>
+
+   </insert>
+   
+   <!-- 查询联系方式 -->
+   <select id="findPointServiceContactByPsId" parameterType="String" resultType="com.op.entity.pointService.PointServiceContact">
+   		select 
+		psc_id,psc_point_service_id ,psc_number 
+		from pointServiceContact
+   		where psc_point_service_id = #{ps_id}
+   </select>
+   
+</mapper>

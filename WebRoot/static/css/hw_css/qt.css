@@ -1,0 +1,9 @@
+@charset "utf-8";
+/* CSS Document */
+.error-404-logo{padding:60px 50px 20px;background:url(../hw_img/404-line.png) no-repeat left bottom;}
+.error-404-info{text-align:center;padding:80px 0;}
+.error-404-info .p1{font-size:24px;color:#ff8a01;line-height:40px;margin-top:80px;}
+.error-404-info .p2{font-size:14px;color:#666;line-height:30px;}
+.error-404-info .p2 span{color:#ff8a01;margin:0 5px;}
+.error-404-info .p3{text-align:center;padding-top:40px;}
+.error-404-info .p3 a{width:100px;height:40px;line-height:40px;text-align:center;display:inline-block;font-size:14px;color:#fff;background:#ff8a01;margin: 0 8px;}

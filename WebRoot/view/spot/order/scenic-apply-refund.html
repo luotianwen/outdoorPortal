@@ -1,0 +1,171 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<base href="/" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>玩嘛</title>
+
+<#include "/view/usercenter/base.css.html">
+<link href="static/css/page.css" rel="stylesheet">
+<link href="static/js/plugins/layer/skin/moon/style.css" rel="stylesheet">
+<style>
+body {
+	background: #f1f1f1;
+}
+a {
+	cursor:pointer;
+}
+</style>
+
+</head>
+<body>
+<#include "/view/usercenter/header.html">
+	<div class="boxw clearfix">
+		<#include "/view/usercenter/housekeeper/menu_left.html">
+		<div class="main-box">
+			<h1>申请退票</h1>
+			<div class="scenic-btns">
+				<div class="fl order-num">订单编号：${dto.orderId}</div>
+				<div class="fr">
+					<a href="ticket/orderInfo.html?id=${dto.orderId}" target="_blank" class="btns-01">订单详情</a>
+				</div>
+			</div>
+			<form action="ticket/applyticket.html" id="applyticket" method="post">
+			<input type="hidden" name="orderId" value="${dto.orderId}"/>
+			<div class="linkman-list">
+				<h3>退票选择</h3>
+				<table>
+					<tr>
+						<th></th>
+						<th>联系人</th>
+						<th>证件类型</th>
+						<th>证件号码</th>
+						<th>联系人手机</th>
+						<th>辅助码</th>
+					</tr>
+					<#list dto.travelPeople as item>
+						<tr>
+							<td>
+								<a class="refund-select" data-id="${item.otp_id}" role="button" id="selectRefund">退票</a>
+								<input type="hidden" name="otpId" id="otpId" />
+							</td>
+							<td>${item.visitorName}</td>
+							<td>
+								<#if item.cardType==1>
+									身份证
+									<#else>
+									其他
+								</#if>
+							</td>
+							<td>
+								${item.cardNum[0..5]}************
+							</td>
+							<td>${item.visitorPhone[0..2]}****${item.visitorPhone[7..]}</td>
+							<td>${item.codeNumber}</td>
+						</tr>
+					</#list>
+				</table>
+			</div>
+			</form>
+			<!-- <div class="refund-reason" style="border-top:1px solid #ddd;">
+				<h3>退票选择</h3>
+				<dl>
+					<dt>退票原因：</dt>
+					<dd>
+						您的选择将有利于我们做出更加符合您的产品，请提交您的退票原因<span class="style-4">（至少一项）</span>
+					</dd>
+				</dl>
+				<dl>
+					<dd>
+						<ul class="reason-list clearfix" id="reason">
+							<li><a class="selected">买多了 / 买错了</a></li>
+							<li><a>商家营业但不接待</a></li>
+							<li><a>商家停业 / 装修 / 转让</a></li>
+							<li><a>计划有变没时间消费</a></li>
+							<li><a>预约不上</a></li>
+							<li><a>去过了，不太满意</a></li>
+							<li><a>朋友 / 网上评价不好</a></li>
+							<li><a>后悔了，不想要了</a></li>
+							<li><a>商业活动（收费）</a></li>
+							<li><a>其他</a></li>
+						</ul>
+					</dd>
+				</dl>
+			</div> -->
+			<div class="venue-order-list det">
+				<h3>门票退票信息</h3>
+				<dl>
+					<dt>门票名称：</dt>
+					<dd class="f-s">${dto.productName}</dd>
+				</dl>
+				<#if dto.validTimeBegin??>
+					<dl>
+						<dt>门票有效期：</dt>
+						<dd>${dto.validTimeBegin}至 ${dto.validTimeEnd}</dd>
+					</dl>
+				</#if>
+				<dl>
+					<dt>使用日期：</dt>
+					<dd>${dto.inDate}</dd>
+				</dl>
+				<dl>
+					<dt>门票单价：</dt>
+					<dd>${dto.retailPrice/100}元/人</dd>
+				</dl>
+				<dl>
+					<dt>数量：</dt>
+					<dd>${dto.count}</dd>
+				</dl>
+				<dl>
+					<dt>票款退回方式：</dt>
+					<dd>原路返回（1—7个工作日内退还于您的账户内，无手续费）</dd>
+				</dl>
+				<dl>
+					<dt>退票金额：</dt>
+					<dd>
+						<em class="f-s">${dto.order_total_price}</em><em class="f-orange">元</em>
+					</dd>
+				</dl>
+			</div>
+
+			<div class="venue-refund-btns">
+				<p class="style-5"
+					style="text-align:center;color:#999;margin-bottom:10px;">说明：退票成功后将会扣除送给您的积分。</p>
+				<p>
+					<a href="ticket/MyOrder.html" class="refund-btn-1">取 消</a>
+					<a id="refund" href="javascript:void(0)" class="refund-btn-2">申请退票</a>
+				</p>
+			</div>
+		</div>
+	</div>
+	<!-- main end -->
+	
+	<#include "/view/usercenter/base.js.html">
+	<script type="text/javascript">
+		$(function(){
+		 
+			
+			//选择退票人
+			$("table").on("click","tr td a#selectRefund",function(){
+				var $this = $(this);
+				if($this.hasClass("selected")){
+					$this.removeClass("selected");
+					$this.parents("td").find("input[name='otpId']").val("");
+				}else{
+					$this.addClass("selected");
+					$this.parents("td").find("input[name='otpId']").val($this.attr("data-id"));
+				}
+			})
+			 
+			//申请退票
+			$("#refund").on("click" , function(){
+				 if($("table").find("tr td a.selected").length < 1){
+			   	     layer.alert("你尚未选择需要退的票！", {icon: 0});
+			   	     return;
+			   	 }
+				 $("#applyticket").submit();
+			}); 
+		})
+	</script>
+</body>
+</html>

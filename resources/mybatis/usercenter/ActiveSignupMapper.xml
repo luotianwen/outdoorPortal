@@ -1,0 +1,430 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="activeSignupMapper">
+	<sql id="Base_Column_List">
+	    asu_id ,asu_user_emergency ,asu_user_emergency_phone,asu_user_relation
+	    ,asu_link_user_phone ,asu_order_area ,asu_active_id ,asu_user_account_num 
+	    ,asu_trade_no ,asu_pay_time ,asu_account_paid ,asu_account_payable,asu_reserve_price,asu_pay_state ,asu_price_type 
+	    ,asu_create_time ,asu_user_id ,asu_last_update_time ,asu_last_update_user 
+	    ,asu_is_delete,asu_leader_is_delete,asu_is_comment,asu_equipment,asu_type
+    </sql>
+
+    <resultMap type="com.op.entity.usercenter.ActiveSignup" id="ActiveSignupReturnMap">
+      <id column="asu_id" property="asu_id"/>
+      <result column="asu_user_emergency" property="asu_user_emergency"/>
+      <result column="asu_user_emergency_phone" property="asu_user_emergency_phone"/>
+      <result column="asu_user_relation" property="asu_user_relation"/>
+      <result column="asu_link_user_phone" property="asu_link_user_phone"/>
+      <result column="asu_order_area" property="asu_order_area"/>
+      <result column="asu_active_id" property="asu_active_id"/>
+      <result column="asu_user_account_num" property="asu_user_account_num"/>
+      <result column="asu_trade_no" property="asu_trade_no"/>
+      <result column="asu_pay_time" property="asu_pay_time"/>
+      <result column="asu_account_paid" property="asu_account_paid"/>
+      <result column="asu_account_payable" property="asu_account_payable"/>
+      <result column="asu_reserve_price" property="asu_reserve_price"/>
+      <result column="asu_pay_state" property="asu_pay_state"/>
+      <result column="asu_price_type" property="asu_price_type"/>
+      <result column="asu_create_time" property="asu_create_time"/>
+      <result column="asu_user_id" property="asu_user_id"/>
+      <result column="asu_last_update_time" property="asu_last_update_time"/>
+      <result column="asu_last_update_user" property="asu_last_update_user"/>
+      <result column="asu_is_delete" property="asu_is_delete"/>
+      <result column="asu_leader_is_delete" property="asu_leader_is_delete"/>
+      <result column="asu_is_comment" property="asu_is_comment"/>
+      <result column="asu_equipment" property="asu_equipment"/>
+      <result column="asu_type" property="asu_type"/>
+      
+      <!-- 根据订单ID查询所有报名人 -->
+   	  <collection property="activeApplicant" ofType="com.op.entity.usercenter.ActiveApplicant" column="{asu_id=asu_id,user_id=asu_user_id}" select="activeApplicantMapper.findActiveApplicantByAsuId" ></collection>
+   
+   </resultMap>
+   
+   <resultMap type="com.op.dto.activity.activeSignUpPay.ActiveSignUpPay" id="ActiveSignUpPayReturnMap">
+   		<id column="asu_id" property="asu_id"/>
+		<!-- 活动ID -->
+      	<result column="asu_active_id" property="asu_active_id"/>
+		
+		<!-- 付款类型（10：全款；20：预付款；30：免费；） -->
+      	<result column="asu_price_type" property="asu_price_type"/>
+		
+		<!-- 支付状态（1：未支付；2：已支付；） -->
+      	<result column="asu_pay_state" property="asu_pay_state"/>
+	
+		<!-- 报名状态 -->
+		<result column="asu_state" property="asu_state" />
+	
+		<!-- 是否已经删除(0：默认；1：是；) -->
+      	<result column="asu_is_delete" property="asu_is_delete"/>
+	
+		<!-- 需要人数  -->
+      	<result column="needUserNum" property="needUserNum"/>
+	
+		<!-- 已确定人数  -->
+      	<result column="confirmUserNum" property="confirmUserNum"/>
+	
+		<!-- 报名截止时间 -->
+      	<result column="a_enroll_end_time" property="a_enroll_end_time"/>
+		
+		<!-- 活动开始时间 -->
+		<result column="activityTime" property="activityTime"/>
+		
+		<!-- 活动结束时间 -->
+		<result column="endTime" property="endTime"/>
+		
+		<!-- 活动状态（1：草稿；2：发布待审核；3：审核中；4：审核不通过；5：审核成功（发布）） -->
+      	<result column="state" property="state"/>
+	
+		<!-- 付款总额  -->
+      	<result column="asu_account_paid" property="asu_account_paid"/>
+      	
+      	<!-- 应付款总额  -->
+      	<result column="asu_account_payable" property="asu_account_payable"/>
+      	
+      	<!-- 预约款总额  -->
+      	<result column="asu_reserve_price" property="asu_reserve_price"/>
+		
+		<!-- 支付宝流水号  -->
+      	<result column="asu_user_account_num" property="asu_user_account_num"/>
+		
+		<!-- 活动标题  -->
+      	<result column="title" property="title"/>
+		
+		<!-- 发布者ID -->
+		<result column="createUser" property="createUser"/>
+		
+		<!-- 创建人 -->
+		<result column="asu_user_id" property="asu_user_id"/>
+		
+		<!-- 保险价格 -->
+		<result column="in_id" property="in_id"/>
+		
+		<!-- 是否强制保险 -->
+		<result column="isinsurance" property="isinsurance"/>
+		
+		<!-- 查询活动关联的保险 -->
+		<association property="insurance" javaType="com.op.entity.activity.cost.ActiveCorrelationCost" column="asu_active_id" select="activeCorrelationCostMapper.selectInsuranceInfoByActiveId"></association>
+		
+		<!-- 根据订单ID查询所有报名人 -->
+   		<collection property="activeApplicant" ofType="com.op.entity.usercenter.ActiveApplicant" column="{asu_id=asu_id,user_id=asu_user_id}" select="activeApplicantMapper.findActiveApplicantByAsuId" ></collection>
+		
+   </resultMap>
+   
+   <!-- 报名列表 -->
+   <select id="findSignUpByActivityIdPage" parameterType="Page" resultType="com.op.dto.usercenter.leader.activeManager.activeSignUp.SignUpList">
+		SELECT u.UNAME AS user_name,
+		  asu_create_time,
+		  gs.peoplenum,
+		  asu_equipment,
+		  asu_order_area,
+		  if(asu_state=10,'未确认','确认') asu_state
+		FROM activesignup asu
+		LEFT JOIN users u
+		ON asu.asu_user_id = u.u_id
+		LEFT JOIN GROUP_SIGNUPUSERNUM gs
+		ON gs.ASU_ID =asu.ASU_ID
+		WHERE asu_active_id = #{t}
+		AND asu_state != 40
+		ORDER BY ASU_CREATE_TIME ASC
+
+   </select>
+   
+   <!-- 我的订单 -->
+   <resultMap type="com.op.dto.usercenter.leader.activeManager.activeSignUp.MySignUp" id="MySignUpReturnMap">
+   		<id column="asu_id" property="asu_id"/>
+   		<id column="asu_type" property="asu_type"/>
+   		<!-- 根据订单ID查询所有报名人 -->
+   		<collection property="activeApplicants" ofType="com.op.entity.usercenter.ActiveApplicant" column="{asu_id=asu_id,order=asu_type}" select="activeApplicantMapper.findActiveApplicantByOrderId" fetchType="eager" ></collection>
+   
+   </resultMap>
+   
+   <select id="findMySignUpByUserIdPage" parameterType="Page" resultMap="MySignUpReturnMap">
+		select asu.asu_id,asu_account_paid,asu_account_payable,asu_reserve_price,asu_pay_state,asu_create_time,asu_state,
+		asu_user_id,asu_is_comment,a.id as activityId,a.title,a.a_active_img,a.activitytime,a.in_id,
+		a.endtime,a.a_enroll_end_time,a.alreadyInNum,a.confirmUserNum,a.createUser,#{t.order} as asu_type
+		from activesignup asu
+		left join activity a on asu.ASU_ACTIVE_ID = a.id
+		
+		<choose>
+			<when test="t.order==0">
+				where asu.asu_user_id = #{t.userId} and ASU_IS_DELETE=0 and asu_type=1
+			</when>
+			<when test="t.order==1">
+				left join GROUP_MYORDER_REFUND_PAY ap on ap.ASU_ID = asu.ASU_ID
+				where asu.asu_user_id = #{t.userId} and ASU_IS_DELETE=0 and asu_type=1
+				and asu.ASU_PAY_STATE = 2 and asu_state!=40
+				and if(ap.num is null,0,ap.num)>0
+			</when>
+			<when test="t.order==2">
+				left join GROUP_WAIT_PAY ap on asu.asu_id = ap.asu_id
+				where asu.asu_user_id = #{t.userId} and ASU_IS_DELETE=0 and asu_type=1
+				and asu.ASU_PAY_STATE = 1 and asu_state!=40
+			</when>
+			<when test="t.order==3">
+				left join GROUP_MYORDER_REFUND ap on ap.ASU_ID = asu.ASU_ID
+				where asu.asu_user_id = #{t.userId} and ASU_IS_DELETE=0 and asu_type=1
+				and asu.ASU_PAY_STATE = 2 and asu_state!=40
+				and if(ap.num is null,0,ap.num)>0
+			</when>
+			<when test="t.order==4">
+				left join GROUP_MYORDER_REFUND_SUCCESS ap on ap.ASU_ID = asu.ASU_ID
+				where asu.asu_user_id = #{t.userId} and ASU_IS_DELETE=0 and asu_type=1
+				and asu.ASU_PAY_STATE = 2 and asu_state!=40
+				and if(ap.num is null,0,ap.num)>0
+			</when>
+			<when test="t.order==5">
+				where asu.asu_user_id = #{t.userId} and ASU_IS_DELETE=0 and asu_type=1 and asu_state=40
+			</when>  
+	        <otherwise>  
+	            where asu.asu_user_id = #{t.userId} and ASU_IS_DELETE=0 and asu_type=1
+	        </otherwise>  
+		</choose>
+		<if test="t.asu_id!=null and t.asu_id!=''">
+			and asu.asu_id = #{t.asu_id}
+		</if>
+		order by asu_id desc
+   </select>
+   
+	<!-- 领队的订单 -->
+	<resultMap type="com.op.dto.usercenter.leader.activeManager.activeSignUp.LeaderSignUp" id="LeaderSignUpReturnMap">
+		<id column="activityId" property="activityId"/>
+	</resultMap>
+   
+   	<!-- 领队的活动(报名的活动以及发布的活动.)-->
+	<select id="leaderActiveManagerPage" parameterType="page" resultMap="LeaderSignUpReturnMap">
+		select a.id activityId
+		from activity a
+		left join V_ACTIVE_SIGNUP vas on vas.id = a.id
+		where a.createUser=#{t.createUser} and vas.num>0
+		<choose>
+			<when test="t.type==0">
+				 and (a.state='5' or a.state='15')
+			</when>
+			<when test="t.type==1">
+				and a.ACTIVITYTIME>now() and a.state='5'
+			</when>
+			<when test="t.type==2">
+				and a.ACTIVITYTIME<![CDATA[<]]>now() and a.ENDTIME>now() and a.state='5'
+			</when>
+			<when test="t.type==3">
+				and a.ENDTIME<![CDATA[<]]>now() and a.state='15'
+			</when>
+		</choose>
+		
+		<!-- 根据创建时间倒序排列 -->
+		order by a.ACTIVITYTIME desc
+   </select>
+   
+   <select id="leaderActiveManagerCount" parameterType="java.util.Map" resultType="java.util.Map">
+   		SELECT
+			(SELECT vd.NUM FROM V_DONESIGNUPNUM vd WHERE vd.userId=#{userId}
+			) stop ,
+			(SELECT vi.NUM FROM V_INGSIGNUPNUM vi WHERE vi.userId=#{userId}
+			) ing,
+			(SELECT vw.NUM FROM V_WAITSIGNUPNUM vw WHERE vw.userId=#{userId}
+			) wait
+		FROM dual
+   </select>
+   
+   <!-- 领队的活动订单 -->
+   <select id="leaderActiveSignupManagerPage" parameterType="page" resultMap="MySignUpReturnMap" >
+		select asu.asu_id,asu_account_paid,asu_account_payable,asu_reserve_price,asu_pay_state,asu_create_time,asu_state,
+		asu_user_id,asu_is_comment,a.id as activityId,a.title,a.a_active_img,a.activitytime,a.in_id,
+		a.endtime,a.a_enroll_end_time,a.alreadyInNum,a.confirmUserNum,a.createUser,0 as asu_type
+		from activity a
+		left join activesignup asu on asu.ASU_ACTIVE_ID = a.id
+		left join GROUP_LEADER_SIGNUP gls on gls.id = a.id
+		
+		where a.createUser=#{t.createUser} and a.id=#{t.activityId} 
+		and ASU_LEADER_IS_DELETE=0 and asu_type=1 and gls.num>0
+		<!-- 根据创建时间倒序排列 -->
+		order by a.PUBLISHESTIME desc,asu.asu_create_time desc
+   </select>
+   
+   <!-- 订单详情 -->
+   <resultMap type="com.op.dto.usercenter.leader.activeManager.activeSignUp.MySignUp" id="OrderDetailsReturnMap">
+   		<id column="asu_id" property="asu_id"/>
+   		<result column="asu_user_id" property="asu_user_id"/>
+   		
+   		<!-- 根据订单ID查询所有报名人 -->
+   		<collection property="activeApplicants" ofType="com.op.entity.usercenter.ActiveApplicant" column="asu_id" select="activeApplicantMapper.findActiveApplicantNormalByAsuId" ></collection>
+   		
+   </resultMap>
+   
+   <!-- 用户查看订单详情 -->
+   <select id="selectDetails" parameterType="java.util.Map" resultMap="OrderDetailsReturnMap">
+   		select asu.asu_id,asu_account_paid,asu_account_payable,asu_reserve_price,asu_pay_state,
+   		asu_create_time,asu_state,asu_user_id,asu_is_comment,a.id as activityId,a.title,
+   		a.a_active_img,a.activitytime,a.endtime,a.a_enroll_end_time,a.alreadyInNum,
+   		a.confirmUserNum,a.createUser,asu.asu_trade_no,asu.asu_order_area
+		from activesignup asu
+		left join activity a on asu.ASU_ACTIVE_ID = a.id
+		where asu.asu_user_id = #{asu_user_id} and ASU_IS_DELETE=0 and asu_type=1
+		and asu.asu_id = #{asu_id}
+   </select>
+   
+   <!-- 领队查看订单详情 -->
+   <select id="selectDetailsForLeader" parameterType="java.util.Map" resultMap="OrderDetailsReturnMap">
+   		select asu.asu_id,asu_account_paid,asu_account_payable,asu_reserve_price,asu_pay_state,
+   		asu_create_time,asu_state,asu_user_id,asu_is_comment,a.id as activityId,a.title,
+   		a.a_active_img,a.activitytime,a.endtime,a.a_enroll_end_time,a.alreadyInNum,
+   		a.confirmUserNum,a.createUser,asu.asu_trade_no,asu.asu_order_area
+		from activesignup asu
+		left join activity a on asu.ASU_ACTIVE_ID = a.id and a.createUser = #{asu_user_id}
+		where ASU_IS_DELETE=0 and asu_type=1
+		and asu.asu_id = #{asu_id}
+   </select>
+   
+   <select id="countMySignUpByUserId" parameterType="String" resultType="java.util.Map">
+		select ga.num ALREADYPAY,
+			gw.num WAITPAY,
+			gri.num REFUNDING,
+			grs.num REFUNDSUCCESS,
+			grc.num CLOSE
+		from 
+			(select count(0) num from GROUP_ALREADYPAY  where asu_user_id=#{userId}) ga,
+			(select count(0) num from GROUP_WAITPAY  where asu_user_id=#{userId}) gw,
+			(select count(0) num from GROUP_REFUNDING  where asu_user_id=#{userId}) gri,
+			(select count(0) num from GROUP_REFUNDSUCCESS  where asu_user_id=#{userId}) grs,
+			(select count(0) num from GROUP_CLOSE grc where asu_user_id=#{userId}) grc
+	
+   </select>
+   
+   <select id="findActivitySignUpPay" parameterType="String" resultMap="ActiveSignUpPayReturnMap">
+   		select asu_id,asu_active_id,asu_price_type,asu_pay_state,asu_is_delete,needUserNum,
+	    confirmUserNum,a_enroll_end_time,state,asu_account_paid,asu_account_payable,
+	    asu_reserve_price,asu_user_account_num,title,a.createUser,asu.asu_user_id,a.in_id,
+	    a.isinsurance,a.activityTime,a.endTime
+	    from activeSignUp asu
+   		left join activity a on a.id = asu.asu_active_id
+   		where asu_id = #{id}
+   </select>
+   
+   <!-- 新增订单 -->
+   <insert id="saveOrder" parameterType="com.op.entity.usercenter.ActiveSignup" useGeneratedKeys="true" keyProperty="asu_id">
+
+   		insert into activesignup 
+   		(
+   		   asu_user_emergency ,asu_user_emergency_phone,asu_user_relation
+	    ,asu_link_user_phone ,asu_order_area ,asu_active_id ,asu_price_type ,asu_account_payable
+	    ,asu_reserve_price,asu_create_time ,asu_user_id,asu_type,asu_pay_state
+	    )
+	    values
+	    (
+	     #{asu_user_emergency} ,#{asu_user_emergency_phone },#{asu_user_relation}
+	    ,#{asu_link_user_phone} ,#{asu_order_area} ,#{asu_active_id} ,#{asu_price_type},#{asu_account_payable}
+	    ,#{asu_reserve_price},#{asu_create_time} ,#{asu_user_id},#{asu_type},#{asu_pay_state}
+	    )
+   </insert>
+   
+   <!-- 修改支付订单信息 -->
+   <update id="updateActiveSignUpPayInfo" parameterType="com.op.entity.alipay.Alipay">
+   		update Activesignup set 
+		<!-- 订单状态（1：未支付；2：已支付；） -->
+		asu_pay_state=2,
+		<!-- 已付款总额(元) -->
+		asu_account_paid=#{total_fee},
+		<!-- 支付宝交易号 -->
+		asu_trade_no=#{trade_no},
+		<!-- 付款时间 -->
+		asu_pay_time=#{pay_time}
+		where asu_id=#{out_trade_no}
+   </update>
+   
+   <!-- 根据支付流水号查询该订单数据，处理支付宝异步通知修改支付信息	 -->
+	<select id="findAsuIdByAccountNum" parameterType="java.lang.String" resultMap="ActiveSignUpPayReturnMap" >
+		select asu_id,asu_active_id,asu_price_type,asu_pay_state,asu_state,asu_is_delete,needUserNum,
+	    confirmUserNum,a_enroll_end_time,state,asu_account_paid,asu_account_payable,asu_reserve_price,
+	    asu_user_account_num,title,a.createUser,asu.asu_user_id,a.in_id,a.isinsurance
+	    from activeSignUp asu
+   		left join activity a on a.id = asu.asu_active_id
+   		where asu_id=#{out_trade_no}
+		
+	</select>
+	
+	<update id="updateByAsu_id" parameterType="java.util.Map">
+		update activesignup set asu_id = #{asu_id}
+		<if test="asu_state!=null and asu_state!=''">,asu_state = #{asu_state}</if>
+		<if test="asu_account_paid!=null and asu_account_paid!=''">,asu_account_paid = #{asu_account_paid}</if>
+		,asu_last_update_time = now()
+		<if test="userId!=null and userId!=''">,asu_last_update_user = #{userId}</if>
+		
+		<if test="count!=null and count!='0'">
+			,asu_account_payable = asu_account_payable/#{people}*(#{people}-#{count})
+			,asu_reserve_price = asu_reserve_price/#{people}*(#{people}-#{count})
+		</if>
+		
+		where asu_id = #{asu_id} and asu_user_id = #{userId}
+	</update>
+	
+	<!-- 领队确认报名 -->
+	<update id="confirmSignUpById" parameterType="java.util.Map">
+		update activeSignup set 
+			asu_state=20 
+		where asu_id=#{asu_id} and asu_active_id=#{activeId}
+	</update>
+	
+	
+	<!-- 领队确认取消报名 -->
+	<update id="cancelSignUpById" parameterType="java.util.Map">
+		update activeSignup set
+			asu_state=#{asu_state}
+		where asu_id=#{asu_id} and asu_active_id=#{activeId}
+	</update>
+	
+	<!-- 用户确认交易完成 -->
+	<update id="complete" parameterType="java.util.Map">
+		UPDATE activesignup
+		<!-- 交易完成 -->
+		SET asu_state  = 30,
+		ASU_LAST_UPDATE_TIME = now(),
+		ASU_LAST_UPDATE_USER = #{userId}
+		<!-- 活动订单ID -->
+		WHERE asu_id   =#{asu_id}
+		<!-- 创建用户 -->
+		AND ASU_USER_ID=#{userId} and ASU_STATE!=40 and ASU_STATE!=10
+	</update>
+	
+	<!-- 更改订单评论状态为已评论 -->
+	<update id="updateActiveSignUpCommentFlag" parameterType="java.lang.String">
+		update activesignup set asu_is_comment=1
+		where asu_id=#{suId}
+	</update>
+	
+	<!-- 查询所有未支付订单 -->
+	<select id="findAllWaitPaySignup" resultMap="ActiveSignupReturnMap">
+		select * from activesignup
+		where asu_type=1 and ASU_PAY_STATE = 1 and asu_state!=40
+	</select>
+	
+	<!-- 到时间未付款取消订单 -->
+	<update id="payCloseForAsu_id" parameterType="String">
+		update activesignup
+		set ASU_LAST_UPDATE_TIME = now(),
+		ASU_STATE = 40
+		
+		where asu_id = #{id} and ASU_PAY_STATE = '1'
+	</update>
+	
+	<!-- 订单是否评论 -->
+	<select id="isComment" parameterType="java.util.Map" resultType="int">
+		select count(asu_id) from activesignup
+		where ASU_IS_COMMENT = 0 and ASU_USER_ID = #{userId} and asu_id = #{asu_id} and ASU_ACTIVE_ID = #{activeId}
+	</select>
+	
+	<!-- 查询领队和活动发送站内信需要的信息 -->
+	<select id="findMySignUpForMessage" parameterType="String" resultType="com.op.dto.usercenter.leader.activeManager.activeSignUp.MySignUp">
+		select a.createUser,a.activityId,a.title,asu.asu_user_id
+		from activesignup asu
+		left join activity a on asu.ASU_ACTIVE_ID = a.id
+		where asu.asu_id = #{id}
+	</select>
+	
+	<!-- 订单支付金额 -->
+	<select id="getAsu_account_paid" parameterType="String" resultType="double">
+		select asu_account_paid from activeSignup
+		where asu_id = #{asu_id}
+	</select>
+	
+</mapper>

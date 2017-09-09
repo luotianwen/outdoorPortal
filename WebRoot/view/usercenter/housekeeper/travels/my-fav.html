@@ -1,0 +1,84 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<base href="/" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>玩嘛</title>
+<#include "/view/usercenter/base.css.html">
+<link href="static/css/page.css" rel="stylesheet"/>
+<style>
+body {
+	background: #f1f1f1;
+}
+</style>
+</head>
+<body>
+	<#include "/view/usercenter/header.html"/>
+	
+	<div class="boxw clearfix">
+		<#include "/view/usercenter/housekeeper/menu_left.html">
+		
+		<div class="fav-box" id="travelsAll">
+			<div class="fav-title">
+				<h1>游记收藏</h1>
+				<span>已收藏<em id="count">${page.totalResult}</em>篇
+				</span>
+			</div>
+			<#list travelsList as travels>
+				<div class="fav-list clearfix" id="travels">
+					<a class="icon-close" id="close" data="${travels.id}" title="关闭"></a>
+					<div class="fav-item  clearfix">
+						<h2>
+							<a href="travels/detail/${travels.id}.html" target="_blank">${travels.title}</a>
+						</h2>
+						<div class="author clearfix">
+							<#if travels.uHeadImg?exists><img src="${travels.uHeadImg}" class="author-img" /></#if>
+							<span>作者：${travels.userName}</span>
+							<span class="date">${travels.issued_time?string("yyyy-MM-dd HH:mm:ss")}</span>
+							<div class="fav-actions">
+								<a class="ico-good" role="button"><i></i>${travels.like_count}</a>
+								<a class="ico-view" role="button"><i></i>${travels.read_count}</a>
+							</div>
+						</div>
+						<div class="text-info clearfix">
+							<p>
+								<a href="travels/detail/${travels.id}.html" target="_blank"><#if travels.cover_image?exists><img src="${travels.cover_image}" /></#if>${travels.digest}<#if travels.digest?length gt 285>……</#if></a>
+							</p>
+						</div>
+					</div>
+				</div>
+			</#list>
+			
+			<div id="page" style="text-align: center;width: 100%;">
+				${page.pageStr}
+			</div>
+		</div>
+		
+	</div>
+	<!-- main end -->
+	<#include "/view/usercenter/base.js.html">
+	<script type="text/javascript" src="static/js/plugins/layer/laypage/laypage.js"></script>
+	<script type="text/javascript" src="static/js/page.js"></script>
+	
+	<script type="text/javascript">
+		$(function(){
+			$("div#travelsAll").on("click","div#travels a#close",function(){
+				var $this = $(this);
+				var id = $this.attr("data");
+				$.post("travels/cancelCollection.json",{id:id},function(data){
+					if(data.RESPONSE_STATE=="200"){
+						$this.closest("#travels").remove();
+						if($("div#travels").length==0){
+							$("#page").html("");
+						}
+						$("#count").html(Number($("#count").html())-1);
+						layer.msg("取消收藏成功。",{icon:1,time:1*1000,shade:0.3})
+					}else if(data.RESPONSE_STATE=="500"){
+						layer.alert('数据加载异常，请稍后再试！',{title:"错误信息",icon:0});
+					}
+				});
+			});
+		})
+	</script>
+</body>
+</html>

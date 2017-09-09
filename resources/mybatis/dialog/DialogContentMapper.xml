@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="DialogContentMapper">
+	<sql id="Base_Column_List">
+    id,dialogId ,addresser ,addressee ,sendTime ,readStatus ,isAddresserDelete ,isAddresseeDelete ,content 
+    </sql>
+
+    <resultMap type="com.op.entity.dialog.DialogContent" id="DialogContentReturnMap">
+		<!-- id -->
+      <id column="id" property="id"/>
+		<!-- 对话表ID -->
+      <result column="dialogId" property="dialogId"/>
+		<!-- 发送人 -->
+      <result column="addresser" property="addresser"/>
+		<!-- 接收人 -->
+      <result column="addressee" property="addressee"/>
+		<!-- 发送时间 -->
+      <result column="sendTime" property="sendTime"/>
+		<!-- 阅读状态(0：未读；1：已读) -->
+      <result column="readStatus" property="readStatus"/>
+		<!-- 发送人删除状态（0：正常；1：删除） -->
+      <result column="isAddresserDelete" property="isAddresserDelete"/>
+		<!-- 接收人删除状态（0：正常；1：删除） -->
+      <result column="isAddresseeDelete" property="isAddresseeDelete"/>
+		<!-- 消息内容 -->
+      <result column="content" property="content"/>
+   </resultMap>
+   
+    <!-- 新增聊天内容 -->
+	<insert id="saveDialogContent" parameterType="com.op.entity.dialog.DialogContent">
+		insert into DIALOGCONTENT (
+			 dialogId ,addresser ,addressee ,sendTime ,readStatus ,isAddresserDelete ,isAddresseeDelete ,content
+		) values (
+			 #{dialogId},#{addresser},#{addressee },#{sendTime },#{readStatus },
+			#{isAddresserDelete },#{isAddresseeDelete},#{content }
+		)
+	</insert>
+	
+	<!-- 根据对话框ID查询对话内容 -->
+	<select id="findDialogContentByDialogId" parameterType="java.util.Map" resultMap="DialogContentReturnMap">
+
+			select <include refid="Base_Column_List"/> from DIALOGCONTENT where 
+			dialogId = #{dialogId}
+			order by id+0 desc
+		  limit 0,10
+	</select>
+	
+	<!-- 切换用户是获取与该用户聊天记录 -->
+	<select id="findDialogContentByUserId" parameterType="Page" resultMap="DialogContentReturnMap">
+	    select <include refid="Base_Column_List"/> from DIALOGCONTENT 
+	    where dialogId = #{id} and ((addresser=#{userId} and addressee=#{login}) 
+	    	or (addresser=#{login} and addressee=#{userId}))
+		<if test="dialogContentId!=null and dialogContentId!='' ">
+			and id <![CDATA[<]]> #{dialogContentId}
+		</if>
+		order by id+0 desc 
+		limit 0,10
+	</select>
+	
+	<!-- 未读消息数量 -->
+	<select id="dialogContentCount" parameterType="java.lang.String" resultType="java.util.Map">
+		select DIALOGID,count(0) NUM from dialogcontent 
+		where READSTATUS = 0 and ADDRESSEE = #{userId} and isAddresseeDelete = 0
+		group by DIALOGID
+	</select>
+	
+	<!-- 修改阅读状态 -->
+	<update id="updateDialogContent" parameterType="java.util.Map">
+		update DIALOGCONTENT set  
+	   		readStatus = 1
+	   	where dialogId = #{dialogId} and addressee = #{userId}
+	</update>
+	
+	<!-- 修改所有消息阅读状态 -->
+	<update id="updateAllDialogContent" parameterType="java.lang.String">
+		update DIALOGCONTENT set  
+	   		readStatus = 1
+	   	where addressee = #{userId}
+	</update>
+	
+	<!-- 删除对话框 -->
+	<delete id="deleteDialogContentBydialogId" parameterType="java.lang.String">
+		delete from DIALOGCONTENT where dialogId = #{dialogId}
+	</delete>
+	
+</mapper>

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="channelsMapper">
+
+    <!--mybatis ehcache缓存配置 -->
+    <cache type="org.mybatis.caches.ehcache.LoggingEhcache" />
+
+	<sql id="Base_Column_List">
+		ch_id,ch_level,ch_name,ch_parentid,ch_describe,ch_sort
+	</sql>
+	<!-- 查询所有频道 -->
+	<select id="selectList" resultType="com.op.entity.channels.Channels">
+		select 
+		<include refid="Base_Column_List" />
+		from channels
+	</select>
+</mapper>

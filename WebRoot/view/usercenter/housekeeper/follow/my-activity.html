@@ -1,0 +1,94 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<base href="/" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>玩嘛</title> 
+
+<#include "/view/usercenter/base.css.html">
+
+<link rel="stylesheet" href="static/css/page.css">
+
+<style>
+body {
+	background: #f1f1f1;
+}
+.laypageskin_molv a {
+    background-color: #fff !important;
+}
+</style>
+
+</head>
+<body>
+
+<#include "/view/usercenter/header.html">
+
+	<div class="boxw clearfix">
+		
+		<#include "/view/usercenter/housekeeper/menu_left.html">
+	
+		<div class="mainActivity-box">
+			<div class="activity-list" id="activity-list">
+				<ul>
+					<#list list as item>
+						<li data-id="${item.id}">
+							<div class="act-img">
+								<a target="_blank" >
+									<img src="${item.a_active_img}">
+								</a>
+							</div>
+							<div class="act-tit">
+								<a>
+								<#if item.title?length gt 15>
+									${item.title[0..15]}
+								<#else>
+									${item.title}
+								</#if>
+								</a>
+							</div>
+							<div class="act-place">
+							<#if item.title?length gt 15>
+								${item.title[15..]}
+							<#else>
+							&nbsp;
+							</#if>
+							</div>
+							<div class="act-price">${item.price?string(",##0.00")}元</div>
+							<div class="act-info">
+								<#list item.jds as item>
+									${item}<#if item_has_next>、</#if>
+								</#list>
+							</div>
+						</li>
+					</#list>
+				</ul>
+			</div>
+				
+			<div style="width: 100%;text-align: center;" id="page">
+			</div>
+		</div>
+	</div>
+	
+	<#include "/view/usercenter/base.js.html">
+	<!-- 分页 -->
+	<script type="text/javascript" src="static/js/plugins/layer/laypage/laypage.js"></script>
+	<script type="text/javascript" src="static/js/page.js"></script>
+	
+	<script type="text/javascript">
+
+	$(function(){
+		$("div#activity-list li").on("click",function(){
+			var url = "huodong/info/"+$(this).data("id")+".html";
+			window.open(url);
+		});
+		
+		$("div#page").page({
+			totalPage:${page.totalPage},
+			currentPage:${page.currentPage},
+			link:"follow/myActive.html"
+		})
+	})
+	
+	</script>
+</body>
+</html>

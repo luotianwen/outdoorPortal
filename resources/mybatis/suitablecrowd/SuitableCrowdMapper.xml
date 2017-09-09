@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="suitablecrowdMapper">
+    <!--mybatis ehcache缓存配置 -->
+    <cache type="org.mybatis.caches.ehcache.LoggingEhcache" />
+    
+	<sql id="Base_Column_List">
+		sc_id,sc_name
+	</sql>
+	<!-- 查询所有适合人群 -->
+	<select id="selectList" resultType="com.op.entity.suitablecrowd.SuitableCrowd">
+		select 
+		<include refid="Base_Column_List" />
+		from suitablecrowd
+	</select>
+</mapper>

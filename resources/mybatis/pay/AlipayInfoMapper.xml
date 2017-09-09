@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+	<!-- 支付宝支付流水信息表(tg_alipayInfo)Mapper -->
+<mapper namespace="alipayInfoMapper">
+    <!--mybatis ehcache缓存配置 -->
+    <!-- 以下两个<cache>标签二选一,第一个可以输出日志,第二个不输出日志 不使用缓存加入useCache="false" -->
+    <!-- <cache type="org.mybatis.caches.ehcache.LoggingEhcache" /> -->
+    <!-- <cache type="org.mybatis.caches.ehcache.EhcacheCache"/>  -->
+
+	<sql id="Base_Column_List">
+  	 serial_number,out_trade_no ,subject ,trade_no ,seller_email ,buyer_email ,seller_id ,buyer_id ,is_success ,trade_status ,gmt_create ,gmt_payment ,gmt_close ,refund_status ,refund_fee ,gmt_refund ,price ,total_fee ,quantity ,body ,show_url ,extra_common_param ,business_scene ,order_type 
+    </sql>
+
+    <resultMap type="com.newAlipay.AlipayInfo" id="alipayInfoReturnMap">
+		<!-- 流水号 -->
+      <id column="serial_number" property="serial_number"/>
+		<!-- 支付交易订单号（网站） -->
+      <result column="out_trade_no" property="out_trade_no"/>
+		<!-- 商品名称 -->
+      <result column="subject" property="subject"/>
+		<!-- 支付宝交易号 -->
+      <result column="trade_no" property="trade_no"/>
+		<!-- 卖家支付宝账号，可以是Email或手机号码。 -->
+      <result column="seller_email" property="seller_email"/>
+		<!-- 买家支付宝账号，可以是Email或手机号码。 -->
+      <result column="buyer_email" property="buyer_email"/>
+		<!-- 卖家支付宝账号对应的支付宝唯一用户号。以2088开头的纯16位数字. -->
+      <result column="seller_id" property="seller_id"/>
+		<!-- 买家支付宝账号对应的支付宝唯一用户号。以2088开头的纯16位数字。 -->
+      <result column="buyer_id" property="buyer_id"/>
+		<!-- 支付结果（0：成功；1：失败） -->
+      <result column="is_success" property="is_success"/>
+		<!-- 交易状态 -->
+      <result column="trade_status" property="trade_status"/>
+		<!-- 交易创建时间 -->
+      <result column="gmt_create" property="gmt_create"/>
+		<!-- 交易付款时间 -->
+      <result column="gmt_payment" property="gmt_payment"/>
+		<!-- 交易关闭时间 -->
+      <result column="gmt_close" property="gmt_close"/>
+		<!-- 退款状态（1：全额退款、2：非全额退款） -->
+      <result column="refund_status" property="refund_status"/>
+		<!-- 退款金额 -->
+      <result column="refund_fee" property="refund_fee"/>
+		<!-- 退款时间 -->
+      <result column="gmt_refund" property="gmt_refund"/>
+		<!-- 商品单价 -->
+      <result column="price" property="price"/>
+		<!-- 交易金额 -->
+      <result column="total_fee" property="total_fee"/>
+		<!-- 购买数量 -->
+      <result column="quantity" property="quantity"/>
+		<!-- 商品描述 -->
+      <result column="body" property="body"/>
+		<!-- 展示网址 -->
+      <result column="show_url" property="show_url"/>
+		<!-- 公用回传参数 -->
+      <result column="extra_common_param" property="extra_common_param"/>
+		<!-- 是否扫码支付 -->
+      <result column="business_scene" property="business_scene"/>
+		<!-- 支付订单类型（1：活动订单、2：场馆订单、3：景点门票订单） -->
+      <result column="order_type" property="order_type"/>
+   </resultMap>
+   
+   <!-- 更新支付流水信息 -->
+   <update id="updateInfo" parameterType="com.newAlipay.AlipayInfo">
+   		update 
+   			alipayInfo
+   		set
+	  	   trade_no = #{trade_no},seller_email  = #{seller_email} ,buyer_email  = #{buyer_email},seller_id  = #{seller_id},
+	  	   buyer_id  = #{buyer_id} , is_success = '0',trade_status  = #{trade_status}
+	  	 <!--   ,
+	  	   gmt_create  = #{gmt_create},gmt_payment  = #{gmt_payment},
+	  	   gmt_close  = #{gmt_close},refund_status  = #{refund_status},gmt_refund  = #{gmt_refund},
+	  	   business_scene = #{business_scene} -->
+	  	   ,extra_common_param = #{extra_common_param}
+   		where
+   			out_trade_no = #{out_trade_no} 
+   			and order_type = #{order_type}
+   </update>
+  
+  <!-- 保存支付流水信息 -->
+  <insert id="saveInfo" parameterType="com.newAlipay.AlipayInfo">
+  		insert into alipayInfo 
+  		(serial_number,out_trade_no ,subject,total_fee ,quantity , body,show_url,order_type
+    	)
+    	values
+    	( #{serial_number},#{out_trade_no} ,#{subject},#{total_fee} ,#{quantity} ,#{body} ,#{show_url},#{order_type} )
+  </insert>
+	
+</mapper>

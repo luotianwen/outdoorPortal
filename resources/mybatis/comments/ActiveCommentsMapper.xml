@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="activeCommentsMapper">
+
+    <!--mybatis ehcache缓存配置 -->
+    <cache type="org.mybatis.caches.ehcache.LoggingEhcache" />
+    
+	<sql id="Base_Column_List">
+    co_id,activity_id ,asu_id,user_id ,content ,activityScore ,leaderScore ,commentTime ,praises 
+    </sql>
+   
+   <!-- 新增评论内容 -->
+   <insert id="insertComments" parameterType="com.op.entity.comments.ActiveComments" >
+   insert into activeComments
+   (
+		 activity_id,asu_id,user_id,
+		content,activityScore,leaderScore,commentTime
+	)
+   values
+   (
+   		 #{activity_id},
+   		#{suId},#{user_id},#{content},#{activityScore},
+   		#{leaderScore},#{commentTime}
+   	)
+   </insert>
+   
+	<!-- 查看关联【活动评价】结果集 -->
+   <resultMap type="com.op.entity.comments.ActiveComments" id="CommentsReturnMap">
+      <id column="co_id" property="co_id"/>
+      
+      <!-- 评价回复数据集合 -->
+      <association property="acbs" javaType="com.op.entity.comments.ActiveCommentBack" column="co_id" 
+      	select="activeCommentBackMapper.findBacksByAcId"></association>
+   </resultMap>
+   
+   <!-- 查看关联活动评价数据 -->
+   <select id="findCommentsByActiveId" parameterType="int" resultMap="CommentsReturnMap" useCache="false">
+	SELECT ac.co_id,
+	  ac.user_id,
+	  ac.content,
+	  ac.activityScore,
+	  ac.leaderScore,
+	  ac.commentTime,
+	  ac.praises,
+	  u.uName,
+	  u.uHeadImg
+	FROM activeComments ac
+	JOIN users u
+	ON ac.USER_ID    =u.u_id
+	WHERE ac.activity_id=#{id}
+   </select>
+   
+   <!-- 计算该活动的满意度 和 参与评价的人数 -->
+   <select id="evaluateNumAndSatisfaction" parameterType="int" resultType="java.util.HashMap" useCache="false">
+  	SELECT COUNT(co_id) EVALUATENUM,
+  	ROUND((SUM(activityScore)/COUNT(co_id))/5*100,2) SATISFACTION
+	FROM activeComments
+	WHERE activity_id=#{id}
+   </select>
+   
+   <!-- 最新评论数据 -->
+   <select id="newDatasPage" parameterType="page" resultType="com.op.entity.comments.ActiveComments" useCache="false">
+	SELECT 
+	ac.co_id,ac.activity_id ,ac.user_id ,ac.content ,ac.activityScore ,ac.leaderScore ,ac.commentTime ,ac.praises,
+	u.uName
+	FROM activeComments ac
+	JOIN users u ON ac.USER_ID =u.u_Id 
+	WHERE activity_id=#{t}
+	ORDER BY COMMENTTIME DESC
+   </select>
+   
+   <resultMap type="com.op.entity.comments.ActiveComments" id="hotDatasResultMap">
+   	<id column="co_id" property="co_id"/>
+    <!-- 评价回复数据集合 -->
+    <collection property="acbs" ofType="com.op.entity.comments.ActiveCommentBack" column="co_id" 
+      	select="activeCommentBackMapper.findBacksByAcId"></collection>
+   </resultMap>
+   
+   <!-- 最热评论数据(按照回复量排序) -->
+   <select id="hotDatasPage" parameterType="page" resultMap="hotDatasResultMap" useCache="false">
+	SELECT 
+	ac.co_id,ac.activity_id ,ac.user_id ,ac.content ,ac.activityScore ,ac.leaderScore ,ac.commentTime ,ac.praises,
+	u.uName,u.uHeadImg
+	FROM activecomments ac
+	JOIN GROUP_COMMENT_REPLY hac ON ac.CO_ID=hac.reply_co_id
+	JOIN users u on ac.USER_ID=u.u_id
+	WHERE ac.ACTIVITY_ID=#{t}
+   </select>
+   
+	<!-- &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&   -->
+	<!-- 		活动详情	→	评价详情 	start	-->
+	<!-- &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&   -->
+	<resultMap type="com.op.dto.activity.comment.CommentInfoDTO" id="commentInfoDtoResultMap">
+		<id column="id" property="id" />
+		<result column="uName" property="uName" />
+		<result column="title" property="title" />
+		<result column="price" property="price" />
+		<result column="content" property="content" />
+		<result column="uHeadImg" property="uHeaderImg" />
+		<result column="commentTime" property="commentTime" />
+		<result column="a_active_img" property="a_active_img" />
+			
+		<!-- 景点 -->
+		<collection property="jds" ofType="java.lang.String" column="id" select="activeScenicMapper.findNameByActiveId" ></collection>
+			
+		<!-- 评价图片 -->
+		<collection property="images" ofType="com.op.entity.activity.comment.CommentImages" 
+			column="co_id" select="commentImagesMapper.findByCoId"></collection>
+	</resultMap>
+	
+	<select id="commentInfoById" parameterType="String" resultMap="commentInfoDtoResultMap">
+		SELECT ac.co_id,
+		  ac.commentTime,
+		  ac.content,
+		  u.uHeadImg,
+		  u.uName,
+		  aa.id,
+		  aa.title,
+		  aa.price,
+		  aa.a_active_img
+		FROM activecomments ac
+		JOIN users u ON ac.USER_ID=u.U_ID
+		JOIN activity aa ON ac.ACTIVITY_ID=aa.id
+		WHERE ac.CO_ID = #{id}
+	</select>
+	<!-- &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&   -->
+	<!-- 		活动详情	→	评价详情 	end	-->
+	<!-- &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&   -->
+</mapper>

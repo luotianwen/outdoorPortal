@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="countysMapper">
+    <!--mybatis ehcache缓存配置 -->
+    <cache type="org.mybatis.caches.ehcache.LoggingEhcache" />
+    
+	<sql id="Base_Column_List">
+    id,code ,name ,parent_code 
+    </sql>
+
+    <resultMap type="com.op.entity.district.Countys" id="CountysReturnMap">
+      <id column="id" property="id"/>
+      <result column="code" property="code"/>
+      <result column="name" property="name"/>
+      <result column="parent_code" property="parent_code"/>
+   </resultMap>
+   
+   <select id="selectCountyByCityCode" parameterType="java.lang.String" resultType="com.op.entity.district.Countys">
+   select <include refid="Base_Column_List"/>
+   from countys where parent_code=#{parent_code}
+   </select>
+</mapper>

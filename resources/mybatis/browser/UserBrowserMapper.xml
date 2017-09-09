@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="UserBrowserMapper">
+	<sql id="Base_Column_List">
+    id,ip ,browser ,browserVersion ,operatingSystem ,accessTime 
+    </sql>
+
+    <resultMap type="com.op.entity.browser.UserBrowser" id="UserBrowserReturnMap">
+      <id column="id" property="id"/>
+      <result column="ip" property="ip"/>
+      <result column="browser" property="browser"/>
+      <result column="browserVersion" property="browserVersion"/>
+      <result column="operatingSystem" property="operatingSystem"/>
+      <result column="accessTime" property="accessTime"/>
+   </resultMap>
+   
+    
+	
+		<!-- 新增 -->
+	<insert id="saveUserBrowser" parameterType="java.util.List" useGeneratedKeys="false" >
+	 insert into UserBrowser (ip,browser,browserVersion,operatingSystem,accessTime)
+        values
+	  <foreach collection="list" item="item" index="index" separator=",">
+          (
+	    #{item.ip},#{item.browser},#{item.browserVersion},#{item.operatingSystem},#{item.accessTime}
+          )
+	  </foreach>
+	</insert>
+	
+	 
+		
+	
+</mapper>

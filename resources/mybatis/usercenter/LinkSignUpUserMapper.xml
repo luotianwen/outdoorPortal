@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="linkSignUpUserMapper">
+	<sql id="Base_Column_List">
+    lsuu_id,lsuu_user_name ,lsuu_user_sex ,lsuu_phone ,lsuu_cart_type ,lsuu_cart_num ,lsuu_birthday ,lsuu_equipment ,lsuu_experience ,lsuu_emgc_user_name ,lsuu_emgc_user_phone ,lsuu_create_user ,lsuu_create_time ,lsuu_update_time ,lsuu_update_user 
+    </sql>
+
+    <resultMap type="com.op.entity.usercenter.LinkSignUpUser" id="LinkSignUpUserReturnMap">
+      <id column="lsuu_id" property="lsuu_id"/>
+   </resultMap>
+   
+   <!--返回  常用报名人信息-->
+   <select id="selectUser" parameterType="string" resultType="com.op.entity.usercenter.LinkSignUpUser">
+   	select lsuu_id,lsuu_user_name,lsuu_user_sex,lsuu_phone,lsuu_cart_type,lsuu_cart_num
+   	from Linksignupuser where lsuu_create_user=#{lsuu_create_user}
+   	order by lsuu_create_time asc
+   </select>
+   
+   <!--根据常用人id和创建人查找出相应的列-->
+   <select id="selectUserId" parameterType="map" resultType="com.op.entity.usercenter.LinkSignUpUser">
+   	select 
+   	lsuu_id,lsuu_user_name,lsuu_user_sex,lsuu_phone,lsuu_cart_type,
+   	lsuu_cart_num,lsuu_birthday,lsuu_equipment,lsuu_experience
+   	,lsuu_emgc_user_name,lsuu_emgc_user_phone
+	from Linksignupuser 
+	where lsuu_create_user=#{lsuu_create_user} and lsuu_id=#{lsuu_id}
+   </select>
+   
+   <!--添加常用报名人 -->
+   <insert id="insertUser" parameterType="com.op.entity.usercenter.LinkSignUpUser">
+   	insert into Linksignupuser(lsuu_user_name,lsuu_user_sex,lsuu_phone,lsuu_cart_type,lsuu_cart_num,lsuu_birthday
+   	 ,lsuu_equipment,lsuu_experience,lsuu_emgc_user_name,lsuu_emgc_user_phone,lsuu_create_user,lsuu_update_user,lsuu_create_time,lsuu_update_time
+   	)
+   	values(
+   	#{lsuu_user_name},#{lsuu_user_sex},#{lsuu_phone},#{lsuu_cart_type},#{lsuu_cart_num},#{lsuu_birthday}
+   	 ,#{lsuu_equipment},#{lsuu_experience},#{lsuu_emgc_user_name},#{lsuu_emgc_user_phone},#{lsuu_create_user},#{lsuu_update_user},now(),now()
+   	)
+   </insert>
+   
+   <!-- 保存报名用户为常用联系人 -->
+   <insert id="signUpInsertUsers" parameterType="java.util.List" useGeneratedKeys="false">
+   	  insert into Linksignupuser(lsuu_id,lsuu_user_name,lsuu_user_sex,lsuu_phone,lsuu_create_user,lsuu_create_time,lsuu_update_time,lsuu_update_user)
+	   VALUES
+	   <foreach collection="list" item="item" separator=",">
+		   (#{item.lsuu_id},#{item.asu_user_name},#{item.asu_user_sex},#{item.asu_user_phone},#{item.asu_user_id},#{item.asu_create_time}
+	   ,#{item.asu_create_time},#{item.asu_user_id})
+	  </foreach>
+   </insert>
+   
+   <!--修改常用报名人-->
+   <update id="updateUser" parameterType="com.op.entity.usercenter.LinkSignUpUser">
+   	update Linksignupuser
+   	set
+   		<if test="lsuu_user_name!=null and lsuu_user_name!=''">lsuu_user_name=#{lsuu_user_name},</if><!-- 真实姓名 -->
+   		<if test="lsuu_user_sex!=null and lsuu_user_sex!=''">lsuu_user_sex=#{lsuu_user_sex},</if><!-- 性别 -->
+   		<if test="lsuu_phone!=null and lsuu_phone!=''">lsuu_phone=#{lsuu_phone},</if><!-- 手机 号码-->
+   		<if test="lsuu_cart_type!=null and lsuu_cart_type!=''">lsuu_cart_type=#{lsuu_cart_type},</if><!-- 证件类型 -->
+   		<if test="lsuu_cart_num!=null and lsuu_cart_num!=''">lsuu_cart_num=#{lsuu_cart_num},</if><!-- 证件号 -->
+   		<if test="lsuu_birthday!=null and lsuu_birthday!=''">lsuu_birthday=#{lsuu_birthday},</if><!-- 出生日期 -->
+   		<if test="lsuu_equipment!=null and lsuu_equipment!=''">lsuu_equipment=#{lsuu_equipment},</if><!-- 装备情况 -->
+   		<if test="lsuu_experience!=null and lsuu_experience!=''">lsuu_experience=#{lsuu_experience},</if><!-- 户外经验 -->
+   		<if test="lsuu_emgc_user_name!=null and lsuu_emgc_user_name!=''">lsuu_emgc_user_name=#{lsuu_emgc_user_name},</if><!-- 应急联系人姓名 -->
+   		<if test="lsuu_emgc_user_phone!=null and lsuu_emgc_user_phone!=''">lsuu_emgc_user_phone=#{lsuu_emgc_user_phone},</if><!-- 应急联系人手机 -->
+   	lsuu_update_user=#{lsuu_update_user},lsuu_update_time=now()<!-- 最后操作人 -->
+   	where lsuu_create_user=#{lsuu_create_user} and lsuu_id=#{lsuu_id}
+   </update>
+   
+   <!--删除常用报名人-->
+   <delete id="deleteUser" parameterType="map" >
+    delete from Linksignupuser where lsuu_id=#{lsuu_id} and lsuu_create_user=#{lsuu_create_user}
+   </delete>
+</mapper>

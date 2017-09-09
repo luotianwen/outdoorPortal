@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<base href="/" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>玩嘛</title>
+
+<#include "/view/usercenter/base.css.html">
+<style>
+body {
+	background: #f1f1f1;
+}
+</style>
+
+</head>
+<body>
+<#include "/view/usercenter/header.html">
+	<div class="boxw clearfix">
+	<#include "/view/usercenter/housekeeper/menu_left.html">
+		<div class="main-box">
+			<h1>订单详情</h1>
+			<div class="order-state">
+				订单状态：
+				<span>
+					<#if pointServiceOrderInfoDTO.pso_pay_state==10>
+						未支付
+						<#assign state=1>
+						<#else>
+							<#if pointServiceOrderInfoDTO.refundSuccess==0>
+								退款成功
+								<#assign state=4>
+								<#else>
+									<#if pointServiceOrderInfoDTO.refunding!=''&&pointServiceOrderInfoDTO.refunding!=0>
+										退款中
+										<#assign state=3>
+										<#else>
+										已支付
+										<#assign state=2>
+									</#if>
+							</#if>
+					</#if>
+				</span>
+			</div>
+			<div class="venue-order-info clearfix">
+				<img src="${pointServiceOrderInfoDTO.pointProjectsImg}">
+				<h2>${pointServiceOrderInfoDTO.pso_zh_name}${pointServiceOrderInfoDTO.pso_project_name}</h2>
+			</div>
+			<div class="venue-order-list">
+				<h3>系统信息信息</h3>
+				<dl>
+					<dt>订单编号：</dt>
+					<dd>${pointServiceOrderInfoDTO.pso_id}</dd>
+				</dl>
+				<!-- 
+				<dl>
+					<dt>收货信息：</dt>
+					<dd>李小玩 185****9999</dd>
+				</dl>
+				 -->
+				<dl>
+					<dt>下单时间：</dt>
+					<dd>${pointServiceOrderInfoDTO.pso_create_time?string('yyyy-MM-dd HH:mm')}</dd>
+				</dl>
+				<#if pointServiceOrderInfoDTO.pso_pay_state=='20'>
+					<dl>
+						<dt>唯一识别码：</dt>
+						<#list pointServiceOrderInfoDTO.pointServiceUniquenessList as item>
+						<dd>
+							${item.psu_uniqueness} 
+							<#if item.pso_refund_state==0||item.pso_refund_state==30>
+								<#if item.psu_state==0>
+									未消费
+									<#else>
+										已使用
+								</#if>
+								<#elseif item.pso_refund_state==10>
+									退款中
+								<#elseif item.pso_refund_state==20>
+									退款成功
+							</#if>
+						</dd>
+						</#list>
+					</dl>
+					<dl>
+						<dt>付款方式：</dt>
+						<dd><#if pointServiceOrderInfoDTO.pso_pay_type=='0'>支付宝</#if></dd>
+					</dl>
+					<dl>
+						<dt>付款时间：</dt>
+						<dd>${pointServiceOrderInfoDTO.pso_pay_time?string('yyyy-MM-dd HH:mm')}</dd>
+					</dl>
+				</#if>
+				<dl>
+					<dt>交易快照：</dt>
+					<dd>2016070800000001</dd>
+				</dl>
+			</div>
+			<div class="venue-order-list">
+				<h3>商户及套餐信息</h3>
+				<dl>
+					<dt>商户名称：</dt>
+					<dd>${pointServiceOrderInfoDTO.pso_zh_name}</dd>
+				</dl>
+				<!-- 
+				<dl>
+					<dt>商户地址：</dt>
+					<dd>北京市通州区九棵树西路90号英特商务园写字楼A座8118号</dd>
+				</dl>
+				 -->
+				<dl>
+					<dt>套餐名称：</dt>
+					<dd>${pointServiceOrderInfoDTO.pso_project_name}</dd>
+				</dl>
+				<dl>
+					<dt>套餐有效期：</dt>
+					<dd>${pointServiceOrderInfoDTO.pso_validity_date_start?string('yyyy-MM-dd')} - ${pointServiceOrderInfoDTO.pso_validity_date_end?string('yyyy-MM-dd')}</dd>
+				</dl>
+				<dl>
+					<dt>套餐单价：</dt>
+					<dd>${pointServiceOrderInfoDTO.pso_discount_price}</dd>
+				</dl>
+				<dl>
+					<dt>数量：</dt>
+					<dd>${pointServiceOrderInfoDTO.pso_project_num}</dd>
+				</dl>
+				<dl>
+					<dt>总价：</dt>
+					<dd>${pointServiceOrderInfoDTO.pso_price}</dd>
+				</dl>
+			</div>
+			<div class="venue-order-btns">
+				<a href="pointServiceOrder/MyOrder.html">返 回</a>
+			</div>
+		</div>
+	</div>
+	<!-- main end -->
+</body>
+<#include "/view/usercenter/base.js.html">
+</html>

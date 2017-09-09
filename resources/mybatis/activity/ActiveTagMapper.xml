@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="activeTagMapper">
+	<sql id="Base_Column_List">
+    at_id,at_name ,at_active_id 
+    </sql>
+
+   <resultMap type="com.op.entity.activity.ActiveTag" id="ActiveTagReturnMap">
+      <id column="at_id" property="at_id"/>
+      <result column="at_name" property="at_name"/>
+      <result column="at_active_id" property="at_active_id"/>
+   </resultMap>
+   
+   <!-- 查询该活动对应的活动标签 -->
+   <select id="selectTagsByActiveId" parameterType="String" resultType="String">
+   select at_name from activeTag where at_active_id=#{id}
+   </select>
+   
+   <!-- 保存活动标签 -->
+   <insert id="insertActiveTag" parameterType="java.util.Map" useGeneratedKeys="false">
+	   insert into activeTag(at_active_id,at_name)
+	   VALUES
+	   <foreach collection="list" item="item" index="index" separator=",">
+	   (
+	   	#{at_active_id},#{list[${index}]}
+	   )
+   </foreach>
+   </insert>
+   
+   <!-- 根据活动id删除标签 -->
+   <delete id="deleteByActivityId" parameterType="java.lang.String">
+   delete from activeTag where at_active_id=#{ID}
+   </delete>
+</mapper>

@@ -1,0 +1,220 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="activeApplicantMapper">
+	<sql id="Base_Column_List">
+	    aa_id,asu_id ,aa_user_name ,aa_user_sex ,aa_user_phone ,aa_user_certificates_type ,
+	    aa_user_certificates_num ,aa_active_id ,aa_state ,aa_refund_flag ,aa_refund_state ,
+	    aa_refund_price ,aa_refund_time ,aa_last_update_time ,aa_last_update_user ,
+	    aa_refund_user ,aa_refund_area ,aa_leader_refund_area ,refund_batch_number ,
+	    aa_refund_date ,aa_signup_linkman,aa_create_time,aa_user_id
+    </sql>
+
+    <resultMap type="com.op.entity.usercenter.ActiveApplicant" id="ActiveApplicantReturnMap">
+      <id column="aa_id" property="aa_id"/>
+      <result column="asu_id" property="asu_id"/>
+      <result column="aa_user_name" property="aa_user_name"/>
+      <result column="aa_user_sex" property="aa_user_sex"/>
+      <result column="aa_user_phone" property="aa_user_phone"/>
+      <result column="aa_user_certificates_type" property="aa_user_certificates_type"/>
+      <result column="aa_user_certificates_num" property="aa_user_certificates_num"/>
+      <result column="aa_active_id" property="aa_active_id"/>
+      <result column="aa_state" property="aa_state"/>
+      <result column="aa_refund_flag" property="aa_refund_flag"/>
+      <result column="aa_refund_state" property="aa_refund_state"/>
+      <result column="aa_refund_price" property="aa_refund_price"/>
+      <result column="aa_refund_time" property="aa_refund_time"/>
+      <result column="aa_last_update_time" property="aa_last_update_time"/>
+      <result column="aa_last_update_user" property="aa_last_update_user"/>
+      <result column="aa_refund_user" property="aa_refund_user"/>
+      <result column="aa_refund_area" property="aa_refund_area"/>
+      <result column="aa_leader_refund_area" property="aa_leader_refund_area"/>
+      <result column="refund_batch_number" property="refund_batch_number"/>
+      <result column="aa_refund_date" property="aa_refund_date"/>
+      <result column="aa_signup_linkman" property="aa_signup_linkman"/>
+      <result column="aa_create_time" property="aa_create_time"/>
+      <result column="aa_user_id" property="aa_user_id"/>
+      
+   </resultMap>
+   
+   <resultMap type="com.op.entity.usercenter.ActiveApplicant" id="ActiveApplicantDetailsReturnMap">
+      <id column="aa_id" property="aa_id"/>
+      
+      <!-- 退款原因 -->
+      <collection property="activeApplicantLog" ofType="com.op.entity.usercenter.ActiveApplicantLog" column="aa_id" select="ActiveApplicantLogMapper.findAllByActiveApplicantId" ></collection>
+   </resultMap>
+   
+	<!-- 新增 -->
+	<insert id="saveActiveApplicant" parameterType="java.util.Map">
+		insert into ActiveApplicant 
+		(
+	 	asu_id,aa_user_name,aa_user_sex,aa_user_phone,aa_user_certificates_type,
+	 	aa_user_certificates_num,aa_active_id,aa_signup_linkman,aa_create_time,aa_user_id
+	 	)
+		values
+	 	<foreach collection="list" item="item"   separator="," >
+			(
+			#{item.asu_id},#{item.aa_user_name},#{item.aa_user_sex},#{item.aa_user_phone},#{item.aa_user_certificates_type},
+		 	#{item.aa_user_certificates_num},#{item.aa_active_id},#{item.aa_signup_linkman},#{aa_create_time},#{item.aa_user_id}
+			)
+		</foreach>
+	 	
+	</insert>
+	
+	<select id="findActiveApplicantByOrderId" parameterType="java.util.Map" resultMap="ActiveApplicantReturnMap">
+		select <include refid="Base_Column_List"/> from ActiveApplicant 
+		where asu_id = #{asu_id} 
+		<if test="order!=null and order!=''">
+			<choose>
+				<when test="order==1">
+					and (AA_REFUND_FLAG=0 or (AA_REFUND_FLAG=1 and AA_REFUND_STATE=110))
+				</when>
+				<when test="order==3">
+					and AA_REFUND_FLAG=1 and AA_REFUND_STATE in (80,90,100,120)
+				</when>
+				<when test="order==4">
+					and AA_REFUND_FLAG=1 and AA_REFUND_STATE=130
+				</when>
+				<when test="order==5">
+					and aa_state=40
+				</when>
+			</choose>
+		</if>
+		
+	</select>
+	
+	<!-- 查询所有报名人 -->
+	<select id="findActiveApplicantByAsuId" parameterType="java.util.Map" resultMap="ActiveApplicantReturnMap">
+		select <include refid="Base_Column_List"/> from ActiveApplicant 
+		where asu_id = #{asu_id} and AA_USER_ID = #{user_id}
+	</select>
+	
+	<!-- 查询所有状态报名人(详情页) -->
+	<select id="findActiveApplicantNormalByAsuId" parameterType="String" resultMap="ActiveApplicantDetailsReturnMap">
+		select <include refid="Base_Column_List"/> from ActiveApplicant 
+		where asu_id = #{asu_id}
+	</select>
+	
+	<update id="updateByAsu_id" parameterType="java.util.Map">
+		update ActiveApplicant set aa_id = #{aa_id}
+		<if test="aa_refund_flag!=null and aa_refund_flag!=''">
+			,aa_refund_flag = #{aa_refund_flag}
+		</if>
+		<if test="aa_refund_state!=null and aa_refund_state!=''">
+			,aa_refund_state = #{aa_refund_state}
+		</if>
+		,aa_refund_time = #{aa_refund_time}
+		<if test="aa_refund_price!=null and aa_refund_price!=''">
+			,aa_refund_price = #{aa_refund_price}
+		</if>
+		,aa_last_update_time = #{aa_last_update_time}
+		<if test="aa_last_update_user!=null and aa_last_update_user!=''">
+			,aa_last_update_user = #{aa_last_update_user}
+		</if>
+		<if test="aa_refund_area!=null and aa_refund_area!=''">
+			,aa_refund_area = #{aa_refund_area}
+		</if>
+		<if test="aa_state!=null and aa_state!=''">
+			,aa_state = #{aa_state}
+		</if>
+		
+		where aa_id = #{aa_id} and AA_REFUND_FLAG=0 and aa_user_id = #{userId}
+	</update>
+	
+	<!-- 订单需要确认报名人数 -->
+	<select id="needupdateByConfirm" parameterType="String" resultType="int">
+		select count(aa_id) from activeapplicant
+		where aa_state = 10 and asu_id = #{asu_id}
+	</select>
+	
+	<!-- 领队确认报名 -->
+	<update id="confirmSignUpById" parameterType="java.util.Map">
+		update activeapplicant set
+			aa_state=20
+		where aa_id in (
+			<foreach collection="aaIds" index="index" item="item" separator=",">
+	            #{item}
+	        </foreach>
+		)and aa_active_id=#{activeId} and asu_id=#{asu_id}
+	</update>
+	
+	<!-- 订单需要确认取消报名人数 -->
+	<select id="needupdateByCancel" parameterType="String" resultType="int">
+		select count(aa_id) from activeapplicant
+		where aa_state !=30 and aa_state !=40 and asu_id = #{asu_id}
+	</select>
+	
+	<!-- 领队确认取消报名 -->
+	<update id="cancelSignUpById" parameterType="java.util.Map">
+		update activeapplicant set
+			aa_state=#{aa_state},
+			aa_refund_state=#{aa_refund_state}
+			<if test="refund_money!=null and refund_money!=''">
+			,AA_REFUND_PRICE = #{refund_money}
+			</if>
+			<if test="refund_remark!=null and refund_remark!=''">
+			,AA_LEADER_REFUND_AREA = #{refund_remark}
+			</if>
+		where aa_id in 
+		<foreach collection="aaIds" index="index" item="item" open="(" separator="," close=")" >
+			<if test="item!=null and item!=''">
+				#{item}
+			</if>
+		</foreach>
+		and aa_active_id=#{activeId} and asu_id=#{asu_id}
+	</update>
+	
+	<!-- 修改报名信息 -->
+	<update id="updateRefundByUser" parameterType="map">
+		update activeapplicant set 
+			aa_refund_state=#{aa_refund_state}
+		where 
+		asu_id=#{asu_id} and aa_user_id=#{userId} and aa_active_id= #{activeId} and aa_id in
+		<foreach collection="aaIds" index="index" item="item" open="(" separator="," close=")" >
+			<if test="item!=null and item!=''">
+				#{item}
+			</if>
+		</foreach>
+	</update>
+	
+	<!-- 用户确认交易完成 -->
+	<update id="complete" parameterType="java.util.Map">
+		UPDATE activeapplicant
+		<!-- 交易完成 -->
+		SET AA_STATE  = 30,
+		AA_LAST_UPDATE_TIME = now(),
+		AA_LAST_UPDATE_USER = #{userId}
+		<!-- 活动订单ID -->
+		WHERE asu_id   =#{asu_id}
+		<!-- 创建用户 -->
+		AND AA_USER_ID=#{userId} and AA_STATE!=40 and AA_STATE!=10 and (AA_REFUND_FLAG =0 OR (AA_REFUND_FLAG =1 AND AA_REFUND_STATE!=100))
+	</update>
+	
+	<!-- 到时间未付款取消订单 -->
+	<update id="payCloseForAsu_id" parameterType="String">
+		update activeapplicant
+		set AA_LAST_UPDATE_TIME = now(),
+		AA_STATE = 40
+		
+		where ASU_ID = #{id}
+	</update>
+	
+	<!-- 订单已退款金额 -->
+	<select id="getRefundPrice" parameterType="String" resultType="String">
+		select SUM(aa_refund_price) from activeapplicant
+		where (aa_refund_state = 90 or aa_refund_state = 100 or aa_refund_state = 130) and asu_id = #{asu_id}
+	</select>
+	
+	<!-- 订单报名人数 -->
+	<select id="getSignUpNum" parameterType="String" resultType="int">
+		select count(aa_id) from activeapplicant
+		where asu_id = #{asu_id}
+	</select>
+	
+	<!-- 获取当前退款金额 -->
+	<select id="getRefundMoney" parameterType="String" resultType="double">
+		select SUM(aa_refund_price) from activeapplicant
+		where aa_refund_state = 90 and asu_id = #{asu_id}
+	</select>
+	
+</mapper>

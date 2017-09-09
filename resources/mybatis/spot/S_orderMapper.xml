@@ -1,0 +1,247 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+	<!-- 景点订单(s_order)Mapper -->
+<mapper namespace="s_orderMapper">
+    <!--mybatis ehcache缓存配置 -->
+    <!-- 以下两个<cache>标签二选一,第一个可以输出日志,第二个不输出日志 不使用缓存加入useCache="false" -->
+    <!-- <cache type="org.mybatis.caches.ehcache.LoggingEhcache" /> -->
+    <!-- <cache type="org.mybatis.caches.ehcache.EhcacheCache"/>  -->
+
+	<sql id="Base_Column_List">
+    orderId,user_id ,channel ,agentOrderId ,productSn ,productName ,productType ,
+    unitPrice ,count ,retailPrice ,settlementPrice ,order_total_price ,isSendSms ,
+    payType ,inDate ,validTimeBegin ,validTimeEnd ,feature ,fetchName ,fetchPhone ,
+    sex ,cardType ,cardNum ,codeNumber ,emsContent ,ticketTimeInfo ,isRealName ,
+    status ,pay_status ,pay_time ,usedNum ,usedState ,trade_no ,create_time ,
+    isSuccess ,errorCode ,errorMsg ,dealTime 
+    </sql>
+
+    <resultMap type="com.op.spot.entity.S_order" id="S_orderReturnMap">
+		<!-- 订单编号 -->
+      <id column="orderId" property="orderId"/>
+		<!-- 用户id -->
+      <result column="user_id" property="user_id"/>
+		<!-- 渠道id -->
+      <result column="channel" property="channel"/>
+		<!-- 对接方订单编号（暂以出游人为准） -->
+      <result column="agentOrderId" property="agentOrderId"/>
+		<!-- 产品编号 -->
+      <result column="productSn" property="productSn"/>
+		<!-- 产品名称 -->
+      <result column="productName" property="productName"/>
+		<!-- 产品种类 -->
+      <result column="productType" property="productType"/>
+		<!-- 产品单价（单位：分） -->
+      <result column="unitPrice" property="unitPrice"/>
+		<!-- 产品数量 -->
+      <result column="count" property="count"/>
+		<!-- 建议售价（单位：分） -->
+      <result column="retailPrice" property="retailPrice"/>
+		<!-- 结算价格（单位：分） -->
+      <result column="settlementPrice" property="settlementPrice"/>
+		<!-- 订单支付总金额 -->
+      <result column="order_total_price" property="order_total_price"/>
+		<!-- 是否发送短信（1、发送；0：不发送） -->
+      <result column="isSendSms" property="isSendSms"/>
+		<!-- 支付方式（1、在线支付） -->
+      <result column="payType" property="payType"/>
+		<!-- 入园日期 -->
+      <result column="inDate" property="inDate"/>
+		<!-- 电子票开始时间 -->
+      <result column="validTimeBegin" property="validTimeBegin"/>
+		<!-- 电子票结束时间 -->
+      <result column="validTimeEnd" property="validTimeEnd"/>
+		<!-- 备用 -->
+      <result column="feature" property="feature"/>
+		<!-- 取票人姓名 -->
+      <result column="fetchName" property="fetchName"/>
+		<!-- 取票人手机 -->
+      <result column="fetchPhone" property="fetchPhone"/>
+		<!-- 取票人性别（0:男,1:女） -->
+      <result column="sex" property="sex"/>
+		<!-- 证件类型 -->
+      <result column="cardType" property="cardType"/>
+		<!-- 证件号码 -->
+      <result column="cardNum" property="cardNum"/>
+		<!-- 辅助码 -->
+      <result column="codeNumber" property="codeNumber"/>
+		<!-- 短信内容 -->
+      <result column="emsContent" property="emsContent"/>
+		<!-- 电子票日期 -->
+      <result column="ticketTimeInfo" property="ticketTimeInfo"/>
+		<!-- 是否实名认证(0：否、1：是) -->
+      <result column="isRealName" property="isRealName"/>
+		<!-- 订单状态（0：等待付款、1：已付款、2：等待出票、3：已出票、4：申请退票、5：部分申请退票、6：退票成功、7：部分退票成功、8：拒绝退票、9：已完成、10：已取消、11：退票中、12：退票失败） -->
+      <result column="status" property="status"/>
+		<!-- 付款状态（0：等待支付、1：付款成功、2：退款中、3：已退款、4：等待退款） -->
+      <result column="pay_status" property="pay_status"/>
+		<!-- 付款时间 -->
+      <result column="pay_time" property="pay_time"/>
+		<!-- 电子票已验证数量 -->
+      <result column="usedNum" property="usedNum"/>
+		<!-- 电子票使用状态 -->
+      <result column="usedState" property="usedState"/>
+		<!-- 支付宝交易号 -->
+      <result column="trade_no" property="trade_no"/>
+		<!-- 创建时间 -->
+      <result column="create_time" property="create_time"/>
+		<!-- 操作是否成功 -->
+      <result column="isSuccess" property="isSuccess"/>
+		<!-- 错误码 -->
+      <result column="errorCode" property="errorCode"/>
+		<!-- 错误说明 -->
+      <result column="errorMsg" property="errorMsg"/>
+		<!-- 处理完成时间 -->
+      <result column="dealTime" property="dealTime"/>
+      
+      
+      
+   </resultMap>
+   
+  <!-- 保存新建订单信息 -->
+  <insert id="saveOrder" parameterType="com.op.spot.entity.S_order">
+  
+  insert into 
+  S_order
+  (orderId,user_id,channel ,agentOrderId ,productSn ,productName ,productType ,unitPrice ,count ,retailPrice ,settlementPrice ,order_total_price ,isSendSms ,payType ,inDate ,validTimeBegin ,validTimeEnd ,feature ,fetchName ,fetchPhone ,sex ,cardType ,cardNum ,codeNumber ,emsContent ,ticketTimeInfo ,isRealName ,status ,pay_status ,usedNum ,usedState ,trade_no ,create_time ,isSuccess ,errorCode ,errorMsg ,dealTime )
+  values
+  (
+  #{orderId},#{user_id},#{channel},#{agentOrderId},#{productSn},#{productName},#{productType},#{unitPrice},#{count},#{retailPrice},#{settlementPrice},#{order_total_price},#{isSendSms},#{payType},#{inDate},#{validTimeBegin},#{validTimeEnd},#{feature},#{fetchName},#{fetchPhone},#{sex},#{cardType},#{cardNum},#{codeNumber},#{emsContent},#{ticketTimeInfo},#{isRealName},#{status},#{pay_status},#{usedNum},#{usedState},#{trade_no},NOW(),#{isSuccess},#{errorCode},#{errorMsg},#{dealTime} 
+  
+  )
+  </insert>
+  
+  <!-- 查询用户订单信息 -->
+  <select id="getUserOrderInfo" parameterType="String" resultMap="S_orderReturnMap">
+  		select
+  			<include refid="Base_Column_List"></include>
+  		from
+  			S_order
+  		where
+  			user_id = #{array[0]}	
+  			and orderId = #{array[1]}	
+  
+  </select>
+  
+  
+  
+  <!-- 获取订单信息 -->
+  <select id="getUserOrderPayInfo" parameterType="String" resultType="com.op.spot.entity.S_order">
+  		select
+  			orderId,productName,order_total_price,count,inDate,fetchPhone,create_time
+  		from
+  			S_order
+  		where
+  			user_id = #{array[0]}	
+  			and orderId = #{array[1]}	
+  			<if test="array.length == 2">
+  				and pay_status = 0
+  			</if>
+  </select>
+  
+ <!--  更新支付状态 -->
+  <update id="updatePayState" parameterType="com.newAlipay.AlipayInfo">
+  		update S_order set 
+  			pay_status = 1 , pay_time = NOW() , status = 1
+    	where
+  			orderId = #{out_trade_no}	
+  			and pay_status = 0
+  </update>
+  
+	
+	<!-- 用户订单信息 -->
+	<resultMap type="com.op.spot.dto.SpotOrderInfoDTO" id="spotOrderResultMap">
+		<id column="orderId" property="orderId"/>
+		
+		<!-- 订单出游人 -->
+		<collection property="travelPeople" ofType="com.op.spot.entity.S_orderTravelPeople" column="orderId" select="s_orderTravelPeopleMapper.getOrderTravelPeople" ></collection>
+	</resultMap>
+	
+	<!-- 查询用户所有订单 -->
+	<select id="getAllUserOrderPage" parameterType="Page" resultMap="spotOrderResultMap">
+		select
+  			<include refid="Base_Column_List"></include>
+  		from
+  			S_order
+  		where
+  			user_id = #{t.userId}
+  		
+  		<if test="t.tabCode=='waitPay'">
+  			and pay_status = 0 and status = 0
+  		</if>
+  		<if test="t.tabCode=='pay'">
+  			and pay_status = 1 and (status = 1 or status = 2 or status = 3 or status = 5 or status = 7 or status = 8 or status = 9 or status = 12 or status = 13)
+  		</if>
+  		<if test="t.tabCode=='waitRefund'">
+  			and (pay_status = 1 or pay_status = 2 or pay_status = 4) and (status=4 or status=11)
+  		</if>
+  		<if test="t.tabCode=='refund'">
+  			and pay_status = 3 and status = 6
+  		</if>
+  		<if test="t.tabCode=='close'">
+  			and pay_status = 10
+  		</if>
+  		
+  		order by create_time desc
+	</select>
+	
+	<!-- 查看订单详情 -->
+	<select id="findUserOrderInfo" parameterType="java.util.Map" resultMap="spotOrderResultMap">
+		select
+  			so.orderId,so.user_id ,so.channel ,so.agentOrderId ,so.productSn ,so.productName ,so.productType ,
+		    so.unitPrice ,so.count ,so.retailPrice ,so.settlementPrice ,so.order_total_price ,so.isSendSms ,
+		    so.payType ,so.inDate ,so.validTimeBegin ,so.validTimeEnd ,so.feature ,so.fetchName ,so.fetchPhone ,
+		    so.sex ,so.cardType ,so.cardNum ,so.codeNumber ,so.emsContent ,so.ticketTimeInfo ,so.isRealName ,
+		    so.status ,so.pay_status ,so.pay_time ,so.usedNum ,so.usedState ,so.trade_no ,so.create_time ,
+		    so.isSuccess ,so.errorCode ,so.errorMsg ,so.dealTime ,
+		    sp.isRefund p_isRefund
+  		from S_order so
+  		left join s_product sp on sp.productSn = so.productSn
+  		
+  		where
+  			so.user_id = #{userId} and orderId = #{id}
+	</select>
+	
+	<!-- 
+		查询用户订单数量
+		未付款 付款状态 0 订单状态 0
+		已付款 付款状态 1 订单状态 1/2/3/5/7/8/9/12/13
+		等待退票 付款状态 1/2/4 订单状态 4/11
+		退票成功 付款状态 3 订单状态 6
+		已关闭 订单状态 10
+	-->
+	<!-- 订单状态（0：等待付款、1：已付款、2：等待出票、3：已出票、4：申请退票、5：部分申请退票、6：退票成功、7：部分退票成功、8：拒绝退票、9：已完成、10：已取消、11：退票中、12：退票失败） -->
+	<!-- 付款状态（0：等待支付、1：付款成功、2：退款中、3：已退款、4：等待退款） -->
+	<select id="findUserOrderCount" parameterType="String" resultType="java.util.Map">
+		select tab1.num waitPay,tab2.num pay,tab3.num waitRefund,tab4.num refund,tab5.num close from
+		(select count(0) num from s_order where pay_status = 0 and status = 0 AND user_id = #{userId}) tab1,
+		(select count(0) num from s_order where pay_status = 1 and (status = 1 or status = 2 or status = 3 or status = 5 or status = 7 or status = 8 or status = 9 or status = 12 or status = 13) AND user_id = #{userId}) tab2,
+		(select count(0) num from s_order where (pay_status = 1 or pay_status = 2 or pay_status = 4) and (status=4 or status=11) AND user_id = #{userId}) tab3,
+		(select count(0) num from s_order where pay_status = 3 and status = 6 AND user_id = #{userId}) tab4,
+		(select count(0) num from s_order where status = 10 AND user_id = #{userId}) tab5
+	</select>
+	
+	<!-- 取消未支付的订单 -->
+	<update id="updateCancelNotPay" parameterType="String">
+		update S_order set status = 10 where user_id = #{array[0]}  and orderId = #{array[1]} and status = 0	;
+		update S_orderTravelPeople set status = 10 where user_id = #{array[0]}  and orderId = #{array[1]} and status = 0	;
+	</update>
+	
+	<!-- 查询两小时未支付超时订单 -->
+	<select id="selectNotPayOrder" resultType="com.op.spot.entity.S_order">
+		SELECT
+  			orderId,user_id
+	  	FROM 
+	  		s_order
+	  	WHERE
+	  		STATUS = 0
+	  		AND create_time &lt; ADDDATE(NOW(),INTERVAL 2 HOUR)
+	</select>
+	
+	<!-- 更新景点订单门票出票状态   （定时任务调用） -->
+	<update id="updateOrderTicketStatus" parameterType="String">
+		update S_orderTravelPeople set status = #{array[1]} where agentOrderId = #{array[0]};
+	    update S_order set status = #{array[1]} where orderId = (select orderId from S_orderTravelPeople  where agentOrderId = #{array[0]} );
+	</update>
+	
+</mapper>

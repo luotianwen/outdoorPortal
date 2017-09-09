@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<!-- saved from url=(0053)http://www.zi-han.net/theme/hplus/notifications.html# -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+	<base href="/">
+    <title>H+ 后台主题UI框架 - 通知 &amp; 提示</title>
+    <meta name="keywords" content="H+后台主题,后台bootstrap框架,会员中心主题,后台HTML,响应式后台">
+    <meta name="description" content="H+是一个完全响应式，基于Bootstrap3最新版本开发的扁平化主题，她采用了主流的左右两栏式布局，使用了Html5+CSS3等现代技术">
+
+    <link rel="shortcut icon" href="http://www.zi-han.net/theme/hplus/favicon.ico"> 
+    <link href="static/css/bootstrap.min.css" rel="stylesheet">
+    <link href="static/css/font-awesome.min.css" rel="stylesheet">
+
+    <link href="static/css/animate.min.css" rel="stylesheet">
+    <link href="static/css/style.min.css" rel="stylesheet">
+
+
+<body class="gray-bg">
+    <div class="wrapper wrapper-content animated fadeIn">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="ibox float-e-margins">
+                    <div class="ibox-content text-center">
+                        <div class="tooltip-demo">
+                            <a data-toggle="tooltip" data-placement="left" data-original-title="这里是提示内容">左侧提示</a>
+                            <button type="button" class="btn btn-default" data-toggle="tooltip" data-placement="top" title="" data-original-title="这里是提示内容">顶部提示</button>
+                            <button type="button" class="btn btn-default" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="这里是提示内容">底部提示</button>
+                            <button type="button" class="btn btn-default" data-toggle="tooltip" data-placement="right" title="" data-original-title="这里是提示内容">右侧提示</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+<input class="laydate-icon" id="layer_date" type="text">
+<button id="addBtn">add</button>
+
+	<script src="static/js/jquery-2.1.1.min.js"></script>
+    <script src="static/js/bootstrap.min.js"></script>
+
+    <script src="static/js/content.min.js"></script>
+
+	
+<!-- 日期插件 -->
+<script type="text/javascript" src="static/js/plugins/layer/laydate/laydate.js"></script>
+<script type="text/javascript" src="static/js/plugins/layer/layer.min.js"></script>
+<script type="text/javascript">
+
+		
+		// 日期
+		var date = {
+		    elem: '#layer_date',
+		    event: 'focus',
+		    format: 'YYYY-MM-DD',
+		    min: laydate.now(),
+		    max: '2099-06-16',
+		    istoday: false,
+		    festival: true, //是否显示节日
+		    choose: function(datas){
+		    }
+		};
+		
+		$("#addBtn").on("click",function(){
+			var str='<input class="laydate-icon" id="layer_date_sss" type="text">';
+			
+			$(this).before(str);
+			
+			setTimeout(function(){
+				
+			
+			// 日期
+			var datesss = {
+			    elem: '#layer_date_sss',
+			    event: 'focus',
+			    format: 'YYYY-MM-DD',
+			    min: laydate.now(),
+			    max: '2099-06-16',
+			    istoday: false,
+			    festival: true, //是否显示节日
+			    choose: function(datas){
+			    }
+			};
+			
+			
+			// 初始化日期组件
+			laydate(datesss);
+			},1)
+		})
+		
+		// 初始化日期组件
+		laydate(date);
+</script>

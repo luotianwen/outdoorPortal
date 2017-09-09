@@ -1,0 +1,215 @@
+<!DOCTYPE HTML>
+<html lang="zh-cn">
+<head>
+	<base href="/" />
+	<meta charset="UTF-8">
+	<title>景点门票订单结算页-玩嘛</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+	<#include "/view/base.css.html">
+	<link rel="stylesheet" href="static/css/hw_css/order.css">
+	<link href="static/plugins/date/css/ticket-date-picker.css" rel="stylesheet" />
+	<style type="text/css">
+		.hi tr td:first-child{
+			font-weight: 700;
+		}
+		.hi tr{
+			 display:block;
+    		margin:10px 0; 
+		}
+	</style>
+</head>
+<body>
+
+	<#include "/view/header.html">
+
+	<div class="header">
+		<div class="san">
+			1.填写订单
+		</div>
+		<div class="san2">
+			2.在线支付
+		</div>
+		<div class="san2">
+			3.成功提交订单
+		</div>
+	</div>
+	<#list product.producPriceList as item>
+		<#if item.ticketTimeType = 4> 
+			<#if item_index == 0>
+		      <#assign b_date = "${item.useDate}">
+		     </#if>
+		     <#if !item_has_next>  
+				<#assign e_date = "${item.useDate}">
+			</#if>  
+			<#if nowDate != item.useDate>
+			    <input type="hidden" id="${item.useDate}_0" name="d_${item.useDate}" value="${item.retailPrice}" stock="${item.stockNumber}">
+			</#if>
+		<#else> 
+			<#assign b_date = "${displayBeginDate}"> <#assign e_date = "${displayEndDate}">
+			${useDate}
+		</#if>
+	</#list>
+	
+	<form action="" id="ticketOrder"> 
+	<div class="content">
+		<p class="h2"> 
+			订单信息	
+		</p>
+		<hr>
+		<input name="productId" value="${productId}" type="hidden">
+		<input name="productSn" value="${product.productSn}" type="hidden">
+		<div class="ticket">
+			<p class="h3 t1">${product.productName} <a href="javascript:" class="ck">查看详情∨</a></p>
+			<div class="hidejing">
+				<div class="sanjiao"></div>
+				<table class="hi">
+					<tr>
+						<td class="strong">费用包含</td>
+						<td>${product.costIncludes}</td>
+					</tr>
+					<tr>
+						<td class="strong">优惠信息</td>
+						<td>${product.pfnerInfo}</td>
+					</tr>
+					<tr>
+						<td class="strong">使用须知</td>
+						<td>${product.usedInfo}</td>
+					</tr>
+					<tr>
+						<td class="strong">退款介绍</td>
+						<td>${product.refundInfo}</td>
+					</tr>
+					<tr>
+						<td class="strong">开放时间</td>
+						<td>${product.openTime}</td>
+					</tr>
+					<tr>
+						<td class="strong">重要提示</td>
+						<td>${product.importInfo}</td>
+					</tr>
+				</table>
+			</div>
+			<p class="tick">
+				<span class="tleft" style="width: 80px;">提前预订时间</span> : <span class="tright">${allottedTime}</span>
+			</p>
+			<p class="tick">
+				<span class="tleft">门票有效期</span> : <span class="tright">${product.productValidTime?replace('|', '至' )}</span>
+			</p>
+			
+			<p class="tik">
+				<span class="tleft"><i>*</i>日期</span> : 
+				<span class="tright"> 
+					<label onclick="ticketDate({isDayDisabled:[${exceptDate}],className:'doubledate',maxDate:'${e_date}',minDate:'${b_date}',isDisabled: '0',target:this,callBack: function(){ticket_date_num.changeStartDate();}});">
+					<input type="text" class="date doubledate" id="startDate"name="inDate" readonly="readonly" autocomplete="off"/>
+				<span class="date_icon">
+				*请选择入园游玩日期</span>
+			</p>
+			<p class="tik">
+				<span class="tleft"><i>*</i>数量</span> : <span  class="tright"><input type="button" value="-" class="jian"><input type="text" id="count" name="count" readonly value="1" class="num"><input type="button" value="+" class="jia">余票<span id="stockNumber" class="col">0</span>张</span>
+			</p>
+			<!-- <p class="tik posp">
+				<span class="tleft"><i>*</i>附加保险</span> : 
+				<span  class="fen">中国人寿景区意外险-20万 ￥10/人</span>
+				<span  class="fen">中国人寿景区意外险-10万 ￥5/人</span>
+				<span  class="fen">中国人寿景区意外险-5万 ￥3/人</span>
+				<span  class="no">不购买保险</span>
+				<div class="baoxian">
+					<p><i class="close">关闭</i></p>
+					<p>就是佛号家搜的奇偶奥到家啊四季度</p>
+					<p>就是佛号家搜的奇偶奥到家啊四季度</p>
+					<p>就是佛号家搜的奇偶奥到家啊四季度</p>
+				</div>
+			</p> -->
+		</div>
+		<p class="h3 t2"> 
+			取票人/出行人信息 <span>所填取票人/出行人的信息必须详细且真实有效</span>	
+		</p>
+		<div class="ticket">
+			<p class="tp">
+				<span><i>*</i>取票人姓名 : </span><span><input type="text" id="fetchName" name="fetchName" value="" class="name"> <span class="beizhu">*请输入出行人姓名</span></span>
+			</p>
+			<p class="tp">
+				<span><i>*</i>取票人手机 : </span><span><input type="text" id="fetchPhone" name="fetchPhone" value="" class="phone"> <span class="beizhu">*请输入手机号码，相关信息将会发送到您的手机上</span></span>
+			</p>
+			<p class="tp">
+				<span><i>*</i>身份证号码 : </span><span><input type="text" id="cardNums" name="cardNum" value="" class="userid"> <span class="beizhu">*请输入出行人18位身份证号码</span></span>
+			</p>
+			<#if product.isTrue gt 0>
+			<p class="tp">
+				<span> 填写出行人信息</span>
+			</p>
+
+			<#if linkSignUpUser?size gt 0>
+			<p class="tpna">
+				常用出行人
+			</p>
+			
+			<ul class="linkman-list" id="allLinkman">
+				<#list linkSignUpUser as item>
+					<li>
+						<span class="checkbox" id="linkman">
+							<i class="icon-select" lsuuId="${item.lsuu_id}" name="${item.lsuu_user_name}" sex="${item.lsuu_user_sex}" phone="${item.lsuu_phone}" cardtype="${item.lsuu_cart_type!''}" cardnum="${item.lsuu_cart_num!''}"></i>
+							<em class="linkman-name">${item.lsuu_user_name}</em>
+						</span>
+					</li>
+				</#list>
+			</ul>
+			</#if>
+			</#if>
+
+			<#if product.isTrue gt 0>
+			<table class="info" id="people">
+				<tr>
+					<td>姓名</td>
+					<td>手机号</td>
+					<td>身份证号码</td>
+					<td>操作</td>
+				</tr>
+				<!--<tr>
+					<td><input type="text" id="visitorName"  name="visitorName" value="" class="plp"></td>
+					<td><input type="text" id="visitorPhone" name="visitorPhone" class="telephone" value=""></td>
+					<td><input type="text" id="tp_cardNum"    name="tp_cardNum" value="" class="id"></td>
+					<td>
+						<span class="keep">保存至常用</span>
+					</td>
+				</tr>-->
+				
+			</table>
+			</#if>
+		</div>
+<!-- 		<p class="h3 t3"> 
+			优惠及折扣 <span>若您在下单后对出游时间或出游人数进行变更，将无法享受促销优惠</span>	
+		</p>
+		<div class="ticket posp">
+			<p class="tik"> 
+				<span>优惠券</span> : <span class="benf">12131312321<b class="yh">∨</b></span><a href="javascript:" class="make">使用</a>
+			</p>
+			<div class="more">
+				<p><span>121564165</span><span>10元</span><span>2016.9.20-2016.10.20</span></p>
+				<p><span>121564165</span><span>10元</span><span>2016.9.20-2016.10.20</span></p>
+				<p><span>121564165</span><span>10元</span><span>2016.9.20-2016.10.20</span></p>
+			</div>
+		</div> -->
+		<div class="dibu">
+			<span class="dileft"><span class="ditu"></span>我已阅读并同意<a href="javascript:">《玩嘛门户网站服务协议》</a></span>
+			<span class="diright">订单总金额<b>￥<label id="totalPrice">0.00</label></b><a id="subBut" href="javascript:">提交订单</a></span>
+		</div>
+	 
+	</div>
+	</form>
+</body>
+<script>
+	var stock = 0;//库存数量，默认为0
+	var price = 0;
+	//0不限购
+    var limitNumber=${product.isTrue};
+
+</script>
+<#include "/view/base.js.html">
+<script type="text/javascript" src="static/js/spot/order/spot-order.js"></script>
+<script src="static/plugins/date/js/ticket-date-picker.js"></script>
+	<!-- 身份证 -->
+	<script type="text/javascript" src="static/js/IDValidator/GB2260.js"></script>
+	<script type="text/javascript" src="static/js/IDValidator/IDValidator.js"></script>
+
+</html>

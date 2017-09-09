@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<base href="/" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>玩嘛</title>
+<#include "/view/base.css.html">
+<link rel="stylesheet" type="text/css" href="static/css/hw_css/form.css" />
+<style>
+body {
+	background: #f1f1f1;
+}
+</style>
+</head>
+<body>
+	<#include "/view/header.html">
+	<div class="boxw buy-progress clearfix">
+		<ul>
+			<li><a href="javascript:void(0)">1.提交订单</a></li>
+			<li><a href="javascript:void(0)" class="selected">2.选择付款方式</a></li>
+			<li><a href="javascript:void(0)">3.购买成功</a></li>
+		</ul>
+	</div>
+	<div class="boxw clearfix">
+		<div class="buy-success-form">
+			<i class="success-img"></i>
+			<div class="success-info" style="border:none;">
+				<div class="price">
+					<p>
+						总费用：<span class="font-yuan">${pointServiceOrder.pso_price}元</span>
+					</p>
+				</div>
+				<h1>订单提交成功！请尽快支付</h1>
+				<!-- 
+				<P>16：00 前支付</P>
+				<P>
+					请在 <span class="c1">2小时0分</span> 内支付，超时后将取消订单
+				</P>
+				 -->
+			</div>
+		</div>
+	</div>
+	<div class="boxw clearfix">
+		<div class="pay-info">
+			<div class="mt">
+				<h3>选择以下支付方式付款</h3>
+			</div>
+			<div class="mc">
+				<div class="pay-list">
+					<h3>支付平台</h3>
+					<ul>
+						<li>
+							<a>
+								<label>
+									<input type="hidden" value="ZFB" class="radio i-checks radio-primary">
+									<i></i> <img id="paybankimg" name="支付宝" src="static/images/bank/zfb.png">
+								</label>
+							</a>
+						</li>
+					</ul>
+				</div>
+				
+				<div class="pay-list">
+					<h3>银行借记卡及信用卡</h3>
+					<ul>
+						<li>
+							<a>
+								<label>
+									<input type="hidden"  value="ICBCBTB" class="radio i-checks radio-primary">
+									<i></i> <img id="paybankimg" name="工商银行" src="static/images/bank/gsyh.png">
+								</label>
+							</a>
+						</li>
+						<li>
+							<a>
+								<label>
+									<input type="hidden"  value="CCBBTB" class="radio i-checks"> 
+									<i></i> <img id="paybankimg" name="建设银行" src="static/images/bank/jsyh.png">
+								</label>
+							</a>
+						</li>
+						<li>
+							<a>
+								<label>
+									<input type="hidden"  value="CMBBTB" class="radio i-checks"> 
+									<i></i> <img id="paybankimg" name="招商银行" src="static/images/bank/zsyh.png">
+								</label>
+							</a>
+						</li>
+						<li>
+							<a>
+								<label>
+									<input type="hidden"  value="ABCBTB" class="radio i-checks"> 
+									<i></i> <img id="paybankimg" name="农业银行" src="static/images/bank/nyyh.png">
+								</label>
+							</a>
+						</li>
+						<li>
+							<a>
+								<label>
+									<input type="hidden"  value="SPDBB2B" class="radio i-checks"> 
+									<i></i> <img id="paybankimg" name="浦发银行" src="static/images/bank/pufa.png">
+								</label>
+							</a>
+						</li>
+						<li>
+							<a>
+								<label>
+									<input type="hidden"  value="BOCBTB" class="radio i-checks"> 
+									<i></i> <img id="paybankimg" name="中国银行" src="static/images/bank/zgyh.png">
+								</label>
+							</a>
+						</li>
+						<li>
+							<a>
+								<label>
+									<input type="hidden"  value="POSTGC" class="radio i-checks"> 
+									<i></i> <img id="paybankimg" name="中国邮政储蓄银行" src="static/images/bank/youzheng.png">
+								</label>
+							</a>
+						</li>
+						<li>
+							<a>
+								<label>
+									<input type="hidden"  value="CIB" class="radio i-checks"> 
+									<i></i> <img id="paybankimg" name="兴业银行" src="static/images/bank/xyyh.png">
+								</label>
+							</a>
+						</li>
+						<li>
+							<a>
+								<label>
+									<input type="hidden"  value="GDB" class="radio i-checks"> 
+									<i></i> <img id="paybankimg" name="广发银行" src="static/images/bank/gfyh.png">
+								</label>
+							</a>
+						</li>
+						<li>
+							<a>
+								<label>
+									<input type="hidden"  value="SPABANK" class="radio i-checks"> 
+									<i></i> <img id="paybankimg" name="平安银行" src="static/images/bank/payh.png">
+								</label>
+							</a>
+						</li>
+						<li>
+							<a>
+								<label>
+									<input type="hidden"  value="BJBANK" class="radio i-checks"> 
+									<i></i> <img id="paybankimg" name="北京银行" src="static/images/bank/bjyh.png">
+								</label>
+							</a>
+						</li>
+						<li>
+							<a>
+								<label>
+									<input type="hidden"  value="COMM-DEBIT" class="radio i-checks"> 
+									<i></i> <img id="paybankimg" name="交通银行" src="static/images/bank/jtyh.png">
+								</label>
+							</a>
+						</li>
+						<li>
+							<a>
+								<label>
+									<input type="hidden"  value="CEB-DEBIT" class="radio i-checks"> 
+									<i></i> <img id="paybankimg" name="中国光大银行" src="static/images/bank/gdyh.png">
+								</label>
+							</a>
+						</li>
+						<li>
+							<a>
+								<label>
+									<input type="hidden"  value="CITIC-DEBIT" class="radio i-checks"> 
+									<i></i> <img id="paybankimg" name="中信银行" src="static/images/bank/zxyh.png">
+								</label>
+							</a>
+						</li>
+						
+					</ul>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+<#include "/view/base.js.html">
+<script type="text/javascript">
+	var psoId = ${pointServiceOrder.pso_id};
+	
+	$(function(){
+		//付款
+		$("label img#paybankimg").on("click",function(){
+			var $this = $(this);
+			$("label img#paybankimg").each(function(index,element){
+				$(this).parent().find("input").removeAttr("name");
+			});
+			$this.parent().find("input").attr("name","bank");
+			
+			var bank = $("label input[name='bank']");
+			
+			window.open("alipay/pay?out_trade_no="+psoId+"&bank="+bank.val());
+		});
+	})
+	
+</script>
+</html>

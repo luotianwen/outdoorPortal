@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<base href="/" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>玩嘛</title>
+<#include "/view/usercenter/base.css.html">
+</head>
+<body>
+	<#include "/view/usercenter/header.html">
+	
+	<div class="boxw clearfix">
+		<#include "/view/usercenter/poinService/pointCenter/menu_left.html">
+		
+		<div class="main-box">
+			<h1>认证管理</h1>
+			
+			<div class="update">
+				<!-- <a id="update" href="javascript:void(0)"><i></i> 修改</a> -->
+			</div>
+			
+			<div class="point-auth">
+				<form id="form">
+					<input type="hidden" name="pa_id" value="${dto.pa_id}" />
+					<table>
+						<tr>
+							<td class="right">真实姓名：</td>
+							<td class="left" id="contactName">${dto.contactName}</td>
+						</tr>
+						<tr>
+							<td class="right">身份证号：</td>
+							<td class="left" id="idCard">${dto.idCard}</td>
+						</tr>
+						<tr>
+							<td class="right">手机号：</td>
+							<td class="left" id="mobile">${dto.mobile}</td>
+						</tr>
+						<tr>
+							<td class="right">邮箱：</td>
+							<td class="left" id="email">${dto.email}</td>
+						</tr>
+						<tr>
+							<td class="right">法人身份证（正面）：</td>
+							<td class="left"><a href="${dto.idCard_p_src}" target="_blank"><i></i> 查看</a></td>
+						</tr>
+						<tr>
+							<td class="right">法人身份证（反面）：</td>
+							<td class="left"><a href="${dto.idCard_p_src2}" target="_blank"><i></i> 查看</a></td>
+						</tr>
+						<tr>
+							<td class="right">营业执照注册号：</td>
+							<td class="left" id="license_number">${dto.license_number}</td>
+						</tr>
+						<tr>
+							<td class="right">营业执照扫描件：</td>
+							<td class="left"><a href="${dto.license_src}" target="_blank"><i></i> 查看</a></td>
+						</tr>
+						<#if dto.threeinone==0>
+							<tr>
+								<td class="right">组织机构代码：</td>
+								<td class="left" id="organizationCode">${dto.organizationCode}</td>
+							</tr>
+							<tr>
+								<td class="right">组织机构代码证：</td>
+								<td class="left"><a href="${dto.organizationCode_src}" target="_blank"><i></i> 查看</a></td>
+							</tr>
+							<tr>
+								<td class="right">纳税人识别号：</td>
+								<td class="left" id="taxpayer_identity_number">${dto.taxpayer_identity_number}</td>
+							</tr>
+							<tr>
+								<td class="right">税务登记证扫描件：</td>
+								<td class="left"><a href="${dto.tax_registration_certificate}" target="_blank"><i></i> 查看</a></td>
+							</tr>
+						</#if>
+					</table>
+				</form>
+				
+			</div>
+		</div>
+	</div>
+	<!-- main end -->
+	<#include "/view/usercenter/base.js.html">
+	
+	<script type="text/javascript">
+		$(function(){
+			$("div.main-box").on("click","a#update",function(){
+				$(this).html("<i></i> 保存");
+				$(this).attr("id","save");
+				$("table td.left").each(function(){
+					var $this = $(this);
+					if($this.find("a").length==0){
+						$this.html("<input name='"+$this.attr("id")+"' value='"+$this.html()+"' />")
+					}
+				})
+			})
+			
+			$("div.main-box").on("click","a#save",function(){
+				var _this = $(this);
+				$.post("pointService/updateAuth.json",$("#form").serialize(),function(data){
+					if(data.RESPONSE_STATE=="200"){
+						layer.msg("修改成功。",{icon:1,time:1*1000,shade:0.3});
+						
+						$("table td.left").each(function(){
+							var $this = $(this);
+							if($this.find("a").length==0){
+								$this.html($this.find("input").val());
+							}
+						})
+						_this.html("<i></i> 修改");
+						_this.attr("id","update");
+						
+					}else{
+						layer.alert("修改失败，请稍后再试！",{icon:0,title:"提醒"})
+					}
+				})
+			})
+		})
+	</script>
+</body>
+</html>

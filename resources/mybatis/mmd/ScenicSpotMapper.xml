@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+	<!-- 景点(scenicSpot)Mapper -->
+<mapper namespace="scenicSpotMapper">
+    <!--mybatis ehcache缓存配置 -->
+    <!-- 以下两个<cache>标签二选一,第一个可以输出日志,第二个不输出日志 不使用缓存加入useCache="false" -->
+    <!-- <cache type="org.mybatis.caches.ehcache.LoggingEhcache" /> -->
+    <!-- <cache type="org.mybatis.caches.ehcache.EhcacheCache"/>  -->
+
+	<sql id="Base_Column_List">
+    id,destination_id ,zh_name ,en_name ,coordinates ,lat ,lng ,address ,briefing ,phone ,website ,traffic ,ticket ,opening_time ,tour_time ,edit_user ,edit_time 
+    </sql>
+
+    <resultMap type="com.op.entity.mmd.ScenicSpot" id="ScenicSpotReturnMap">
+		<!-- id -->
+      <id column="id" property="id"/>
+		<!-- 所属目的地id -->
+      <result column="destination_id" property="destination_id"/>
+		<!-- 景点中文名称 -->
+      <result column="zh_name" property="zh_name"/>
+		<!-- 景点英文名称 -->
+      <result column="en_name" property="en_name"/>
+		<!-- 经纬度 -->
+      <result column="coordinates" property="coordinates"/>
+		<!-- 景点坐标经度 -->
+      <result column="lat" property="lat"/>
+		<!-- 景点坐标纬度 -->
+      <result column="lng" property="lng"/>
+		<!-- 景点地址 -->
+      <result column="address" property="address"/>
+		<!-- 景点介绍 -->
+      <result column="briefing" property="briefing"/>
+		<!-- 电话 -->
+      <result column="phone" property="phone"/>
+		<!-- 网址 -->
+      <result column="website" property="website"/>
+		<!-- 交通 -->
+      <result column="traffic" property="traffic"/>
+		<!-- 门票 -->
+      <result column="ticket" property="ticket"/>
+		<!-- 开放时间 -->
+      <result column="opening_time" property="opening_time"/>
+		<!-- 用时参考（游览时间） -->
+      <result column="tour_time" property="tour_time"/>
+		<!-- 编辑人（最后一次） -->
+      <result column="edit_user" property="edit_user"/>
+		<!-- 编辑时间（最后一次） -->
+      <result column="edit_time" property="edit_time"/>
+   </resultMap>
+
+
+  	<insert id="insertScenicSpot" parameterType="com.op.entity.mmd.ScenicSpot">
+  		insert into ScenicSpot( destination_id ,zh_name ,en_name ,lat ,lng ,address ,briefing ,phone ,website ,traffic ,ticket ,opening_time ,tour_time ,edit_user ,edit_time
+  		,data_src
+  		)
+  		values
+  		( #{destination_id},#{zh_name},#{en_name},#{lat},#{lng},#{address},#{briefing},#{phone},#{website},#{traffic},#{ticket},#{opening_time},#{tour_time},#{edit_user} ,now()
+  		,#{data_src}
+  		)
+  	</insert>
+	
+	<select id="getScenicSpotListPage" parameterType="Page" resultType="com.op.entity.mmd.ScenicSpot">
+		select 
+		  id,destination_id ,zh_name ,en_name ,lat ,lng ,address ,briefing ,phone ,website ,traffic ,ticket ,opening_time ,tour_time ,edit_user ,edit_time,isCrawling,data_src
+		from
+			ScenicSpot
+		where
+			isCrawling = 0	
+	</select>
+	
+	<update id="updateScenicSpot" parameterType="com.op.entity.mmd.ScenicSpot" >
+     update ScenicSpot
+     set
+  		<!--  destination_id = #{destination_id},
+	 	 zh_name = #{zh_name},
+	 	 en_name = #{en_name}, -->
+	 	 coordinates = #{coordinates},
+	 	 lat = #{lat},
+	 	 lng = #{lng},
+	 	 address = #{address},
+	 	 briefing = #{briefing},
+	 	 phone = #{phone},
+	 	 website = #{website},
+	 	 traffic = #{traffic},
+	 	 ticket = #{ticket},
+	 	 opening_time = #{opening_time},
+	 	 tour_time = #{tour_time},
+	 	 edit_user = #{edit_user},
+	 	 edit_time = now(),
+	 	 isCrawling = '1'
+  		where 
+  		id = #{id}
+	</update>
+	
+</mapper>

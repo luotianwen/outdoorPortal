@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 地点服务营业日(businessTime)Mapper -->
+<mapper namespace="businessTimeMapper">
+	<!--mybatis ehcache缓存配置 -->
+	<!-- 以下两个<cache>标签二选一,第一个可以输出日志,第二个不输出日志 不使用缓存加入useCache="false" -->
+	<!-- <cache type="org.mybatis.caches.ehcache.LoggingEhcache" /> -->
+	<!-- <cache type="org.mybatis.caches.ehcache.EhcacheCache"/> -->
+
+	<sql id="Base_Column_List">
+		psabd_id,psabd_start_date ,psabd_end_date ,psabd_point_service_id
+	</sql>
+
+	<resultMap type="com.op.entity.pointService.BusinessTime" id="BusinessTimeReturnMap">
+		<!-- id -->
+		<id column="psabd_id" property="psabd_id" />
+		<!-- 营业开始时间 -->
+		<result column="psabd_start_date" property="psabd_start_date" />
+		<!-- 营业结束时间 -->
+		<result column="psabd_end_date" property="psabd_end_date" />
+		<!-- 地点服务ID -->
+		<result column="psabd_point_service_id" property="psabd_point_service_id" />
+	</resultMap>
+
+	<resultMap type="com.op.dto.pointService.show.BusinessTimeDTO" id="BusinessTimeDTOResultMap">
+		<result column="psabd_id" property="psabd_id"/>
+		
+		<!-- 营业日  -->
+		<collection property="businessDaysList" ofType="com.op.entity.pointService.BusinessDays" column="psabd_id" select="businessDaysMapper.findBusinessDaysByPsabdId"></collection>
+		
+	</resultMap>
+
+	<!-- 查询营业日时间 -->
+	<select id="findBusinessTimeByPsId" parameterType="String" resultMap="BusinessTimeDTOResultMap">
+		select psabd_id,psabd_start_date ,psabd_end_date ,psabd_point_service_id from businessTime
+		where psabd_point_service_id = #{ps_id}
+	</select>
+
+	
+</mapper>

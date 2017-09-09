@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 地点项目/套餐适合人群字典表(pointComboCrowdType)Mapper -->
+<mapper namespace="pointComboCrowdTypeMapper">
+	<!--mybatis ehcache缓存配置 -->
+	<!-- 以下两个<cache>标签二选一,第一个可以输出日志,第二个不输出日志 不使用缓存加入useCache="false" -->
+	<!-- <cache type="org.mybatis.caches.ehcache.LoggingEhcache" /> -->
+	<!-- <cache type="org.mybatis.caches.ehcache.EhcacheCache"/> -->
+
+	<sql id="Base_Column_List">
+		id,pcct_pcct_describe
+	</sql>
+
+	<resultMap type="com.op.entity.pointService.PointComboCrowdType" id="PointComboCrowdTypeReturnMap">
+		<!-- id -->
+		<id column="id" property="id" />
+		<!-- 说明 -->
+		<result column="pcct_describe" property="pcct_describe" />
+	</resultMap>
+
+	<!-- 根据项目ID查询适合人群 -->
+	<select id="findPointComboCrowdTypeByPspId" parameterType="String" resultType="com.op.entity.pointService.PointComboCrowdType">
+		select pcct_describe from pointComboCrowdType pcct
+		left join projectCrowdType pct on pct.crowdTypeId = pcct.id
+		where projectId = #{psp_id}
+	</select>
+	
+	<select id="getAll" resultType="com.op.entity.pointService.PointComboCrowdType">
+   		select 
+   			id,pcct_describe
+   		from
+   			PointComboCrowdType
+	</select>
+	
+
+</mapper>

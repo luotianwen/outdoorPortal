@@ -1,0 +1,18 @@
+@CHARSET "utf-8";
+
+body {
+	margin: 0 auto;
+}
+/*
+			You can add your custom layer styles
+			in the style attribute of the layer,
+			to a style element or
+			to an external css file
+		*/
+.navbar-header a {
+	color: #FFFFFF !important;
+}
+
+.navbar-nav>li>a {
+	color: #FFFFFF !important;
+}

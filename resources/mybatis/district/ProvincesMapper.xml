@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="provincesMapper">
+    <!--mybatis ehcache缓存配置 -->
+    <cache type="org.mybatis.caches.ehcache.LoggingEhcache" />
+    
+	<sql id="Base_Column_List">
+    id,code ,name 
+    </sql>
+
+    <resultMap type="com.op.entity.district.Provinces" id="ProvincesReturnMap">
+      <id column="id" property="id"/>
+      <result column="code" property="code"/>
+      <result column="name" property="name"/>
+      
+	  <!-- 1:N 【省】对应的【市】查询 -->
+      <collection property="citys" ofType="com.op.entity.district.Citys" column="code" select="citysMapper.selectCitys">
+      </collection>
+   </resultMap>
+   
+	<!-- 查询所有省 -->
+	<select id="selectProvinces" resultMap="ProvincesReturnMap" >
+		select <include refid="Base_Column_List"/> from provinces
+	</select>
+
+	<!-- 景点获取当前城市信息 -->
+	<select id="findNowProvince" resultMap="ProvincesReturnMap" parameterType="String">
+		select id,code ,name
+		from provinces
+		where name = #{name}
+	</select>
+
+
+</mapper>

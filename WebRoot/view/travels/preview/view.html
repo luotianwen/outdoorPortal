@@ -1,0 +1,193 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head lang="en">
+<base href="/" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>玩嘛</title>
+<#include "/view/base.css.html">
+<link rel="stylesheet" type="text/css" href="static/css/hw_css/augment.css"/>
+<link rel="stylesheet" type="text/css" href="static/css/hw_css/travels-title.css" />
+<style>
+
+#bank img {
+	background-image: url(static/css/bank/bank-logo.png);
+	width: 125px;
+	height: 28px;
+	background-repeat: no-repeat;
+}
+</style>
+
+</head>
+<body>
+	<#include "/view/header.html">
+    <div class="w10 pT-5 mo-top">
+        <!--第一张大图  -->
+        <div class="h7 mo-top1 position-r" <#if !travels.show_image?exists>style="background-color:#ff8a01;"</#if>>
+            <#if travels.show_image?exists>
+            	<img src="${travels.show_image?if_exists}" style="width: 100%;height:600px;"/>
+            	<#else>
+            	<span class="no_pic">还没有添加游记头图</span>
+            </#if>
+            <div class="colorFFF fontS3 " >
+                <p class="w7 overF position-a mo-top2" >${travels.title?if_exists}</p>
+            </div>
+        </div>
+        
+        <!-- 目录栏  -->
+        <div class="w10 h4 backFFF box1" id="scroll">
+            <div class="boxw borf position-r">
+                <a id="user-head" href="javascript:void(0)" class="mo-top3  position-a <#if travels.music?exists>user-head</#if>" <#if SESSION_USER.uHeadImg?exists>style="background: url(${SESSION_USER.uHeadImg}) no-repeat;background-size: cover;"</#if>></a>
+                <!-- <span class="mo-top4 border-R position-a"></span> -->
+                <#if travels.music?exists>
+                	<audio id="music" src="${travels.music}" preload="none" loop></audio>
+                </#if>
+                <div>
+                    <div class="mo-top5 mT-6 ">
+                        <a href="javascript:void(0)" class="mo-top6 position-r color6">${SESSION_USER.uName}<span class="<#if SESSION_USER.uSex==2>mo-top-2<#else>mo-top-1</#if>"></span></a>
+                        <span class="color9 mo-top7">等级：<em class="mo-top8">${SESSION_USER.grade_name}</em></span>
+                        <div class="float-r fontS2 mo-top9">
+                            <span class=" backf colorFFF mo-one7" id="title1" style="float: right;">目录</span>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="boxw position-r">
+    	<#if travels.departure_time?exists>
+        <!-- 时间 几人出行  -->
+        <div class="w8 pTB backFFF box">
+            <span class=" a6 index position-r">出发时间：${travels.departure_time?string('yyyy-MM-dd')}</span>
+            <span class=" a7 index position-r">出行天数：${travels.travel_days!'' }天</span>
+            <span class=" a8 index position-r">任务：${travels.travel_person!'' }</span>
+            <span class=" a9 index position-r">人均费用：${travels.per_capita_cost!'' }RMB</span>
+        </div>
+        </#if>
+        
+        <!-- 导航栏  -->
+        <div class="right-all box" id="blockR">
+            <div class="one">
+                <div class="right-font mT-4"><span class="right-icon"></span>游记目录</div>
+                <#assign count=1>
+                <#list travels.travelsContentList as item>
+					<#if item.parent_id=="0">
+						<#if item.content_type=="4">
+			                <ul>
+			                    <li class="fontSize"><span id="title" data-target="${item.travelsTitle.id}"><a class="color6" href="javascript:void(0)">${item.travelsTitle.title!''}</a></span></li>
+			                </ul>
+						<#elseif item.content_type=="5">
+			                <ul>
+			                    <li class="fontSize">
+			                        <span class="curP" id="title" data-target="${item.travelsTitle.id}"><a class="color6" href="javascript:void(0)">Day${count}.&nbsp;&nbsp;${item.travelsTitle.title!''}</a><i class="triangle up"></i></span>
+			                        <#assign count=count+1>
+									<#assign index=1>
+									<#list travels.travelsContentList as children>
+										<#if children.content_type=="4">
+										<#if children.parent_id==item.id>
+											<ul>
+					                            <li class="fontSize"><p id="children-title" class="branch">${index}.&nbsp;&nbsp;<a class="color6" href="javascript:$('html,body').animate({scrollTop:$('#${children.travelsTitle.id}').offset().top},1000)">${children.travelsTitle.title!''}</a></p></li>
+					                        	<#assign index=index+1>
+					                        </ul>
+										</#if>
+										</#if>
+									</#list>
+			                    </li>
+			                </ul>
+						</#if>
+					</#if>
+				</#list>
+				<div style="height:30px;"></div>
+            </div>
+        </div>
+        
+	</div>
+	
+	<div class="mT-5"></div>
+	
+	<#assign index=1>
+	<#list travels.travelsContentList as item>
+		<#if item.content_type=="1">
+			<div class="boxw">
+		        <!--  游记内容  -->
+		        <div class="w8 fontS1 ta">
+		            <p class="pad">
+		            	${item.content?if_exists }
+		            </p>
+		        </div>
+			</div>
+		<#elseif item.content_type=="2">
+			<div class="boxw">
+		        <!--  定位  -->
+		        <div class=" w8 hov img">
+		            <!-- 图片和定位 -->
+		            <img class="lazy-img pad db" data-original="${item.travelsPhotos.src}@!yjxq" width="${item.travelsPhotos.width}px"/>
+		            <#if item.travelsPhotos.tagName??>
+						<a href="javascript:void(0)" class="mo-one8">${item.travelsPhotos.tagName}</a>
+					</#if>
+		        </div>
+		    </div>
+		<#elseif item.content_type=="4">
+			<div class="boxw">
+				<div class="article-title ta">
+					<a id="${item.travelsTitle.id }"></a>
+					<p class="${item.travelsTitle.style_id}">
+						<i></i><span>${item.travelsTitle.title}</span>
+					</p>
+				</div>
+			</div>
+			
+		<#elseif item.content_type=="5">
+			<a id="${item.travelsTitle.id }"></a>
+			<div class="w10" style="<#if !item.travelsPhotos??>#ff8a01;</#if>">
+				<#if item.travelsPhotos??><img class="lazy-img" data-original="${item.travelsPhotos.src?if_exists}" style="width: 880px;margin-left: 352px;"/></#if>
+		        <div class="colorFFF fontS3 " >
+	                <p class="w7 overF position-a mo-topDay">Day${index}、${item.travelsTitle.title?if_exists}</p>
+	            </div>
+		    </div>
+			<#assign index=index+1>
+		</#if>
+	</#list>
+	
+	<div class="tier"></div>
+	<div class="goBack">
+	    <a href="travels/travelsdraft.html?id=${travels.id}"><span class="goBack1">返回</span></a>
+	</div>
+	
+    <!--固定区域 -->
+	<div class="w10 top-top box1" id="top" style="display:none;">
+        <div class="boxw position-r">
+            <a id="user-head" href="javascript:void(0)" class="top-top1 position-a <#if travels.music?exists>user-head</#if>" <#if SESSION_USER.uHeadImg?exists>style="background: url(${SESSION_USER.uHeadImg}) no-repeat;background-size:cover"</#if>></a>
+            <!-- <span class="top-top2 border-R position-a"></span> -->
+            <div>
+                <div class="mo-top5 aba">
+                    <p class="w9 overF position-a top-top3" id="mo11">${travels.title?if_exists}</p>
+                    <div class="float-r  mo-top9 colorFFF">
+                        <span class=" backf mo-one7" id="title2" style="float: right;">目录</span>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+	
+	<#include "/view/base.js.html">
+	<script type="text/javascript" src="static/js/travels/show/musicplay.js" ></script>
+	<script type="text/javascript" src="static/js/travels/show/jquery.nicescroll.js" ></script>
+	<script type="text/javascript" src="static/js/travels/show/travels-view.js" ></script>
+	<!-- 图片延迟加载 -->
+	<script type="text/javascript" src="static/js/plugins/lazy-load-img/jquery.lazyload.min.js" ></script>
+	<script type="text/javascript">
+	$(function(){
+		// 初始化lazyload并设置图片显示方式
+		$("img.lazy-img").lazyload({
+			effect: "show", // 载入使用何种效果
+			threshold: 3000, // 提前开始加载
+			failurelimit : 10 // 图片排序混乱时
+		});
+		
+	})
+	</script>
+</body>
+</html>

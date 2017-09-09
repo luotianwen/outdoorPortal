@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>玩嘛</title>
+<base href="/">
+<#include "/view/base.css.html">
+<link rel="stylesheet" type="text/css" href="static/css/hw_css/form.css" />
+<link rel="stylesheet" type="text/css" href="static/css/reply/reply.leader.css" />
+
+</head>
+<body>
+
+<#include "/view/header.html">
+
+<form action="" id="replyLeaderForm">
+<input name="type" type="hidden" value="leader" />
+	<div class="boxw clearfix" style="margin-top: 20px;">
+		<div class="reply-form">
+			<div class="mt">
+				<h3>申请领队（个人）</h3>
+			</div>
+			<div class="mc">
+				<div id="page1">
+				<dl class="clearfix">
+					<dt>
+						<em>*</em>真实姓名：
+					</dt>
+					<dd>
+						<input type="text" name="realName" placeholder="请输入真实姓名" style="width:200px;">
+					</dd>
+				</dl>
+				<dl class="clearfix">
+					<dt>
+						<em>*</em>用户性别：
+					</dt>
+					<dd>
+						<label>
+							<span class="cssradio">
+								<input type="radio" value="1" name="gender" checked> 
+								<span></span>
+							</span>男
+						</label> 
+						<label>
+							<span class="cssradio"> 
+								<input type="radio" value="2" name="gender"> 
+								<span></span>
+							</span>女
+						</label>
+					</dd>
+				</dl>
+				<dl class="clearfix">
+					<dt>
+						<em>*</em>手机号码：
+					</dt>
+					<dd>
+						<input type="text" name="mobile" placeholder="请输入手机号码" >
+					</dd>
+				</dl>
+				<dl class="clearfix">
+					<dt>固定电话：</dt>
+					<dd>
+						<input type="text" name="telephone" placeholder="请输入固定电话(xxx-xxxxxxx)">
+					</dd>
+				</dl>
+				<dl class="clearfix">
+					<dt>
+						<em>*</em>证件类型：
+					</dt>
+					<dd>
+						<select name="idcardType">
+							<option value="1">身份证</option>
+				    		<option value="2">护照</option>
+				    		<option value="3">军官证</option>
+				    		<option value="4">港澳回乡证或台胞证</option>
+						</select>
+					</dd>
+				</dl>
+				<dl class="clearfix">
+					<dt>
+						<em>*</em>证件号码：
+					</dt>
+					<dd>
+						<input type="text" name="idcardNum" placeholder="请输入证件号码" >
+					</dd>
+				</dl>
+				<dl class="clearfix">
+					<dt>
+						<em>*</em>居住地址：
+					</dt>
+					<dd>
+						<select name="provinceId"> 
+							<#list provinces as item>
+							<option value="${item.code}">${item.name }</option> 
+							</#list>
+						</select> 
+						<select name="cityId">
+						</select>
+						<select name="countyId">
+						</select>
+					</dd>
+				</dl>
+				<dl class="clearfix">
+					<dt>
+						<em>*</em>QQ：
+					</dt>
+					<dd>
+						<input type="text" name="qq" placeholder="请输入QQ">
+					</dd>
+				</dl>
+				<dl class="clearfix">
+					<dt>
+						<em>*</em>用户邮箱：
+					</dt>
+					<dd>
+						<input type="text" name="email" placeholder="请输入用户邮箱" />
+					</dd>
+				</dl>
+				<dl class="clearfix">
+					<dt>
+						<em>*</em>应急联系人姓名：
+					</dt>
+					<dd>
+						<input type="text" name="emergencyName" placeholder="请输入应急联系人姓名" style="width:200px;">
+					</dd>
+				</dl>
+				<dl class="clearfix">
+					<dt>
+						<em>*</em>应急联系人手机：
+					</dt>
+					<dd>
+						<input type="text" name="emergencyMobile" placeholder="请输入应急联系人手机">
+					</dd>
+				</dl>
+				<dl class="clearfix">
+					<dt>与本人关系：</dt>
+					<dd>
+						<select name="relation">
+							<option value="父母">父母</option>
+							<option value="夫妻">夫妻</option>
+							<option value="朋友">朋友</option>
+						</select>
+					</dd>
+				</dl>
+				</div>
+				<div style="display: none;" id="page2" class="ignore">
+				<dl class="clearfix">
+					<dt>
+						<em>*</em>户外履历：
+					</dt>
+					<dd>
+						<textarea maxlength="500" class="ignore" name="antecedents" placeholder="请输入户外履历"></textarea>
+						<div class="error-area"></div>
+					</dd>
+				</dl>
+				<dl class="clearfix">
+					<dt>
+						<em>*</em>培训经历：
+					</dt>
+					<dd>
+						<textarea maxlength="500" class="ignore" name="training" placeholder="请输入培训经历"></textarea>
+						<div class="error-area"></div>
+					</dd>
+				</dl>
+				<dl class="clearfix">
+					<dt>
+						<em>*</em>证件照（正面）：
+					</dt>
+					<dd>
+						<input type="hidden" file class="ignore" name="idcartFrontUrl">
+						<a href="javascript:void(0)" class="btn-img" id="idcartFrontUrl" upload-a>上传证件照（正面）</a>
+					</dd>
+				</dl>
+				<dl class="clearfix">
+					<dt>
+						<em>*</em>证件照（反面）：
+					</dt>
+					<dd>
+						<input type="hidden" file class="ignore" name="idcartBackUrl">
+						<a href="javascript:void(0)" class="btn-img" id="idcartBackUrl" upload-a>上传证件照（反面）</a>
+					</dd>
+				</dl>
+				<dl class="clearfix">
+					<dt>
+						<em>*</em>手持证件照：
+					</dt>
+					<dd>
+						<input type="hidden" file class="ignore" name="idcartHandUrl">
+						<a href="javascript:void(0)" class="btn-img" id="idcartHandUrl" upload-a>上传手持证件照</a>
+						<input type="file" name="file" style="display: none;" />
+					</dd>
+				</dl>
+				<dl class="clearfix">
+					<dt>示例展示：</dt>
+					<dd>
+						<img src="static/images/hw_img/sfz-img.jpg" width="625" height="130" />
+					</dd>
+				</dl>
+				</div>
+			</div>
+			<div class="btns">
+				<a href="javascript:void(0)" class="btn-sub" id="prev" style="display: none;">上一步</a>
+				<a href="javascript:void(0)" class="btn-sub" id="next">下一步</a>
+				<a href="javascript:void(0)" class="btn-sub" id="submit" style="display: none;">提交</a>
+				<a href="javascript:void(0)" class="btn-sub" id="reset">重置</a>
+			</div>
+		</div>
+	</div>
+</form>
+
+<div id="container" style="display: none;">
+	<a id="selectfiles" href="javascript:void(0);" class='btn'>选择文件</a>
+	<a id="postfiles" href="javascript:void(0);" class='btn'>开始上传</a>
+</div>
+
+	<#include "/view/base.js.html">
+	
+	<script type="text/javascript">
+	// 记录当前上传文件ID
+	var currentUploadFileId=null,
+		currentValidateForm = null;// 校验对象
+	</script>
+	<!-- 上传文件插件 -->
+	<script type="text/javascript" src="static/upload/plupload-2.1.8/js/plupload.full.min.js"></script>
+	<script type="text/javascript" src="static/js/reply/reply.file.upload.js"></script>
+	
+	<script type="text/javascript" src="static/js/plugins/validate/jquery.validate.min.js"></script>
+	<!-- 身份证 -->
+	<script type="text/javascript" src="static/js/IDValidator/GB2260.js"></script>
+	<script type="text/javascript" src="static/js/IDValidator/IDValidator.js"></script>
+	
+	<script type="text/javascript" src="static/js/reply/reply.leader.js"></script>
+</body>
+</html>

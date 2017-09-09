@@ -1,0 +1,294 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="UsersMapper">
+
+    <!--mybatis ehcache缓存配置 -->
+    <!-- 以下两个<cache>标签二选一,第一个可以输出日志,第二个不输出日志 -->
+    <!-- <cache type="org.mybatis.caches.ehcache.LoggingEhcache" /> -->
+    <!-- <cache type="org.mybatis.caches.ehcache.EhcacheCache"/>  -->
+
+
+	<sql id="Base_Column_List">
+    u_id,uName ,uEmail ,uPhone ,uPassword ,uSex ,uHeadImg ,uLoginAreaCode ,uCreateTime ,
+    uLastUpdateTime ,uType ,uScoreNum ,rId ,isFroZen,isGAG,uLoginIp,uLoginDate,
+    uLoginCount,emergencyName, emergencyMobile, relation,personalitySignature,
+    follow,fans,historyVisit,source
+    </sql>
+
+    <resultMap type="com.op.entity.users.Users" id="UsersReturnMap">
+      <id column="u_id" property="uId"/>
+      <result column="uName" property="uName"/>
+      <result column="uEmail" property="uEmail"/>
+      <result column="uPhone" property="uPhone"/>
+      <result column="uPassword" property="uPassword"/>
+      <result column="uSex" property="uSex"/>
+      <result column="uHeadImg" property="uHeadImg"/>
+      <result column="uLoginAreaCode" property="uLoginAreaCode"/>
+      <result column="uCreateTime" property="uCreateTime"/>
+      <result column="uLastUpdateTime" property="uLastUpdateTime"/>
+      <result column="uType" property="uType"/>
+      <result column="uScoreNum" property="uScoreNum"/>
+      <result column="rId" property="rId"/>
+      <result column="isFroZen" property="isFroZen"/>
+      <result column="isGAG" property="isGAG"/>
+      <result column="uLoginIp" property="uLoginIp"/>
+      <result column="uLoginDate" property="uLoginDate"/>
+      <result column="uLoginCount" property="uLoginCount"/>
+      <result column="emergencyName" property="emergencyName"/>
+      <result column="emergencyMobile" property="emergencyMobile"/>
+      <result column="relation" property="relation"/>
+      <result column="personalitySignature" property="personalitySignature"/>
+      <result column="follow" property="follow"/>
+      <result column="fans" property="fans"/>
+      <result column="historyVisit" property="historyVisit"/>
+      <result column="source" property="source"/>
+      
+      <result column="grade_name" property="grade_name"/>
+      
+      <!-- 查询角色 -->
+      <!-- <association property="role" javaType="com.op.entity.authority.Roles" column="rId" select="rolesMapper.findRoleByRId">
+	  </association> -->
+   </resultMap>
+
+	<!-- 用户详细信息 -->
+   <resultMap type="com.op.entity.users.UserInfo" id="UserInfoReturnMap">
+      <id column="u_id" property="uId"/>
+      <result column="uName" property="uName"/>
+      <result column="uEmail" property="uEmail"/>
+      <result column="uPhone" property="uPhone"/>
+      <result column="uPassword" property="uPassword"/>
+      <result column="uSex" property="uSex"/>
+      <result column="uHeadImg" property="uHeadImg"/>
+      <result column="uLoginAreaCode" property="uLoginAreaCode"/>
+      <result column="uCreateTime" property="uCreateTime"/>
+      <result column="uLastUpdateTime" property="uLastUpdateTime"/>
+      <result column="uType" property="uType"/>
+      <result column="uScoreNum" property="uScoreNum"/>
+      <result column="rId" property="rId"/>
+      <result column="isFroZen" property="isFroZen"/>
+      <result column="isGAG" property="isGAG"/>
+      <result column="uLoginIp" property="uLoginIp"/>
+      <result column="uLoginDate" property="uLoginDate"/>
+      <result column="uLoginCount" property="uLoginCount"/>
+      <result column="rName" property="rName"/>
+   </resultMap>
+   
+   <!-- 根据手机号/邮箱登录用户 -->
+   <select id="loginUserByPhoneOrEmail" parameterType="com.op.entity.users.Users" resultMap="UsersReturnMap" >
+   	SELECT <include refid="Base_Column_List" />,ug.grade_name
+   	FROM users users
+   	left join user_grade ug on (users.integral>=ug.MININTEGRAL and users.integral <![CDATA[<=]]> MAXINTEGRAL)
+   	WHERE
+   	uPassword=#{uPassword}
+   	AND
+   	(uPhone = #{uPhone}
+   	OR
+   	uEmail = #{uEmail})
+    AND UTYPE in (1,2,3,50)
+   </select>
+   
+   <!-- 根据用户id查询用户基本信息 -->
+   <select id="selectId" parameterType="string" resultType="com.op.entity.users.UserInfo">
+   	select Users.u_id,Users.uname,Users.uemail,Users.uphone,Users.usex,Users.uheadimg,Users.utype,Users.uscorenum
+    ,Users.isfrozen,Users.integral,Users.uLoginAreaCode
+   	,User_grade.grade_name
+	from Users left join User_grade on
+	Users.integral between User_grade.minintegral and User_grade.maxintegral
+	where
+   	u_id = #{u_id}
+   </select>
+ 
+
+	<!--根据用户ID获取用户详细信息 -->
+	<select id="findUserById" parameterType="String" resultMap="UsersReturnMap" useCache="false" >
+		SELECT u_id,uName,uHeadImg,utype,uLoginAreaCode,follow,fans,historyVisit,ug.grade_name FROM users 
+		left join user_grade ug on (users.integral>=ug.MININTEGRAL and users.integral <![CDATA[<=]]>MAXINTEGRAL)
+		WHERE u_id = #{userId} 
+	</select>
+	
+	<!--根据用户ID获取用户邮箱 -->
+	<select id="findUserEmailById" parameterType="String" resultType="String" useCache="false" >
+		SELECT uEmail FROM users WHERE u_id = #{userId} 
+	</select>
+   
+   <!-- 查询用户头像 -->
+   <select id="selectHead" parameterType="string" resultType="string">
+   	select uHeadImg from users where u_id=#{uId}
+   </select>
+
+   <!-- 修改用户信息 -->
+   <update id="updateUsers" parameterType="com.op.entity.users.Users">
+   	update Users set 
+	   	uname=#{uName},
+	   	usex=#{uSex},
+	   	uLoginAreaCode=#{uLoginAreaCode},
+	   	birthday=#{birthday},
+	   	personalitySignature=#{personalitySignature},
+	   	ULASTUPDATETIME=now()
+   	where u_id=#{uId}
+   </update>
+   
+   <!-- 修改用户头像 -->
+  <update id="updateHead" parameterType="map">
+  	update Users set uHeadImg=#{uHeadImg} where u_Id=#{uId}
+  </update>
+  
+   <!-- 修改用户紧急联系人信息 -->
+   <update id="updateUsersEmergency" parameterType="com.op.entity.users.Users">
+   	update Users set emergencyName=#{emergencyName}, emergencyMobile=#{emergencyMobile}, relation=#{relation} where u_id=#{uId}
+   </update>
+	
+   <!-- saveUser -->
+   <insert id="saveUser" parameterType="com.op.entity.users.Users" useGeneratedKeys="true" keyColumn="u_id" keyProperty="uId" >
+   insert into users 
+   (uName,uPhone,uPassword,uCreateTime,uLastUpdateTime,uType,ULOGINIP,ULOGINDATE,ULOGINCOUNT,source)
+   values (#{uName},#{uPhone},#{uPassword},#{uCreateTime},#{uCreateTime},#{uType},#{uLoginIp},#{uLoginDate},#{uLoginCount},0)
+   </insert>
+ 
+  
+   
+   <!-- checkUserPhoneUnique -->
+   <select id="checkUserPhoneUnique" parameterType="String" resultType="Integer" useCache="false" >
+       <![CDATA[
+           select count(1) from users where uPhone=#{uPhone} and uType <>4
+        ]]>
+   </select>
+   
+   <select id="checkUserEmailUnique" parameterType="String" resultType="Integer" useCache="false" >
+   select count(1) from users where uEmail=#{uEmail}
+   </select>
+
+
+   <!-- 验证用户名邮箱手机号是否有重复 -->
+   <select id="checkUserInfo" parameterType="java.util.HashMap" resultType="Integer">
+   		select count(1) from users where 
+   		<if test="uName != null and uName != '' ">
+   			uName=#{uName}
+   		</if> 
+   		<if test="uEmail != null and uEmail != '' ">
+   			uEmail=#{uEmail}
+   		</if> 
+   		<if test="uPhone != null and uPhone != '' ">
+   			uPhone=#{uPhone}
+   		</if> 
+   		<if test="uId != null and uId != '' ">
+   		   and 	u_id not in (#{uId})
+   		</if>
+   </select>
+
+   
+   <select id="checkUserIsFroZen" parameterType="String" resultType="Integer">
+   select isFroZen from users where u_id=#{uId}
+   </select>
+   
+   <update id="updateUserRoleByUid" parameterType="java.util.HashMap">
+   update users set rId=#{rId} where u_id=#{uId}
+   </update>
+   
+   <!-- 改变用户登录信息（IP、最后登录时间、登录次数） -->
+   <update id="updateUserLoginInfo" parameterType="com.op.entity.users.Users">
+   update users set ULOGINIP=#{uLoginIp},uLoginDate=#{uLoginDate},uLoginCount=#{uLoginCount}
+   where u_id = #{uId}
+   </update>
+   
+   <!-- 根据用户ID修改绑定手机号码 -->
+   <update id="updateUserPhoneById" parameterType="com.op.entity.users.Users">
+   update users set uPhone=#{uPhone}
+   where u_id=#{uId}
+   </update>
+   
+   <!-- 根据用户ID修改/绑定邮箱号码 -->
+   <update id="updateUserEmailById" parameterType="com.op.entity.users.Users">
+   update users set uEmail=#{uEmail}
+   where u_id=#{uId}
+   </update>
+   
+   <!-- 根据用户ID修改绑定密码 -->
+   <update id="updateUserPasswordById" parameterType="com.op.entity.users.Users">
+   update users set upassword=#{uPassword}
+   where 1=1
+   <if test="uId!=null and uId!=''">
+   		and u_id=#{uId}
+   </if>
+   <if test="uPhone!=null and uPhone!=''">
+   		and uPhone=#{uPhone}
+   </if>
+   <if test="uEmail!=null and uEmail!=''">
+   		and uEmail=#{uEmail}
+   </if>
+   </update>
+   
+   
+   <!-- 更新用户头像地址为OSS地址 -->
+   <update id="updateUserAvatarOssUrl" parameterType="com.op.entity.users.Users">
+	   update users set uHeadImg=#{uHeadImg}
+	   where u_id = #{uId} 
+   </update>
+   
+   <!-- 根据用户ID查询用户个人信息 -->
+   <select id="findUserInfoById" parameterType="String" resultType="com.op.dto.usercenter.userInfo.UsersInfo">
+   		select u_id,uName,uSex,uLoginAreaCode,birthday,personalitySignature
+   		from users
+   		where u_id = #{id}
+   </select>
+   
+   <!-- 根据用户ID查询用户身份类型 -->
+   <select id="selectUtypeById" parameterType="String" resultType="int">
+   select uType from users where u_id=#{id}
+   </select>
+   
+   <!-- 昵称唯一验证 -->
+   <select id="validateName" parameterType="java.util.Map" resultType="java.lang.Integer">
+	   select count(u_id) from users where uName = #{uName}
+	   <if test="uId != null and uId != ''">
+	   and u_id != #{uId}
+	   </if>
+   </select>
+   
+   <!-- 昵称唯一验证 -->
+   <select id="checkUserName" parameterType="String" resultType="java.lang.Integer">
+	   select count(u_id) from users where uName = #{uName}
+   </select>
+   
+   <!-- 根据身份查询所有用户ID -->
+   <select id="findUserIdByMessage" parameterType="int" resultType="String">
+   		select u_id from users 
+   		<if test="identity!=0">
+   		
+   			where utype = #{identity}
+   		</if>
+   </select>
+   
+   <!-- 个人中心展示信息(关注，最近访问) -->
+   <select id="findUserCenterInfo" parameterType="String" resultType="com.op.dto.usercenter.usercenter.UserCenterInfo">
+   		select u_id,uName,uHeadImg from users
+   		where u_id = #{userId}
+   </select>
+   
+   <!-- 私信个人信息 -->
+   <select id="findUserCenterInfoForDialog" parameterType="java.util.Map" resultType="com.op.dto.usercenter.usercenter.UserCenterInfo">
+   		select u_id,uName,uHeadImg from users
+   		where (u_id = #{creater} or u_id = #{friend}) and u_id != #{login}
+   </select>
+   
+   <!-- 修改历史访问次数 -->
+   <update id="updateHistoryVisit" parameterType="String">
+   		update users set
+   		historyVisit = historyVisit+1
+   		where u_id = #{userId}
+   </update>
+   
+   <!-- 新增用户个人资料 -->
+   <insert id="saveUserInfo" parameterType="String">
+		insert into app_usersinfo
+		(
+			ui_user
+		)
+		values
+		(
+			#{uId }
+		)
+   </insert>
+   
+</mapper>

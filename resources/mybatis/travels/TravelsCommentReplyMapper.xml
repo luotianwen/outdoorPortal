@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="travelsCommentReplyMapper">
+	<sql id="Base_Column_List">
+    tcr_id,tcr_travelsCommentId ,tcr_replyContent ,tcr_createTime ,tcr_replyUserId ,tcr_beReplyUserId
+    </sql>
+
+    <resultMap type="com.op.entity.travels.TravelsCommentReply" id="TravelsCommentReplyReturnMap">
+      <id column="tcr_id" property="tcr_id"/>
+      <result column="tcr_travelsCommentId" property="tcr_travelsCommentId"/>
+      <result column="tcr_replyContent" property="tcr_replyContent"/>
+      <result column="tcr_createTime" property="tcr_createTime"/>
+      <result column="tcr_replyUserId" property="tcr_replyUserId"/>
+      <result column="tcr_beReplyUserId" property="tcr_beReplyUserId"/>
+   </resultMap>
+   
+   <!-- 根据评论查询回复(关联查询) -->
+   <select id="selectByCommentId" parameterType="java.lang.String" resultType="com.op.entity.travels.TravelsCommentReply">
+	  SELECT tcr_id,
+	      tcr_travelsCommentId ,
+	      tcr_replyContent ,
+	      tcr_createTime ,
+	      tcr_replyUserId ,
+	      tcr_beReplyUserId ,
+	      u.uName,
+	      u.uHeadImg,count(tcr_id)
+	    FROM travelsCommentReply tcr
+	    LEFT JOIN users u
+	    ON tcr.tcr_replyUserId    =u.U_ID
+	    WHERE tcr_travelsCommentId=#{id}
+	    ORDER BY tcr_createTime
+	    limit 0,5
+	  
+   </select>
+   
+   <!-- 查询评论回复条数 -->
+   <select id="countReplysByCommentId" parameterType="java.lang.String" resultType="int">
+   select count(tcr_id) from travelsCommentReply where tcr_travelsCommentId=#{id}
+   </select>
+   
+   <!-- 分页查询回复信息 -->
+   <select id="findCommentReplysPage" parameterType="Page" resultType="com.op.entity.travels.TravelsCommentReply">
+   select <include refid="Base_Column_List"/>
+   , u.uName,u.uHeadImg
+   from travelsCommentReply tcr
+   left join users u on tcr.tcr_replyUserId=u.U_ID
+   where tcr_travelsCommentId=#{t}
+   order by tcr_createTime
+   </select>
+   
+   <!-- 回复层主 -->
+   <insert id="insertReplyComment" parameterType="com.op.entity.travels.TravelsCommentReply">
+   insert into travelsCommentReply (  tcr_travelsCommentId ,tcr_replyContent ,tcr_createTime ,tcr_replyUserId ,tcr_beReplyUserId)
+   values ( #{tcr_travelsCommentId},#{tcr_replyContent},now(),
+   #{tcr_replyUserId},#{tcr_beReplyUserId})
+   </insert>
+	
+</mapper>

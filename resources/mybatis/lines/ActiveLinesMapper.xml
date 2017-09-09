@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="activeLinesMapper">
+	<sql id="Base_Column_List">
+    al_id,al_coordinates ,al_description ,al_create_time ,al_create_user ,al_update_user ,al_update_time ,al_is_delete ,al_active_id
+    </sql>
+
+    <resultMap type="com.op.entity.lines.ActiveLines" id="ActiveLinesReturnMap">
+      <id column="al_id" property="al_id"/>
+      <result column="al_coordinates" property="al_coordinates"/>
+      <result column="al_description" property="al_description"/>
+      <result column="al_create_time" property="al_create_time"/>
+      <result column="al_create_user" property="al_create_user"/>
+      <result column="al_update_user" property="al_update_user"/>
+      <result column="al_update_time" property="al_update_time"/>
+      <result column="al_is_delete" property="al_is_delete"/>
+      <result column="al_active_id" property="al_active_id"/>
+   </resultMap>
+   
+   <!-- 活动详情页面：根据活动ID查询总体线路信息	2016年3月24日 -->
+   <select id="selectByActiveId" parameterType="String" resultType="com.op.entity.lines.ActiveLines" useCache="false" >
+   select <include refid="Base_Column_List"/>
+   from activelines where al_active_id=#{id}
+   </select>
+   
+   <!-- 添加活动线路图 -->
+   <insert id="insertintoActiveLines" parameterType="com.op.entity.lines.ActiveLines">
+   insert into activeLines(al_id,al_coordinates,al_create_time,al_create_user)
+   values (#{al_id},#{al_coordinates},#{al_create_time},#{al_create_user})
+   </insert>
+   
+   <!-- 保存总体线路信息 -->
+   <insert id="insertActiveLines" parameterType="com.op.entity.lines.ActiveLines" useGeneratedKeys="false">
+   insert into activeLines( al_coordinates,al_create_user,al_active_id)
+   values
+   (
+    #{al_coordinates},#{al_create_user},#{al_active_id}
+   )
+   </insert>
+   
+</mapper>

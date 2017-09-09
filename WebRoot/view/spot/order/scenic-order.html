@@ -1,0 +1,250 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<base href="/" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>玩嘛</title>
+
+<#include "/view/usercenter/base.css.html">
+<link href="static/css/page.css" rel="stylesheet">
+<link href="static/js/plugins/layer/skin/moon/style.css" rel="stylesheet">
+<style>
+body {
+	background: #f1f1f1;
+}
+a {
+	cursor:pointer;
+}
+</style>
+
+</head>
+<body>
+<#include "/view/usercenter/header.html">
+	<div class="boxw clearfix">
+		<#include "/view/usercenter/housekeeper/menu_left.html">
+		<div class="main-box">
+			<h1>我的订单</h1>
+			<div class="order-nav">
+				<a href="ticket/MyOrder.html" <#if tabCode=="all">class="now"</#if>> 全部订单 </a>
+				<a href="ticket/MyOrder.html?tabCode=waitPay" <#if tabCode=="waitPay">class="now"</#if>> 等待支付（${count.waitPay}） </a>
+				<a href="ticket/MyOrder.html?tabCode=pay" <#if tabCode=="pay">class="now"</#if>> 支付成功（${count.pay}） </a>
+				<a href="ticket/MyOrder.html?tabCode=waitRefund" <#if tabCode=="waitRefund">class="now"</#if>> 退票中（${count.waitRefund}） </a>
+				<a href="ticket/MyOrder.html?tabCode=refund" <#if tabCode=="refund">class="now"</#if>> 退票成功（${count.refund}） </a>
+				<a href="ticket/MyOrder.html?tabCode=close" <#if tabCode=="close">class="now"</#if>> 已关闭（${count.close}） </a>
+			</div>
+			<div class="order-list">
+				<#list list as item>
+					<#if item.status==0>
+						<div class="order-item paying">
+							<div class="order-states">等待付款</div>
+							<div class="order-tips">${item.waitPayTime}前支付，超时取消订单。</div>
+							<div class="order-info-01">
+								<span> ${item.create_time?string('yyyy-MM-dd HH:mm:ss')} </span>
+								<span> 订单号：${item.orderId} </span>
+								<div class="order-price">
+									应付款： <i> ${item.order_total_price} </i> 元
+								</div>
+							</div>
+							<div class="order-info-02">
+								<div class="orderArea s-w" style="width:690px;">
+									<h3>${item.productName}</h3>
+									<h3>${item.retailPrice/100}元/人 x ${item.count}</h3>
+									
+									<#list item.travelPeople as tp>
+										<#if tp_index == 4>
+											<div id="allpeople" style="display: none;">
+										</#if>
+										<p>
+											<span>${tp.visitorName}</span>
+											<span>${tp.cardNum} </span>
+											<span>${tp.visitorPhone}</span>
+											<span class="f-orange">等待付款</span>
+										</p>
+										<#if tp_index gt 3 && tp_index == tp?length-1>
+											</div>
+										</#if>
+									</#list>
+
+									<#if item.travelPeople?size gt 3>
+										<p>
+											<a id="showAll" class="more" href="javascript:void(0)">查看更多<i class="down"></i></a>
+										</p>
+									</#if>
+									
+								</div>
+								<div class="order-btns-area">
+									<a href="ticket/payInfo?orderId=${item.orderId}" target="_blank" class="btns-01"> 立即支付 </a>
+									<a href="ticket/orderInfo.html?id=${item.orderId}" target="_blank" class="btns"> 订单详情 </a>
+								</div>
+							</div>
+						</div>
+						<#else>
+						<div class="order-item <#if item.status==4||item.status==11>refunding</#if>">
+							<#if item.status==1>
+								<div class="order-states">已付款</div>
+								<#elseif item.status==2>
+								<div class="order-states">等待出票</div>
+								<#elseif item.status==3>
+								<div class="order-states">已出票</div>
+								<#elseif item.status==4>
+								<div class="order-states">已申请退票</div>
+								<#elseif item.status==5>
+								<div class="order-states">部分申请退票</div>
+								<#elseif item.status==6>
+								<div class="order-states">退票成功</div>
+								<#elseif item.status==7>
+								<div class="order-states">部分退票成功</div>
+								<#elseif item.status==8>
+								<div class="order-states">拒绝退票</div>
+								<#elseif item.status==9>
+								<div class="order-states">已完成</div>
+								<#elseif item.status==10>
+								<div class="order-states">已关闭</div>
+								<#elseif item.status==11>
+								<div class="order-states">退票中</div>
+								<#elseif item.status==12>
+								<div class="order-states">退票失败</div>
+								<#elseif item.status==13>
+								<div class="order-states">出票失败</div>
+							</#if>
+							<div class="order-info-01">
+								<span> ${item.create_time?string('yyyy-MM-dd hh:mm:ss')} </span>
+								<span> 订单号：${item.orderId} </span>
+								<div class="order-price">
+									实付款： <i> ${item.order_total_price} </i> 元
+								</div>
+							</div>
+							<div class="order-info-02">
+								<div class="orderArea s-w" style="width:690px;">
+									<h3>${item.productName}</h3>
+									<h3>${item.retailPrice/100}元/人 x ${item.count}</h3>
+									
+									<#list item.travelPeople as tp>
+										<#if tp_index == 3>
+											<div id="allpeople" style="display: none;">
+										</#if>
+										<#if tp.status==1>
+											<p>
+												<span>${tp.visitorName}</span>
+												<span>${tp.cardNum} </span>
+												<span>${tp.visitorPhone}</span>
+												<span class="f-orange">已付款</span>
+											</p>
+											<#elseif item.status==2>
+											<p>
+												<span>${tp.visitorName}</span>
+												<span>${tp.cardNum} </span>
+												<span>${tp.visitorPhone}</span>
+												<span class="f-orange">等待出票</span>
+											</p>
+											<#elseif item.status==3>
+											<p>
+												<span>${tp.visitorName}</span>
+												<span>${tp.cardNum} </span>
+												<span>${tp.visitorPhone}</span>
+												<span class="f-orange">已出票</span>
+											</p>
+											<#elseif tp.status==4>
+											<p>
+												<span class="f-green">${tp.visitorName}</span>
+												<span class="f-green">${tp.cardNum} </span>
+												<span class="f-green">${tp.visitorPhone}</span>
+												<span class="f-green">退票中</span>
+											</p>
+											<#elseif tp.status==6>
+											<p>
+												<span class="f-green">${tp.visitorName}</span>
+												<span class="f-green">${tp.cardNum} </span>
+												<span class="f-green">${tp.visitorPhone}</span>
+												<span class="f-green">退票成功</span>
+											</p>
+											<#elseif tp.status==8>
+											<p>
+												<span>${tp.visitorName}</span>
+												<span>${tp.cardNum} </span>
+												<span>${tp.visitorPhone}</span>
+												<span class="f-orange">拒绝退票</span>
+											</p>
+											<#elseif tp.status==9>
+											<p>
+												<span>${tp.visitorName}</span>
+												<span>${tp.cardNum} </span>
+												<span>${tp.visitorPhone}</span>
+												<span class="f-orange">交易完成</span>
+											</p>
+											<#elseif tp.status==10>
+											<p>
+												<span>${tp.visitorName}</span>
+												<span>${tp.cardNum} </span>
+												<span>${tp.visitorPhone}</span>
+												<span class="f-orange">已关闭</span>
+											</p>
+											<#elseif tp.status==11>
+											<p>
+												<span class="f-green">${tp.visitorName}</span>
+												<span class="f-green">${tp.cardNum} </span>
+												<span class="f-green">${tp.visitorPhone}</span>
+												<span class="f-green">退票中</span>
+											</p>
+											<#elseif tp.status==12>
+											<p>
+												<span>${tp.visitorName}</span>
+												<span>${tp.cardNum} </span>
+												<span>${tp.visitorPhone}</span>
+												<span class="f-orange">退票失败</span>
+											</p>
+											<#elseif tp.status==13>
+											<p>
+												<span>${tp.visitorName}</span>
+												<span>${tp.cardNum} </span>
+												<span>${tp.visitorPhone}</span>
+												<span class="f-orange">出票失败</span>
+											</p>
+										</#if>
+										<#if tp_index gte 3 && tp_index == item.travelPeople?size-1>
+											</div>
+										</#if>
+									</#list>
+									
+									<#if item.travelPeople?size gt 3>
+										<p>
+											<a id="showAll" class="more" href="javascript:void(0)">查看更多<i class="down"></i></a>
+										</p>
+									</#if>
+									
+								</div>
+								<div class="order-btns-area">
+									<a href="ticket/orderInfo.html?id=${item.orderId}" target="_blank" class="btns"> 订单详情 </a>
+								</div>
+							</div>
+						</div>
+					</#if>
+				</#list>
+			</div>
+			<div id="page" style="text-align: center;width: 100%;">
+				${page.pageStr}
+			</div>
+		</div>
+	</div>
+	<!-- main end -->
+	<#include "/view/usercenter/base.js.html">
+	<script type="text/javascript" src="static/js/plugins/layer/laypage/laypage.js"></script>
+	<script type="text/javascript" src="static/js/page.js"></script>
+	<script type="text/javascript">
+		$(function(){
+			$("#showAll").on("click",function(){
+				var $this = $(this);
+				if($this.find("i").hasClass("down")){
+					$this.find("i").removeClass();
+					$this.find("i").addClass("up");
+					$this.closest("div").find("#allpeople").css("display","block");
+				}else{
+					$this.find("i").removeClass();
+					$this.find("i").addClass("down");
+					$this.closest("div").find("#allpeople").css("display","none");
+				}
+			})
+		})
+	</script>
+</body>
+</html>

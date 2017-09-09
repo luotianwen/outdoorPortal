@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD SQL Map Config 3.0//EN"  
+	"http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+	
+	<settings> 
+        <!-- 全局映射器启用缓存 -->
+  		<setting name="cacheEnabled" value="true" />
+        <setting name="useGeneratedKeys" value="false" /> 
+        <setting name="defaultExecutorType" value="REUSE" /> 
+        <!-- 设置JDBC类型为空时,某些驱动程序 要指定值 --> 
+        <setting name="jdbcTypeForNull" value="VARCHAR"/>
+        <!-- 日志 -->
+        <setting name="logImpl" value="STDOUT_LOGGING"/> 
+        <!--打开延迟加载的开关  -->
+        <setting name="lazyLoadingEnabled" value="false"/>
+        <!--将积极加载改为消极加载及按需加载  -->
+        <setting name="aggressiveLazyLoading" value="false"/>
+        
+    </settings>
+	<typeAliases>
+		<!-- 分页 -->
+		<typeAlias type="com.op.plugin.page.Page" alias="Page"/>
+		 <!--
+		      通过package, 可以直接指定package的名字， mybatis会自动扫描你指定包下面的javabean,
+		      并且默认设置一个别名，默认的名字为： javabean 的首字母小写的非限定类名来作为它的别名。
+		      也可在javabean 加上注解@Alias 来自定义别名， 例如： @Alias(users) 
+        <package name="com.op.entity"/>
+       -->
+		
+	</typeAliases>
+</configuration>

@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<base href="/" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>玩嘛</title>
+
+<#include "/view/usercenter/base.css.html">
+<link href="static/css/page.css" rel="stylesheet">
+<style>
+body {
+	background: #f1f1f1;
+}
+</style>
+
+</head>
+<body>
+	<#include "/view/usercenter/header.html">
+	<div class="boxw clearfix">
+		<#include "/view/usercenter/housekeeper/menu_left.html">
+		<div class="main-box">
+			<h1>场馆订单</h1>
+			<div class="order-list">
+				<#list pointServiceOrderListDTO as item>
+					<div class="order-item<#if item.pso_pay_state==10> paying</#if>">
+						<div class="order-states">
+							<#if item.pso_pay_state==10>
+								未支付
+								<#assign state=1>
+								<#else>
+									<#if item.refundSuccess==0>
+										退款成功
+										<#assign state=4>
+										<#else>
+											<#if item.refunding!=''&&item.refunding!=0>
+												退款中
+												<#assign state=3>
+												<#else>
+												已支付
+												<#assign state=2>
+											</#if>
+									</#if>
+							</#if>
+						</div>
+						
+						<div class="order-info-01">
+							<span> ${item.pso_create_time?string('yyyy-MM-dd HH:mm')} </span>
+							<span> 订单号：<a href="pointServiceOrder/orderInfo.html?id=${item.pso_id}" target="_blank" class="btns" style="color:#555;">${item.pso_id}</a> </span>
+							<div class="order-price">
+								<p>
+									<#if item.pso_pay_state==10>
+										应付款：<i>${item.pso_price?number}</i>元
+										<#else>
+											实付款：<i>${item.pso_price?number}</i>元
+									</#if>
+									
+								</p>
+								<#if item.pso_refund_amount?number gt 0><p>退款中：${item.pso_refund_amount?number}元</p></#if>
+								<#if item.pso_already_refund?number gt 0><p>已退款：${item.pso_already_refund?number}元</p></#if>
+							</div>
+						</div>
+						<div class="order-info-02">
+							<div class="event-img">
+								<img src="${item.pointProjectsImg}" />
+							</div>
+							<div class="orderArea">
+								<h3><a href="pointServiceProjects/detail/${item.pso_project_id}.html" target="_blank">${item.pso_zh_name}${item.pso_project_name}</a></h3>
+								
+								<p>
+									单价：${item.pso_discount_price?number}
+								</p>
+								<p>
+									数量：${item.pso_project_num}
+								</p>
+								<p>
+									有效期：${item.pso_validity_date_start?string('yyyy-MM-dd')} - ${item.pso_validity_date_end?string('yyyy-MM-dd')}
+								</p>
+							</div>
+						</div>
+					</div>
+					
+				</#list>
+			</div>
+			<div id="page" style="text-align: center;width: 100%;">
+				${page.pageStr}
+			</div>
+		</div>
+	</div>
+	<!-- main end -->
+</body>
+<#include "/view/usercenter/base.js.html">
+<script type="text/javascript" src="static/js/plugins/layer/laypage/laypage.js"></script>
+<script type="text/javascript" src="static/js/page.js"></script>
+</html>

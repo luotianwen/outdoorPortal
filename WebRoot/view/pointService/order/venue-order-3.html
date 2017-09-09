@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<base href="/" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>玩嘛</title>
+<#include "/view/base.css.html">
+<link rel="stylesheet" type="text/css" href="static/css/hw_css/form.css" />
+<style>
+body {
+	background: #f1f1f1;
+}
+</style>
+</head>
+<body>
+	<#include "/view/header.html">
+	<div class="boxw clearfix">
+		<div class="venue-order-success clearfix">
+			<div class="order-success-info clearfix">
+				<span class="ico-ok"></span>
+				<div class="info-text">
+					<h1>恭喜您！购买成功</h1>
+					<P>
+						已支付<span class="fs">${pointServiceOrder.pso_price}</span>元
+					</P>
+					<a href="pointServiceOrder/orderInfo.html?id=${pointServiceOrder.pso_id}" class="view-detail" role="button">查看订单详情</a>
+				</div>
+				<div class="tips">
+					<p>玩嘛网 不会以任何理由要求您提供银行卡信息或支付额外费用</p>
+					<p>防止诈骗电话及钓鱼链接</p>
+					<p>联系电话：400-0928-400</p>
+				</div>
+			</div>
+			<div class="order-info-list clearfix">
+				<dl class="clearfix">
+					<dt>订单编号：</dt>
+					<dd>${pointServiceOrder.pso_id}</dd>
+				</dl>
+				<!-- 
+				<dl class="clearfix">
+					<dt>购买信息：</dt>
+					<dd>洱海 185****9999</dd>
+				</dl>
+				 -->
+				<dl class="clearfix">
+					<dt>商户名称：</dt>
+					<dd>${pointServiceOrder.pso_id}</dd>
+				</dl>
+				<dl class="clearfix">
+					<dt>套餐：</dt>
+					<dd>套餐一 180 元/人 全年有效（除过节假日)</dd>
+				</dl>
+				<dl class="clearfix">
+					<dt>营业时间：</dt>
+					<dd>周一、周二、周三、周四、周五 9：00 —18:00 周六、周日 9：00 —12:00</dd>
+				</dl>
+				<dl class="clearfix">
+					<dt>商户地址：</dt>
+					<dd>北京市通州区九棵树西路90号英特商务园写字楼A座8118号</dd>
+				</dl>
+			</div>
+		</div>
+	</div>
+
+</body>
+</html>

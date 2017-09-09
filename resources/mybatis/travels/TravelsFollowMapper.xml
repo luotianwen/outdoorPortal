@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="travelsFollowMapper">
+	<sql id="Base_Column_List">
+    tf_id,tf_travelsId ,tf_userId ,tf_createTime 
+    </sql>
+
+    <resultMap type="com.op.entity.travels.TravelsFollow" id="TravelsFollowReturnMap">
+      <id column="tf_id" property="tf_id"/>
+      <result column="tf_travelsId" property="tf_travelsId"/>
+      <result column="tf_userId" property="tf_userId"/>
+      <result column="tf_createTime" property="tf_createTime"/>
+   </resultMap>
+   
+	
+	<!-- 根据用户ID和游记id查询是否已经收藏 -->
+	<select id="countUserFollowTravels" parameterType="java.util.Map" resultType="int">
+	select count(tf_id) num
+	from travelsFollow
+	where tf_userId=#{userId}
+	and tf_travelsId=#{id}
+	</select>
+	
+	<!-- 个人中心删除游记收藏 -->
+	<delete id="deleteByUserAndTravels" parameterType="java.util.Map">
+	delete from travelsFollow where tf_userId=#{userId} and tf_travelsId=#{id}
+	</delete>
+	
+	<insert id="insertTravelsFollow" parameterType="java.util.Map">
+	insert into travelsFollow 
+	( tf_travelsId ,tf_userId ,tf_createTime )
+	values
+	( #{id},#{userId},now())
+	</insert>
+	
+	<!-- 收藏游记 -->
+	<update id="updateTravelsFollowNum" parameterType="java.util.Map">
+	update travels set collection_count=collection_count+1,operation_time = now() where id=#{id}
+	</update>
+	
+	<!-- 取消收藏游记 -->
+	<update id="updateTravelsFollowNumReduce" parameterType="java.util.Map">
+	update travels set collection_count=collection_count-1,operation_time = now() where id=#{id}
+	</update>
+</mapper>

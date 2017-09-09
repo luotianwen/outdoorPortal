@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="travelsCommentMapper">
+	<sql id="Base_Column_List">
+    tc_id,tc_content ,tc_createTime ,tc_createUser ,tc_travelsId ,tc_img 
+    </sql>
+   
+   <insert id="comment" parameterType="com.op.entity.travels.TravelsComment" useGeneratedKeys="true" keyColumn="tc_id" keyProperty="tc_id">
+   insert into travelsComment
+   ( tc_content ,tc_createTime ,tc_createUser ,tc_travelsId ,tc_img)
+   values
+   ( #{tc_content},#{tc_createTime},#{tc_createUser},#{tc_travelsId},#{tc_img})
+   </insert>
+   
+
+    <resultMap type="com.op.entity.travels.TravelsComment" id="TravelsCommentReturnMap">
+      <id column="tc_id" property="tc_id"/>
+      <result column="tc_content" property="tc_content"/>
+      <result column="tc_createTime" property="tc_createTime"/>
+      <result column="tc_createUser" property="tc_createUser"/>
+      <result column="tc_travelsId" property="tc_travelsId"/>
+      <result column="tc_img" property="tc_img"/>
+      
+      <association property="replysCount" javaType="int" column="tc_id"
+      		 select="travelsCommentReplyMapper.countReplysByCommentId"></association>
+      		 
+      <collection property="replys" ofType="com.op.entity.travels.TravelsCommentReply" 
+      		column="tc_id" select="travelsCommentReplyMapper.selectByCommentId" ></collection>
+      		
+   </resultMap>
+   
+   <select id="findCommentByTravelsIdPage" parameterType="Page" resultMap="TravelsCommentReturnMap">
+   select <include refid="Base_Column_List"/>
+   ,u.uName,u.uHeadImg
+   from travelsComment tc
+   left join users u on tc.tc_createUser = u.u_Id
+   where tc_travelsId=#{t}
+   order by tc_createTime desc
+   </select>
+   
+</mapper>

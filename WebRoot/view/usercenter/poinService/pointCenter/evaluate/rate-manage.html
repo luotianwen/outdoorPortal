@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<base href="/" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>玩嘛</title>
+<#include "/view/usercenter/base.css.html">
+<link href="static/css/page.css" rel="stylesheet">
+</head>
+<body>
+	<#include "/view/usercenter/header.html">
+	
+	<div class="boxw clearfix">
+		<#include "/view/usercenter/poinService/pointCenter/menu_left.html">
+		
+		<div class="main-box">
+			<h1>评价管理</h1>
+			<#list pointEvaluateDTOList as item>
+				<div class="order-rate clearfix" id="rate">
+					<div class="order-info clearfix">
+						<div style="width:100%">
+							<dl>
+								<dt>订单号：</dt>
+								<dd>
+									<a href="pointServiceOrder/orderInfo.html?id=${item.pse_venue_order_id}" target="_blank">${item.pse_venue_order_id}</a>
+								</dd>
+							</dl>
+							<dl>
+								<dt>评分：</dt>
+								<dd class="star">
+									<#list 1..item.pse_star?number as index>
+										<img src="static/images/hw_img/star5.png">
+									</#list>
+									
+									<#if 5-item.pse_star?number!=0>
+										<#list 1..(5-item.pse_star?number) as index>
+											<img src="static/images/hw_img/star6.png">
+										</#list>
+									</#if>
+								</dd>
+							</dl>
+							<dl>
+								<dt>时间：</dt>
+								<dd>${item.pse_create_time?string('yyyy-MM-dd HH:mm')}</dd>
+							</dl>
+							<dl>
+								<dt>用户昵称：</dt>
+								<dd>${item.uName}</dd>
+							</dl>
+						</div>
+					
+						<div style="width:100%">
+							<dl>
+								<dt>SKU ID：</dt>
+								<dd>${item.pse_project_id}</dd>
+							</dl>
+							<dl>
+								<dt>商品名称：</dt>
+								<dd>
+									<a href="pointServiceProjects/detail/${item.pse_project_id}.html" target="_blank">${item.psp_item_name}</a>
+								</dd>
+							</dl>
+						</div>
+					
+					</div>
+					<div class="rate-info clearfix" id="content" uId="${item.uId}" pcId="${item.pse_id}">
+						<dl class="clearfix">
+							<dt class="clearfix">
+								<div class="rate-con clearfix">
+									<img width="30" height="30" src="${item.uHeadImg}">
+									<em>${item.uName}：</em>
+									${item.pse_evaluate_comment}
+									<span class="date">2016-8-24 15:11:06</span>
+								</div>
+								<div class="rate-img">
+									<#list item.pointEvaluateImgList as img>
+										<img width="120" height="120" src="${img.psei_img_url}">
+									</#list>
+								</div>
+							</dt>
+							<dd class="clearfix" id="replyComment" style="display:none;">
+							</dd>
+							<dd class="clearfix rate-self-input" id="reply">
+								<div class="input-block">
+									<input type="text" placeholder="回复">
+									<a class="answer-btn" href="javascript:void(0);">回复</a>
+								</div>
+							</dd>
+						</dl>
+					</div>
+					
+				</div>
+			</#list>
+		</div>
+		<div id="page" style="text-align: center;width: 100%;">
+			${page.pageStr}
+		</div>
+	</div>
+	<!-- main end -->
+	<#include "/view/usercenter/base.js.html">
+	<script type="text/javascript" src="static/js/plugins/layer/laypage/laypage.js"></script>
+	<script type="text/javascript" src="static/js/page.js"></script>
+	<script type="text/javascript" src="static/js/pointService/evaluate/evaluate.js"></script>
+</body>
+</html>

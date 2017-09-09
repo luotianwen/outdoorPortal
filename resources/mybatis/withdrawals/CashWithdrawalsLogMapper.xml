@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cashWithdrawalsLogMapper">
+	<sql id="Base_Column_List">
+    id,cw_id ,user_id ,user_name ,handling_time ,log 
+    </sql>
+
+    <resultMap type="com.op.entity.withdrawals.CashWithdrawalsLog" id="CashWithdrawalsLogReturnMap">
+		<!-- ID -->
+      <id column="id" property="id"/>
+		<!-- 提现申请ID -->
+      <result column="cw_id" property="cw_id"/>
+		<!-- 操作人ID -->
+      <result column="user_id" property="user_id"/>
+		<!-- 操作人名称 -->
+      <result column="user_name" property="user_name"/>
+		<!-- 操作时间 -->
+      <result column="handling_time" property="handling_time"/>
+		<!-- 日志信息 -->
+      <result column="log" property="log"/>
+   </resultMap>
+   
+     <!-- 根据提现申请ID获日志细信息 -->
+   <select id="findcashWithdrawalsLogById" parameterType="String" resultType="com.op.entity.withdrawals.CashWithdrawalsLog" >
+	  SELECT 
+	  user_id ,user_name ,handling_time ,log 
+	  FROM cashWithdrawalsLog 
+	  WHERE  
+      cw_id =  #{cw_id}
+      order by handling_time desc
+   </select>
+	
+	
+	   <!-- 插入日志 -->
+   <insert id="insertLog" parameterType="java.util.HashMap" useGeneratedKeys="false" >
+	   insert into cashWithdrawalsLog (id,cw_id ,user_id ,user_name ,handling_time ,log )
+       values
+       (#{uuid},#{id},#{user_id},#{user_name},now(),#{log})
+   </insert>
+	
+	
+	
+</mapper>

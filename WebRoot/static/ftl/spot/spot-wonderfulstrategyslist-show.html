@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head  >
+	<base href="/" />
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<title>${wonderfulstrategy.name}</title>
+	<#include "/view/base.css.html">
+	<link rel="stylesheet" type="text/css" href="static/css/hw_css/scenic.css" />
+    <style>
+
+        .jing{
+            height: 220px;
+            margin-top: 20px;
+            margin-bottom: 20px;
+        }
+        .jingleft{
+            width: 380px;
+            height: 220px;
+            float: left;
+        }
+        .jingleft img{
+            display: block;
+            width: 100%;
+            height: 100%;
+        }
+        .jingright{
+            width:730px;
+            height: 200px;
+            padding:10px 0 0px 30px;
+            float: left;
+            position: relative;
+        }
+        .jtop{
+            margin-bottom: 20px;
+        }
+        .h3{
+            font-size: 18px;
+            color:#333333;
+            font-weight: bold;
+        }
+        .letgo{
+            float: right;
+        }
+        .info{
+            line-height: 25px;
+        }
+        .jiage{
+            display: inline-block;
+            width: 70px;
+            float: left;
+        }
+        .jianjie{
+            display: inline-block;
+            width: 660px;
+            float: left;
+            color: #333333;
+        }
+        .tese{
+            line-height: 30px;
+            position: absolute;
+            bottom: 10px;
+        }
+        .tese i{
+            display: inline-block;
+            width: 60px;
+            line-height: 25px;
+            background: url(../img/beij.png) no-repeat 0 -11px;
+            color: #fff;
+            text-indent: 10px;
+        }
+        .label{
+            display: inline-block;
+            margin-left: 10px;
+            margin-right: 10px;
+            color: #2167d0;
+        }
+        .paging{
+            width: 1140px;
+            margin: 20px auto;
+            padding: 10px 30px;
+            text-align: center;
+        }
+        .paging span{
+            display: inline-block;
+            padding: 5px 10px;
+            border: 1px solid #e4e4e4;
+            margin-right: 2px;
+            margin-left: 2px;
+            cursor: pointer;
+        }
+        .paging span:hover{
+            background: #2167d0;
+            color: #fff;
+        }
+        .now{
+            background: #2167d0;
+            color: #fff;
+        }
+        .pagnum{
+            border: 1px solid #e4e4e4;
+            width: 28px;
+            height: 28px;
+            text-align: center;
+            line-height: 30px;
+            background: #f4f4f4;
+        }
+        .que{
+            display: inline-block;
+            width: 60px;
+            line-height: 30px;
+            border: 1px solid #e4e4e4;
+            text-align: center;
+            margin-left: 5px;
+            color: #666666;
+            background: #fff;
+        }
+        .que:hover{
+            background: #2167d0;
+            color: #fff;
+        }
+        .queue{
+            width: 1160px;
+            margin: 0 auto;
+            background: #fff;
+            padding: 30px 20px;
+        }
+        .header{
+            width: 1200px;
+            margin: 0 auto;
+        }
+        .jdtop{
+            margin-bottom: 10px;
+        }
+        .header,.header a{
+            line-height: 40px;
+            color: #2167d0;
+        }
+        .biaoqian{
+            display: inline-block;
+            padding: 0 10px;
+            color: #ff8a01;
+            font-size: 12px;
+            border-radius: 15px;
+            margin-right: 10px;
+            border: 1px solid #ff8a01;
+        }
+        .info1{
+            line-height: 25px;
+            height: 50px;
+            margin-top: 10px;
+        }
+        .info1 a{
+            color: #2167d0;
+        }
+        body{font-size:14px; font-family: 'Microsoft Yahei', 'Helvetica Neue', 'Luxi Sans', 'DejaVu Sans', Tahoma, 'Hiragino Sans GB', STHeiti; color:#6c6c6c;background: #fff;}
+    </style>
+</head>
+
+<body>
+<#include "/view/header.html">
+    <!-- scenic begin -->
+    <div class="queue">
+        <p class="h2">景区精彩攻略</p>
+        <hr>
+        <#list wonderfulstrategys as item>
+        <div class="jing">
+            <div class="jingleft">
+                <a href="javascript:" target="_blank"><img src="${item.pho}" alt=""></a>
+            </div>
+            <div class="jingright">
+                <p class="jdtop">
+                    <span class="h3">${item.name}</span>
+                </p>
+                 <p class="info">
+                    <span class="biaoqian"></span>
+                </p>
+                <p class="info1">
+                    <#if item.content?length lt 97 >
+                        ${item.content}
+                        <#else>
+                            ${item.content[0..96]}...
+                    </#if>
+                    <a href="spot/wonderfulstrategys/${item.id}.html" target="_blank">阅读全文>></a>
+                </p>
+                <p class="society">
+                <!--    分享到<i class="gam1"></i><i class="gam2"></i><i class="gam3"></i><i class="gam4"></i><i class="gam5"></i><i class="gam6"></i><i class="gam7"></i>
+              -->  </p>
+                <p class="time">
+                    发布时间：${item.cdate?datetime}
+                </p>
+            </div>
+        </div>
+        <hr>
+        </#list>
+    </div>
+    <!-- scenic end -->
+</body>
+<#include "/view/base.js.html">
+</html>

@@ -1,0 +1,377 @@
+body{
+	background: #f4f4f4;
+}
+.header{
+	width: 1200px;
+	line-height: 50px;
+	margin: 0 auto;
+	height: 50px;
+	margin-top: 10px;
+	background: url(../../images/hw_img/bj1.png) no-repeat;
+}
+.san,.san2{
+	width: 400px;
+	text-align: center;
+}
+.san{
+	color: #fff;
+}
+.san2{
+	color: #333333;
+}
+.content{
+	width: 1140px;
+	margin: 0 auto;
+	background: #fff;
+	padding:0 30px;
+}
+.header div{
+	float: left;
+}
+.h2{
+	line-height: 65px;
+	font-size: 16px;
+	font-weight: bold;
+	color: #333333;
+}
+hr{
+	height: 1px;
+	border: 1px solid #e4e4e4;
+}
+.h3{
+	line-height: 60px;
+	padding-left: 30px;
+	color: #666666;
+	font-weight: bold;
+	text-indent: 40px;
+}
+.t1 a{
+	color: #2167d0;
+	font-weight: normal;
+	margin-left: 20px;
+}
+.t1{
+	background: url(../../images/hw_img/jing1.png) no-repeat 30px 20px;
+}
+.t2{
+	background: url(../../images/hw_img/ge1.png) no-repeat 30px 15px;
+}
+.t3{
+	background: url(../../images/hw_img/you1.png) no-repeat 30px 20px;
+}
+.tick,.tik{
+	line-height: 50px;
+	width: 1000px;
+	margin: 0 auto;
+	padding: 0 20px;
+}
+.posp{
+	position: relative;
+}
+.tick,.col,.dileft a{
+	color: #ff8a01;
+}
+.ticket{
+	position: relative;
+}
+.ticket i{
+	color: #ff8a01;
+}
+.tleft{
+	display: inline-block;
+	width: 70px;
+	text-align: right;
+}
+.tright{
+	margin-left: 10px;
+	color: #999999;
+}
+select {
+  	border:  1px solid #e4e4e4;
+  	appearance:none;
+  	-moz-appearance:none;
+  	-webkit-appearance:none;
+  	background: url(../../images/hw_img/arrow1.png) no-repeat scroll right center transparent;
+  	padding-right: 14px;
+  	width: 150px;
+  	height: 30px;
+  	text-align: center;
+  	margin-left: 10px;
+  	margin-right: 10px;
+}
+select::-ms-expand{
+	display: none; 
+}
+input{
+	border: 1px solid #e4e4e4;
+	line-height: 30px;
+}
+.jian{
+	margin-left: 10px;
+	width: 30px;
+	cursor: pointer;
+}
+.jia{
+	width: 30px;
+	cursor: pointer;	
+	margin-right: 10px;
+}
+.num{
+	width: 60px;
+	text-align: center;
+}
+.fen,.no{
+	display: inline-block;
+	margin-left: 20px;
+	padding:  0 10px;
+	border:1px solid #E4E4E4;
+	line-height: 25px;
+	cursor: pointer;
+	position: relative;
+}
+.h3 span{
+	color: #666666;
+	font-size: 12px;
+	font-weight: normal;
+	margin-left: 20px;
+}
+.tp{
+	line-height: 50px;
+	width: 1000px;
+	margin: 0 auto;
+	padding: 0 20px;
+}
+.tp span:nth-child(1){
+	display: inline-block;
+	width: 110px;
+}
+.name,.phone,.userid{
+	width: 200px;
+	text-indent: 10px;
+}
+.beizhu{
+	margin-left: 10px;
+	color: #999999;
+	font-size: 12px;
+}
+.tpna{
+	line-height: 50px;
+	width: 60px;
+	margin-left: 99px;
+	position: absolute;
+    margin-top: -6px;
+}
+.people{
+	display: inline-block;
+	padding: 0 10px 0 30px;
+	background: url(../../images/hw_img/ju1.png) no-repeat 5px 15px;
+	margin-left: 10px;
+	cursor: pointer;
+}
+.nopeo{
+	background: url(../../images/hw_img/ju.png) no-repeat 4px 14px;
+}
+.info{
+	width: 1000px;
+	margin: 10px auto;
+	border: 1px solid #E4E4E4;
+	text-align: center;
+}
+.info tr td{
+	padding: 10px;
+}
+.info tr:nth-child(1) td{
+	border: 1px solid #E4E4E4;	
+	background: #f4f4f4;
+}
+.plp{
+	width: 100px;
+	line-height: 25px;
+	text-align: center;
+}
+.telephone{
+	width: 150px;
+	line-height: 25px;
+	text-align: center;
+}
+.id{
+	width: 200px;
+	line-height: 25px;
+	text-align: center;
+}
+.keep{
+	display: inline-block;
+	line-height: 25px;
+	padding: 0 10px 0 30px;
+	background: url(../../images/hw_img/ju1.png) no-repeat 5px 5px ;
+	cursor: pointer;
+}
+.nouse{
+	background: url(../../images/hw_img/ju.png) no-repeat 4px 4px ;
+}
+.benf{
+	display: inline-block;
+	border:1px solid #E4E4E4;
+	line-height: 30px;
+	margin-right: 10px;
+	width: 200px;
+	margin-left: 20px;
+	text-align: left;
+}
+.benf b{
+	float: right;
+	margin-right: 5px;
+	font-size: 20px;
+	cursor: pointer;
+}
+.make{
+	display: inline-block;
+	width: 60px;
+	line-height: 30px;
+	text-align: center;
+	background: #ff8a01;
+	color: #fff;
+}
+.dibu{
+	width: 1060px;
+	margin: 0 auto;
+	padding: 20px 40px;
+	line-height: 60px;
+	margin-top: 30px;
+	border-top: 1px solid #E4E4E4;
+	overflow: hidden;
+}
+.dileft{
+	float: left;
+}
+.ditu{
+	display: inline-block;
+	width: 20px;
+	height: 20px;
+	background: url(../../images/hw_img/ju1.png) no-repeat;
+	vertical-align: -4px;
+	margin-right: 5px;
+	cursor: pointer;
+}
+.diright{
+	display: inline-block;
+	float: right;
+	line-height: 60px;
+}
+.diright b{
+	color: #ff8a01;
+	font-size: 18px;
+	font-weight: bold;
+	margin-left: 10px;
+	margin-right: 20px;
+}
+.diright a{
+	display: inline-block;
+	width: 120px;
+	line-height: 35px;
+	background: #ff8a01;
+	color: #fff;
+	text-align: center;
+}
+.hidejing{
+	width: 960px;
+	position: absolute;
+	padding:20px;
+	background: #f4f4f4;
+	z-index: 100;
+	left: 100px;
+	top: 60px;
+	display: none;
+}
+.sanjiao{
+	width: 0;
+    height: 0;
+    border-left: 10px solid transparent;
+    border-right: 10px solid transparent;
+    border-bottom: 10px solid #f4f4f4;
+    position: absolute;
+    top: -10px;
+    left: 149px;
+}
+.hidejing table tr>:nth-child(1){
+	width: 100px;
+	text-align: center;
+}
+.hidejing table tr>:nth-child(2){
+	width: 860px;
+}
+.baoxian{
+	padding:0 20px 20px 20px;
+	position: absolute;
+	background: #f4f4f4;
+	z-index: 100;
+	left: 415px;
+	display: none;
+}
+.baoxian p:nth-child(1){
+	display: block;
+	text-align: right;
+}
+.baoxian p:nth-child(1) i{
+	cursor: pointer;
+}
+.more{
+	width: 300px;
+	padding: 0 15px;
+	background: #fff;
+	position: absolute;
+	left: 83px;
+	display: none;
+}
+.more p span:nth-child(1){
+	display: inline-block;
+	width: 100px;
+	text-align: center;
+}
+.more p span:nth-child(2){
+	display: inline-block;
+	width: 40px;
+	text-align: center;
+}
+.more p span:nth-child(3){
+	display: inline-block;
+	width: 160px;
+	text-align: center;
+}
+.more p:hover{
+	background: #ff8a01;
+	color: #fff;
+	cursor: pointer;
+}
+
+
+.checkbox .icon-select{
+	display:inline-block;
+	width:15px;
+	height:15px;
+	background:url(../../images/hw_img/icon-select.png) no-repeat 0 -24px;
+	vertical-align: -14%;
+	margin-right:5px;
+}
+.checkbox.now .icon-select{
+	display:inline-block;
+	width:15px;
+	height:15px;
+	background:url(../../images/hw_img/icon-select.png) no-repeat 0 0;
+	vertical-align: -14%;
+	margin-right:5px;
+}
+.linkman-list{
+	overflow:hidden;
+	margin-left:180px;
+}
+.linkman-list li{
+	float:left;
+	padding:10px 0;
+}
+.linkman-list .linkman-name{
+	display:inline-block;
+	width:90px;
+}
+
+

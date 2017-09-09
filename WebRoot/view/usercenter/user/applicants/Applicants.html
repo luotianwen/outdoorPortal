@@ -1,0 +1,58 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<base href="/" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>玩嘛</title>
+<#include "/view/usercenter/base.css.html">
+<style>
+body {
+	background: #f1f1f1;
+}
+</style>
+</head>
+<body>
+	<#include "/view/header.html"/>
+	
+	<div class="boxw clearfix" style="margin-top: 20px;">
+		<#include "/view/usercenter/user/user_left_menu.html"/>
+		<div class="myinfo-main">
+			<div class="myinfo-title">
+				<h1>常用报名人</h1>
+			</div>
+			<div class="app-list">
+				<table>
+					<tr>
+						<th width="150">姓名</th>
+						<th width="50">性别</th>
+						<th width="150">手机号码</th>
+						<th width="100">证件类型</th>
+						<th>证件号码</th>
+						<th width="150">操作</th>
+					</tr>
+					<#list listUser as item>
+						<tr>
+							<td>${item.lsuu_user_name}</td>
+							<td><#if item.lsuu_user_sex==1>男<#else>女</#if></td>
+							<td>${item.lsuu_phone}</td>
+							<td>身份证</td>
+							<td>${item.lsuu_cart_num}</td>
+							<td><a style="cursor: pointer" onclick="findApplicant('${item.lsuu_id }')">编辑</a><a style="cursor: pointer" onclick="deleteApplicant(${item.lsuu_id})">删除</a></td>
+						</tr>
+					</#list>
+				</table>
+				<a style="cursor: pointer" id="addApplicants" class="btn-app-add"><i></i>添加报名人</a>
+			</div>
+			<div class="myinfo-list app-form" id="oneApplicant">
+			</div>
+		</div>
+	</div>
+	<!-- main end -->
+	
+	<#include "/view/usercenter/base.js.html">
+	<!-- 身份证 -->
+	<script type="text/javascript" src="static/js/IDValidator/GB2260.js"></script>
+	<script type="text/javascript" src="static/js/IDValidator/IDValidator.js"></script>
+	<script type="text/javascript" src="static/js/hw_js/applicant.js" ></script>
+</body>
+</html>

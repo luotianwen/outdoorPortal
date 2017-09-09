@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="activeCommentBackMapper">
+	<sql id="Base_Column_List">
+    cb_id,co_id ,user_id ,content ,replyTime ,praises 
+    </sql>
+
+    <resultMap type="com.op.entity.comments.ActiveCommentBack" id="ActiveCommentBackReturnMap">
+      <id column="cb_id" property="cb_id"/>
+   </resultMap>
+   
+   <!-- 评论回复 -->
+   <insert id="insert" parameterType="com.op.entity.comments.ActiveCommentBack">
+   insert into activeCommentBack(
+   co_id ,user_id ,content ,replyTime 
+   ) 
+   values(
+   #{co_id },#{user_id },#{content },#{replyTime }
+   )
+   </insert>
+   
+   <!-- 根据评论ID查看回复内容 -->
+   <select id="findBacksByAcId" parameterType="String" resultType="com.op.entity.comments.ActiveCommentBack">
+	SELECT acb.cb_id,
+	  acb.co_id,
+	  acb.user_id,
+	  acb.content,
+	  acb.replyTime,
+	  acb.praises,
+	  u.uName,
+	  u.uHeadImg
+	FROM activeCommentBack acb 
+	JOIN users u ON acb.user_id =u.u_id
+	WHERE acb.co_id=#{co_id}
+   </select>
+	
+   <!-- 根据评论ID查看回复内容（分页） -->
+   <select id="loadReplyPage" parameterType="Page" resultType="com.op.dto.activity.comment.CommentInfoBackDTO">
+	SELECT acb.content,
+	  u.uName,
+	  u.uHeadImg headImg
+	FROM activeCommentBack acb
+	JOIN users u ON acb.USER_ID =u.u_id
+	WHERE acb.co_id=#{t}
+   </select>
+   
+   <!-- 保存回复信息 -->
+   <insert id="save" parameterType="java.util.Map">
+   insert into activeCommentBack(user_id ,content )
+   values(#{user_id },#{content })
+   </insert>
+	
+</mapper>

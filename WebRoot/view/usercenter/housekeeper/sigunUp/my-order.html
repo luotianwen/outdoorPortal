@@ -1,0 +1,174 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<base href="/" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>玩嘛</title>
+
+<#include "/view/usercenter/base.css.html">
+<link href="static/css/page.css" rel="stylesheet">
+<link href="static/js/plugins/layer/skin/moon/style.css" rel="stylesheet">
+<style>
+body {
+	background: #f1f1f1;
+}
+a {
+	cursor:pointer;
+}
+</style>
+
+</head>
+<body>
+<#include "/view/usercenter/header.html">
+	<div class="boxw clearfix">
+		<#include "/view/usercenter/housekeeper/menu_left.html">
+		<form action="activeSignup/MySignUp.html" method="post">
+			<div class="main-box">
+				<h1>我的订单</h1>
+				
+				<div class="order-nav">
+					<a href="activeSignup/MySignUp.html?order=0" <#if order='0'>class="now"</#if>> 全部订单 </a>
+					<a href="activeSignup/MySignUp.html?order=1" <#if order='1'>class="now"</#if>> 已经支付（${alreadypaid}） </a>
+					<a href="activeSignup/MySignUp.html?order=2" <#if order='2'>class="now"</#if>> 等待支付（${waitpay}） </a>
+					<a href="activeSignup/MySignUp.html?order=3" <#if order='3'>class="now"</#if>> 退款处理中（${refunding}） </a>
+					<a href="activeSignup/MySignUp.html?order=4" <#if order='4'>class="now"</#if>> 退款成功（${refundsuccess}） </a>
+					<a href="activeSignup/MySignUp.html?order=5" <#if order='5'>class="now"</#if>> 已关闭（${close}） </a>
+				</div>
+				<div class="order-list" id="list">
+					<!-- order-item begin -->
+					<#list mySignUps as item>
+						<div class="order-item <#if item.state='2'>paying</#if>">
+							<div class="order-states">
+								${item.asu_stateStr}
+							</div>
+							<#if item.state='2'><div class="order-tips">${item.paytime} &nbsp;&nbsp;前支付，超时取消订单。</div></#if>
+							<div class="order-info-01">
+								<span> ${item.asu_create_time?string('yyyy-MM-dd HH:mm')} </span>
+								<span> 报名联系人：${item.signUpLinkman!''} </span>
+								<span> 订单号：${item.asu_id} </span>
+								<div class="order-price">
+									<#if item.state='2'><div class="order-tips">应付款： <i> ${item.asu_account_payable!'0'} </i> 元</div></#if>
+									<#if item.state='3' || item.state='1'><div class="order-tips">实付款： <i> ${item.asu_account_paid!'0'} </i> 元</div></#if>
+									<#if item.state='5'><div class="order-tips">订单金额： <i> ${item.asu_account_payable!'0'} </i> 元</div></#if>
+									<#if item.state='4'>
+										<div class="order-tips">
+		                                	<p>实付款：<i>${item.asu_account_paid!'0'}</i>元</p>
+		                                	<p>已退款：${item.refund}元</p>
+		                            	</div>
+									</#if>
+								</div>
+							</div>
+							<div class="order-info-02" id="orderAll">
+								<input id="asu_id" type="hidden" value="${item.asu_id}" />
+								<input id="activityId" type="hidden" value="${item.activityId}" />
+								<div class="event-img">
+									<a href="huodong/info/${item.activityId}.html" target="_blank"><img src="${item.a_active_img}" /></a>
+								</div>
+								<div class="orderArea">
+									<h3><a href="huodong/info/${item.activityId}.html" target="_blank">${item.title}</a></h3>
+									
+									<#list item.activeApplicants as aaitem>
+										<#if aaitem_index lt 3>
+											<p>
+												<input id="aa_id" type="hidden" value="${aaitem.aa_id}" />
+												<span>${aaitem.aa_user_name}</span>
+												<span>
+													<#if aaitem.aa_user_sex==1>
+														男
+														<#else>
+														女
+													</#if>
+												</span>
+												<span>${aaitem.aa_user_phone}</span>
+												<span>${aaitem.aa_state_str!''}</span>
+											</p>
+										</#if>
+									</#list>
+									<div id="allapplicant" style="display: none;">
+										<#list item.activeApplicants as aaitem>
+											<#if aaitem_index gte 3>
+												<p>
+													<input id="aa_id" type="hidden" value="${aaitem.aa_id}" />
+													<span>${aaitem.aa_user_name}</span>
+													<span>
+														<#if aaitem.aa_user_sex==1>
+															男
+															<#else>
+															女
+														</#if>
+													</span>
+													<span>${aaitem.aa_user_phone}</span>
+													<span>${aaitem.aa_state_str!''}</span>
+												</p>
+											</#if>
+										</#list>
+									</div>
+									<#if item.activeApplicants?size gt 3>
+										<p>
+											<a id="showAll" class="more" href="javascript:void(0)">查看更多<i class="down"></i></a>
+										</p>
+									</#if>
+								</div>
+								<div class="order-btns-area">
+									<#if item.state='1'>
+										<a href="activeSignup/orderDetails.html?asu_id=${item.asu_id}" target="_blank" class="btns"> 订单详情 </a>
+										<#if item.asu_state!=30>
+											<a href="activeSignup/orderDetails.html?asu_id=${item.asu_id}" target="_blank" class="btns"> 取消订单 </a>
+											<#if item.asu_state!=10>
+												<a id="complete" href="javascript:void(0);" class="btns last"> 交易完成 </a>
+											</#if>
+										<#else>
+											<#if item.asu_is_comment==0>
+												<a id="comment" href="javascript:void(0);" class="btns last"> 立即评价 </a>
+											</#if>
+										</#if>
+									</#if>
+									<#if item.state='2'>
+										<#if item.activityState=='1'>
+											<a onclick="immediatePay(${item.asu_id},${item.activityId})" target="_blank" href="javascript:void(0);" class="btns-01"> 立即支付 </a>
+											<a href="activeSignup/orderDetails.html?asu_id=${item.asu_id}" target="_blank" class="btns"> 订单详情 </a>
+											
+											<#if item.asu_state==10||item.asu_state==20>
+												<a href="activeSignup/orderDetails.html?asu_id=${item.asu_id}" target="_blank" class="btns last"> 取消订单 </a>
+											</#if>
+											
+											<#else>
+												<#if item.asu_state!=10>
+													<a onclick="immediatePay(${item.asu_id},${item.activityId})" target="_blank" href="javascript:void(0);" class="btns-01"> 立即支付 </a>
+													<a href="activeSignup/orderDetails.html?asu_id=${item.asu_id}" target="_blank" class="btns"> 订单详情 </a>
+													<a href="activeSignup/orderDetails.html?asu_id=${item.asu_id}" target="_blank" class="btns last"> 取消订单 </a>
+													<#else>
+														<a href="activeSignup/orderDetails.html?asu_id=${item.asu_id}" target="_blank" class="btns"> 订单详情 </a>
+												</#if>
+										</#if>
+									</#if>
+									<#if item.state='3'>
+										<a href="activeSignup/orderDetails.html?asu_id=${item.asu_id}" target="_blank" class="btns last"> 订单详情 </a>
+									</#if>
+									<#if item.state='4'>
+										<a href="activeSignup/orderDetails.html?asu_id=${item.asu_id}" target="_blank" class="btns last"> 订单详情 </a>
+									</#if>
+									<#if item.state='5'>
+										<a href="activeSignup/orderDetails.html?asu_id=${item.asu_id}" target="_blank" class="btns last"> 订单详情 </a>
+									</#if>
+								</div>
+							</div>
+						</div>
+					</#list>
+				</div>
+				<div id="page" style="text-align: center;width: 100%;">
+					${page.pageStr}
+				</div>
+			</div>
+		</form>
+	</div>
+	
+	<!-- main end -->
+
+<#include "/view/usercenter/base.js.html">
+<script type="text/javascript" src="static/js/plugins/layer/laypage/laypage.js"></script>
+<script type="text/javascript" src="static/js/page.js"></script>
+<script type="text/javascript" src="static/js/signup/mySignup.js"></script>
+
+</body>
+</html>

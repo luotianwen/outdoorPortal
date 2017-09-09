@@ -1,0 +1,352 @@
+@CHARSET "utf-8";
+
+.solr {
+	width: 100%;
+	overflow: hidden;
+}
+
+.solr .solr-item input {
+	width: 100%;
+	height: 36px;
+	font-size: 13px;
+	padding-left: 5px;
+	border-radius: 2px;
+	border: 1px solid #CCCCCC;
+}
+
+.solr .solr-item i {
+	position: absolute;
+	right: 23px;
+	top: 9.5px;
+	font-size: 18px;
+	color: #1D924C;
+}
+
+.solr .solr-item-btn {
+	text-align: center;
+	float: right;
+	width: 208px;
+}
+
+.active-search-btn {
+	display: inline-block;
+	width: 80%;
+	height: 36px;
+	background-color: #1D924C;
+	border: 1px solid #1D924C;
+	color: white;
+	border-radius: 3px;
+	font-size: 14px;
+	transition: 0.5s ease;
+	-moz-transition: 0.5s ease;
+	-o-transition: 0.5s ease;
+	-webkit-transition: 0.5s ease;
+}
+
+.active-search-btn i {
+	color: white !important;
+}
+
+a {
+	text-decoration: none !important;
+	cursor: pointer !important;
+}
+
+.clr {
+	clear: both;
+}
+
+.center {
+	text-align: center;
+}
+
+.row-set-left {
+	margin-left: -15px;
+}
+
+.active-choose .choose-div {
+	width: 100%;
+}
+
+.active-choose .choose-list {
+	overflow: hidden;
+	text-align: right;
+	max-width: inherit;
+}
+
+.active-choose .choose-list .choose-item {
+	float: right;
+	width: 33%;
+	max-width: 120px;
+	height: 80px;
+	position: relative;
+	font-size: 18px;
+	cursor: pointer;
+	transition: 1s ease;
+	-moz-transition: 1s ease;
+	-o-transition: 1s ease;
+	-webkit-transition: 1s ease;
+}
+
+.show-choose {
+	position: absolute;
+	overflow: hidden;
+	max-width: 970px;
+	display: none;
+	z-index: 10;
+	width: 100%;
+}
+
+.border-content {
+	border: 1px solid #CCCCCC;
+	margin-left: 0px;
+	margin-right: 0px;
+	background-color: #FFFFFF;
+}
+/*----------  选择时间 	begin --------------*/
+.show-choose .show-time {
+	overflow: hidden;
+	padding-top: 10px;
+	display: block;
+}
+
+.show-choose .show-time .border-content {
+	border-bottom: 0;
+	padding-bottom: 10px;
+}
+
+.show-time .choose-when-title {
+	margin-bottom: 10px;
+}
+
+.show-time .choose-date-in input {
+	width: 100%;
+	padding: 0px 1px 0px 5px;
+}
+
+.show-time .choose-date a {
+	display: inline-block;
+	width: 100%;
+	height: 30px;
+	line-height: 30px !important;
+	font-size: 12px;
+	color: #FFFFFF;
+	text-align: center;
+	background-color: #CECECE;
+	margin-bottom: 13px;
+	transition: 0.3s ease;
+	-moz-transition: 0.3s ease;
+	-o-transition: 0.3s ease;
+	-webkit-transition: 0.3s ease;
+}
+
+.show-time .choose-date a:HOVER {
+	background-color: #1D924C;
+}
+
+.data-curr {
+	background-color: #1D924C !important;
+}
+
+.choose-day {
+	padding-right: 0px;
+}
+
+.show-time .choose-day a {
+	display: inline-block;
+	padding: 8px 15px;
+	font-size: 12px;
+	color: #FFFFFF;
+	text-align: center;
+	margin-bottom: 5px;
+    background-color: #CECECE;
+	transition: 0.3s ease;
+	-moz-transition: 0.3s ease;
+	-o-transition: 0.3s ease;
+	-webkit-transition: 0.3s ease;
+}
+
+.show-time .choose-day a:HOVER {
+	color: #FFFFFF;
+	background-color: #1D924C;
+}
+
+
+.show-time .choose-day .current-week{
+	color: #FFFFFF;
+	background-color: #1D924C;
+}
+
+
+/*---------  选择时间 	end ----------------*/
+
+/*---------- 选择地点 	begin --------------*/
+.show-choose .show-areas {
+	overflow: hidden;
+	padding-top: 10px;
+	display: block;
+	width: 100%;
+}
+
+.show-choose .show-areas .border-content {
+	padding-bottom: 10px;
+	border-bottom: 0;
+}
+
+.show-areas .choose-where-title {
+	margin-bottom: 10px;
+}
+
+.show-areas .choose-where-tag a {
+	display: inline-block;
+	width: 100%;
+	height: 30px;
+	line-height: 30px !important;
+	font-size: 12px;
+	color: #FFFFFF;
+	line-height: 20px;
+	text-align: center;
+	background-color: #CECECE;
+	margin-bottom: 6px;
+	transition: 0.3s ease;
+	-moz-transition: 0.3s ease;
+	-o-transition: 0.3s ease;
+	-webkit-transition: 0.3s ease;
+}
+
+.show-areas .choose-where-tag a:HOVER {
+	background-color: #1D924C;
+}
+
+.show-choose .where-home-tile {
+	line-height: 40px;
+	font-size: 13px;
+}
+
+.show-choose .where-add-home a {
+	display: inline-block;
+	font-size: 13px;
+	padding: 8px 15px;
+	background-color: #CECECE;
+	color: #FFFFFF;
+}
+
+.show-choose .where-add-home a:HOVER {
+	background-color: #1D924C;
+	color: #FFFFFF !important;
+}
+/*---------  选择地点 	end ----------------*/
+
+/*---------  选择活动 	begin --------------*/
+.show-choose .show-active {
+	overflow: hidden;
+	padding-top: 10px;
+	display: block;
+}
+
+.show-choose .show-active .border-content {
+	border-bottom: 0;
+	padding-bottom: 10px;
+}
+
+.show-active .choose-active {
+	margin-bottom: 10px;
+}
+
+.show-active .active-tag a {
+	padding: 8px 12px;
+	background-color: #CECECE;
+	font-size: 13px;
+	color: #FFFFFF;
+	display: inline-block;
+	margin-bottom: 2px;
+	transition: 0.3s ease;
+	-moz-transition: 0.3s ease;
+	-o-transition: 0.3s ease;
+	-webkit-transition: 0.3s ease;
+}
+
+.show-active .active-tag a:HOVER {
+	background-color: #1D924C;
+}
+
+.show-active .active-tag .curr {
+	background-color: #1D924C;
+}
+/*---------  选择活动 	end ----------------*/
+.reset-down {
+	width: 100%;
+	line-height: 50px;
+}
+
+.reset-down .reset-choose-time {
+	font-size: 13px;
+	color: #228EBF;
+	float: left;
+}
+
+.reset-down .down-choose-time {
+	text-align: right;
+	float: right;
+	padding-right: 40px;
+}
+
+.reset-down .down-choose-time .done {
+	width: 60px;
+}
+
+.reset-down .down-choose-time .other {
+	width: 130px;
+}
+
+.reset-down .down-choose-time a {
+	display: inline-block;
+	height: 30px;
+	line-height: 30px;
+	text-align: center;
+	color: #FFFFFF;
+	cursor: pointer;
+	font-size: 16px;
+	border-radius: 2px;
+	background-color: #1D924C;
+	transition: 0.5s ease;
+	-moz-transition: 0.5s ease;
+	-o-transition: 0.5s ease;
+	-webkit-transition: 0.5s ease;
+}
+
+.reset-down .down-choose-time a:HOVER {
+	background-color: #F99E24;
+}
+
+.amap-sug-result {
+	display: none !important;
+}
+
+.auto-search {
+	width: 100%;
+	overflow: hidden;
+	background-color: #FEFEFE;
+	border: 1px solid #D1D1D1;
+	border-top: 0;
+	z-index: 1024;
+	position: relative;
+	padding-left: 5px;
+	display: none;
+}
+
+.in-address{
+	padding-right: 30px;
+}
+.laydate_box{
+    box-sizing:content-box !important;
+	-moz-box-sizing:content-box !important; /* Firefox */
+	-webkit-box-sizing:content-box !important; /* Safari */
+	-o-box-sizing:content-box !important;
+}
+.laydate_box div{
+    box-sizing:content-box !important;
+	-moz-box-sizing:content-box !important; /* Firefox */
+	-webkit-box-sizing:content-box !important; /* Safari */
+	-o-box-sizing:content-box !important;
+}

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+		"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="playthemeMapper">
+	
+	<resultMap type="com.op.spot.entity.Playtheme" id="PlaythemeResultMap">
+		<id column="id" property="id"/>
+		
+		<collection property="playthemes" ofType="com.op.spot.entity.Playtheme" column="id" select="playthemeMapper.playthemeListByPid"></collection>
+	</resultMap>
+
+	<select id="playthemeByPidList" resultMap="PlaythemeResultMap">
+		SELECT id,NAME FROM
+		s_playtheme WHERE pid=0 AND STATUS=1
+	</select>
+	
+	<select id="playthemeListByPid" parameterType="String" resultType="com.op.spot.entity.Playtheme">
+		SELECT id,NAME FROM
+		s_playtheme WHERE pid=#{id} AND STATUS=1
+	</select>
+
+	<select id="playthemeList"  resultType="com.op.spot.entity.Playtheme">
+		SELECT id,NAME FROM
+		s_playtheme WHERE  STATUS=1
+	</select>
+
+</mapper>

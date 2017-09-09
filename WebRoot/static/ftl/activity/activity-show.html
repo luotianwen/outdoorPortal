@@ -1,0 +1,651 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head lang="en">
+<base href="/" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>${activity.title}</title>
+
+<!-- base -->
+<#include "/view/base.css.html">
+
+<link rel="stylesheet" type="text/css" href="static/css/hw_css/info.css" />
+<link rel="stylesheet" type="text/css" href="static/js/plugins/focus/css/focusStyle.css">
+
+<style>
+body {
+	background: #f1f1f1;
+}
+
+
+
+.banneractivity { position: relative; overflow: hidden; text-align: center;margin: 0 auto}
+.banneractivity li { list-style: none; }
+.banneractivity ul li { float: left; }
+
+
+.banneractivity { width: 1200px;}
+.banneractivity .dots { position: absolute; left: 0; right: 0; bottom: 20px;}
+.banneractivity .dots li
+{
+	display: inline-block;
+	width: 10px;
+	height: 10px;
+	margin: 0 4px;
+	text-indent: -999em;
+	border: 2px solid #fff;
+	border-radius: 6px;
+	cursor: pointer;
+	opacity: .4;
+	-webkit-transition: background .5s, opacity .5s;
+	-moz-transition: background .5s, opacity .5s;
+	transition: background .5s, opacity .5s;
+}
+.banneractivity .dots li.active
+{
+	background: #fff;
+	opacity: 1;
+}
+.banneractivity .arrow { position: absolute; top: 200px;}
+.banneractivity #al { left: 15px;}
+.banneractivity #ar { right: 15px;}
+</style>
+
+</head>
+<body>
+
+<!-- header -->
+<#include "/view/header.html">
+
+<!--banner begin-->
+<div class="bannerImg" style="background-image: url('${activity.a_active_img }');">
+	<div class="boxw event-area">
+		<div class="event-info">
+			<div class="event-title">${activity.title }</div>
+			<div class="event-content">
+		        <ul>
+		          <li class="w1">开始时间：${activity.activityTime?string('yyyy-MM-dd HH:mm')}</li>
+		          <li class="w1">结束时间：${activity.endTime?string('yyyy-MM-dd HH:mm')}</li>
+		          <li class="w1">
+		            <label class="lets3">发布者</label>：${activity.user.uName}</li>
+		          <li class="w1">联系电话：${activity.a_phone?c}</li>
+		          <li class="w1">
+		            <label class="lets3">出发地</label>：${activity.a_start_location}</li>
+		          <li class="w1">
+		            <label class="lets3">目的地</label>：${activity.a_end_location}</li>
+		            
+		          <li class="w1">适合人群：${activity.sc_name}</li>
+		          <#if activity.aca?exists>
+		          	<li class="w1">儿童年龄：${activity.aca.aca_age_min}-${activity.aca.aca_age_max}岁</li>
+		          </#if>
+		          
+		          
+		          <li class="w3">活动类型： 
+						<#list activity.activeTypes as type>
+							${type.cl_name} <#if type_has_next>,</#if> 
+						</#list></li>
+					</li>
+		          <li class="w3">活动景点：
+		          	<#list activity.as as item>
+		          		${item.as_name} <#if item_has_next>,</#if>
+		          	</#list>
+		          </li>
+		          <li class="w3">报名截止：<span class="c1"></span></li>
+		          <li class="w1">集合时间：${activity.a_gather_time?string('yyyy-MM-dd HH:mm')}</li>
+		          <li class="w1">交通方式：
+		          	<#list activity.at as item>
+		          		${item.trafficName} <#if item_has_next>,</#if>
+		          	</#list>
+		          </li>
+		          <li class="w3">集合地点： ${activity.a_gather_location}</li>
+		        </ul>
+			</div>
+			<div class="event-content02">
+				<span id="alreadyInNumSpan" class="c1">参加 ${activity.alreadyInNum} 人/</span> 
+				<span id="residueNumSpan">余位 ${activity.needUserNum-activity.confirmUserNum} 人</span>
+				<div class="c-price">
+					<span>${activity.price?string(",##0.00")}</span><b>元</b>
+				</div>
+			</div>
+			<div class="event-btns" id="showActivityState">
+				<#if (.now?string('yyyy-MM-dd HH:mm:ss')?date gt activity.endTime?string('yyyy-MM-dd HH:mm:ss')?date) >
+				<a class="disabled-btn01">活动已结束</a>
+				<#assign isSignup="活动已结束"/>
+				
+				<#elseif (.now?string('yyyy-MM-dd HH:mm:ss')?date gt activity.activityTime?string('yyyy-MM-dd HH:mm:ss')?date)>
+				<a class="disabled-btn01">活动已开始</a>
+				<#assign isSignup="活动已开始"/>
+				
+				<#elseif (.now?string('yyyy-MM-dd HH:mm:ss')?date gt activity.a_enroll_end_time?string('yyyy-MM-dd HH:mm:ss')?date)>
+				<a class="disabled-btn01">报名截止</a>
+				<#assign isSignup="报名截止"/>
+				
+				<#elseif (activity.alreadyInNum >= activity.needUserNum)>
+				<a class="disabled-btn01">报名人数已满</a>
+				<#assign isSignup="报名人数已满"/>
+				
+				<#elseif (activity.state = 5 )>
+				<a class="btn01">我要预订</a>
+				<#assign isSignup="我要预订"/>
+				
+				<#else>
+				<a class="disabled-btn01">${activity.stateVal}</a>
+				<#assign isSignup="${activity.stateVal}"/>
+				
+				</#if>
+			</div>
+		</div>
+	    <div class="event-lead">
+	      <div class="lead-box clearfix">
+	        <div class="main-leader nobg" >
+	          <div class="leader-pic"> 
+	          	<a href="javascript:void(0)">
+	          		<img src="${activity.user.uHeadImg}" width="50" height="50" />
+	          	</a>
+	            <p class="na">
+	            	<a href="javascript:void(0)">${activity.user.uName}</a>
+	            </p>
+	            <p class="ba">电话：${activity.a_phone}</p>
+	          </div>
+	        </div>
+	        <!-- <div class="main-leader" style="display:none;">
+	          <div class="leader-pic"> 
+	          	<a href="#">
+	          		<img src="static/images/hw_img/photo.jpg" width="50" height="50" />
+	          	</a>
+	            <p class="na"><a href="#">走南闯北</a></p>
+	            <p class="ba">主领队</p>
+	          </div>
+	          <p>电话：123456478910</p>
+	          <p>带队次数：386</p>
+	          <p>带队人数：6829</p>
+	          <p>好评率：89%（已有2081人评论）</p>
+	        </div>
+	        <div class="vice-leader"> 
+	        	<a href="#" class="leader">
+	        		<img src="static/images/hw_img/photo.jpg" width="50" height="50" />走南闯北
+	        	</a> 
+	        	<a href="#" class="leader">
+	        		<img src="static/images/hw_img/photo.jpg" width="50" height="50" />走南闯北
+	        	</a> 
+	        </div> -->
+	      </div>
+	    </div>
+	</div>
+</div>
+<!--banner end -->
+<!-- tab begin -->
+<div id="event_tabs_stick"></div>
+<div class="event-tabs-area">
+	<div class="event-tabs">
+		<div class="boxw event-tabs-box clearfix " id="event_tabs_box">
+			<a F="1F" class="selected">活动介绍</a> 
+			<a F="2F" >费用说明</a> 
+			<a F="3F" >活动须知</a> 
+			<a F="6F" >报名列表</a> 
+			<a F="4F" >活动评价(0)</a> 
+			<a F="5F" >咨询问答 (0)</a> 
+		</div>
+	</div>
+</div>
+<!-- tab end -->
+<div class="boxw detail-block clearfix">
+  <div class="detail-title" id="1F">
+    <div class="txt">活动介绍</div>
+    <div class="line"></div>
+  </div>
+</div>
+
+<div class="schedule">
+	<div class="detail-info clearfix">
+		<div class="container">
+			<div class="affix-box">
+				<div class="affix-top">
+		          <ul>
+		            <li><a BREAK-F="1F" href="javascript:void(0)">总体介绍</a></li>
+		            <li><a BREAK-F="active_xcjs" href="javascript:void(0)">行程介绍</a></li>
+		            <li><a BREAK-F="active_zbyq" href="javascript:void(0)">装备要求</a></li>
+		          </ul>
+				</div>
+			</div>
+			<div class="detail-sum">
+				<div class="section01">
+					<h1>活动描述</h1>
+					<p>${activity.details}</p>
+				</div>
+				<div class="section01">
+					<h1>路线特色描述</h1>
+					<p>${activity.characteristic}</p>
+				</div>
+				<div class="section01">
+					<h1>行程看点描述</h1>
+					<p>
+						${activity.tripWatchFocus}
+					</p>
+				</div>
+			</div>
+		</div>
+		
+<!-- 		<div class="container-map" id="container_map"></div> -->
+		
+	</div>
+	
+	<#if activity.lines?exists >
+	<#list activity.lines as line>
+		<div class="route-info">
+			<div class="boxw clearfix">
+				<div class="route">
+					<h1>线路介绍${line_index+1}</h1>
+					<h2>
+						<#list line.lineAddress as item>
+							${item.la_address_name}<#if item_has_next>&nbsp;-&nbsp;</#if>
+						</#list>
+					</h2>
+					<p>
+						${line.l_active_description}
+					</p>
+				</div>
+				<div class="map line-map" id="line_${line_index+1}_map" start-location="${line.start}" end-location="${line.end}" coordinates="${line.l_line_coordinate!""}" ></div>
+			</div>
+
+
+
+
+		<div class="banneractivity" id="banneractivity-${line_index}">
+			<ul>
+
+					<#list line.lineImages as item>
+				       <li><img class="sliderimg" src="${item.li_local_url}" alt="" width="1200px" ></li>
+					</#list>
+
+			</ul>
+			<a href="javascript:void(0);"   class="unslider-arrow06 prev ${line_index}"><img class="arrow" id="al" src="/static/images/hw_img/a4.png" alt="prev" width="20" height="35"></a>
+			<a href="javascript:void(0);"   class="unslider-arrow06 next ${line_index}"><img class="arrow" id="ar" src="/static/images/hw_img/a15.png" alt="next" width="20" height="37"></a>
+		</div>
+
+
+
+
+
+		</div>
+		
+		
+	</#list>
+	</#if>
+	
+	<div class="itinerary">
+		<div class="boxw itinerary-info clearfix">
+			<div class="affix-box">
+				<div class="affix-top">
+					<ul>
+						<li><a BREAK-F="1F" href="javascript:void(0)">总体介绍</a>
+						</li>
+						<li><a BREAK-F="active_xcjs" href="javascript:void(0)">行程介绍</a>
+						</li>
+					</ul>
+				</div>
+				<div class="affix-day" id="affix_day">
+					<ul>
+					<#if activity.lines?exists >
+					<#list activity.lines as line >
+						<li class="bg0${line_index+1}
+						
+							<#if (line_index=0)>
+							 selected
+							</#if>
+							
+							">
+							<a>第${line_index+1}
+							<#if line.journey_type == 'day'>
+							天
+							<#else>
+							时间段
+							</#if>
+							</a>
+						</li>
+					</#list>
+					</#if>
+					</ul>
+				</div>
+				<div class="affix-top">
+					<ul>
+						<li>
+							<a BREAK-F="active_zbyq" href="javascript:void(0)">装备要求</a>
+						</li>
+					</ul>
+				</div>
+				
+			</div>
+			<div class="itinerary-box">
+				<div class="tit" id="active_xcjs">行程介绍</div>
+				<!-- day begin -->
+				<#if activity.lines?exists >
+				<#list activity.lines as line >
+					<div id="perday_info" class="perday-info b0${line_index+1}">
+						<div class="day-title day01">
+							<span class="">
+							第 ${line_index+1} 
+							<#if line.journey_type == 'day'>
+							天
+							<#else>
+							时间段
+							</#if>
+							</span>
+							<span class="day-theme">
+							<#list line.lineAddress as item>
+								${item.la_address_name}<#if item_has_next>&nbsp;-&nbsp;</#if>
+							</#list>
+							
+							</span>
+						</div>
+						<div class="day-txt">
+							<dl class="dl-w01">
+								<dt>出行方式：</dt>
+								<dd>${line.l_vehicle}</dd>
+							</dl>
+							<dl class="dl-w01">
+								<dt>日 期：</dt>
+								<dd>
+									<#if line.journey_type == 'day'>
+									${line.l_time?string('yyyy-MM-dd')}
+									<#else>
+									${line.l_time?string('yyyy-MM-dd HH:mm')}
+									&nbsp;-&nbsp;
+									${line.l_to_time?string('yyyy-MM-dd HH:mm')}
+									</#if>
+									
+								</dd>
+							</dl>
+							<dl class="dl-w01">
+								<dt>餐 饮：</dt>
+								<dd>${line.l_diet}</dd>
+							</dl>
+							<dl class="dl-w01">
+								<dt>住 宿：</dt>
+								<dd>${line.l_accommodation}</dd>
+							</dl>
+							<dl>
+								<dt>活动介绍：</dt>
+								<dd>
+									<p>${line.l_active_description}</p>
+								</dd>
+							</dl>
+							<dl>
+								<dt>温馨提示：</dt>
+								<dd>
+									<p>${line.l_prompt!"无"}</p>
+								</dd>
+							</dl>
+						</div>
+					</div>
+				</#list>
+				</#if>
+				
+					<!-- day end -->
+					<div class="tit" style="margin-top:50px;" id="active_zbyq">装备要求</div>
+					<!-- day begin -->
+					<div class="zb-info">
+						<h3>装备要求</h3>
+						<div class="mc">
+							<#if activity.aes?size == 0>
+							无
+							<#else>
+								<#list activity.aes as item>
+									<p>${item_index+1}、${item.ae_name}：&nbsp;${item.ae_description}</p>
+								</#list>
+							</#if>
+						</div>
+					</div>
+			</div>
+		</div>
+	</div>
+</div>
+<div class="boxw detail-block clearfix">
+	<div class="detail-title" id="2F">
+		<div class="txt">费用说明</div>
+		<div class="line"></div>
+	</div>
+	<div class="detail-txt">
+		<h1>费用包括</h1>
+		<div class="mc">
+			<#assign fybknum=0 />
+			<#list activity.costs as item>
+				<#if (item.acp_type='0')>
+					<#assign fybknum=fybknum+1 />
+					<ul class="cost-list">
+						<li class="cost-item-01">${item.acp_cost_name}</li>
+						<li class="cost-item-02">${item.acp_cost}元/人</li>
+						<li class="cost-item-03">${item.acp_comment}</li>
+					</ul>
+				</#if>
+			</#list>
+			
+			<#if (fybknum=0)>
+				暂无
+			</#if>
+		</div>
+	</div>
+	<div class="detail-txt">
+		<h1>可选费用</h1>
+		<div class="mc">
+			<#assign kxfynum=0 />
+			<#list activity.costs as item>
+				<#if (item.acp_type='1')>
+					<#assign kxfynum=kxfynum+1 />
+					<ul class="cost-list">
+						<li class="cost-item-01">${item.acp_cost_name}</li>
+						<li class="cost-item-02">${item.acp_cost}元/人</li>
+						<li class="cost-item-03">${item.acp_comment}</li>
+					</ul>
+				</#if>
+			</#list>
+			
+			<#if (kxfynum=0)>
+				暂无
+			</#if>
+		</div>
+	</div>
+	<div class="detail-txt">
+		<h1>费用不包括</h1>
+		<div class="mc">
+			<p>${activity.a_price_deatil_off}</p>
+		</div>
+	</div>
+	<div class="detail-txt">
+		<h1>支付、退款说明</h1>
+		<div class="mc">
+			<p>
+				${activity.refundCondition}
+			</p>
+		</div>
+	</div>
+</div>
+
+
+<div class="boxw detail-block clearfix">
+	<div class="detail-title" id="3F">
+		<div class="txt">活动须知</div>
+		<div class="line"></div>
+	</div>
+	<div class="detail-txt">
+		<h1>活动须知</h1>
+		<div class="mc">
+			<p style="word-wrap: break-word;">
+				${activity.a_careful}
+			</p>
+		</div>
+	</div>
+</div>
+
+<!-- <#if activity.insurance?exists>
+<div class="boxw detail-block clearfix">
+	<div class="detail-title" id="3F">
+		<div class="txt">活动保险</div>
+		<div class="line"></div>
+	</div>
+	<div class="detail-txt">
+		<h1>活动保险</h1>
+		<div class="mc">
+			<p>
+				产品名称：${activity.insurance.productName}
+			</p>
+			<p>
+				计划名称：${activity.insurance.planName}
+			</p>
+			<p>
+				保险期限：${activity.insurance.minDeadline}
+					<#if activity.insurance.maxDeadline?exists>
+						-${activity.insurance.maxDeadline}
+					</#if>
+					<#if activity.insurance.unit='1'>
+						天
+					<#else>
+						年
+					</#if>
+			</p>
+			<p>
+				保险价格：${activity.insurance.price}元
+			</p>
+		</div>
+	</div>
+</div>
+</#if> -->
+
+<div class="boxw detail-block clearfix">
+	<div class="detail-title" id="6F">
+		<div class="txt">报名列表</div>
+		<div class="line"></div>
+	</div>
+	<div class="buyer-list">
+		<table width="100%" id="buyer_table">
+			<thead>
+				<tr>
+					<th width="200">用户</th>
+					<th width="150">报名时间</th>
+					<th width="100">人数</th>
+					<th>备注</th>
+					<th width="100">领队确认</th>
+				</tr>
+			</thead>
+			<tbody>
+			</tbody>
+		</table>
+	</div>
+	<div id="buyer_page" style="text-align: center;margin-top: 10px;"></div>
+</div>
+
+<div class="boxw detail-block clearfix">
+	<div class="detail-title" id="4F">
+		<div class="txt">活动评价</div>
+		<div class="line"></div>
+	</div>
+	
+	
+	<div class="comment-content">
+	
+		<div class="comment-timeline">
+			<h3 class="comment-name">最新评价</h3>
+			<ul class="comment-timeline-list">
+			</ul>
+		</div>
+		
+		
+		<div class="comment-list">
+			<div class="comment-order-title">
+				<div class="left-title">
+					<h3 class="comment-name">热门评价</h3>
+				</div>
+				<div class="right-title current">
+					<!-- <i class="iconfont">√</i>只显示带图评价 -->
+				</div>
+			</div>
+			<ul class="comment-box-list">
+			</ul>
+		</div>
+	</div>
+	<div class="comment-more">
+		加载更多
+		<i class="iconfont"></i>
+	</div>
+</div>
+<div class="boxw detail-block clearfix">
+	<div class="detail-title" id="5F">
+		<div class="txt">咨询问答</div>
+		<div class="line"></div>
+	</div>
+	<div class="question-content" id="question_content">
+		<div class="question-input">
+			<div class="question-input-box">
+		
+			<input class="input-block" id="search_consult_input" type="text" data-pagesize="6" data-can-search="true" placeholder="输入你的提问" maxlength="20" >
+			<div class="question-btn" id="consultation">提问</div>
+			
+			</input>
+		</div>
+		
+		<div class="question-order" id="question_order">
+			<div class="order-block" id="order_block">
+				<a class="current" href="javascript:void(0)" ctype="PRAISES" loadnum="1" >最有帮助</a> <span class="sep">|</span> 
+				<a href="javascript:void(0)" ctype="NEW" loadnum="0" >最新</a>
+			</div>
+		</div>
+		<ul class="question-list" id="question_list" style="display: none;">
+		</ul>
+		 
+		<div class="more-question" id="more_question">
+			加载更多<i class="iconfont"></i>
+		</div>
+		
+	</div>
+		
+	<div class="question-none" id="question_none" style="display: none;">
+		<p>抱歉，没有找到答案。</p>
+	</div>
+</div>
+
+<#include "/view/base.js.html">	
+<script>window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"32"},"slide":{"type":"slide","bdImg":"1","bdPos":"right","bdTop":"76.5"}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];</script>
+<script type="text/javascript">
+// 报名截止时间
+var activityTime = '${activity.a_enroll_end_time?string('yyyy/MM/dd HH:mm:ss')}',
+	activeId='${activity.id?c}',
+	uName = '${SESSION_USER.uName}',
+	leaderId='${activity.createUser}',
+	lId='${activity.createUser}';
+var activitys=${activity.lines?size};
+</script>
+<!-- js分页 -->
+<script type="text/javascript" src="static/js/plugins/layer/laypage/laypage.js"></script>
+<!-- 轮播图 -->
+<script type="text/javascript" src="static/js/unslider.min.js"></script>
+<!-- 倒计时 -->
+<script type="text/javascript" src="static/js/plugins/date/jquery.downCount.js"></script>
+
+
+<!--&lt;!&ndash; 滚动视差&ndash;&gt;
+<script type="text/javascript" src="static/js/plugins/imageScroll/jquery.imageScroll.js"></script>
+<script type="text/javascript">
+// 滚动视差
+$('.img-holder').imageScroll();
+</script>-->
+<!-- 图片延迟加载 -->
+<script type="text/javascript" src="static/js/plugins/lazy-load-img/jquery.lazyload.min.js" ></script>
+<!-- 属性定义 -->
+<script type="text/javascript" src="static/js/activity/info/info.model.js"></script>
+<!-- info -->
+<script type="text/javascript" src="static/js/activity/info/info.active.js"></script>
+<!-- 报名列表 -->
+<script type="text/javascript" src="static/js/activity/info/info.buyer.js"></script>
+<!-- 评价 -->
+<script type="text/javascript" src="static/js/activity/info/info.comment.js"></script>
+<!-- 提问 -->
+<script type="text/javascript" src="static/js/activity/info/info.consultation.js"></script>
+<!-- 地图 -->
+<#include "/view/webapi.js.html">
+<!-- map -->
+<!-- <script type="text/javascript" src="static/js/activity/info/info.active.polyline.js"></script> -->
+<!-- line map -->
+<script type="text/javascript" src="static/js/activity/info/info.line.map.js"></script>
+<!-- 更新活动 -->
+<script type="text/javascript" src="static/js/activity/info/info.update.js"></script>
+</body>
+</html>

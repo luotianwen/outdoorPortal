@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="activeTrafficMapper">
+	<sql id="Base_Column_List">
+    at_id,at_traffic_id ,at_active_id 
+    </sql>
+
+    <resultMap type="com.op.entity.activity.ActiveTraffic" id="ActiveTrafficReturnMap">
+      <id column="at_id" property="at_id"/>
+      <result column="at_traffic_id" property="at_traffic_id"/>
+      <result column="at_active_id" property="at_active_id"/>
+      <result column="trafficName" property="trafficName"/>
+   </resultMap>
+   
+   <!-- 查询该活动对应的交通方式 -->
+   <select id="selectTrafficIdsByActiveId" parameterType="String" resultType="String">
+   select at_traffic_id from activeTraffic where at_active_id=#{id}
+   </select>
+
+	<!-- 保存活动交通方式 -->
+	<insert id="insertActiveTraffic" parameterType="java.util.Map" useGeneratedKeys="false">
+		insert into activeTraffic (at_active_id,at_traffic_id  )
+	   	VALUES
+	   	<foreach collection="at_traffic_id" item="item" index="index" separator=",">
+	   	(
+	   		#{at_active_id},#{at_traffic_id[${index}]}
+	   	)
+	   	</foreach>
+	</insert>
+	
+	<!-- 根据活动ID删除交通方式 -->
+	<delete id="deleteByActivityId" parameterType="java.lang.String">
+	delete from activeTraffic where at_active_id=#{id}
+	</delete>
+	
+	<!-- 根据活动ID查询该活动使用的所有交通方式 -->
+	<select id="findTrafficByActiveId" parameterType="String" resultType="com.op.entity.activity.ActiveTraffic"  useCache="false" >
+		SELECT <include refid="Base_Column_List"/>,
+		  t.t_content AS trafficName
+		FROM activeTraffic at
+		LEFT JOIN traffic t ON at.at_traffic_id  = t.t_id
+		WHERE at.at_active_id=#{id}
+	</select>
+	
+	
+</mapper>

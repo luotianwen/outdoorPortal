@@ -1,0 +1,162 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<base href="/" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>玩嘛</title>
+
+<#include "/view/usercenter/base.css.html">
+<style>
+body {
+	background: #f1f1f1;
+}
+</style>
+</head>
+<body>
+<#include "/view/usercenter/header.html">
+	<div class="boxw clearfix">
+		<div class="info-sidebar">
+			<div class="my-names">${users.uName}</div>
+			<div class="my-info">
+				<span class="mylevel">等级：<a href="javascript:void(0)">${users.grade_name}</a></span><#if users.uLoginAreaCode?exists><span>现居：${users.uLoginAreaCode}</span></#if>
+			</div>
+			<div class="my-more">
+				<div class="my-nums" style="margin-left: 25px;">
+					<p>关注</p>
+					<strong>${users.follow}</strong>
+				</div>
+				<div class="my-nums" style="margin-left: 25px;">
+					<p>粉丝</p>
+					<strong>${users.fans}</strong>
+				</div>
+				<!-- <div class="my-nums">
+					<p>玩票</p>
+					<strong>0</strong>
+				</div> -->
+			</div>
+			<#if users.uId!=SESSION_USER.uId>
+			<div class="its-action" id="iacb">
+				<#if isFollow=="y">
+					<a class="btn-attention" id="follow-cancel" role="button">取消关注</a>
+					<#else>
+					<a class="btn-attention" id="follow-button" role="button"><i></i>关注</a>
+				</#if>
+				<a href="dialog/msg.html?id=${users.uId}" target="_blank" class="btn-message" role="button"><i></i>私信</a>
+			</div>
+			</#if>
+			
+			<#if (follow?size>0)>
+			<div class="my-users">
+				<div class="my-users-title">${usex}的关注</div>
+				<ul id="follow">
+					<#list follow as item>
+						<li>
+							<a target="_blank" href="users/center.html?id=${item.u_id}">
+								<img src="<#if item.uHeadImg?exists>${item.uHeadImg}<#else>static/portrait/default.jpg</#if>" width="50" height="50" />
+							</a>
+							<p>
+								<a title="${item.uName}" target="_blank" href="users/center.html?id=${item.u_id}">${item.uName}</a>
+							</p>
+						</li>
+					</#list>
+				</ul>
+				<div class="my-users-page">
+					<span title="上一页" class="my-prev" id="fprevious"></span>
+					<span title="下一页" class="my-next" id="fnext"></span>
+				</div>
+			</div>
+			</#if>
+			<div class="my-users">
+				<#if (recentVisit?size>0)>
+					<div class="my-users-title">最近访客</div>
+					<ul id="recentVisit">
+						<#list recentVisit as item>
+							<li>
+								<a target="_blank" href="users/center.html?id=${item.u_id}">
+									<img src="<#if item.uHeadImg?exists>${item.uHeadImg}<#else>static/portrait/default.jpg</#if>" width="50" height="50" />
+								</a>
+								<p>
+									<a title="${item.uName}" target="_blank" href="users/center.html?id=${item.u_id}">${item.uName}</a>
+								</p>
+							</li>
+						</#list>
+					</ul>
+				</#if>
+				<div class="my-users-history">
+					<span>历史访客<i class="c1">${users.historyVisit}</i></span>
+					<span>今日<i class="c1"><#if todayVisit?exists>${todayVisit}<#else>0</#if></i></span>
+				</div>
+			</div>
+		</div>
+		<div class="info-main-box">
+			<div class="note-links" style="margin-bottom: 0px;">
+				<div style="padding: 30px 0px 10px;">
+					<h2 style="float: left;margin-top: -24px;font-size: 20px;color: #555;font-weight: normal;">${usex}的游记</h2>
+					<#if users.uId=SESSION_USER.uId><a style="float: right;margin-top: -30px;" href="travels/draft.html" class="btn-write"><i></i>写游记</a></#if>
+				</div>
+			</div>
+
+			<div class="my-note-list" style="margin-bottom: 10px;">
+				<#if (travelsList?size==0)>
+					<div class="note-not">
+						<img src="static/images/hw_img/note-img-no.jpg" /> 
+						<p>主人您还没有游记哦，写一篇游记和大家一起分享吧！</p>
+					</div>
+				<#else>
+					<ul id="myTravels" class="clearfix">
+						<#list travelsList as travels>
+							<li>
+								<div class="mn-img">
+									<img src="${travels.cover_image}" />
+								</div>
+								<div class="mn-item">
+									<div class="mn-actions">
+										<a href="javascript:void(0)" class="note-good on">${travels.like_count}<i></i></a>
+									</div>
+									<div class="mn-info">
+										<div class="mn-tit">
+											<h2>
+												<a href="travels/detail/${travels.id}.html" target="_blank">${travels.title}</a>
+											</h2>
+										</div>
+										<div class="mn-date">
+											${travels.issued_time?string("yyyy-MM-dd HH:mm:ss")}
+										</div>
+										<div class="mn-text">
+											<a href="travels/detail/${travels.id}.html" target="_blank">${travels.digest}<#if travels.digest?length gt 285>……</#if></a>
+										</div>
+									</div>
+									<div class="mn-extra">
+										<span class="note-view"><i></i>${travels.read_count}/${travels.reply_count}</span>
+										<span class="note-star"><i></i>${travels.collection_count}</span>
+										<a href="javascript:void(0)" class="note-place"><i></i>${travels.address}</a>
+									</div>
+								</div>
+							</li>
+						</#list >
+					</ul>
+				</#if> 
+			</div>
+              
+			<div class="main-common">
+				<h2>${usex}的问答</h2>
+				<div class="main-questions">
+					<div class="new-question">
+						我的问答是一个所有人帮助所有人的平台，用你的旅行经验，去帮助其他用户.
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- main end -->
+	<#include "/view/usercenter/base.js.html">
+	<script type="text/javascript">
+		var userId = ${users.uId};
+		var fcurrent = ${page.currentPage};
+		var ftotal = ${page.totalPage};
+		var rcurrent = ${page.currentPage};
+		var rtotal = ${page.totalPage};
+	</script>
+	<script type="text/javascript" src="static/js/usercenter/center.js"></script>	
+</body>
+</html>

@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="commentImagesMapper">
+
+    <!--mybatis ehcache缓存配置 -->
+    <cache type="org.mybatis.caches.ehcache.LoggingEhcache" />
+    
+	<sql id="Base_Column_List">
+    ci_id,co_id ,ci_location_url ,ci_cly_url ,sort
+    </sql>
+
+    <resultMap type="com.op.entity.activity.comment.CommentImages" id="CommentImagesReturnMap">
+      <id column="ci_id" property="ci_id"/>
+      <result column="co_id" property="co_id"/>
+      <result column="ci_location_url" property="ci_location_url"/>
+      <result column="ci_cly_url" property="ci_cly_url"/>
+      <result column="sort" property="sort"/>
+      
+   </resultMap>
+   
+   <!-- 根据评价ID查询图片集合 -->
+   <select id="findByCoId" parameterType="String" resultType="com.op.entity.activity.comment.CommentImages">
+   select <include refid="Base_Column_List"/>
+   from commentImages 
+   where co_id = #{id}
+   </select>
+   
+	<!-- 新增评论图片 -->
+	<insert id="saveCommentImages" parameterType="java.util.List">
+		insert into commentImages(
+			 co_id ,ci_cly_url ,sort
+		)
+        values
+		<foreach collection="list" item="item" index="index" separator="," >
+            (
+			 #{item.co_id},#{item.ci_cly_url},#{item.sort}
+            )
+		</foreach>
+	</insert>
+   
+</mapper>

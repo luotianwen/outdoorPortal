@@ -1,0 +1,26 @@
+<div class="sidebar">
+	<ul>
+		<h2>
+			<a href="pointService/home.html?id=${users.uId}" <#if map.left='商家信息'>class="now"</#if> > 商家信息 </a>
+		</h2>
+	</ul>
+	<#if users.uId=SESSION_USER.uId>
+	<ul>
+		<h2>
+			<a href="pointService/authInfo.html?id=${users.uId}" <#if map.left='认证信息'>class="now"</#if> > 认证信息 </a>
+		</h2>
+	</ul>
+	</#if>
+	<ul>
+		<h2>
+			<a href="pointService/allProject.html?id=${users.uId}" <#if map.left='项目管理'>class="now"</#if> > 项目管理 </a>
+		</h2>
+	</ul>
+	<#if users.uId=SESSION_USER.uId>
+	<ul>
+		<h2>
+			<a href="pointService/allEvaluate.html?id=${users.uId}" <#if map.left='评价管理'>class="now"</#if> > 评价管理 </a>
+		</h2>
+	</ul>
+	</#if>
+</div>

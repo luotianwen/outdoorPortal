@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<base href="/" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>玩嘛</title> 
+
+<#include "/view/usercenter/base.css.html">
+
+<style>
+body {
+	background: #f1f1f1;
+}
+</style>
+
+</head>
+<body>
+
+<#include "/view/usercenter/header.html">
+
+	<div class="boxw clearfix">
+		
+		<#include "/view/usercenter/housekeeper/menu_left.html">
+	
+		<div class="mainActivity-box">               
+             <div class="activity-tit">
+                <h1>活动模板 (<span id="templateActiveNum">${list?size}</span>)</h1>
+                <a href="huodong/release.html" target="_blank" class="add-btn"><i></i>发布活动</a>
+            </div>
+            <div class="activity-list">
+            <ul>
+            	<#list list as item>
+				<li>
+					<div class="li-mask">
+						<a href="huodong/againRelease/${item.id}.html" target="_blank" class="edit-note-btn"><i></i>编辑</a>
+						<a href="javascript:void(0)" id="delActivity" activity-id="${item.id}" class="del-note-btn"><i></i>删除</a>
+					</div>
+					<div class="act-img">
+						<a target="_blank" >
+							<img src="${item.a_active_img}">
+						</a>
+					</div>
+					<div class="act-tit">
+						<a>
+						<#if item.title?length gt 15>
+							${item.title[0..15]}
+						<#else>
+							${item.title!"未命名"}
+						</#if>
+						</a>
+					</div>
+					<div class="act-place">
+						<#if item.title?length gt 15>
+							${item.title[15..]}
+						<#else>
+						&nbsp;
+						</#if>
+					</div>
+					<div class="act-price">${item.price?string(",##0.00")}元</div>
+					<div class="act-info">
+						<#list item.jds as item>
+							${item}<#if item_has_next>、</#if>
+						</#list>
+					</div>
+				</li>
+            	</#list>
+			</ul>
+         </div>
+      </div>
+	</div>
+	
+	<#include "/view/usercenter/base.js.html">
+	<script type="text/javascript">
+	$(function(){
+		$("a#delActivity").on("click",function(){
+			var $this = $(this);
+			layer.confirm("确认删除该模板么?",{icon:3},function(index){
+				layer.close(index);
+				layer.msg("删除中...",{icon:16,shade:0.3,time:10*1000});
+				$.post("huodong/deleteTemplate.json?id="+$this.attr("activity-id"),function(data){
+					if(data){
+						if(data.RESPONSE_STATE == "200"){
+							layer.msg("删除成功。",{icon:1,time:1*1000,shade:0.3})
+							$this.closest("li").remove();
+							$("#templateActiveNum").text(($("#templateActiveNum").text()*1)-1)
+						}else{
+							layer.alert(data.ERROR_INFO,{icon:0})
+						}					
+					}
+					
+				})
+			})
+		})
+	
+	})
+	</script>	
+</body>
+</html>

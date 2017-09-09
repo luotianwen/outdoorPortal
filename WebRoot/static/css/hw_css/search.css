@@ -1,0 +1,137 @@
+@charset "utf-8";
+/* CSS Document */
+/* search */
+.search-area{background:#b3b2a9;width:1200px;margin:0 auto;height:60px;}
+.search-main {margin: 10px auto 0;width: 1200px;position:relative;}
+.solr { width: 100%;}
+.solr .solr-item {cursor: pointer;float: left;overflow: inherit;padding-left: 15px;padding-right: 15px; position: relative;    width: 208px;z-index: 999999;}
+.solr .solr-item input {border: 1px solid #fff;font-size: 14px;height: 36px;padding-left: 5px;width: 100%;
+background: transparent;color:#fff;}
+.solr .solr-item i { color: #1d924c; font-size: 18px;  position: absolute;  right: 23px; top: 9.5px;}
+.solr .solr-item-btn {float: right;padding-left:9px;width: 199px;}
+.active-search-btn {background-color: #ff8a01;border: 1px solid #ff8a01;color: white; display: inline-block;
+    font-size: 14px; height: 38px; transition: all 0.5s ease 0s; width: 160px;cursor: pointer;}
+.show-choose {width:453px;background:url(../../images/active/search/alpha-bj.png) repeat;border: 1px solid #fff;border-radius: 3px;height:auto;overflow: hidden; position: absolute; right:7px;top:45px;height:146px;}
+.show-lequ {width:928px;}
+.active-tag{padding:10px 12px;overflow:hidden;}
+.show-choose a{float:left;display:inline-block;width:70px;background:transparent;border:1px solid #fff;height:30px;color:#fff;font-size:14px;line-height:30px;text-align:center;margin:5px 18px 5px 5px; }
+.show-choose a:hover{background:#ff8a01;border:1px solid #ff8a01;color:#fff;}
+.show-choose .choose-current-a{background:#ff8a01;border:1px solid #ff8a01;color:#fff;}
+.show-choose .choose-where-tag{width:500px;}
+.show-choose .choose-where-tag a{width:196px;}
+.show-choose .where-add-home{width:240px;padding-left:80px;}
+.show-choose .where-add-home a{background:#ff8a01;border:1px solid #ff8a01;color:#fff;width:220px;}
+.show-choose.position-01{right:-231px;}
+::-moz-placeholder { color: #fff; }
+::-webkit-input-placeholder { color:#fff; }
+:-ms-input-placeholder { color:#fff; }
+input:-moz-placeholder { color:#fff; }
+
+.filter-wrap{background:#fff;width:100%;-webkit-box-shadow: 0px 1px 2px #ddd; -moz-box-shadow: 0px 1px 2px #ddd; box-shadow: 0px 1px 2px #ddd;height:auto;color:#333; }
+.filter-active{margin:0 50px;border-bottom:1px solid #eee;}
+.filter-active .filter-item{width:100px;float:left;color:#333;padding:8px 0;}
+.filter-active .filter-group{float:left;padding-top:6px; position:relative;}
+.filter-active .filter-group .filter-tab li{float:left;height:24px;line-height:24px;padding:0 10px;}
+.filter-active .filter-group .filter-tab a{display: inline-block;height: 24px;line-height: 24px; padding: 0 10px;color:#333;}
+.filter-active .filter-group .filter-tab a.selected{background:#f1f1f1;}
+.filter-active .filter-group .filter-tab b {border-left: 5px solid transparent; border-right: 5px solid transparent;border-top: 5px solid #999;border-bottom:0;display: inline-block;font-size: 0; line-height: 0; width: 0;margin-left:5px;}
+.filter-active .filter-group .filter-tab a.selected b{border-top:0;border-bottom: 5px solid #333;}
+.filter-active .filter-group .filter-content-show{width:1150px;background:#f1f1f1;height:100px;position:absolute;top:30px;left:-125px;z-index:9999;-webkit-box-shadow: 1px 2px 3px rgba(0, 0, 0, 0.2); -moz-box-shadow: 1px 2px 3px rgba(0, 0, 0, 0.2); box-shadow: 1px 2px 3px rgba(0, 0, 0, 0.2)}
+
+.filter-list{margin:0 50px;border-bottom:1px solid #eee;}
+.filter-list .filter-item{width:100px;float:left;color:#333;padding:8px 0;}
+.filter-list .filter-content{float:left;padding-top:6px;}
+.filter-list .filter-content .buxian{float:left;width:76px;}
+.filter-content  a {border-radius: 2px;display: inline-block;height: 22px;line-height: 22px;   overflow: hidden; padding: 0 8px 0 5px; text-overflow: ellipsis; white-space: nowrap;color:#333;}
+.filter-content  a:hover {background:#ff8a01;color:#fff;}
+.filter-content  a.selected {background:#ff8a01;color:#fff;}
+.filter-list .filter-content .filter-text{margin-left:80px;}
+.filter-list .filter-content .filter-text li{float:left;}
+.filter-list .filter-content .filter-text a{background:url(../../images/active/search/icons.png) no-repeat 0 0;padding-left:22px;padding-right:6px;}
+.filter-list .filter-content .filter-text a:hover{background:#ff8a01 url(../../images/active/search/icons.png) no-repeat 0 -41px;}
+.filter-list .filter-content .filter-text a.selected{background:#ff8a01 url(../../images/active/search/icons.png) no-repeat 0 -21px;}
+.filter-list .filter-content .price-range{margin-left:130px;}
+.filter-list .filter-content .price-range .lab-text{float:left;padding-right:8px;padding-top:2px;}
+.filter-list .filter-content .price-range .ipt-txt {background:#eee;border: 1px solid #ccc;height: 16px;line-height: 16px; padding-left: 2px;width: 60px;float:left;border-radius: 2px;padding-bottom:2px;}
+.filter-list .filter-content .price-range span{float:left;margin:0 5px;}
+.filter-list .filter-content .price-range .btn01{background:#eee;border: 1px solid #ccc;height: 22px;line-height: 14px; width: 38px;float:left;border-radius: 2px; cursor: pointer;font-size:12px;color:#ff8a01;margin-left:5px;padding-bottom:2px;}
+.filter-list .filter-more{position:absolute;right:15px;bottom:8px;}
+.filter-list .filter-more a{color:#ff8a01;}
+.filter-list .filter-more a:hover{color:#ff8a01;}
+.filter-list .filter-more b {border-left: 5px solid transparent; border-right: 5px solid transparent;border-top: 5px solid #ff8a01;border-bottom:0;display: inline-block;font-size: 0; line-height: 0; width: 0;margin-left:5px;}
+.filter-list .up b{border-top:0;border-bottom: 5px solid #ff8a01;}
+.w1{width:110px;}
+.w2{width:70px;}
+.w3{width:120px;}
+.c1{color:#ff8a01;}
+.f14{font-size:14px;}
+.filter-panel{position:relative;margin:0 50px;}
+.filter-panel .filter-num{width:100px;float:left;color:#333;padding:8px 0;}
+.filter-panel .filter-key{float:left;width:76px;padding:8px 0;}
+.filter-panel .filter-values{float:left;width:800px;padding:8px 0;}
+.filter-panel .filter-values a{display: inline-block;float: left; height: 18px; line-height: 18px; margin: 0 10px 4px 0;background: #fff url(../../images/active/search/del-all.png) no-repeat scroll right 0; border: 1px solid #aaa;font-size: 12px; padding: 0 24px 0 4px;border-radius: 2px;color:#333;}
+.filter-panel .filter-values a:hover{background: #fff url(../../images/active/search/del-all.png) no-repeat scroll right -18px; border: 1px solid #ff8a01;color:#333;}
+.filter-panel .del-all{ position:absolute;right:0;bottom:12px;}
+.filter-panel .del-all a{color:#ff8a01;}
+.filter-panel .del-all a:hover{color:#ff8a01;}
+
+/* main */
+.active-main{margin-top:32px !important;position:relative;}
+.active-list{float:left;width:720px;}
+.active-item{height:190px;box-shadow: 0px 1px 2px #ddd;margin-bottom:16px;background:#fff; cursor:pointer;}
+.active-item .imgbox{float:left;}
+.active-item .imgbox img{height:190px;width:320px;}
+.active-item .item-content{float:right;width:400px;position:relative;z-index:1;}
+.active-item .item-content .c-title{padding:4px 0px;margin:0 20px;position:relative;height:51px;}
+.active-item .item-content .c-title a{color:#333;font-size:16px;display:inline-block;width:280px;}
+.active-item .item-content .c-title a:HOVER{color:#ff8a01;}
+.active-item .item-content .c-title .c-price{position:absolute;right:0;bottom:0;}
+.active-item .item-content .c-title .c-price span{color:#ff8a01;font-size:30px;font-family: Helvetica Neue;font-weight:700;}
+.active-item .item-content .c-title .c-price b{color:#ff8a01;font-size:14px;font-family: Helvetica Neue;}
+.active-map{float:right;width:465px;border:1px solid #bbb;background:#fff; }
+
+.active-map-stick{position: fixed;top: 0px;z-index: 999;margin-left: 733px;}
+
+.active-map .map-big{height:40px;line-height:40px;padding-left:25px;}
+.active-map .map-big a{font-size:18px;color:#ff8a01;}
+.active-map .map-content{height:560px;}
+.item-content .c-SpecificItem{padding:4px 0px;margin:0 20px;overflow:hidden;border-top:1px solid #ddd;height:122px;}
+.item-content .c-SpecificItem ul{overflow:hidden;margin-bottom:2px;}
+.item-content .c-SpecificItem li{float:left;width:179px;padding:2px 0;}
+.item-content .c-SpecificItem li.w{width:358px;}
+.item-content .c-SpecificItem .item-base{border-top:1px solid #ddd;padding:4px 0;}
+.item-content .c-SpecificItem .item-base li{width:179px;text-align:center;color:#999;border-right:1px solid #ddd;padding:0;}
+.item-content .c-SpecificItem .item-base li.last{border-right:none;}
+.item-content .c-introduce{background:#ff8a01;overflow:hidden;color:#fff;padding:10px 20px;position:absolute;left:0;bottom:0;height:0;opacity:0;z-index:3;width:360px;}
+
+
+/*----------------------------------------------------	add		-----------------------------------------------------*/
+
+/*2016年2月28日*/
+
+.auto-search {top:46px;width: 214px;overflow: hidden;background:url(../../images/active/search/alpha-bj.png) repeat;border: 1px solid #D1D1D1;border-top: 0;z-index: 1024;position: absolute;display: none;}
+.auto-item{color: #FFFFFF;}
+.auto-item:hover{background-color: #B6B3A3;}
+.auto-item-span{color: #ECE8E8;}
+.laypageskin_molv a{background-color: #fff !important;}
+
+/*2016年3月7日*/
+.active-item:hover{box-shadow: 2px 5px 8px #ccc;transform: scale(1.01, 1.01);}
+
+
+/* 景点列表 */
+.scenic-list{float:left;width:720px;}
+.scenic-item{height:200px;margin-bottom:15px;background:#fff;}
+.scenic-item:hover{box-shadow: 0 2px 7px rgba(0, 0, 0, 0.2);}
+.scenic-item .imgbox{float:left;}
+.scenic-item .imgbox img{height:200px;width:320px;}
+.scenic-item .sc{float:left;width:360px;padding:10px 20px;height:180px;}
+.scenic-item .sc .title{font-size:18px;color:#333;}
+.scenic-item .sc .title:hover{color:#ff8a01;}
+.scenic-item .sc .txt{font-size:14px;color:#555;line-height:24px;padding-top:5px;}
+.scenic-item .sc .tag{float:left;height:25px;padding:0 20px;border:1px solid #ddd; border-radius:20px;font-size:12px;color:#ff8a01;line-height:25px;display:inline-block;margin:12px 0;margin-right:10px;}
+.scenic-item .sc .tag:hover{border:1px solid #ff8a01;}
+.scenic-item .sc .btn-buy{width:98px;height:33px;background:#ff8a01;text-align:center;font-size:16px;color:#fff;line-height:32px;display:inline-block; border-radius:5px;float:right;margin:8px 0;}
+.scenic-item .sc .address{float:left;font-size:14px;color:#999;width:260px;display:inline-block;}
+.scenic-item .sc .price{float:right;font-size:14px;color:#ff8a01;}
+.spot-map {position:fixed;top:0px;left:1085px;}

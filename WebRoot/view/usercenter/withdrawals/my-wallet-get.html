@@ -1,0 +1,314 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<base href="/" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>提现申请</title>
+
+<#include "/view/usercenter/base.css.html">
+<style>
+body {
+	background: #f1f1f1;
+}
+.click{
+cursor:pointer;
+border:1px solid #DDDDDD;
+}
+</style>
+</head>
+<body>
+<#include "/view/header.html">
+ 
+<div class="boxw clearfix" style="margin-top: 20px;">
+<#include "/view/usercenter/user/user_left_menu.html">
+<div class="myinfo-main">
+<div class="myinfo-title">
+  <h1>提现</h1>
+</div>
+
+<div class="withdrawals-nav">
+  <ul>
+    <li class="now">1.填写提现申请</li>
+    <li>2.客服审核处理</li>
+    <li>3.提现成功</li>
+  </ul>
+</div>
+<form action="withdrawals/acceptance.html" method="post" id="withdrawals">
+<div class="account-info">
+  <div class="account-t"><h1>账户信息</h1><a href="javaScript:void(0)" id="addAccount"><i></i>新增账户</a></div>
+<#assign account_id = ''>
+<div class="account-c" id="account-div" >
+<#list accountList as account>
+	<#if account_index gt 1>
+	<div id="account_hide-div"  style="display: none;">
+	</#if>	
+		<dl id="account_dl" aid="${account.id }">
+			<dt>
+				<div id="account_${account.id }" class="click fl<#if account.isDefault = '1' > name</#if>">
+					<span class="a-s-1">${account.account_name }</span><span class="a-s-1">${account.type_name }
+					</span><span class="a-s-1">${account.account_number }</span>
+				</div>
+				<div class="fl"> 
+					
+				    	 <span  class="a-s-3" id="default_account_span" <#if account.isDefault != '1' >style="display: none;"</#if> >默认账户</span>
+				    
+				</div>
+			</dt>
+			<dd style="display: none;">
+		    	<a href="javascript:void(0)" class="a-s-5" id="set_default_account"
+				    	 <#if account.isDefault = '1' >
+				    	  style="display: none;"    <#assign account_id = account.id>
+				    	  </#if>
+				    	  >设为默认账户</a>
+		    	<a href="javascript:void(0)" id="editAccount" class="a-s-5">编辑</a>
+		    	<a href="javascript:void(0)" id="delAccount" class="a-s-5">删除</a>
+		    </dd>
+		</dl>
+   <#if account_index gt 1>
+	  </div>
+   </#if>	
+</#list> 						 
+		<a href="javascript:void(0)" class="account-more" id="more_account_a">更多账户
+			<i class="down"></i>
+		</a>
+		<a href="javascript:void(0)" class="account-more" id="hide_account_a" style="display: none;">收起
+			<i class="up"></i>
+		</a>
+	</div>
+	  <input type="hidden" name="account_id" id="account_id" value="${account_id}"/>
+  </div>
+  <div class="myinfo-list">
+	<div class="payPassword-box">
+		<h1 class="payPassword-tit">提现金额与密码</h1>
+		<div class="edit-payPassword">			
+                    <dl class="clearfix">
+        <dt>账户余额：</dt>
+        <dd><span class="balance">${balance.available_money?string(',##0.00')}元</span></dd>
+		<input type="hidden" id="balance" value="${balance.available_money}"/> 
+      </dl>
+      <dl class="clearfix">
+        <dt>提现金额：</dt>
+        <dd> 
+                  <input  type="text" name="money" id="money" value=" "/>
+                  <i></i>
+        </dd>
+                 <dd class="tips-error"></dd>
+      </dl>
+      <#if isSetPayPwd>
+	      <dl class="clearfix">
+	        <dt>支付密码：</dt>
+	        <dd>
+	            <input type="password" id="password"/>
+	            <input type="hidden" name="payPassword" id="payPassword"/>
+	            <i></i>
+	         </dd>
+	      </dl>
+       </#if>	
+      <div class="btns">
+		 <a class="btn-exit" href="balance/details.html">取消</a>
+		 <a class="btn-over" id="submit" href="javascript:void(0)">下一步</a>
+	 </div>
+		<div class="tipsMobile">客服电话：400-0928-400    服务时间：周一至周五 9:30-17:30 </div>
+		</div>
+	</div>
+	<div class="tips">
+	   <h2>温馨提示：</h2> 
+	   <p>1.提现申请成功后，一般1到3天内到账，如有问题，请咨询客服； </p>
+	   <p>2.提现金额输入值必须是不小于50且不大于50000的正整数； </p>
+	   <p>3.您只能用储蓄卡或第三方支付平台进行提现，如遇到任何提现问题可以查看在线提现帮助； </p>
+	   <p>4.提现完成后，您可以进入账户提现记录页面进行查看余额提现状态。</p>
+  </div>
+</div>
+</form>
+</div>
+</div> 
+<#if isSetPayPwd>
+		<input type="hidden" id="modulus" value="${publicKey.modulus }"/> 
+		<input type="hidden" id="exponent" value="${publicKey.exponent }"/>
+</#if>			
+<!-- main end -->
+  
+<#include "/view/usercenter/base.js.html">
+<script type="text/javascript" src="static/js/plugins/validate/jquery.validate.min.js"></script>
+<script type="text/javascript" src="static/js/plugins/validate/messages_zh.min.js"></script>
+<script type="text/javascript">
+	 function init(){
+		 $("a#set_default_account").on("click",function(){
+				var $this = $(this);
+				var $dl = $("dl#account_dl"),
+				$dd = $this.parent(),
+				$dt = $dd.prev();
+				id = $this.parents("dl").attr("aid");
+				  $.post("wAccount/setDefault/"+id,function(data){
+					if(data.RESPONSE_STATE=="200"){ 
+						$dl.find("a#set_default_account").show();
+						$dl.find("div.name").removeClass("name");
+						$dl.find("span#default_account_span").hide();
+						$dt.find("div:eq(0)").addClass("name");
+						$dt.find("span#default_account_span").show();
+						$this.hide();
+						$("#account_id").val(id);
+				 	}else{
+				 		layer.alert(data.ERROR_INFO, {icon: 0});
+				 	}
+				})  
+				
+			})
+			$("div.click").on("click",function(){
+				 $account_id = $("#account_id");
+				 var account_id =  $account_id.val();
+				 if(account_id != null){
+					 $("div#account_"+account_id).removeClass("name");
+				 }
+				 id = $(this).parents("dl").attr("aid");
+				 $("div#account_"+id).addClass("name");
+				 $account_id.val(id);
+				 
+			})
+			$("dl#account_dl").on("mouseover",function(){
+				$(this).find("dd").show();
+			}).on("mouseout",function(){
+				$(this).find("dd").hide();
+			})
+				  	$("a#addAccount").on("click",function(){
+	  		 layer.open({
+	             type: 2,
+	             title:false,
+	             closeBtn: 0,
+	             shade: 0.2,
+	             area: ["800px", "380px"],
+	             content: "wAccount/addAccount.html"
+	         });  
+		})
+	  	$("a#editAccount").on("click",function(){
+	  		id = $(this).parents("dl").attr("aid");
+	  		 layer.open({
+	             type: 2,
+	             title:false,
+	             closeBtn: 0,
+	             shade: 0.2,
+	             area: ["800px", "380px"],
+	             content: "wAccount/show/"+id+".html"
+	         });  
+		})
+	  	$("a#delAccount").on("click",function(){
+	  		$dl = $(this).parents("dl");
+	  		id = $dl.attr("aid");
+	  		
+	  		layer.confirm('您确定要删除该提现账户吗？', {
+		  		  btn: ['确定','取消'] 
+		  		}, function(index){
+		  			$.post("wAccount/del/"+id+".html",function(data){
+			  			  if(data.RESPONSE_STATE=="200"){ 
+			 				 $account_id = $("#account_id");
+							 var account_id =  $account_id.val();
+							 if($account_id.val() == id){
+								 $account_id.val("");
+							 }
+							 $dl.remove();
+			  			  }else if(data.RESPONSE_STATE=="500"){
+			  				layer.alert(data.ERROR_INFO, {icon: 0});
+			  			  }
+		  			});
+		  			layer.close(index);
+		  		});
+		})
+	 }
+  $(function(){
+	  
+	  init();
+	  
+
+	
+	$("a#more_account_a").on("click",function(){
+		$("div#account_hide-div").slideDown();//
+		$("a#hide_account_a").show();
+		$(this).hide();
+	})
+	
+	$("a#hide_account_a").on("click",function(){
+		$("div#account_hide-div").slideUp();//
+		$("a#more_account_a").show();
+		$(this).hide();
+	})
+	
+	//解决浏览器自动填充
+	$("input#money").focus(function(){
+		$(this).val($.trim($(this).val()));
+		 });
+	 })
+
+	//提交
+  	$("#submit").on("click" , function(){
+	 if($("#withdrawals").valid()){
+		  $password = $("#password");
+		  $modulus = $("#modulus");
+		  $exponent = $("#exponent");
+		  if($password.length > 0){
+			  var publicKey = RSAUtils.getKeyPair($exponent.val(), '', $modulus.val());
+			  var payPassword = RSAUtils.encryptedString(publicKey, $password.val());
+			  $("#payPassword").val(payPassword);
+		  }
+		  $("#withdrawals").submit();
+	  }
+  	}); 	 
+ 
+	 $.validator.setDefaults({
+	     highlight: function(a) {
+	         $(a).removeClass("input-success").addClass("input-error");
+	         $(a).nextAll("i").removeClass("icon-success").addClass("icon-error");
+	     },
+	     success: function(a) {
+	    	 a.prev("input").removeClass("input-error").addClass("input-success");
+	    	 a.prev("i").removeClass("icon-error").addClass("icon-success");
+	     },
+	     errorElement: "p",  
+	     errorPlacement: function(a, b) {
+	        a.appendTo(b.parent());
+	     },
+	     errorClass: "input-error",
+	     validClass: "input-success"
+	 });
+	 var patrn=/^(\d{2,5})$/;
+	 //验证提现金额
+	 jQuery.validator.addMethod("checkPrice", function(value, element) { 
+		 return this.optional(element) || (parseInt(value)>=50 && parseInt(value)<=50000);
+	 }, "只能填写大于等于50，小于等于50000的整数金额");
+	 jQuery.validator.addMethod("checkPrice2", function(value, element) { 
+		 return this.optional(element) || (patrn.exec(value) && parseInt(value)<=50000);
+	 }, "只能填写大于等于50，小于等于50000的整数金额");
+	 jQuery.validator.addMethod("checkPrice3", function(value, element) {  
+		 var balance= $("#balance").val();
+		 return this.optional(element) || parseInt(value) <= balance;
+	 }, "您的帐户余额不足"); 
+	 // 密码验证，以字母开头，长度在8-15之间，密码至少包含一个大写字母、一个小写字母。
+	 jQuery.validator.addMethod("passwordCheck", function(value, element) {       
+		 return this.optional(element) || /^(?=^.{8,15}$)((?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$/.test(value);
+	 }, "支付密码格式不正确"); 
+
+	 $("#withdrawals").validate({
+	    rules:{
+	    	money:{
+	            required:true,
+	            checkPrice:true,
+	            checkPrice2:true,
+	            checkPrice3:true
+	        }           
+	    },
+	    messages:{
+	    	money:{
+	            required:"请输入提现金额"
+	        }                         
+	    }
+	});    
+
+	$("#password").rules("add", {
+		required : true,
+		passwordCheck : true,
+		messages : {
+			required : "请输入支付密码"
+		}
+	});
+</script>
+</body>
+</html>

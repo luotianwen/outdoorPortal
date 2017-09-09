@@ -1,0 +1,127 @@
+@CHARSET "utf-8";
+.active-main{
+	width:1190px;margin: 0 auto;overflow: hidden;padding-top:20px;
+}
+.active-list{
+	border: 1px solid #FFFFFF;border-top: 1px dashed #ccc;height: 220px;min-width: 798px;padding: 16px 10px;
+}
+.active-list .img-div{
+	width: 188px;height: 188px;float: left;
+}
+.active-list .active-item{
+	width: 570px;height: 188px;float: right;font-family: 'Microsoft Yahei', 'simsun';
+}
+.active-item .item-all{
+	width: 100%;height: 80%;border-bottom: 1px dashed #B4B5B5;
+}
+.item-all .item-all-title{
+	width: 100%;height: 25%;overflow: hidden;white-space: nowrap;
+}
+.item-all-title a{
+	color: #3cb43c;font-size: 18px;
+}
+.item-all .item-all-description{
+	width: 100%;height: 35%;overflow: hidden;
+}
+.item-all .item-all-description span{
+	color: #b4b5b5;font-size: 12px;
+}
+.item-all .item-all-adtipr{
+	width: 100%;height: 40%;
+}
+.item-all-adtipr .address-time{
+	width: 70%;float: left;
+}
+.active-item .item-base li{
+	width: 33%;float: left;font-size: 13px;font-family: 'simsun';padding-top: 15px;
+}
+.item-base .btn-primary{
+	vertical-align: top;
+}
+.active-item .item-base li span {
+    color: #EB9632;
+}
+.active-item .item-base li a {
+   font-size: 14px;
+   color: #349CD8;
+}
+.active-item .item-base li i{
+    font-size: 18px;
+    color: #1D924C;
+}
+.address-time .address{
+	width: 100%;height: 50%;
+}
+.address li{
+	width: 132px;
+	overflow: hidden;
+}
+.address-time li{
+	float: left;
+    font-size: 13px;
+    font-family: 'simsun';
+}
+.address-time li i{
+    font-size: 18px;
+    color: #1D924C;
+}
+.address-time .time{
+	width: 100%;height: 50%;
+}
+.address-time .time ul li:FIRST-CHILD{
+	width: 132px;
+}
+.address-time .time ul li:FIRST-CHILD i{
+    font-size: 14px;
+}
+
+.item-all-adtipr .price-num{
+	width: 130px;float: right;
+}
+.price-num .price{
+	width: 100%;
+	overflow: hidden;
+	text-align: right;
+}
+.price-num .price span{
+	font-size: 25px;
+	color: #EB9632;
+}
+.price-num .num{
+	width: 100%;
+	overflow: hidden;
+	text-align: right;
+}
+.price-num .num span:FIRST-CHILD{
+	color: #EB9632;
+}
+.price-num .num span{
+	font-size: 14px;
+}
+
+.active-list .active-item .item-base{
+	width: 100%;height: 20%;
+}
+.marker-active-flag{
+	border: 1px solid #1D924C;
+}
+.panel-body{
+	border: 0px !important;
+}
+
+.lbs-layer-title{
+	background-color: #33AFFF;
+	overflow: hidden;
+	color: white;
+}
+.lbs-info{
+	padding: 10px;
+}
+.lbs-layer-logo{
+	float: left;
+	overflow: hidden;
+}
+.lbs-show-false{
+	position: fixed !important;
+	top: 180px;
+}

@@ -1,0 +1,223 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="pointServiceMapper">
+	<sql id="Base_Column_List">
+		ps_id,ps_zh_name ,ps_en_name ,ps_type ,ps_province_id ,
+		ps_city_id ,ps_countys_id ,ps_address ,ps_coordinates ,
+		ps_traffic ,ps_create_time ,ps_create_user_id ,ps_auth_user_id ,
+		ps_auth_id ,ps_is_auth ,ps_state ,ps_error_comment ,ps_check_user_id ,
+		ps_update,ps_update_time
+	</sql>
+
+	<resultMap type="com.op.entity.pointService.PointService" id="PointServiceReturnMap">
+		<!-- id -->
+		<id column="ps_id" property="ps_id" />
+		<!-- 地点中文名 -->
+		<result column="ps_zh_name" property="ps_zh_name" />
+		<!-- 地点英文名 -->
+		<result column="ps_en_name" property="ps_en_name" />
+		<!-- 终极类型 -->
+		<result column="ps_type" property="ps_type" />
+		<!-- 省id -->
+		<result column="ps_province_id" property="ps_province_id" />
+		<!-- 市id -->
+		<result column="ps_city_id" property="ps_city_id" />
+		<!-- 区/县id -->
+		<result column="ps_countys_id" property="ps_countys_id" />
+		<!-- 详细地址 -->
+		<result column="ps_address" property="ps_address" />
+		<!-- 位置经纬度坐标（保存实例： (纬度,经度）） -->
+		<result column="ps_coordinates" property="ps_coordinates" />
+		<!-- 交通 -->
+		<result column="ps_traffic" property="ps_traffic" />
+		<!-- 创建时间 -->
+		<result column="ps_create_time" property="ps_create_time" />
+		<!-- 创建用户id -->
+		<result column="ps_create_user_id" property="ps_create_user_id" />
+		<!-- 认证人ID -->
+		<result column="ps_auth_user_id" property="ps_auth_user_id" />
+		<!-- 认证信息ID -->
+		<result column="ps_auth_id" property="ps_auth_id" />
+		<!-- 是否认证（0：否；1：是） -->
+		<result column="ps_is_auth" property="ps_is_auth" />
+		<!-- 发布状态(10：草稿；20：待审核；30：审核中；40：审核成功；50：审核失败；) -->
+		<result column="ps_state" property="ps_state" />
+		<!-- 审核失败备注 -->
+		<result column="ps_error_comment" property="ps_error_comment" />
+		<!-- 审核人 -->
+		<result column="ps_check_user_id" property="ps_check_user_id" />
+		<!-- 最后修改人 -->
+		<result column="ps_update" property="ps_update" />
+		<!-- 最后修改时间 -->
+		<result column="ps_update_time" property="ps_update_time" />
+	</resultMap>
+
+
+	<!-- 添加地点服务基本信息 -->
+	<insert id="insertReplyPointService"
+		parameterType="com.op.dto.pointService.insert.ruzhu.InsertPointServiceDTO"
+		useGeneratedKeys="true" keyColumn="ps_id" keyProperty="ps_id">
+		insert into pointServiceDeputy
+		(
+			ps_zh_name ,ps_type ,ps_province_id ,ps_city_id ,ps_countys_id,ps_address ,
+			ps_traffic ,ps_create_user_id,ps_coordinates,ps_point_service_id,ps_is_add
+		)
+		values
+		(
+			 #{ps_zh_name},#{ps_type},#{ps_province_id },#{ps_city_id },
+			#{ps_countys_id },#{ps_address},#{ps_traffic },#{ps_create_user_id},#{ps_coordinates},
+			#{ps_point_service_id},#{ps_is_add}
+		)
+	</insert>
+
+	<!-- 场馆展示 -->
+	<resultMap type="com.op.dto.pointService.show.PointServiceShowDTO" id="PointServiceShowDTOResultMap">
+		<!-- id -->
+		<result column="ps_id" property="ps_id" />
+
+		<!-- 场馆标签 -->
+		<collection property="pointServiceFeatureList" ofType="com.op.entity.pointService.PointServiceFeature" column="ps_id" select="pointServiceFeatureMapper.findPointServiceFeatureByPsId"></collection>
+
+		<!-- 联系方式 -->
+		<collection property="pointServiceContactList" ofType="com.op.entity.pointService.PointServiceContact" column="ps_id" select="pointServiceContactMapper.findPointServiceContactByPsId"></collection>
+
+		<!-- 营业时间 -->
+		<collection property="businessTimeDTOList" ofType="com.op.dto.pointService.show.BusinessTimeDTO" column="ps_id" select="businessTimeMapper.findBusinessTimeByPsId"></collection>
+
+	</resultMap>
+
+	<!-- 场馆展示 -->
+	<select id="pointServiceShow" parameterType="String" resultMap="PointServiceShowDTOResultMap">
+		select
+			ps.ps_id,ps.ps_zh_name,ps.ps_en_name,ps.ps_address,ps.ps_coordinates,
+			ps.ps_traffic,ps.ps_create_time,ps.ps_create_user_id,ps.ps_state,
+			provinces.name as ps_province_id,citys.name as ps_city_id,countys.name as ps_countys_id,
+			pst.categoryName as ps_type
+		from pointservice ps
+		left join provinces on ps.ps_province_id = provinces.id
+		left join citys on ps.ps_city_id = citys.id
+		left join countys on ps.ps_countys_id = countys.id
+		left join pointServiceType pst on pst.categoryId = ps.ps_type
+
+		where ps.ps_id = #{id}
+	</select>
+	
+	
+
+	<!-- 购买人数 -->
+	<select id="findPointPurchaseNumber" parameterType="String" resultType="String">
+		select num from GROUP_POINT_PURCHASE
+		where ps_id = #{id}
+	</select>
+
+
+	<!-- 项目收藏数量 -->
+	<select id="pointCollection" parameterType="String" resultType="String">
+		select count(pse_id) from PointServiceEnshrine
+		where pse_venue_id = #{id}
+	</select>
+
+	<!-- 添加收藏 -->
+	<insert id="addConllection" parameterType="java.util.Map">
+		insert into PointServiceEnshrine
+		(
+			 pse_venue_id, pse_user_id
+		)
+		values
+		(
+			 ${id },${userId}
+		)
+	</insert>
+
+	<!-- 用户取消收藏 -->
+	<delete id="cancelCollection" parameterType="java.util.Map">
+		delete from PointServiceEnshrine
+		where pse_venue_id = ${id } and pse_user_id = ${userId}
+	</delete>
+
+	<!-- 是否收藏 -->
+	<select id="isCollection" parameterType="java.util.Map" resultType="int">
+		select count(pse_id) from PointServiceEnshrine
+		where pse_venue_id = ${id } and pse_user_id = ${userId}
+	</select>
+
+	<!-- 场馆评论页面显示信息 -->
+	<select id="pointEvaluate" parameterType="String" resultType="com.op.dto.pointService.evaluate.PointEvaluateInfo">
+		select ps.ps_id,ps.ps_zh_name,psi.PSI_URL pointImg
+		from pointservice ps
+		left join pointserviceimg psi on psi.PSI_POINT_SERVICE_ID = ps.ps_id
+
+		where ps.ps_id = #{id}
+		limit 0,1
+	</select>
+
+	<!-- 查询场馆修改页面详细信息 -->
+	<resultMap type="com.op.dto.pointService.update.point.PointServiceUpdateDTO" id="PointServiceUpdateResultMap">
+		<!-- id -->
+		<result column="ps_id" property="ps_id" />
+
+		<!-- 类型id -->
+		<result column="ps_type" property="ps_type" />
+
+		<!-- 场馆类型 -->
+		<association property="pointTypeDTO" javaType="com.op.dto.pointService.update.point.PointTypeDTO" column="ps_type" select="pointServiceTypeMapper.findPointTypeDTO"></association>
+
+		<!-- 场馆标签 -->
+		<collection property="pointServiceFeatureList" ofType="com.op.entity.pointService.PointServiceFeature" column="ps_id" select="pointServiceFeatureMapper.findPointServiceFeatureByPsId"></collection>
+
+		<!-- 联系方式 -->
+		<collection property="pointServiceContactList" ofType="com.op.entity.pointService.PointServiceContact" column="ps_id" select="pointServiceContactMapper.findPointServiceContactByPsId"></collection>
+
+		<!-- 营业时间 -->
+		<collection property="businessTimeDTOList" ofType="com.op.dto.pointService.show.BusinessTimeDTO" column="ps_id" select="businessTimeMapper.findBusinessTimeByPsId"></collection>
+
+	</resultMap>
+
+	<!-- 查询场馆修改页面详细信息 -->
+	<select id="findInsertPointServiceDTO" parameterType="java.util.Map" resultMap="PointServiceUpdateResultMap">
+		select
+			ps_id,ps_zh_name,ps_en_name,ps_type,ps_province_id,ps_city_id,ps_countys_id,
+			ps_address,ps_coordinates,ps_traffic,ps_create_time,ps_create_user_id,ps_state
+		from pointService
+		where ps_id = #{id} and ps_auth_user_id = #{userId}
+	</select>
+
+	<!-- 验证场馆创建人 -->
+	<select id="checkPointCreateUser" parameterType="java.util.Map" resultType="int">
+		select count(ps_id) from pointService
+		where ps_id = #{id} and ps_create_user_id = #{userId}
+	</select>
+
+	<!-- 是否认证 -->
+	<select id="isAuth" parameterType="String" resultType="int">
+		select count(ps_id) from pointService
+		where ps_id = #{id} and ps_is_auth = 1
+	</select>
+
+	<!--                                  商家个人中心                                                                                        -->
+	
+	<!-- 场馆展示 -->
+	<select id="findPointService" parameterType="String" resultMap="PointServiceShowDTOResultMap">
+		select
+			ps.ps_id,ps.ps_zh_name,ps.ps_en_name,ps.ps_address,ps.ps_coordinates,
+			ps.ps_traffic,ps.ps_create_time,ps.ps_create_user_id,ps.ps_state,
+			provinces.name as ps_province_id,citys.name as ps_city_id,countys.name as ps_countys_id,
+			pst.categoryName as ps_type
+		from pointservice ps
+		left join provinces on ps.ps_province_id = provinces.id
+		left join citys on ps.ps_city_id = citys.id
+		left join countys on ps.ps_countys_id = countys.id
+		left join pointServiceType pst on pst.categoryId = ps.ps_type
+
+		where ps.ps_auth_user_id = #{userId} and ps.ps_state = 40
+	</select>
+	
+	<!-- 查询该用户名下所有场馆 -->
+	<select id="allPoint" parameterType="String" resultType="com.op.dto.pointService.show.PointServiceShowDTO">
+		select ps_id,ps_zh_name
+		from pointservice
+		
+		where ps_auth_user_id = #{userId} and ps_state = 40
+	</select>
+</mapper>

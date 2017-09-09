@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="linesMapper">
+	<sql id="Base_Column_List">
+    l_id,l_vehicle ,l_time ,l_diet ,l_accommodation ,l_active_description ,l_prompt ,l_create_user 
+    ,l_create_time ,l_active_id ,l_line_coordinate ,journey_type ,l_to_time
+    </sql>
+
+    <resultMap type="com.op.entity.lines.SubsectionLines" id="LinesReturnMap">
+      <id column="l_id" property="l_id"/>
+      <result column="journey_type" property="journey_type"/>
+      
+      <!-- 线路地点集合 -->
+      <collection property="lineAddress" ofType="com.op.entity.lines.address.LineAddress" column="l_id" select="lineAddressMapper.selectByLineId" ></collection>
+      
+      <!-- 该线路对应的图片/线路图片 -->
+      <collection property="lineImages" ofType="com.op.entity.lines.LineImages" column="l_id" select="lineImagesMapper.findImagesListByActiveLineId" ></collection>
+   </resultMap>
+   
+   <!-- 根据活动ID查询线路集合 -->
+   <select id="selectListBylAlId" parameterType="String" resultMap="LinesReturnMap" useCache="false"  >
+   	select <include refid="Base_Column_List"/>
+   	from subsectionLines where l_active_id=#{id}
+   	order by l_time asc
+   </select>
+   
+   
+    <resultMap type="com.op.dto.activity.edit.InsertLineDTO" id="EditDraftLinesReturnMap">
+      <id column="l_id" property="l_id"/>
+      
+      <!-- 线路地点集合 -->
+      <collection property="didian" ofType="com.op.entity.lines.address.LineAddress" column="l_id" select="lineAddressMapper.selectByLineId" ></collection>
+      
+      <!-- 该线路对应的图片/线路图片 -->
+      <collection property="images" ofType="com.op.entity.lines.LineImages" column="l_id" select="lineImagesMapper.findImagesListByActiveLineId" ></collection>
+   </resultMap>
+   <!-- 根据活动ID查询线路集合 -->
+   <select id="editDraftSelectListBylAlId" parameterType="String" resultMap="EditDraftLinesReturnMap" useCache="false"  >
+   	select <include refid="Base_Column_List"/>
+   	from subsectionLines where l_active_id=#{id}
+   	order by l_time asc
+   </select>
+   
+   <!-- 根据活动ID查询线路集合 -->
+   <select id="selectByActiveId" parameterType="String" resultType="com.op.entity.lines.SubsectionLines" >
+   	select <include refid="Base_Column_List"/>
+   	from subsectionLines where l_active_id=#{id} and l_create_user=#{userId}
+   </select>
+   
+   <!-- 添加活动线路 -->
+   <insert id="tianjiaxianlu" parameterType="com.op.dto.activity.insertActivity.line.InsertLineDTO" useGeneratedKeys="true" keyProperty="l_id" >
+   insert into subsectionLines (
+   l_vehicle ,l_time ,l_diet ,l_accommodation ,l_active_description ,l_prompt ,l_create_user 
+    ,l_active_id ,journey_type ,l_to_time ,l_line_coordinate
+   )
+   values 
+   (
+   #{l_vehicle }
+   
+   <choose>
+   	<when test="journey_type == 'day'">,#{l_time_day }</when>
+   	<otherwise>,#{l_time_hour }</otherwise>
+   </choose>
+   
+   ,#{l_diet },#{l_accommodation },#{l_active_description },#{l_prompt },#{l_create_user }
+   ,#{activityId } ,#{journey_type} ,#{l_to_time} ,#{l_line_coordinate}
+   )
+   </insert>
+   
+   <!-- 添加活动线路 -->
+   <insert id="tianjiaxianluGenerateActiveId" parameterType="com.op.dto.activity.insertActivity.line.InsertLineDTO" useGeneratedKeys="true" keyProperty="l_id" >
+   insert into subsectionLines (
+   l_vehicle ,l_time ,l_diet ,l_accommodation ,l_active_description ,l_prompt ,l_create_user 
+    ,l_active_id ,journey_type ,l_to_time,l_line_coordinate
+   )
+   values 
+   (
+   #{l_vehicle }
+   
+   <choose>
+   	<when test="journey_type == 'day'">,#{l_time_day }</when>
+   	<otherwise>,#{l_time_hour }</otherwise>
+   </choose>
+   
+   
+   ,#{l_diet },#{l_accommodation },#{l_active_description },#{l_prompt },#{l_create_user }
+   ,#{activityId} ,#{journey_type} ,#{l_to_time},#{l_line_coordinate}
+   )
+   </insert>
+   
+   <!-- 更改线路信息 -->
+   <update id="updatelineInfo" parameterType="com.op.dto.activity.insertActivity.line.InsertLineDTO">
+   update subsectionLines set l_vehicle=#{l_vehicle},l_time=
+   
+   
+   <choose>
+   	<when test="journey_type == 'day'">#{l_time_day }</when>
+   	<otherwise>#{l_time_hour }</otherwise>
+   </choose>
+   
+   ,l_diet=#{l_diet},l_accommodation=#{l_accommodation}
+   ,l_active_description=#{l_active_description},l_prompt=#{l_prompt},l_line_coordinate=#{l_line_coordinate},journey_type=#{journey_type},l_to_time=#{l_to_time}
+   where l_id=#{l_id} AND l_create_user=#{l_create_user}
+   </update>
+   
+   <!-- 查询该活动的线路数量 -->
+   <select id="findActiveLineNum" parameterType="int" resultType="int">
+   select count(l_id) from subsectionLines where l_active_id=#{id}
+   </select>
+   
+   <!-- 根据id和创建用户删除线路数据 -->
+   <delete id="deleteByIdAndUser" parameterType="java.util.Map">
+   delete from subsectionLines where l_id=#{l_id} AND l_create_user=#{l_create_user}
+   </delete>
+   
+   <!-- 根据id和创建用户删除线路数据 -->
+   <delete id="deleteByActiveId" parameterType="String">
+   delete from subsectionLines where L_ACTIVE_ID=#{id}
+   </delete>
+   
+   
+</mapper>

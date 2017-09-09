@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="activityInsuranceMapper">
+	<sql id="Base_Column_List">
+    ai_id,ai_insurance_id ,ai_activity_id ,ai_create_time ,ai_create_user 
+    </sql>
+
+    <resultMap type="com.op.entity.activity.insurance.ActivityInsurance" id="ActivityInsuranceReturnMap">
+      <id column="ai_id" property="ai_id"/>
+      <result column="ai_insurance_id" property="ai_insurance_id"/>
+      <result column="ai_activity_id" property="ai_activity_id"/>
+      <result column="ai_create_time" property="ai_create_time"/>
+      <result column="ai_create_user" property="ai_create_user"/>
+   </resultMap>
+	
+	<!-- 保存活动保险数据		2016年3月28日 -->
+	<insert id="insertGenerateActiveId" parameterType="java.util.Map" useGeneratedKeys="true">
+		insert into activityInsurance
+		(
+			ai_insurance_id ,ai_activity_id ,ai_create_user 
+		)
+		values
+		(
+			#{ai_insurance_id},#{activityId},#{ai_create_user}
+		)
+	</insert>
+	
+	<!-- 删除历史保险信息		2016年3月28日 -->
+	<delete id="deleteInsuranceByActiveId" parameterType="java.util.Map">
+	delete from activityInsurance where ai_activity_id=#{ai_activity_id} and ai_create_user=#{ai_create_user}
+	</delete>
+	
+	<!-- 根据活动ID和创建用户和保险ID删除活动保险		2016年3月30日 -->
+	<delete id="deleteByActiveIdAndUserId" parameterType="java.util.Map">
+	delete from activityInsurance where ai_activity_id=#{ai_activity_id} and ai_create_user=#{ai_create_user} and ai_insurance_id=#{ai_insurance_id}
+	</delete>
+	
+	<!-- 插入数据		2016年3月28日 -->
+	<insert id="insert" parameterType="java.util.Map" useGeneratedKeys="false">
+	insert into activityInsurance(ai_insurance_id ,ai_activity_id ,ai_create_user )
+	values(#{ai_insurance_id},#{ai_activity_id},#{ai_create_user})
+	</insert>
+	
+	<!-- 根据活动ID删除 -->
+	<delete id="deleteByActiveId" parameterType="String">
+	delete from activityInsurance where AI_ACTIVITY_ID =#{id}
+	</delete>
+	
+	<!-- 查询活动关联的保险 -->
+	<select id="selectInsuranceInfoByActiveId" parameterType="java.util.Map" resultType="com.op.dto.activity.insurances.ActivityInsuranceResultDTO">
+		SELECT
+			iplan.planId,
+			i.productName,
+			iplan.planName,
+			acc.acp_cost price,
+			acc.acp_qixian minDeadline
+		FROM InsurancePlan iplan
+		LEFT JOIN Insurances i ON iplan.productId = i.productId
+		JOIN activeCorrelationCost acc ON acc.acp_activity_id = ${id} and acc.acp_order=0
+		WHERE iplan.planid = ${planid}
+	</select>
+	
+</mapper>

@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="InsurancePriceMapper">
+    <!--mybatis ehcache缓存配置 -->
+    <!-- 以下两个<cache>标签二选一,第一个可以输出日志,第二个不输出日志  不使用缓存加入useCache="false" -->
+    <cache type="org.mybatis.caches.ehcache.LoggingEhcache" /> 
+    <!-- <cache type="org.mybatis.caches.ehcache.EhcacheCache"/>  -->
+    
+	<sql id="Base_Column_List">
+    id,productId ,Idl_id ,planId ,price 
+    </sql>
+
+    <resultMap type="com.op.entity.insurance.InsurancePrice" id="InsurancePriceReturnMap">
+		<!-- id -->
+      <id column="id" property="id"/>
+		<!-- 保险产品ID -->
+      <result column="productId" property="productId"/>
+		<!-- 期限ID -->
+      <result column="Idl_id" property="idl_id"/>
+		<!-- 计划ID -->
+      <result column="planId" property="planId"/>
+		<!-- 产品价格（单位：元） -->
+      <result column="price" property="price"/>
+   </resultMap>
+   
+   
+   <!-- 根据保险计划ID获取计划保障期限价格  List 列表 -->
+   <select id="findByPlanId" parameterType="string"  resultType="com.op.dto.insurance.InsurancePriceDTO" >
+	Select
+	lpr.id,ild.mindeadline,ild.maxdeadline,ild.unit,lp.planname,lp.casecode,lpr.price
+	from InsurantDateLimit ild
+	left join InsurancePlan lp on lp.productId = ild.productId
+	left join InsurancePrice lpr on lpr.idl_id = ild.id and
+	lpr.planid=lp.planid
+	where lp.planId = #{planId}
+	order by ild.id,lp.planId
+   </select>
+   
+      
+   <!-- 根据保险计划ID获取计划保障期限价格  List 列表 -->
+   <select id="details" parameterType="com.op.dto.insurance.InsuranceInquiryParameterDto"  resultType="com.op.dto.insurance.InsurancePriceDTO" >
+		<!-- Select
+		lpr.id,ild.mindeadline,ild.maxdeadline,ild.unit,lp.planname,lpr.price
+		from InsurantDateLimit ild
+		left join InsurancePlan lp on lp.productId = ild.productId
+		left join InsurancePrice lpr on lpr.idl_id = ild.id and
+		lpr.planid=lp.planid
+		where 1=1
+	    <if test="productId != null and productId != ''  and productId != 0 ">
+	    	and ild.productid = #{productId}
+	    </if>
+	    <if test="planId != null and planId != ''  and planId != 0 ">
+	    	and lp.planId = #{planId}
+	    </if>
+	    <if test="deadlineId != null and deadlineId != ''  and deadlineId != 0 ">
+	    	and ild.id = #{deadlineId}
+	    </if>
+		order by ild.id,lp.planId -->
+		select
+			planId,planname,productId,caseCode
+		from InsurancePlan
+		where 1=1
+		<if test="productId != null and productId != ''  and productId != 0 ">
+	    	and productid = #{productId}
+	    </if>
+	    <if test="planId != null and planId != ''  and planId != 0 ">
+	    	and planId = #{planId}
+	    </if>
+		order by planId
+		
+   </select>
+  
+   <!-- 查询对应活动的保险详情 -->
+   <select id="selectById" parameterType="String" resultType="com.op.dto.activity.insurances.ActivityInsuranceResultDTO" useCache="false" >
+	SELECT i.productName,
+	  ip.planName,
+	  idl.minDeadline,
+	  idl.maxDeadline,
+	  idl.unit,
+	  ipr.price
+	FROM Insurances i
+	LEFT JOIN InsurancePlan ip ON i.productId=ip.productId
+	LEFT JOIN InsurantDateLimit idl ON i.productId=idl.productId
+	LEFT JOIN InsurancePrice ipr ON ipr.Idl_id =idl.id AND ipr.planId=ip.planId
+	WHERE ipr.id  = #{id}
+   </select>
+</mapper>

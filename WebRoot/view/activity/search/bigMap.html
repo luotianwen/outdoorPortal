@@ -1,0 +1,342 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<base href="/" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>活动地图</title>
+<link rel="stylesheet" href="static/css/map.css">
+<style type="text/css">
+	html,body {
+		margin: 0;
+		height: 100%;
+		width: 100%;
+		position: absolute;
+	}
+	
+	.info {
+		border: solid 1px silver;
+	}
+	
+	div.info-top {
+		position: relative;
+		background: none repeat scroll 0 0 #F9F9F9;
+		border-bottom: 1px solid #CCC;
+		border-radius: 5px 5px 0 0;
+	}
+	
+	div.info-top div {
+		display: inline-block;
+		color: #333333;
+		font-size: 14px;
+		font-weight: bold;
+		line-height: 31px;
+		padding: 0 10px;
+	}
+	
+	div.info-top img {
+		position: absolute;
+		top: 10px;
+		right: 10px;
+		transition-duration: 0.25s;
+	}
+	
+	div.info-top img:hover {
+		box-shadow: 0px 0px 5px #000;
+	}
+	
+	div.info-middle {
+		font-size: 12px;
+		padding: 6px;
+		line-height: 20px;
+	}
+	
+	div.info-bottom {
+		height: 0px;
+		width: 100%;
+		clear: both;
+		text-align: center;
+	}
+	
+	div.info-bottom img {
+		position: relative;
+		z-index: 104;
+	}
+	
+	span {
+		margin-left: 5px;
+		font-size: 11px;
+	}
+	
+	.info-middle img {
+		float: left;
+		margin-right: 6px;
+	}
+	
+	#tip {
+		background-color: #fff;
+		padding-left: 10px;
+		padding-right: 10px;
+		position: absolute;
+		font-size: 12px;
+		left: 30px;
+		top: 30px;
+		border-radius: 3px;
+		border: 1px solid #ccc;
+		line-height: 30px;
+	}
+	.amap-icon img {
+	    position: absolute;
+	    z-index: -1;
+	    left: -9px!important;
+	}
+	#conntent li{
+		border:1px solid #fff;
+	}
+	#conntent li:hover{
+		border:1px solid #ff8a01;
+		color: #fa5d5d;
+	}
+	#other-item{
+
+    	margin-top: -6px;
+    	padding-bottom: 10px;
+	}
+</style>
+</head>
+<body>
+	<div id="container" style="width:100%; height: 100%;"></div>
+	<div class="map-search clearfix">
+		<div class="venue-search">
+			<input type="text" placeholder="搜索" name="" /> <i></i>
+		</div>
+		<div class="sxtj clearfix">
+			<div class="title">
+				<i class="icons"></i>筛选条件 <i class="arrow-right"></i>
+			</div>
+			<div class="com clearfix">
+				<ul class="clearfix">
+					<li><i class="item-1"></i>活动</li>
+					<li><i class="item-1"></i>场馆</li>
+				</ul>
+			</div>
+		</div>
+		<div class="tsxs clearfix">
+			<div class="title">
+				<i class="icons"></i>同时显示 <i class="arrow-down"></i>
+			</div>
+			<div class="other-item" >
+				<li id="other-item"><a class="ico-venus"><i></i></a>活动 <i class="arrow-right" ></i></li>
+				<div class="list">
+					<ul id="conntent">
+						
+					</ul>
+				</div>
+			</div>
+			
+		</div>
+		<div class="venue-list clearfix" id="detail" style="display: none">
+			<ul class="clearfix">
+				
+			</ul>
+		</div>
+	</div>
+	
+	<script type="text/javascript" src="static/js/jquery-2.1.1.min.js"></script>
+	<#include "/view/webapi.js.html">
+<script>
+	$(function() {
+		$(".title").click(function() {
+			$(this).next().slideToggle();
+		})
+		$("#other-item").click(function() {
+			$(".list").show();
+			$(".venue-list").hide();
+
+		})
+	})
+		var map;
+		var center="${center}";
+		var arr=center.split(",");
+		var search_obj = {};// 查询缓存对象
+		var default_page = {key:'page',val:'1'};// 更换搜索条件一定要重新设置分页{key:'page',val:'1'}
+		var begin=0;
+
+		function init() {
+			//地图初始化时，在地图上添加一个marker标记,鼠标点击marker可弹出自定义的信息窗体
+			map = new AMap.Map("container", {
+				resizeEnable : true,
+				center : arr,
+				zoom : 11
+			});
+// 地图平移结束后触发。如地图有拖拽缓动效果，则在缓动结束后触发
+			map.on('moveend', function(){
+				// 当用户点击搜索得到的数据，地图要平移到该数据的坐标地点
+					getBounds();
+               begin= new Date().getSeconds();
+			});
+
+			getBounds();
+			begin= new Date().getSeconds();
+		}
+		function getBounds(){
+			var end= new Date().getSeconds();
+			if(begin==0||end-begin>refreshTime){
+			  query();
+			}
+			else{
+				layer.msg('操作太快.');
+			}
+		}
+		function query(){
+			var bounds = map.getBounds();//地物对象的经纬度矩形范围。
+			var northEast = bounds.getNorthEast();// 获取东北角坐标。
+			var center = bounds.getCenter();//获取当前Bounds的中心点经纬度坐标。
+			searchActive({data:[
+				default_page,// 默认第一页
+				{key:'bl',val:center.getLat()+","+center.getLng()},// 转换格式纬度，经度
+				{key:'northEast',val:northEast.toString()}
+			]});
+		}
+		function searchActive(search){
+			// 解析搜索对象
+			for(var i=0,len=search.data.length;i<len;i++){
+				var data = search.data[i];
+				var key = data.key;// 参数key
+				var val = data.val;// 参数值
+					search_obj[key] = val;
+			}
+			// 获取json数据
+			getResult();
+		}
+		var _active_markers=new Array();// 重置marker数组
+
+		function getResult(){
+			_active_markers=new Array();// 重置marker数组
+			$.post("search/active.do", search_obj, function(data){
+				outResult(data.result);
+			});
+
+		}
+		 var _listHtml="";
+        function outResult(data2){
+
+        	  _listHtml="";
+            var _title="";
+			for(var i=0;i<data2.length;i++){
+				 var data=data2[i];
+				var  coordinates=data.coordinates.split(",");
+				addMarker(coordinates[1],coordinates[0],data);
+				_title=data.title.length>20?data.title.substr(0,20):data.title;
+				  _listHtml+="<li title="+data.title+" onclick=content("+data.id+")>"+_title+"</li>";
+			}
+			getList();
+			
+		}
+        function content(id){
+
+        	for(var i=0;i<_active_markers.length;i++){
+      			var marker = _active_markers[i];
+      			if(marker.getExtData().id ==id){
+      				// 当鼠标移到列表数据高亮显示图标
+
+      				detail(marker);
+      			}
+      			else{
+      				marker.setIcon('static/img/index/active/mark-green.png');
+      			}
+      			
+      		}
+        }
+        function getList(){
+        	 $("#conntent").html(_listHtml);
+        }
+        //
+        
+		//添加marker标记
+		function addMarker(lng, lat,data) {
+			var marker = new AMap.Marker({
+				map : map,
+				position : [ lng, lat ], //基点位置
+				icon:'static/img/index/active/mark-green.png'
+			});
+
+			 marker.setExtData(data);
+			// 鼠标移近点标记时触发事件
+		    marker.on('mouseover',markerMouseover);
+		    // 鼠标移出点标记时触发事件
+		    marker.on('mouseout',markerMouseout);
+
+			marker.on("click",a);
+			_active_markers.push(marker);
+		}
+        function a(e){
+        	var marker = e.target;
+        	detail(marker);
+        }
+        var _clickid;
+		function detail(marker) {
+			marker.setIcon('static/img/index/active/mark-yellow.png');
+			$(".list").hide();
+        	 var htmlObj=marker.getExtData();
+			_clickid=htmlObj.id;
+		    $("#detail").html(getDatail(htmlObj));
+            $(".venue-list").show();
+			markgreen(marker);
+	  }
+	  function markgreen(marker){
+		  for(var i=0;i<_active_markers.length;i++){
+			  var data=_active_markers[i];
+			  if(data.getExtData().id!=marker.getExtData().id){
+				  data.setIcon('static/img/index/active/mark-green.png');
+			  }
+		  }
+	  }
+		 var _html="<li><div class='venue-img'><a href='huodong/info/iidi.html' target='_blank'><img  src='isrci' style='width:300px;height:180px' /></a></div>";
+		    _html+="<div class='venue-title'><a href='huodong/info/iidi.html' target='_blank'>ititlei</a></div>";
+		    _html+="<div class='venue-address'>出发地<i></i>iaddressi</div>";
+	        _html+="<div class='venue-address'>目的地<i></i>ieaddressi</div>";
+			_html+="<div class='venue-info'>开始时间 iactivityTimei</div>";
+		    _html+="<div class='venue-info'  >结束时间:iendTimeStri</div>";
+	        _html+="<div class='venue-address'>参加 ialreadyInNumi 人/</b> 余位 ineedUserNumi 人</div>";
+			_html+="<div class='venue-info'  >报名截止时间：ia_enroll_end_timeStri</div>";
+		    _html+="<div class='venue-extra'>发布者:icreateUserNamei</div>";
+		   _html+="</li>";
+		 function getDatail(Obj){
+		 	var info=Obj.characteristic.length>50?Obj.characteristic.substr(0,50):Obj.characteristic;
+        	 var contents=_html.replaceAll("iidi", Obj.id).replaceAll("isrci",Obj.a_active_img).replaceAll("ititlei",Obj.title).replaceAll("iaddressi",Obj.a_start_location)
+			.replaceAll("ieaddressi",Obj.a_end_location).replaceAll("ialreadyInNumi",Obj.alreadyInNum).replaceAll("ineedUserNumi",Obj.needUserNum-Obj.alreadyInNum)
+					 .replaceAll("iactivityTimei",Obj.activityTimeStr) .replaceAll("ia_enroll_end_timeStri",Obj.a_enroll_end_timeStr)
+        	 .replaceAll("iendTimeStri",Obj.endTimeStr).replaceAll("icreateUserNamei",Obj.createUserName);
+        	 return contents;
+        	 
+         }
+		//鼠标移到点标记时触发事件
+		function markerMouseover(e){
+
+			var marker = e.target;
+			if(_clickid!=marker.getExtData().id)
+			// 加亮显示marker
+			marker.setIcon('static/img/index/active/mark-yellow.png');
+		}
+		//鼠标移出点标记时触发事件
+		function markerMouseout(e){
+			var marker = e.target;
+			// 恢复marker
+			if(_clickid!=marker.getExtData().id)
+			marker.setIcon('static/img/index/active/mark-green.png');
+		}
+	</script>
+	<script type="text/javascript" src="static/js/plugins/layer/layer.min.js"></script>
+	<script type="text/javascript">
+String.prototype.replaceAll = function(reallyDo, replaceWith, ignoreCase) {
+    if (!RegExp.prototype.isPrototypeOf(reallyDo)) {
+        return this.replace(new RegExp(reallyDo, (ignoreCase ? "gi": "g")), replaceWith);
+    } else {
+        return this.replace(reallyDo, replaceWith);
+    }
+}
+</script>
+</body>
+</html>
+
+

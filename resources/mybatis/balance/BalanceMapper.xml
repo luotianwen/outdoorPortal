@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="balanceMapper">
+
+    <!--mybatis ehcache缓存配置 -->
+    <cache type="org.mybatis.caches.ehcache.LoggingEhcache" /> 
+
+	<sql id="Base_Column_List">
+    id,user_id ,payPassword ,available_money ,frozen_money ,state ,update_time ,remarks ,operator_name ,operator_id 
+    </sql>
+
+    <resultMap type="com.op.entity.balance.Balance" id="BalanceReturnMap">
+		<!-- ID -->
+      <id column="id" property="id"/>
+		<!-- 用户ID -->
+      <result column="user_id" property="user_id"/>
+		<!-- 支付密码 -->
+      <result column="payPassword" property="payPassword"/>
+		<!-- 可用金额 -->
+      <result column="available_money" property="available_money"/>
+		<!-- 冻结金额 -->
+      <result column="frozen_money" property="frozen_money"/>
+		<!-- 账户状态（1：有效；2：冻结；） -->
+      <result column="state" property="state"/>
+		<!-- 更新时间 -->
+      <result column="update_time" property="update_time"/>
+		<!-- 更改用户状态备注 -->
+      <result column="remarks" property="remarks"/>
+		<!-- 更改用户状态操作人名称 -->
+      <result column="operator_name" property="operator_name"/>
+		<!-- 更改用户状态操作人id -->
+      <result column="operator_id" property="operator_id"/>
+   </resultMap>
+
+   
+    <!-- 注册成功后，给用户开通余额 -->
+   <insert id="insertBalance" parameterType="String" useGeneratedKeys="false" >
+	   	insert into Balance ( user_id,state,update_time )
+		 values ( #{user_id},1,now())
+   </insert>
+   
+   <!-- 根据用户id获取用户余额信息 -->
+   <select id="getBalanceByUserId" parameterType="String" resultType="com.op.entity.balance.Balance" useCache="false" >
+   		 select id,available_money ,frozen_money ,state,payPassword
+   		 from Balance where user_id=#{user_id}
+   </select>
+   
+   	<!-- 变动用户账户冻结金额-->
+   <update id="updateFrozenMoney" parameterType="java.util.HashMap">
+   		update balance set 
+   		available_money = available_money - (select cw_cash+fee_cash from cashWithdrawals where id= #{id})
+   		frozen_money = frozen_money + (select cw_cash+fee_cash from cashWithdrawals where id= #{id})
+   		where user_id = #{sqrId}
+   </update>
+   
+   <!-- 判断用户是否设置支付密码 -->
+   <select id="isSetPayPwd" parameterType="String" resultType="String" useCache="false" >
+   		 select payPassword
+   		 from Balance where user_id=#{user_id}
+   </select>
+  
+   <!-- 修改支付密码-->
+   <update id="updatePayPassword" parameterType="com.op.dto.usercenter.userInfo.PayPasswordDTO">
+   		update balance set 
+   		payPassword = #{payPassword}
+   		where
+   		user_id = #{userId}
+   		<if test="oldPayPassword != null and oldPayPassword != '' ">
+   			 AND payPassword = #{oldPayPassword}
+   		</if>
+   		<if test="oldPayPassword == null or oldPayPassword == '' ">
+   			 AND payPassword is null
+   		</if>
+   </update>
+	
+	
+	<update id="updateMoneyByUserId" parameterType="java.util.Map">
+		update balance set 
+		AVAILABLE_MONEY = AVAILABLE_MONEY+#{available_money},
+		FROZEN_MONEY = FROZEN_MONEY+#{frozen_money}
+		where USER_ID = #{userId}
+	</update>
+	
+	
+   <!-- 提现申请，变动可用金额信息-->
+   <update id="updateAvailable_money_TX" parameterType="java.util.HashMap">
+   		update balance set 
+   		available_money = available_money - #{cw_cash} - #{fee_cash}
+   		where user_id = #{user_id}
+   </update>
+	
+	
+</mapper>

@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 订单识别码(pointServiceUniqueness)Mapper -->
+<mapper namespace="pointServiceUniquenessMapper">
+	<!--mybatis ehcache缓存配置 -->
+	<!-- 以下两个<cache>标签二选一,第一个可以输出日志,第二个不输出日志 不使用缓存加入useCache="false" -->
+	<!-- <cache type="org.mybatis.caches.ehcache.LoggingEhcache" /> -->
+	<!-- <cache type="org.mybatis.caches.ehcache.EhcacheCache"/> -->
+
+	<sql id="Base_Column_List">
+		psu_id,pso_id ,psu_uniqueness ,psu_state ,pso_refund_state,psu_use_time
+		
+	</sql>
+
+	<resultMap type="com.op.entity.pointService.order.PointServiceUniqueness" id="PointServiceUniquenessReturnMap">
+		<!-- id -->
+		<id column="psu_id" property="psu_id" />
+		<!-- 订单ID -->
+		<result column="pso_id" property="pso_id" />
+		<!-- 唯一识别码 -->
+		<result column="psu_uniqueness" property="psu_uniqueness" />
+		<!-- 识别码状态(0：待消费，1：已使用) -->
+		<result column="psu_state" property="psu_state" />
+		<!-- 退款状态(0：未申请退款；10：等待玩嘛确认，20：退款中，30：退款成功，40：退款失败，50：取消退款) -->
+		<result column="pso_refund_state" property="pso_refund_state" />
+		<!-- 使用时间 -->
+		<result column="psu_use_time" property="psu_use_time"/>
+	</resultMap>
+
+	<!-- 查询订单唯一识别码 -->
+	<select id="findPointServiceUniquenessByPsoId" parameterType="String" resultMap="PointServiceUniquenessReturnMap">
+		select
+		psu_id,pso_id ,psu_uniqueness ,psu_state ,pso_refund_state,psu_use_time
+		from PointServiceUniqueness
+		where pso_id = #{pso_id}
+	</select>
+
+	<!-- 新增唯一标识 -->
+	<insert id="addPointServiceUniqueness" parameterType="java.util.Map">
+		insert into PointServiceUniqueness
+		(
+			 pso_id ,psu_uniqueness
+		)
+		VALUES
+		<foreach collection="uniqueness" item="item" separator=",">
+		(
+			 #{id} ,#{item}
+		)
+		</foreach>
+	</insert>
+	
+	<!-- 验证识别码是否可退款 -->
+	<select id="verificationUniqueness" parameterType="java.util.Map" resultType="int">
+		select count(psu_id) from PointServiceUniqueness
+		where pso_id = #{id} and psu_id in (#{uniqueness}) and psu_state = 0 and (pso_refund_state = 0 or pso_refund_state = 40 or pso_refund_state = 50)
+	</select>
+	
+	<!-- 订单退款修改识别码信息 -->
+	<update id="updateUniquenessRefund" parameterType="java.util.Map">
+		update PointServiceUniqueness set
+		pso_refund_state = 10
+		where pso_id = #{id} and psu_id in (#{uniqueness}) and psu_state = 0 and (pso_refund_state = 0 or pso_refund_state = 40 or pso_refund_state = 50)
+	</update>
+	
+	<!-- 退款详情 -->
+	<select id="findPointServiceUniquenessByRefund" parameterType="String" resultMap="PointServiceUniquenessReturnMap">
+		select
+		psu_id,pso_id ,psu_uniqueness ,psu_state ,pso_refund_state,psu_use_time
+		from PointServiceUniqueness
+		where pso_id in (#{psu_id})
+	</select>
+	
+	<!-- 到店消费(验证密码) -->
+	<select id="verifyPassword" parameterType="java.util.Map" resultMap="PointServiceUniquenessReturnMap">
+		select psu_id,psu.pso_id ,psu_uniqueness ,psu_state ,psu.pso_refund_state,psu_use_time
+		from PointServiceUniqueness psu
+		left join pointServiceOrder pso on pso.pso_id = psu.pso_id
+		left join pointService ps on ps.ps_id = pso.pso_point_service_id
+		
+		where psu.psu_uniqueness = #{pass} and ps.ps_create_user_id = #{userId}
+	</select>
+	
+	<!-- 使用识别码 -->
+	<update id="updateUniquenessUse" parameterType="String">
+		update PointServiceUniqueness set
+		psu_state = 1
+		where psu_id = #{psu_id} 
+	</update>
+	
+	<!-- 验证此订单识别码是否全部使用 -->
+	<select id="orderUniquenessNum" parameterType="String" resultType="int">
+		select count(psu_id) from PointServiceUniqueness
+		
+		where psu_state = 0 and (pso_refund_state = 0 or pso_refund_state = 40 or pso_refund_state = 50)
+		and pso_id = #{pso_id}
+	</select>
+	
+	
+</mapper>

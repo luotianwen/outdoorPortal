@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+	<!-- 第三方平台账号联合登录(jointLogin)Mapper -->
+<mapper namespace="jointLoginMapper">
+    <!--mybatis ehcache缓存配置 -->
+    <!-- 以下两个<cache>标签二选一,第一个可以输出日志,第二个不输出日志 不使用缓存加入useCache="false" -->
+    <!-- <cache type="org.mybatis.caches.ehcache.LoggingEhcache" /> -->
+    <!-- <cache type="org.mybatis.caches.ehcache.EhcacheCache"/>  -->
+
+	<sql id="Base_Column_List">
+     id,login_type ,openid ,user_id ,accessToken ,tokenExpireIn ,update_time 
+    </sql>
+
+    <resultMap type="com.op.entity.jointLogin.JointLogin" id="JointLoginReturnMap">
+		<!-- id -->
+      <id column="id" property="id"/>
+		<!-- 平台类型（QQ；weixin） -->
+      <result column="login_type" property="login_type"/>
+		<!-- 第三方平台授权用户身份唯一标识(一般32位字符串) -->
+      <result column="openid" property="openid"/>
+		<!-- 绑定用户id -->
+      <result column="user_id" property="user_id"/>
+		<!-- 第三方平台授权码 -->
+      <result column="accessToken" property="accessToken"/>
+		<!-- 授权码到期时间（单位：秒） -->
+      <result column="tokenExpireIn" property="tokenExpireIn"/>
+		<!-- 授权刷新时间 -->
+      <result column="update_time" property="update_time"/>
+   </resultMap>
+   
+   <!-- 检测第三方登录账号是否已绑定网站账户 -->
+   <select id="findUserByOpenId" parameterType="com.op.entity.jointLogin.JointLogin" resultMap="UsersMapper.UsersReturnMap">
+   		SELECT u_id,uName ,uEmail ,uPhone ,uPassword ,uSex ,uHeadImg ,uLoginAreaCode ,uCreateTime ,uLastUpdateTime ,uType ,uScoreNum ,rId
+    	,isFroZen,isGAG,uLoginIp,uLoginDate,uLoginCount,emergencyName, emergencyMobile, relation,personalitySignature,ug.grade_name
+	   	FROM users users
+	   	left join user_grade ug on (users.integral>=ug.MININTEGRAL and users.integral <![CDATA[<=]]>MAXINTEGRAL)
+	   	left join JointLogin jl on user_id = u_id
+	   	WHERE
+	   	openid = #{openid}
+	   	AND login_type = #{login_type}
+	    AND UTYPE in (1,2,3,50)
+   </select>
+  
+  <insert id="insertJointLoginInfo" parameterType="com.op.entity.jointLogin.JointLogin">
+  	insert into 
+  		JointLogin (login_type ,openid ,user_id ,accessToken ,tokenExpireIn ,update_time )
+  	values 
+  		(#{login_type} ,#{openid} ,#{user_id} ,#{accessToken} ,#{tokenExpireIn} ,now())
+  </insert>
+	
+	 <!-- 更新第三方登录用户信息 -->
+	<update id="updateUserJointLoginInfo" parameterType="com.op.entity.jointLogin.JointLogin">
+		update
+			JointLogin
+		set	 
+		 	accessToken = #{accessToken} ,
+		 	tokenExpireIn = #{tokenExpireIn},
+		 	update_time = now()
+		 where
+		 	openid = #{openid}
+	   		AND 
+	   		login_type = #{login_type}
+		 	
+	</update>
+	
+	
+	   <!-- 昵称序列获取 -->
+   <select id="nicknameSeq" resultType="String">
+	   select  max(id)+1 from JointLogin
+   </select>
+	
+</mapper>

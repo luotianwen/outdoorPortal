@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<base href="/">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>认证</title>
+
+<!-- base -->
+<#include "/view/base.css.html">
+
+<link rel="stylesheet" type="text/css" href="static/css/hw_css/form.css" />
+</head>
+<body>
+
+	<!-- header -->
+	<#include "/view/header.html">
+	
+<div class="boxw clearfix">
+  <div class="venue-form">
+    <div class="mt-venue">
+      <h1>认领商户</h1><span>(<em>*</em>为必填选项)</span>
+    </div>
+    <form action="" id="insertAuthForm">
+    <input type="hidden" name="ps_id" value="${ps_id}">
+	    <div class="venue-box sh clearfix">
+	     <dl class="clearfix">
+	        <dt><em>*</em>真实姓名：</dt>
+	        <dd>
+	          <input  type="text" name="contactName"  placeholder="请输入真实姓名">
+	        </dd>
+	      </dl>
+	      <dl class="clearfix">
+	        <dt><em>*</em>身份证号：</dt>
+	        <dd>
+	          <input  type="text" name="idCard"  placeholder="请输入身份证号">
+	        </dd>
+	      </dl>
+	       <dl class="clearfix">
+	        <dt><em>*</em>手机号：</dt>
+	        <dd>
+	          <input  type="text" name="mobile"  placeholder="请输入手机号">
+	        </dd>
+	      </dl>
+	      <dl class="clearfix">
+	        <dt><em>*</em>邮箱：</dt>
+	        <dd>
+	          <input  type="text" name="email"  placeholder="请输入邮箱地址">
+	        </dd>
+	      </dl> 
+	       <dl class="clearfix">
+	        <dt><em>*</em>身份证（正面）：</dt>
+	        <dd>
+	        <ul class="venue-img clearfix" style="width:920px;">        	
+	        	<li addphoto id="idCard_p_src"><a class="edit-add" ><i></i>上传证件照</a></li>
+	        </ul>
+	        </dd>
+	      </dl>
+	       <dl class="clearfix">
+	        <dt><em>*</em>身份证（反面）：</dt>
+	        <dd>
+	        <ul class="venue-img clearfix" style="width:920px;">        	
+	        	<li addphoto id="idCard_i_src2"><a class="edit-add"  ><i></i>上传证件照</a></li>
+	        </ul>
+	        </dd>
+	      </dl>
+	       <dl class="clearfix">
+	        <dt><em>*</em>营业执照注册号：</dt>
+	        <dd>
+	          <input type="text" name="license_number"  placeholder="营业执照注册号">
+	        </dd>
+	      </dl>
+	      <dl class="clearfix">
+	        <dt><em>*</em>营业执照扫描件：</dt>
+	        <dd>
+	        <ul class="venue-img clearfix" style="width:940px;">        	
+	        	<li addphoto id="license_src"><a class="edit-add"><i></i>营业执照扫描件</a></li>
+	        </ul>
+	        </dd>
+	      </dl> 
+	    </div>
+    </form>
+    <div class="btns">
+	    <a href="index.html" class="btn-sub-gray">取 消</a>
+	    <a href="javascript:void(0)" class="btn-sub" id="submit">提 交</a>
+    </div>
+  </div>
+</div>
+
+<div id="container" style="display: none;">
+	<a id="selectfiles" href="javascript:void(0);" class='btn'>选择文件</a>
+	<a id="postfiles" href="javascript:void(0);" class='btn'>开始上传</a>
+</div>
+
+<#include "/view/base.js.html">
+
+<script type="text/javascript" src="static/upload/plupload-2.1.8/js/plupload.full.min.js"></script>
+<script type="text/javascript" src="static/js/pointService/renzheng/upload.js"></script>
+<script type="text/javascript" src="static/js/plugins/validate/jquery.validate.min.js"></script>
+<!-- 身份证 -->
+<script type="text/javascript" src="static/js/IDValidator/GB2260.js"></script>
+<script type="text/javascript" src="static/js/IDValidator/IDValidator.js"></script>
+<script type="text/javascript" src="static/js/pointService/renzheng/auth.pointService.js"></script>
+</body>
+</html>

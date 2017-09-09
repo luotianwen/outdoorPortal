@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="activeChildrenAgeMapper">
+    <!--mybatis ehcache缓存配置 -->
+    <cache type="org.mybatis.caches.ehcache.LoggingEhcache" />
+    
+	<sql id="Base_Column_List">
+    aca_id,aca_age_min ,aca_age_max ,aca_description
+    </sql>
+
+    <resultMap type="com.op.entity.zd.ActiveChildrenAge" id="ActiveChildrenAgeReturnMap">
+      <id column="aca_id" property="aca_id"/>
+      <result column="aca_age_min" property="aca_age_min"/>
+      <result column="aca_age_max" property="aca_age_max"/>
+      <result column="aca_description" property="aca_description" />
+    </resultMap>
+   
+	<!-- 查询所有 -->
+	<select id="selectList" resultType="com.op.entity.zd.ActiveChildrenAge">
+		select <include refid="Base_Column_List"/>
+		from activeChildrenAge
+	</select>
+	
+	<!-- 根据ID查询数据 2016年3月24日 -->
+	<select id="selectById" parameterType="int" resultType="com.op.entity.zd.ActiveChildrenAge" useCache="false" >
+	select <include refid="Base_Column_List"></include>
+	from ACTIVECHILDRENAGE where aca_id=#{id}
+	</select>
+</mapper>

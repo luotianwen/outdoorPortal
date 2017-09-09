@@ -1,0 +1,57 @@
+<!DOCTYPE HTML>
+<html lang="zh-cn">
+<head>
+	<base href="/" />
+	<meta charset="UTF-8">
+	<title>Document</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+	<#include "/view/base.css.html">
+	<link rel="stylesheet" href="static/css/hw_css/base.css">
+	<link rel="stylesheet" href="static/css/hw_css/lose.css">
+	<script src="http://apps.bdimg.com/libs/jquery/1.8.2/jquery.min.js"></script>
+</head>
+</head>
+<body>
+
+	<#include "/view/header.html">
+
+	
+	<div class="header">
+		<div class="san">
+			1.填写订单
+		</div>
+		<div class="san">
+			2.在线支付
+		</div>
+		<div class="san2">
+			3.成功提交订单
+		</div>
+	</div>
+	<div class="content">
+		<div class="lose">
+			<div class="loleft">
+				<img src="static/images/hw_img/lose.png" alt="">
+			</div>
+			<div class="lright">
+				<p class="tp">
+					抱歉，订单付款失败！<span>可能原因有：</span>
+				</p>
+				<p class="lp">
+					•订单支付总额超过了您这张银行卡的付款限额，无法付款；
+				</p>
+				<p class="lp">
+					•您所使用的银行卡余额不足，无法付款；
+				</p>
+				<p class="lp">
+					•由于网络的原因，您暂时无法付款，请稍后重试；
+				</p>
+			</div>
+		</div>
+		<div class="maybe">
+			您可能需要：<a href="javascript:">选择其他方式付款</a><a href="javascript:">查看更多</a>
+		</div>
+	</div>
+	<#include "/view/base.js.html">
+	
+</body>
+</html>

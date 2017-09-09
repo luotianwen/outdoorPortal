@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="activeTypesMapper">
+	<sql id="Base_Column_List">
+    at_id,at_active_id ,at_type_id 
+    </sql>
+
+    <resultMap type="com.op.entity.activity.ActiveTypes" id="ActiveTypesReturnMap">
+      <id column="at_id" property="at_id"/>
+   </resultMap>
+   
+   <!-- 根据活动查询所有该活动对应的类型 集合-->
+   <select id="findTypesByActiveId" parameterType="int" resultType="com.op.entity.activity.ActiveTypes" useCache="false"  >
+   select <include refid="Base_Column_List"/>,cic.cl_name
+   FROM activeTypes act
+   LEFT JOIN classification cic ON act.at_type_id = cic.cl_id
+   where at_active_id=#{id}
+   </select>
+   
+   <!-- 根据活动ID查询类型ID集合 -->
+   <select id="selectTypeIdsByActiveId" parameterType="String" resultType="String">
+   select at_type_id from activeTypes where at_active_id=#{id}
+   </select>
+   
+   <!-- 保存活动类型 -->
+   <insert id="insertActiveTypes" parameterType="java.util.Map" useGeneratedKeys="false">
+	   insert into activetypes(at_active_id ,at_type_id)
+	   VALUES
+	   <foreach collection="at_type_ids" item="item" index="index" separator=",">
+	   (
+	   	#{at_active_id},#{at_type_ids[${index}]}
+	   )
+	   </foreach>
+   </insert>
+   
+   <!-- 根据活动删除类型数据 -->
+   <delete id="deleteByActivityId" parameterType="java.lang.String">
+   delete from activetypes where at_active_id=#{id}
+   </delete>
+</mapper>

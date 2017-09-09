@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:jee="http://www.springframework.org/schema/jee" xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xsi:schemaLocation="
+			http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+			http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+
+	 
+    <bean class="com.op.spot.visitbeijing.SpotTicketUtil">
+		<property name="key" value="${lyw.key}"/>
+		<property name="partnerCode" value="${lyw.partnerCode}"/>
+		<property name="proxyId" value="${lyw.proxyId}"/>
+	</bean> 
+	
+		
+	<bean class="com.newAlipay.config.AlipayConfig">  
+	    <property name="partner" value="${alipay.partner}"/>    
+	    <property name="key" value="${alipay.key}"/>      
+	    <property name="notify_url" value="${alipay.notify_url}"/>      
+	    <property name="return_url" value="${alipay.return_url}"/>      
+	    <property name="sign_type" value="${alipay.sign_type}"/>      
+	    <property name="log_path" value="${alipay.log_path}"/>      
+	    <property name="input_charset" value="${alipay.input_charset}"/>      
+	    <property name="exter_invoke_ip" value="${alipay.exter_invoke_ip}"/>
+	</bean>  
+	
+	<bean class="com.op.plugin.sms.AlidayuSMS">
+		<property name="appKey" value="${sms.appKey}"/>
+		<property name="appSecret" value="${sms.appSecret}"/>
+		<property name="serverUrl" value="${sms.serverUrl}"/>
+	</bean> 
+ 
+</beans>

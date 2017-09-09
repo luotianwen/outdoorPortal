@@ -1,0 +1,81 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<base href="/" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>玩嘛</title>
+<#include "/view/usercenter/base.css.html">
+<style>
+body {
+	background: #f1f1f1;
+}
+</style>
+</head>
+<body>
+	<#include "/view/header.html"/>
+
+	<div class="boxw clearfix" style="margin-top: 20px;">
+		<#include "/view/usercenter/user/user_left_menu.html"/>
+		<div class="myinfo-main">
+			<div class="myinfo-title">
+				<h1>账号安全</h1>
+			</div>
+			<div class="myinfo-list">
+				<dl class="clearfix">
+					<dt>修改密码：</dt>
+					<dd>
+						<#if users.uPassword?exists>
+							<#if users.uPhone?exists>
+								<a href="users/password.html?by=mobile" class="safe-link">手机验证修改</a>
+							</#if>
+							<#if users.uEmail?exists>
+								<a href="users/password.html?by=email" class="safe-link">邮箱验证修改</a>
+							</#if>
+							<#else>
+							<a href="users/password.html" class="safe-link">设置密码</a>
+						</#if>
+					</dd>
+				</dl>
+				<dl class="clearfix">
+					<dt>绑定邮箱：</dt>
+					<dd>
+						<#if users.uEmail?exists>
+							<div>
+								<span class="safe-span01">${users.uEmail}</span>
+								<a href="users/changeEmail.html" class="safe-link">更换邮箱</a>
+							</div>
+							<#else>
+							<div>
+								<#if users.uPhone?exists>
+									<a href="users/bindingEmail.html" class="safe-link">设置邮箱</a>
+									<#else>
+										请先绑定手机号！
+								</#if>
+							</div>
+						</#if>
+					</dd>
+				</dl>
+				<dl class="clearfix">
+					<dt>绑定手机：</dt>
+					<dd>
+						<#if users.uPhone?exists>
+							<div>
+								<span class="safe-span01">${users.uPhone[0..2]}****${users.uPhone[7..]}</span>
+								<a href="users/changeMobile.html" class="safe-link">更换手机号</a>
+							</div>
+							<#else>
+							<div>
+								<a href="users/bindingMobile.html" class="safe-link">绑定手机号</a>
+							</div>
+						</#if>
+					</dd>
+				</dl>
+
+			</div>
+		</div>
+	</div>
+	<!-- main end -->
+	
+	<#include "/view/usercenter/base.js.html">
+</body>
+</html>

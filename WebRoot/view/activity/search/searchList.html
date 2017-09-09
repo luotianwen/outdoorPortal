@@ -1,0 +1,477 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<base href="/" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>搜索活动</title>
+
+
+<!-- base -->
+<#include "/view/base.css.html">
+
+<!-- search css -->
+<link rel="stylesheet" type="text/css" href="static/js/plugins/search/list.css"/>
+<link rel="stylesheet" type="text/css" href="static/css/hw_css/search.css" />
+<!-- dateRange -->
+<link rel="stylesheet" type="text/css" href="static/js/plugins/pickerDateRange/dateRange.css"/>
+<style>
+body{background:#f1f1f1 !important;}
+
+#container {
+	width: 100%;
+	height: 100%;
+}
+</style>
+</head>
+<body>
+
+<!-- header -->
+<#include "/view/header.html">
+
+
+<!-- model数据 -->
+<script type="text/javascript" src="static/js/activity/search/model.search.js"></script>
+
+<div class="search-area clearfix">
+<div class="search-main">
+<div class="solr clearfix">
+	<form action="search/actives.html" method="post">
+		<div class="solr-item">
+			<input type="text" name="position" autocomplete="off" show-type="in_position" id="current_address" value="" placeholder="......" />
+			<input type="hidden" name="default_position" />				
+			<i show-type="in_position" onclick="showCityInfo()" class="fa fa-map-marker"></i>
+			<div id="auto_search" class="auto-search"></div>			
+		</div>
+		
+		<div class="solr-item">
+			<input type="text" placeholder="时间" show-type="in_time" id="show-time" readonly="readonly" onclick="isShowOrHide(this)" />
+			<i class="fa fa-calendar" show-type="in_time" ></i>
+			<input type="hidden" name="st" />
+			<input type="hidden" name="lt" />
+		</div>
+		
+		<div class="solr-item">
+			<input type="text" readonly="readonly" show-search show-type="areas_div_id" placeholder="去哪儿">
+			<i show-type="areas_div_id" class="fa fa-location-arrow"></i>
+                  
+                  <div class="show-choose position-01" id="areas_div_id" style="display:none;">
+                   <div class="active-tag">
+                    <div class="fl choose-where-tag">
+                    	<a value="" class="choose-current-a">距离不限</a>
+                    	<a value="75">≤75公里</a>
+                    	<a value="25">≤25公里</a>
+                    	<a value="100">≤100公里</a>
+                    	<a value="50">≤50公里</a>
+                    	<a value="125">≤125公里</a></div>
+                    <!-- <div class="fl where-add-home">
+                    	<a href="#" >添加家庭住址</a>
+                    	<a href="#" >寻找家庭附近活动</a>
+                    </div> -->
+                   </div>
+                  </div>
+			      <input type="hidden" name="d" />
+                  
+		</div>
+		
+		<div class="solr-item">
+			<input type="text" readonly="readonly" is-load-data="0"  show-search show-type="lequ_div_id" placeholder="玩嘛" name="in_keyword" id="index_what" />
+			<i show-type="lequ_div_id" class="fa fa-bicycle"></i>
+                  
+                  <div class="show-choose show-lequ" id="lequ_div_id" style="display:none;">
+                   <div class="active-tag choose-active-type" >
+                    <#list types as type>
+                    	<a choose="0" value="${type.cl_id}" >${type.cl_name}</a>
+                    </#list>
+                    </div>
+                  </div>
+				  <input type="hidden" name="keyword" />
+                  
+		</div>
+		<div class="solr-item-btn">
+			<button type="button" class="active-search-btn" onclick="search_active()"><i class="fa fa-search"></i>&nbsp;搜索附近的活动</button>
+		</div>
+	</form>
+</div>
+</div>
+</div>
+
+<!-- search start -->
+<div class="list-screen" id="search-shaixuan">
+		
+		<div style="margin:0 50px;">
+			<div class="screen-address">
+				<div class="list-tab">
+					<div id="search_list" class="clearfix">
+						<div class="jiud-name">搜索类目</div>
+						<div class="ui-tab-container">
+							<ul class="clearfix ui-tab-list">
+								<li>活动</li>
+								<!-- <li>线路</li> -->
+							</ul>
+							<div class="ui-tab-bd">
+								<div class="ui-tab-content clearfix">
+									<div class="screenBox screenBackground">
+									<dl class="listIndex" >
+										<dt>骑行</dt>
+										<dd>
+											<label class="buxian">
+												<a href="javascript:;" class="selected" attrval="不限">不限</a>
+											</label>
+                                        </dd>
+                                        <dd class="filter-list-checkbox">
+											<label class="w2">
+												<input name="checkbox2" style="display:none" type="checkbox" value="1" search disabled search-key="active_type" />
+												<a href="javascript:;">公路赛</a> 
+											</label>
+											<label class="w2">
+												<input name="checkbox2" style="display:none" type="checkbox" value="2" search disabled search-key="active_type"  />
+												<a href="javascript:;">山地骑行</a> 
+											</label>
+										</dd>
+									</dl>
+									
+									<dl class="listIndex">
+										<dt>水上运动</dt>
+										<dd>
+											<label class="buxian">
+												<a href="javascript:;" class="selected" attrval="不限">不限</a>
+											</label>
+                                        </dd>
+                                        <dd class="filter-list-checkbox">
+											<label class="w2">
+												<input name="checkbox2" type="checkbox" style="display:none" value="3" search disabled search-key="active_type" />
+												<a href="javascript:;"  >划船</a>
+											</label>
+											<label class="w2">
+												<input name="checkbox2" type="checkbox" style="display:none" value="4" search disabled search-key="active_type" />
+												<a href="javascript:;">冲浪</a> 
+											</label>
+											<label class="w2">
+												<input name="checkbox2" type="checkbox" style="display:none" value="5" search disabled search-key="active_type" />
+												<a href="javascript:;"  >游艇</a>
+											</label>
+										</dd> 
+									</dl>
+									
+									</div>
+								</div>
+								
+								<!-- <div class="ui-tab-content clearfix" >
+	                                <div class="screenBox screenBackground">
+	                                <dl class="listIndex">
+										<dd class="filter-list-radio">
+		                                    <label class="w3">
+			                                    <input name="tabrad1" type="radio" value="" search-type style="display:none;" />
+			                                    <a href="javascript:;"  >西藏五日游</a>
+		                                    </label>
+											<label class="w3">
+												<input name="tabrad1" type="radio" value="" search-type style="display:none;" />
+												<a href="javascript:;"  >海南两日游</a>
+											</label>
+											<label class="w3">
+												<input name="tabrad1" type="radio" value="" search-type style="display:none;" />
+												<a href="javascript:;"  >北京五日游</a>
+											</label>
+										</dd>
+									</dl>
+									</div>
+								</div> -->
+								
+								
+							</div>
+						</div>
+						
+					</div>
+				</div>
+			</div>
+			
+			<div class="screen-term">
+				<div class="selectNumberScreen">
+					<div id="selectList" class="screenBox screenBackground">
+						<dl class="listIndex" >
+							<dt>发布者</dt>
+							<dd>
+								<label class="buxian"><a href="javascript:;" class="selected" attrval="不限">不限</a></label>
+                            </dd>
+                            <dd class="filter-list-checkbox">
+								<label class="w1">
+									<input name="checkbox2" search disabled search-key="act" type="checkbox" value="1" default="true" style="display:none;"/>
+									<a href="javascript:;">个人领队</a>
+								</label>
+								<label class="w1">
+									<input name="checkbox2" search disabled search-key="act" type="checkbox" value="2" default="true" style="display:none;"/>
+									<a href="javascript:;">俱乐部</a>
+								</label>
+							</dd>
+						</dl>
+						<dl class="listIndex">
+							<dt>搜索类别</dt>
+							<dd>
+								<label class="buxian"><a href="javascript:;" class="selected" attrval="不限">不限</a></label>
+                            </dd>
+                            <dd class="filter-list-checkbox">								
+								<label class="w1">
+									<input name="checkbox2" type="checkbox" search disabled search-key="at" value="1" default="true" style="display:none;" />
+									<a href="javascript:;"  >商业活动(收费)</a>
+								</label>
+								<label class="w1">
+									<input name="checkbox2" type="checkbox" search disabled search-key="at" value="2" style="display:none;" />
+									<a href="javascript:;">非商业活动(免费)</a> 
+								</label>
+								<span class="more"><em class="close-choose"></em>更多分类</span>
+							</dd> 
+						</dl>
+						<dl class="listIndex more-none"  >
+							<dt>活动时长</dt>
+							<dd>
+								<label class="buxian">
+									<a href="javascript:;" class="selected" attrval="不限">不限</a>
+								</label>
+                            </dd>
+                            <dd class="filter-list-radio">
+								<label class="w2">
+									<input name="radio4" type="radio" style="display:none;" search disabled search-key="a_date_length" value="1" />
+									<a href="javascript:;" >1天</a>
+								</label>
+								<label class="w2">
+									<input name="radio4" type="radio" style="display:none;" search disabled search-key="a_date_length" value="2" />
+									<a href="javascript:;" >2天</a>
+								</label>
+						        <label class="w2">
+							        <input name="radio4" type="radio" style="display:none;" search disabled search-key="a_date_length" value="3" />
+							        <a href="javascript:;" >3天</a>
+						        </label>
+						        <label class="w2">
+							        <input name="radio4" type="radio" style="display:none;" search disabled search-key="a_date_length" value="4" />
+							        <a href="javascript:;" >3天以上</a>
+						        </label>
+								
+							</dd>
+						</dl>
+						<dl class="listIndex more-none"  >
+							<dt>适合人群</dt>
+							<dd>
+								<label class="buxian">
+								<a href="javascript:;" class="selected" attrval="不限">不限</a>
+								</label>
+                            </dd>
+                            <dd class="filter-list-radio">
+								<label class="w2">
+									<input name="radio2" style="display:none;" search disabled search-key="sc_id" type="radio" value="1" />
+									<a href="javascript:;" >成人</a>
+								</label>
+								<label class="w2">
+									<input name="radio2" style="display:none;" search disabled search-key="sc_id" type="radio" value="2" />
+									<a href="javascript:;" >儿童</a>
+								</label>
+						        <label class="w2">
+							        <input name="radio2" style="display:none;" search disabled search-key="sc_id"  type="radio" value="3" />
+							        <a href="javascript:;" >家庭</a>
+						        </label>
+						        <label class="w2">
+							        <input name="radio2" style="display:none;" search disabled search-key="sc_id"  type="radio" value="4" />
+							        <a href="javascript:;" >夫妻</a>
+						        </label>							
+								<label class="w2">
+									<input name="radio2" style="display:none;" search disabled search-key="sc_id"  type="radio" value="5" />
+									<a href="javascript:;" >朋友</a>
+								</label>
+							</dd>
+						</dl>
+						<dl class="listIndex more-none"  >
+							<dt>活动强度</dt>
+							<dd>
+								<label class="buxian">
+									<a href="javascript:;" class="selected" attrval="不限">不限</a>
+								</label>
+							</dd>
+							<dd class="filter-list-radio">
+								<label class="w2">
+									<input name="radio5" type="radio" style="display:none;" search disabled search-key="a_difficulty_type" value="1" />
+									<a href="javascript:;" >休闲</a>
+								</label>
+								<label class="w1">
+									<input name="radio5" type="radio" style="display:none;" search disabled search-key="a_difficulty_type" value="2" />
+									<a href="javascript:;" >一级(入门级)</a>
+								</label>
+						        <label class="w2">
+							        <input name="radio5" type="radio" style="display:none;" search disabled search-key="a_difficulty_type" value="3" />
+							        <a href="javascript:;" >二级</a>
+						        </label>
+						        <label class="w2">
+							        <input name="radio5" type="radio" style="display:none;" search disabled search-key="a_difficulty_type" value="4" />
+							        <a href="javascript:;" >三级</a>
+						        </label>
+								<label class="w2">
+									<input name="radio5" type="radio" style="display:none;" search disabled search-key="a_difficulty_type" value="5" />
+									<a href="javascript:;" >四级</a>
+								</label>
+								<label class="w1">
+									<input name="radio5" type="radio" style="display:none;" search disabled search-key="a_difficulty_type" value="6" />
+									<a href="javascript:;" >五级(专业)</a>
+								</label>
+							</dd>
+						</dl>
+						<dl class="listIndex more-none"  >
+							<dt>儿童年龄段</dt>
+							<dd>
+								<label class="buxian">
+								<a href="javascript:;" class="selected" attrval="不限">不限</a></label>
+							</dd>
+							<dd class="filter-list-radio">
+								<label class="w3">
+									<input name="radio3" type="radio" style="display:none;" search disabled search-key="a_children_age"  value="1" />
+									<a href="javascript:;" >婴儿(0-1)</a>
+								</label>
+								<label class="w3">
+									<input name="radio3" type="radio" style="display:none;" search disabled search-key="a_children_age"  value="2" />
+									<a href="javascript:;" >幼儿(2-4)</a>
+								</label>
+						        <label class="w3">
+							        <input name="radio3" type="radio" style="display:none;" search disabled search-key="a_children_age"  value="3" />
+							        <a href="javascript:;" >大孩子(5-8)</a>
+						        </label>
+						        <label class="w3">
+							        <input name="radio3" type="radio" style="display:none;" search disabled search-key="a_children_age"  value="4" />
+							        <a href="javascript:;" >少年(9-12)</a>
+						        </label>
+								<label class="w3">
+									<input name="radio3" type="radio" style="display:none;" search disabled search-key="a_children_age"  value="5" />
+									<a href="javascript:;" >青少年(13-18)</a>
+								</label>
+							</dd>
+						</dl>
+						<dl class="listIndex more-none"  >
+							<dt>活动价格</dt>
+							<dd>
+								<label class="buxian">
+									<a href="javascript:;" class="selected" attrval="不限">不限</a>
+								</label>
+                            </dd>
+                            <dd class="filter-list-radio">
+								<label class="w3">
+									<input name="priceRadio6" type="radio" style="display:none;" search disabled search-key="prices" start="0" end="100"/>
+									<a href="javascript:;" values2="99" values1="1" attrval="1-99">100元以下</a>
+								</label>
+								<label class="w3">
+									<input name="priceRadio6" type="radio" style="display:none;" search disabled search-key="prices" start="100" end="300"/>
+									<a href="javascript:;" values2="300" values1="100" attrval="100-300">100-300元 </a>
+								</label>
+								<label class="w3">
+									<input name="priceRadio6" type="radio" style="display:none;" search disabled search-key="prices" start="300" end="600"/>
+									<a href="javascript:;" values2="600" values1="300" attrval="300-600">300-600元</a>
+								</label>
+								<label class="w3">
+									<input name="priceRadio6" type="radio" style="display:none;" search disabled search-key="prices" start="600" end="1500"/>
+									<a href="javascript:;" values2="1500" values1="600" attrval="600-1500">600-1500元</a>
+								</label>
+                                <label>
+									<div class="custom"><span>自定义</span>&nbsp;
+									<input name="" type="text" min="0" id="custext1" maxlength="7" onkeyup="this.value=this.value.replace(/\D/g,'')" onafterpaste="this.value=this.value.replace(/\D/g,'')"/>
+									<span> -</span>
+									<input name="" type="text" min="0" id="custext2" maxlength="7" onkeyup="this.value=this.value.replace(/\D/g,'')" onafterpaste="this.value=this.value.replace(/\D/g,'')"/>
+									<input name="" type="button" id="cusbtn" value="确定" />
+									</div>
+                                </label>
+							</dd>
+						</dl>
+					</div>
+				</div>   
+			</div>
+		</div>
+	
+		<div class="hasBeenSelected clearfix">
+			<span class="data-num"><font id="data_num">0</font>条数据</span>
+			<div style="float:right;" class="eliminateCriteria">【清空全部】</div>
+			<dl>
+				<dt>已选条件：</dt>
+				<dd style="display:none" class="clearDd">
+					<div class="clearList"></div>
+				</dd>
+			</dl>
+		</div>
+		
+	</div>
+<!-- search end -->
+
+
+<div class="boxw active-main clearfix">
+<!-- 活动列表 start -->
+<div class="active-list" id="show_actives">
+</div>
+<div id="check_map_height"></div>
+<div class="active-map" id="active_map">
+	<div class="map-big" id="map-big">
+		<a href="javascript:void(0)">展示大图</a>
+	</div>
+	<div class="map-content">
+		<div id="check_lbs-show"></div>
+		<div id="container"></div>
+		<div id="panel_search_result"></div>
+	</div>
+</div>
+<div id="page" style="margin:25px 0; text-align:left;text-align: center;width: 720px;"></div>
+</div>
+
+<#include "/view/base.js.html">
+<!-- ftl解析数据 -->
+<script type="text/javascript">
+<#if searchList?exists>
+	<#list searchList as item>
+	_util_data._default_search_data.push({"${item.key}":"${item.val}"});
+	</#list>
+</#if>
+
+_util_data._minValidDate = "${minValidDate}";
+$(function(){
+	$("#map-big").on("click",function(){
+		var bounds = map.getBounds();//地物对象的经纬度矩形范围。
+		var center = bounds.getCenter();//获取当前Bounds的中心点经纬度坐标。
+		layer.open({
+			type : 2,
+			area : [ '98%', '98%' ],
+			title : '活动地图',
+			shade : 0.5,
+			fix : true,
+			shift : 0,
+			maxmin : false,
+			closeBtn : 1,
+			content : 'huodong/bigMap.html?ran=1000&center='+center
+		});
+		
+		
+	})
+	
+})
+</script>
+<!-- 筛选条件 -->
+<script type="text/javascript" src="static/js/plugins/search/shaixuan.js"></script>
+<script type="text/javascript" src="static/js/plugins/search/ui.tab.js"></script>
+<!-- 双日历 -->
+<script type="text/javascript" src="static/js/plugins/pickerDateRange/dateRange.js"></script>
+<!-- 高德地图API -->
+	<#include "/view/webapi.js.html">
+<!-- 搜索附近的活动 -->
+<script type="text/javascript" src="static/js/activity/search/list.search.js"></script>
+<!-- 分页 -->
+<script type="text/javascript" src="static/js/plugins/layer/laypage/laypage.js"></script>
+<!-- 图片延迟加载 -->
+<script type="text/javascript" src="static/js/plugins/lazy-load-img/jquery.lazyload.min.js" ></script>
+<!-- init -->
+<script type="text/javascript" src="static/js/activity/search/init.search.js"></script>
+<!-- 地图小工具 -->
+<script type="text/javascript" src="http://cache.amap.com/lbs/static/addToolbar.js"></script>
+<!-- 地图 -->
+<script type="text/javascript" src="static/js/index/active/searchActive/search.lbs.js?v=2"></script>
+<!-- marker标注 -->
+<script type="text/javascript" src="static/js/index/active/searchActive/search.lbs.market.js"></script>
+<!-- 地图工具控件 -->
+<script type="text/javascript" src="static/js/index/active/lbs-active-show/lbs.config.js"></script>
+<!-- 搜索筛选条件 -->
+<script type="text/javascript" src="static/js/index/active/searchActive/search.shaixuan.js"></script>
+<!-- 搜索附近的活动 -->
+<script type="text/javascript" src="static/js/index/active/searchActive/search.fujin.js"></script>
+<!-- 搜索核心组件 -->
+<script type="text/javascript" src="static/js/index/active/searchActive/search.core.js"></script>
+</body>
+</html>

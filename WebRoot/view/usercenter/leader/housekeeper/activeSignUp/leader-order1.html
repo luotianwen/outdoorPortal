@@ -1,0 +1,212 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<base href="/" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>玩嘛</title>
+
+<#include "/view/usercenter/base.css.html">
+
+<link href="static/css/page.css" rel="stylesheet">
+<style>
+body {
+	background: #f1f1f1;
+}
+a {
+	cursor:pointer;
+}
+</style>
+
+</head>
+<body>
+<#include "/view/usercenter/header.html">
+	<div class="boxw clearfix">
+		<#include "/view/usercenter/housekeeper/menu_left.html">
+		<form action="activeSignup/MySignUp.html" method="post">
+			<div class="main-box">
+				<h1>我的订单</h1>
+				
+				<div class="order-list" id="list">
+					<!-- order-item begin -->
+					<#list leaderSignUp as leaderSignUp>
+					<#list leaderSignUp.mySignUp as item>
+						<div class="order-item <#if item.state='2'>paying</#if>">
+							<div class="order-states">
+								${item.asu_stateStr}
+							</div>
+							<div class="order-info-01">
+								<span> ${item.asu_create_time?string('yyyy-MM-dd HH:mm')} </span>
+								<span> 报名联系人：${item.signUpLinkman!''} </span>
+								<span> 订单号：${item.asu_id} </span>
+								<div class="order-price">
+									<#if item.state='2'><div class="order-tips">应付款： <i> ${item.asu_account_payable!'0'} </i> 元</div></#if>
+									<#if item.state='3' || item.state='1'><div class="order-tips">实付款： <i> ${item.asu_account_paid!'0'} </i> 元</div></#if>
+									<#if item.state='5'><div class="order-tips">订单金额： <i> ${item.asu_account_payable!'0'} </i> 元</div></#if>
+									<#if item.state='4'>
+										<div class="order-tips">
+		                                	<p>实付款：<i>${item.asu_account_paid!'0'}</i>元</p>
+		                                	<p>已退款：${item.refund}元</p>
+		                            	</div>
+									</#if>
+								</div>
+							</div>
+							<div class="order-info-02" id="orderAll">
+								<input id="asu_id" type="hidden" value="${item.asu_id}" />
+								<input id="activityId" type="hidden" value="${item.activityId}" />
+								<div class="event-img">
+									<img src="${item.a_active_img}" />
+								</div>
+								<div class="orderArea">
+									<h3><a href="huodong/info/${item.activityId}.html">${item.title}</a></h3>
+									
+									
+									<#list item.activeApplicants as aaitem>
+										<#if aaitem_index lt 3>
+											<p>
+												<input id="aa_id" type="hidden" value="${aaitem.aa_id}" />
+												<span>${aaitem.aa_user_name}</span>
+												<span>${aaitem.aa_user_sex}</span>
+												<span>${aaitem.aa_user_phone}</span>
+												<span>${aaitem.aa_state_str!''}</span>
+											</p>
+										</#if>
+									</#list>
+									<div id="allapplicant" style="display: none;">
+										<#list item.activeApplicants as aaitem>
+											<#if aaitem_index gte 3>
+												<p>
+													<input id="aa_id" type="hidden" value="${aaitem.aa_id}" />
+													<span>${aaitem.aa_user_name}</span>
+													<span>${aaitem.aa_user_sex}</span>
+													<span>${aaitem.aa_user_phone}</span>
+													<span>${aaitem.aa_state_str!''}</span>
+												</p>
+											</#if>
+										</#list>
+									</div>
+									<#if item.activeApplicants?size gt 3>
+										<p>
+											<a id="showAll" class="more" href="javascript:void(0)">查看更多<i class="down"></i></a>
+										</p>
+									</#if>
+								</div>
+								<div class="order-btns-area">
+									<a href="activeSignup/leaderorderDetails.html?asu_id=${item.asu_id}" class="btns"> 订单详情 </a>
+								</div>
+							</div>
+						</div>
+					</#list>
+					</#list>
+				</div>
+				<div id="page" style="text-align: center;width: 100%;">
+				</div>
+			</div>
+		</form>
+	</div>
+	<!-- main end -->
+
+	<div style="display: none;font-size: 15px;padding: 20px;" id="set_refund">
+		<input type="number" min="0" max="5" style="width: 260px;height: 25px;" placeholder="退款金额" id="refund_money" value="0" />
+		<br>
+		<br>
+		<textarea rows="3" cols="34" placeholder="退款备注" maxlength="100" id="refund_remark" ></textarea>
+		<br>
+		<br>
+		<button type="button" id="submit" >确认</button>
+	</div>
+
+<#include "/view/usercenter/base.js.html">
+<script type="text/javascript" src="static/js/plugins/layer/laypage/laypage.js"></script>
+<script type="text/javascript" src="static/js/page.js"></script>
+
+<script type="text/javascript">
+	$(function(){
+		$("div#page").page({
+			totalPage:${page.totalPage},
+			currentPage:${page.currentPage},
+			link:"activeSignup/MySignUp.html"
+		})
+	})
+	
+	$("div#orderAll").on("click","#confirm",function(){
+		var $this = $(this);
+		var $orderAll = $this.closest("div#orderAll");
+		
+		var asu_id = $orderAll.find("#asu_id").val()
+		var aa_id = $this.parent().parent().find("#aa_id").val()
+		var activityId = $orderAll.find("#activityId").val()
+		
+		layer.confirm('您确定要确认报名？', {
+			icon :0,btn: ['确定','取消'] //按钮
+		}, function(index){
+			layer.close(index);
+			$.post("activeSignup/confirmSignUp.html?asu_id="+asu_id+"&aaIds="+aa_id+"&activityId="+activityId,function(data){
+				if(data.RESPONSE_STATE=="200"){
+					layer.confirm(data.SUCCESS_INFO, {
+						icon :1,btn: ['确定'] //按钮
+					}, function(index){
+						location.reload();
+					}, function(index){
+						location.reload();
+					});
+				}else if(data.RESPONSE_STATE=="500"){
+					layer.alert(data.ERROR_INFO, {
+						title:"错误信息",
+						icon:2
+					});
+				}
+			});
+		});
+		
+	});
+	
+	var $this = null;
+	$("div#orderAll").on("click","#cancel",function(){
+		$this = $(this);
+		
+		layer.open({
+			type: 1,
+			title: '设置退款金额',
+			closeBtn: 1,
+			area: ['355px','260px'],
+			shadeClose: false,
+			content: $('#set_refund')
+		});
+		
+	});
+	
+	$("#submit").on("click",function(){
+		var $orderAll = $this.closest("div#orderAll");
+		var asu_id = $orderAll.find("#asu_id").val()
+		var aa_id = $this.parent().parent().find("#aa_id").val()
+		var activityId = $orderAll.find("#activityId").val()
+		var refund_money = $("#refund_money").val();
+		var refund_remark = $("#refund_remark").val();
+		
+		layer.confirm('是否确认提交退款金额?<span style="color:red;">注：待用户同意之后将交由财务部退款</span>', {
+			icon :0,btn: ['确定','取消'] //按钮
+		}, function(index){
+			layer.close(index);
+			$.post("activeSignup/cancelSignUp.html?asu_id="+asu_id+"&aaIds="+aa_id+"&activityId="+activityId+"&refund_money="+refund_money+"&refund_remark="+refund_remark,function(data){
+				if(data.RESPONSE_STATE=="200"){
+					layer.confirm(data.SUCCESS_INFO, {
+						icon :1,btn: ['确定'] //按钮
+					}, function(index){
+						location.reload();
+					}, function(index){
+						location.reload();
+					});
+				}else if(data.RESPONSE_STATE=="500"){
+					layer.alert(data.ERROR_INFO, {
+						title:"错误信息",
+						icon:2
+					});
+				}
+			});
+		});
+	});
+	
+	
+</script>
+</body>
+</html>

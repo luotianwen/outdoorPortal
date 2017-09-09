@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="correlationCostMapper">
+
+    <!--mybatis ehcache缓存配置 -->
+    <cache type="org.mybatis.caches.ehcache.LoggingEhcache" />
+    
+	<sql id="Base_Column_List">
+    cc_id,cc_name ,cc_type 
+    </sql>
+
+    <resultMap type="com.op.entity.correlationCost.CorrelationCost" id="CorrelationCostReturnMap">
+      <id column="cc_id" property="cc_id"/>
+      <result column="cc_name" property="cc_name"/>
+      <result column="cc_type" property="cc_type"/>
+   </resultMap>
+   
+   <!-- 查询所有的费用 -->
+   <select id="findAllCost" resultType="com.op.entity.correlationCost.CorrelationCost">
+   select <include refid="Base_Column_List"></include>
+   from correlationCost
+   </select>
+   
+</mapper>

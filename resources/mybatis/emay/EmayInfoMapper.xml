@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="emayInfoMapper">
+	<sql id="Base_Column_List">
+    ei_id,el_type ,el_value ,el_create_time ,el_update_time ,el_update_user 
+    </sql>
+
+    <resultMap type="com.op.entity.emay.EmayInfo" id="EmayInfoReturnMap">
+      <id column="ei_id" property="ei_id"/>
+      <result column="el_type" property="el_type"/>
+      <result column="el_value" property="el_value"/>
+      <result column="el_create_time" property="el_create_time"/>
+      <result column="el_update_time" property="el_update_time"/>
+      <result column="el_update_user" property="el_update_user"/>
+   </resultMap>
+
+
+	<!-- 查询所有的模板进行缓存 -->
+	<select id="listAllEmayInfo" resultType="com.op.entity.emay.EmayInfo">
+		select  <include refid="Base_Column_List" />
+		from EmayInfo
+	</select>
+		
+	
+</mapper>

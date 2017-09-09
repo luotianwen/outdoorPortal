@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+	<!-- 用户提现类型(withdrawalsType)Mapper -->
+<mapper namespace="withdrawalsTypeMapper">
+    <!--mybatis ehcache缓存配置 -->
+    <!-- 以下两个<cache>标签二选一,第一个可以输出日志,第二个不输出日志 不使用缓存加入useCache="false" -->
+    <cache type="org.mybatis.caches.ehcache.LoggingEhcache" />
+    <!-- <cache type="org.mybatis.caches.ehcache.EhcacheCache"/>  -->
+
+
+	<sql id="Base_Column_List">
+    id,type_name ,simple_code ,type ,icon ,fee ,isAvailable ,remarks ,sort 
+    </sql>
+
+    <resultMap type="com.op.entity.withdrawals.WithdrawalsType" id="WithdrawalsTypeReturnMap">
+		<!-- ID -->
+      <id column="id" property="id"/>
+		<!-- 提现方式名称（例：支付宝、工商银行） -->
+      <result column="type_name" property="type_name"/>
+		<!-- 提现方式简码 -->
+      <result column="simple_code" property="simple_code"/>
+		<!-- 提现方式类型（1：银行提现；2：第三方支付提现） -->
+      <result column="type" property="type"/>
+		<!-- 图标 -->
+      <result column="icon" property="icon"/>
+		<!-- 提现手续费（%） -->
+      <result column="fee" property="fee"/>
+		<!-- 是否可用（1：可用；2：不可用） -->
+      <result column="isAvailable" property="isAvailable"/>
+		<!-- 备注 -->
+      <result column="remarks" property="remarks"/>
+		<!-- 排序 -->
+      <result column="sort" property="sort"/>
+   </resultMap>
+ 
+   
+     <!-- 分页获取提现类型列表 -->
+   <select id="getWithdrawalsTypeList" resultMap="WithdrawalsTypeReturnMap" useCache="true">
+	   	SELECT 
+		 id,type_name,icon ,fee,type
+	   	FROM withdrawalsType
+	   	where
+	    isAvailable = 1
+	   	order by sort
+   </select>   
+     <!-- 根据id查询详细信息 -->
+   <select id="findWithdrawalsTypeById" parameterType="String" resultMap="WithdrawalsTypeReturnMap" >
+	   	SELECT 
+		id,type_name,icon ,fee,type
+	   	FROM withdrawalsType
+	   	where id = #{id}
+   </select>   
+     <!-- 根据用户提现账户ID获取账户提现方式信息 -->
+   <select id="findWithdrawalsTypeByAccountId" parameterType="String" resultMap="WithdrawalsTypeReturnMap" >
+      SELECT 
+      wt.id,type_name,icon ,fee,type
+	  FROM withdrawalsType wt
+	  inner join WITHDRAWALSACCOUNT wa on wa.WT_ID = wt.ID
+      where
+      wa.ID = #{id}
+   </select>
+   
+   
+	
+</mapper>

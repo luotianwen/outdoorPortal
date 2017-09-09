@@ -1,0 +1,46 @@
+﻿@charset "utf-8";
+ 
+ 
+.clearfix{zoom:1;}
+.clearfix:after{content:".";display:block;height:0;clear:both;visibility:hidden;}
+
+
+.ticket_prev_m,
+.ticket_next_m{background:url(../images/bg_calendar.png) no-repeat 0 0;height:19px;width:36px;display:block;position:absolute;left:15px;}
+.ticket_prev_m{top:20px;}
+.ticket_next_m{background-position: 0 -36px;top:190px;}
+.ticket_today{display:block;position:absolute;left:12px;top:115px;color:#1A477E;font-weight:700;text-align:center;width:42px;}
+.ticket_prev_m:hover{background-position: -40px 0px;}
+.ticket_next_m:hover{background-position: -40px -36px;}
+
+.iptgroup{width:620px;height:60px;margin:20px auto 0 auto;}
+.iptgroup li{float:left;height:30px;line-height:30px;padding:5px;}
+.iptgroup li .ipticon{background:url(../images/date_icon.gif) 98% 50% no-repeat;border:1px #CFCFCF solid;padding:3px;}
+.ticket_d_pane{position:absolute;width:187px;margin:0;z-index:9999;}
+.ticket_data_content_pane{width:451px;overflow:hidden;font-size:12px;position:absolute;left:0;z-index:100;top:0;background:#fff;border:2px solid #ff8a01;border-top:none;}
+.ticket_data_content_pane a:link,.ticket_data_content_pane a:visited{color:#222222;text-decoration:none;font-weight:900;}
+.ticket_data_content_pane a:hover{color:#fff;}
+.ticket_date_reset{border-top:1px #2092D6 dotted;clear:both;margin:3px;padding:3px;text-align:right;}
+.ticket_date_reset span{cursor:pointer;background:#2192D6;color:#FFF;padding:2px 5px;margin-left:3px;}
+.ticket_prev_next_month{border-top:28px solid #ff8a01;float:left;width:65px;position:relative;}
+
+.ticket_data_tab{background-color:#ff8a01;}
+.ticket_data_tab,.ticket_date_info{zoom:1;overflow:hidden;} 
+dl.ticket_data_tab dt{font-weight:900;width:55px;height:28px;background-color:#ff8a01;color:#fff;line-height:28px;}
+dl.ticket_data_tab dt.d_th_bg{width:55px;}
+.ticket_data_tab dt,.ticket_date_info dt{line-height:24px;height:24px;text-align:center;border-bottom:0px solid #B2C4D2;border-right:none;cursor:default;background:#EDECEC;font:12px/24px arial;width:24px;float:left;text-align:center;}
+.d_th_bg{color:#FF9900;}
+.ticket_date_info dt{background:#fff;color:#404040;width: 54px;height:54px;border-right:1px solid #d8d8d8;border-bottom:1px solid #d8d8d8;line-height:54px;}
+.ticket_date_info .ticket_td_kong{background:#fff;cursor:default;}
+.ticket_time_pane{background:#2092D6;line-height:22px;height:22px;overflow:hidden;margin-bottom:4px;padding-bottom:1px;background:url(../images/date_top.png) 4px 0 no-repeat;}
+.ticket_clean_btn{float:left;padding-left:6px;}
+.ticket_close_btn{float:right;padding-right:6px;}
+.ticket_time{float:left;padding-left:8px;}
+.ticket_time input{width:17px;padding:1px;line-height:12px;height:12px;margin-right:2px;margin-top:2px;_margin-top:1px;}
+.ticket_date_info .td_select{background-color:#fffbee;color:#ff6600;}
+.ticket_date_info .td_hover{color:red;cursor:pointer;}
+.ticket_txt_hide{display:none;}
+dl.ticket_date_info{border-left:1px solid #d8d8d8;}
+dl.ticket_date_info .ticket_td_hui{background:#fff;cursor:default;color:#DBDBDB;font-weight:400;}
+a img{border:0;}
+.left_table{float:left;width: 386px;}

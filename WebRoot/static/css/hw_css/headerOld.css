@@ -1,0 +1,21 @@
+@charset "utf-8";
+/* CSS Document */
+.m_toolbar{width:100%;background:#f1f1f1;height:40px;min-width:1200px;}
+.m_entry, .m_nav{line-height:40px;font-size:14px;}
+.m_toolbar a{color:#666;text-decoration:none;}
+.m_toolbar a:hover{color:#666;text-decoration:none;}
+.m_nav a{color:#666;text-decoration:none;margin:0 10px;}
+.m_header{width:100%;background:#fff;min-width:1200px;}
+.m_header .logoarea{padding-bottom:16px;width:280px;height:74px;position:relative;}
+.m_header .logoarea span{font-size:18px;color:#ff8a01; position:absolute; right:0; bottom:12px;}
+.m_header .release{padding-top:34px;font-size:14px;padding-right:40px;}
+.m_header .release a.btn01{border: 1px solid #ff8a01;border-radius: 3px;height: 38px; width: 95px;line-height:38px;text-align:center;display:inline-block;text-decoration:none;color:#ff8a01;margin-left:18px;background:#fff;cursor: pointer;transition: 0.5s ease;-moz-transition: 0.5s ease;-o-transition: 0.5s ease;-webkit-transition: 0.5s ease;}
+.m_header .release a.btn01:hover{text-decoration:none;color:#fff;border: 1px solid #ff8a01;background:#ff8a01;}
+
+.nav_list{height:40px;line-height:40px;position:relative;overflow:hidden;}
+.nav_list li{float:left;height:40px;display:block;padding:0 18px;}
+.nav_list li a{color:#666;font-size:16px;text-decoration:none;display:block;height:38px;}
+.nav_list li a:hover{color:#ff8a01;text-decoration:none;}
+.nav_list li a.first{color:#ff8a01;text-decoration:none;}
+.nav_list #buoy{position:absolute;width:68px;height:2px;background:#ff8a01;bottom:0px;}
+

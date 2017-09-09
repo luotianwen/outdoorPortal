@@ -1,0 +1,135 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<base href="/" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>我的钱包</title>
+<#include "/view/usercenter/base.css.html">
+<style>
+body {
+	background: #f1f1f1;
+}
+</style>
+</head>
+<body>
+<#include "/view/header.html"/>
+<div class="boxw clearfix" style="margin-top: 20px;">
+
+<#include "/view/usercenter/user/user_left_menu.html"/>
+
+<div class="myinfo-main">
+<div class="myinfo-title">
+  <h1>我的钱包</h1>
+</div>
+<div class="myinfo-list">
+<div class="my-wallet clearfix">
+	<div class="wallet-state">账户状态：
+	  <#if balance.state == '1'>
+		<i>可用</i>
+	  <#else>
+		<i class="disabled">不可用</i>
+	  </#if>
+	</div>
+<ul>
+<li>
+  <p>可用余额</p>
+  <p class="money">${balance.available_money?string(',##0.00')}<em>元</em></p>
+</li>
+<li>
+  <p>冻结余额</p>
+  <p class="money">${balance.frozen_money?string(',##0.00') } <em>元</em></p>
+</li>
+</ul>
+<div class="action-view">
+<a href="withdrawals/list.html">查看提现详情</a>
+<p>提现的最小额度是￥50.00</p>
+</div>
+	  <#if balance.state == '1'>
+			<#if balance.available_money gte 50 >
+				<a href="withdrawals/apply.html" class="btn-tx">提现</a>
+			<#else>
+				<a href="javascript:layer.alert('可用余额不足', {icon: 0});" class="btn-tx disabled">提现</a>
+			</#if>
+	  <#else>
+		<a href="javascript:" class="btn-tx disabled">提现</a>
+	  </#if>
+
+</div>
+	<div class="payPassword-box">
+		<#if isSetPayPwd>
+			<a href="balance/showModifyPayPwd.html" class="btn-payPassword"><i></i>修改支付密码</a>
+		<#else>
+			<a href="balance/showModifyPayPwd.html" class="btn-payPassword"><i></i>设置支付密码</a>
+	  	</#if>
+	</div>
+	<div class="bill-detail">
+		<div class="mt"><i></i>账单明细</div>
+		<table>
+			<thead>
+				<tr>
+					<th width="150">时间</th>
+					<th width="150">支入/支出</th>
+					<th width="150">冻结</th>
+					<th>备注</th>
+				</tr>
+			</thead>
+			<tbody id="detailed">
+			</tbody>
+		</table>
+		<div id="page" style="text-align:center;"></div>
+	</div>
+</div>
+</div>
+</div>
+<!-- main end -->
+
+<#include "/view/usercenter/base.js.html">
+<!-- 分页 -->
+<script type="text/javascript" src="static/js/plugins/layer/laypage/laypage.js"></script>
+
+<script type="text/javascript">
+
+$(function(){
+	getData();
+});
+ 
+//异步分页
+function getData(data){
+	$.getJSON("cashRecord/recently.html", data, function(res){
+		laypage({
+		    cont: $('#page'), // 容器。值支持id名 
+		    pages: res.totalPage, // 通过后台拿到的总页数
+		    curr:  res.currentPage,// 当前页
+		    skin: '#ff8a01', //皮肤
+		    skip: true, //是否开启跳页
+		    groups: 3, //连续显示分页数
+		    last: "尾页:"+res.totalPage, //在尾页追加总页数。
+		    jump: function(obj, first){ //触发分页后的回调
+		    	 if(!first){ 
+		    		 //点击跳页触发函数自身，并传递点击的当前页：obj.curr
+		             getData({'currentPage':obj.curr});// 搜索指定页数据
+		         }
+		    }
+		});
+		var _length = res.resultList.length;
+		var str = '';
+		
+		for(var i=0;i<_length;i++){
+			var a = res.resultList[i];
+			str+='<tr>'
+                +'<td>'+a.time+'</td>'
+                +'<td>'+a.behavior+''+a.money.toFixed(2)+'</td>'
+                +'<td>'+a.frozen_behavior+''+a.frozen_money.toFixed(2)+'</td>'
+                +'<td style="text-align: left;">'+a.remarks+'</td>'
+                +'</tr>';
+		}
+		
+		$('#detailed').html(str);
+	});
+};
+</script>			
+
+
+
+</body>
+</html>

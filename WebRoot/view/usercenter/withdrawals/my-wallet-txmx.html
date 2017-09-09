@@ -1,0 +1,92 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<base href="/" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>提现明细</title>
+<#include "/view/usercenter/base.css.html">
+<link rel="stylesheet" type="text/css" href="static/css/page.css">
+<style>
+body {
+	background: #f1f1f1;
+}
+.disabled {
+    background: #bbb!important;
+    }
+</style>
+</head>
+<body>
+<#include "/view/header.html">
+ 
+<div class="boxw clearfix" style="margin-top: 20px;">
+<#include "/view/usercenter/user/user_left_menu.html">
+  <div class="myinfo-main">
+    <div class="myinfo-title">
+      <h1>提现明细</h1>
+    </div>
+    <div class="myinfo-list">
+      <div class="my-wallet-txmx clearfix">
+        <div class="txmx-nav clearfix">
+          <ul >
+          <#if cw.cw_state?exists>
+            <li><a href="withdrawals/list.html">全部</a></li>
+            <li><a href="withdrawals/list.html?state=1"<#if cw.cw_state == '1'> class="now"</#if>>提现申请中</a></li>
+            <li><a href="withdrawals/list.html?state=2"<#if cw.cw_state == '2'> class="now"</#if>>审核处理中</a></li>
+            <li><a href="withdrawals/list.html?state=3"<#if cw.cw_state == '3'> class="now"</#if>>提现成功</a></li>
+            <li class="last"><a href="withdrawals/list.html?state=4"<#if cw.cw_state == '4'> class="now"</#if>>提现失败</a></li>
+          <#else>
+            <li><a href="withdrawals/list.html" class="now">全部</a></li>
+            <li><a href="withdrawals/list.html?state=1">提现申请中</a></li>
+            <li><a href="withdrawals/list.html?state=2">审核处理中</a></li>
+            <li><a href="withdrawals/list.html?state=3">提现成功</a></li>
+            <li class="last"><a href="withdrawals/list.html?state=4">提现失败</a></li>
+          </#if>
+
+          </ul>
+          	<#if balance.available_money gte 50 >
+				<a href="withdrawals/apply.html" class="btn-tx">提现</a>
+			<#else>
+				<a href="javascript:layer.alert('可用余额不足', {icon: 0});" class="btn-tx disabled">提现</a>
+			</#if>
+          </div>
+        <div class="txmx-list"> 
+         <#list withdrawalsList as wl>
+          <!-- txmx-item begin -->
+            <#if wl.cw_state == '1'>
+	            <div class="txmx-item sqing">
+	            <div class="txmx-states"> <span class="date">${wl.application_time?string('yyyy-MM-dd HH:mm:ss')}</span> 提现申请中 
+            <#elseif wl.cw_state == '2'>
+	            <div class="txmx-item cling">
+	            <div class="txmx-states"> <span class="date">${wl.application_time?string('yyyy-MM-dd HH:mm:ss')}</span> 审核处理中
+            <#elseif wl.cw_state == '3'>
+            	<div class="txmx-item">
+            	<div class="txmx-states"> <span class="date">${wl.application_time?string('yyyy-MM-dd HH:mm:ss')}</span> 提现成功
+            <#else>
+	            <div class="txmx-item">
+	            <div class="txmx-states"> <span class="date">${wl.application_time?string('yyyy-MM-dd HH:mm:ss')}</span> 提现失败
+            </#if>
+            </div>
+            <div class="txmx-info">
+              <div class="txmx-form">
+                <p> <span> 流水号：${wl.id} </span> <span> 提现金额：${wl.cw_cash?string(',##0.00')}元 </span> <span> 手续费：${wl.fee_cash?string(',##0.00')}元 </span></p>
+               <!--  <p><span>备注：</span></p> -->
+              </div>
+              <div class="txmx-btns-area"> <a href="withdrawals/details/${wl.id}.html" class="btns-01"> 查看详情 </a> </div>
+            </div>
+          </div>
+          <!-- txmx-item end --> 
+          </#list>
+         
+        </div>
+         ${page.pageStr}
+        <div class="txmx-tips">提示：系统仅显示您两年内的提现明细，更早的提现明细不再显示。</div>
+        <div class="txmx-btns"><a href="balance/details.html" >返回</a></div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- main end -->
+
+<#include "/view/usercenter/base.js.html">
+</body>
+</html>

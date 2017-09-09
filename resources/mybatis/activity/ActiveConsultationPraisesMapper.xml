@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="activeConsultationPraisesMapper">
+	<sql id="Base_Column_List">
+    acp_id,acp_user_Id ,acp_ac_id 
+    </sql>
+
+    <resultMap type="com.op.entity.activity.ActiveConsultationPraises" id="ActiveConsultationPraisesReturnMap">
+      <id column="acp_id" property="acp_id"/>
+      <result column="acp_user_Id" property="acp_user_Id"/>
+      <result column="acp_ac_id" property="acp_ac_id"/>
+   </resultMap>
+   
+   
+   <!-- 根据用户名和咨询ID查询是否存在点赞数据 -->
+   <select id="findByUserIdAndCoId" parameterType="java.util.Map" resultType="int" >
+	SELECT COUNT(acp_id) num
+	FROM activeConsultationPraises
+	WHERE acp_user_Id=#{userId}
+	AND acp_ac_id    =#{ac_id}
+   </select>
+	
+   <!-- 添加用户点赞信息 -->
+   <insert id="insertData" parameterType="java.util.Map">
+	INSERT INTO activeConsultationPraises
+	(
+		acp_user_Id ,acp_ac_id 
+	)
+	VALUES
+	(
+		#{userId } ,#{ac_id }
+	)
+   </insert>
+   
+   <!-- 根据用户名和咨询ID删除点赞信息 -->
+   <delete id="deleteData" parameterType="java.util.Map">
+	DELETE
+	FROM activeConsultationPraises
+	WHERE acp_user_Id=#{userId}
+	AND acp_ac_id    =#{ac_id}
+   </delete>
+   
+   <!-- 根据用户ID和咨询ID查询是否点赞 -->
+   <select id="findPraisesByUserIdAndConsultationId" parameterType="java.util.Map" resultType="com.op.entity.activity.ActiveConsultationPraises">
+   select <include refid="Base_Column_List"></include>
+   from activeConsultationPraises
+   where acp_user_Id=#{userId}
+   AND acp_ac_id in
+   <foreach collection="page.result" index="index" item="item" open="(" separator="," close=")">
+   #{page.result[${index}].id}
+   </foreach>
+   </select>
+</mapper>

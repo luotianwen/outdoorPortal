@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+	<!-- 用户资金提现申请表(cashWithdrawals)Mapper -->
+<mapper namespace="cashWithdrawalsMapper">
+    <!--mybatis ehcache缓存配置 -->
+    <!-- 以下两个<cache>标签二选一,第一个可以输出日志,第二个不输出日志 不使用缓存加入useCache="false" -->
+    <cache type="org.mybatis.caches.ehcache.LoggingEhcache" /> 
+    <!-- <cache type="org.mybatis.caches.ehcache.EhcacheCache"/>  -->
+
+	<sql id="Base_Column_List">
+    id,user_id ,cw_cash ,wa_id ,wt_id ,account_name ,account_number ,fee_cash ,application_time ,operator ,handling_time ,success_message ,success_screenshot ,user_remarks ,remarks ,cw_state 
+    </sql>
+
+    <resultMap type="com.op.entity.withdrawals.CashWithdrawals" id="CashWithdrawalsReturnMap">
+		<!-- 提现流水号（id） -->
+      <id column="id" property="id"/>
+		<!-- 申请用户ID -->
+      <result column="user_id" property="user_id"/>
+		<!-- 提现金额 -->
+      <result column="cw_cash" property="cw_cash"/>
+		<!-- 提现账户ID -->
+      <result column="wa_id" property="wa_id"/>
+		<!-- 提现类型ID -->
+      <result column="wt_id" property="wt_id"/>
+		<!-- 账户姓名 -->
+      <result column="account_name" property="account_name"/>
+		<!-- 账户账号 -->
+      <result column="account_number" property="account_number"/>
+		<!-- 提现手续费 -->
+      <result column="fee_cash" property="fee_cash"/>
+		<!-- 申请时间 -->
+      <result column="application_time" property="application_time"/>
+		<!-- 处理人（ID） -->
+      <result column="operator" property="operator"/>
+		<!-- 处理时间 -->
+      <result column="handling_time" property="handling_time"/>
+		<!-- 第三方或银行转账成功信息 -->
+      <result column="success_message" property="success_message"/>
+		<!-- 第三方或银行转账成功截图 -->
+      <result column="success_screenshot" property="success_screenshot"/>
+		<!-- 用户提现申请备注 -->
+      <result column="user_remarks" property="user_remarks"/>
+		<!-- 备注 -->
+      <result column="remarks" property="remarks"/>
+		<!-- 提现状态（1：提交申请；2：财务处理；3：提现完成；4：提现失败；5：用户取消） -->
+      <result column="cw_state" property="cw_state"/>
+    
+		<!-- 提现用户名称  -->
+      <result column="uName" property="uName"/>
+		<!--提现类型名称  -->
+      <result column="type_name" property="type_name"/>
+		<!-- 提现类型图标  -->
+      <result column="icon" property="icon"/>
+      
+       <!-- 申请提现日志信息 -->
+      <collection property="cashWithdrawalsLogList" ofType="com.op.entity.withdrawals.CashWithdrawalsLog" column="id" select="cashWithdrawalsLogMapper.findcashWithdrawalsLogById" ></collection>
+   
+   </resultMap>
+   
+       <!-- 分页获取提现申请列表 -->
+   <select id="getListPage" parameterType="Page" resultType="com.op.entity.withdrawals.CashWithdrawals" useCache="false">
+	   	SELECT 
+		id, cw_cash,fee_cash  ,application_time ,cw_state 
+	   	FROM cashWithdrawals
+	   	WHERE
+		user_id = #{t.user_id}
+		<if test="t.cw_state != null and t.cw_state != '' ">
+			and cw_state =  #{t.cw_state}
+		</if>
+		 
+		ORDER BY application_time DESC
+   </select>
+   
+       <!-- 根据ID获取提现申请详细信息 -->
+   <select id="findCashWithdrawalsById" parameterType="map" resultMap="CashWithdrawalsReturnMap" >
+	   	SELECT 
+		cw.id,user_id,cw_cash ,account_name ,account_number,fee_cash ,application_time ,operator ,handling_time,success_message ,success_screenshot ,user_remarks ,cw.remarks ,cw_state ,
+		type_name
+	   	FROM cashWithdrawals cw
+	   	LEFT JOIN withdrawalsType wt ON wt.id = cw.wt_id
+	   	WHERE  
+		cw.id = #{id}
+		and user_id = #{user_id}
+   </select>
+	
+   <!-- 保存提现申请 -->
+   <insert id="insertCashWithdrawals" parameterType="com.op.entity.withdrawals.CashWithdrawals" useGeneratedKeys="false" >
+	   insert into cashWithdrawals ( id,user_id ,cw_cash ,wa_id ,wt_id ,account_name ,account_number,fee_cash,application_time,user_remarks,cw_state)
+       SELECT 
+	  #{id},#{user_id },#{cw_cash },#{wa_id },wt_id,account_name ,account_number , #{fee_cash},#{application_time},#{user_remarks},#{cw_state} 
+	  FROM withdrawalsAccount 
+	  WHERE  
+      id =  #{wa_id }
+   </insert>
+   
+   
+       <!-- 查询当天已经申请的提现总数 -->
+   <select id="findCashWithdrawalsDayFrequency" parameterType="com.op.dto.usercenter.withdrawals.WithdrawalsApplyDTO" resultType="int" useCache="false">
+	   	SELECT 
+		count(id)
+	   	FROM cashWithdrawals
+	   	WHERE
+		user_id = #{user_id}
+		AND TO_CHAR(application_time, 'YYYY-MM-DD') = #{today_date}
+   </select>
+	
+</mapper>

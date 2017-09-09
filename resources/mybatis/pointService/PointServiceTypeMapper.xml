@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="pointServiceTypeMapper">
+	<sql id="Base_Column_List">
+		id,categoryId ,categoryName ,categoryLevel ,parentId ,oneTypeId ,updateTime
+		,updateUserId ,orderNumber ,isDelete
+	</sql>
+
+	<resultMap type="com.op.entity.pointService.PointServiceType" id="PointServiceTypeReturnMap">
+		<id column="id" property="id" />
+		<result column="categoryId" property="categoryId" />
+		<result column="categoryName" property="categoryName" />
+		<result column="categoryLevel" property="categoryLevel" />
+		<result column="parentId" property="parentId" />
+		<result column="oneTypeId" property="oneTypeId" />
+		<result column="updateTime" property="updateTime" />
+		<result column="updateUserId" property="updateUserId" />
+		<result column="orderNumber" property="orderNumber" />
+		
+		<collection property="list" ofType="com.op.entity.pointService.PointServiceType" column="oneTypeId"
+			 select="pointServiceTypeMapper.typeChildrensAll" >
+    	</collection>
+	</resultMap>
+
+	<!-- 查询所有的一级类型，并关联查询子数据集合 -->
+	<select id="oneTypeAll" resultMap="PointServiceTypeReturnMap">
+	select 
+	pst.id,pst.categoryId ,pst.categoryName ,pst.categoryLevel ,pst.parentId ,pst.oneTypeId ,pst.updateTime
+	,pst.updateUserId ,pst.orderNumber ,pst.isLock
+	,u.uName updateUserName
+	from pointServiceType pst
+ 	left join users u on pst.UPDATEUSERID = u.u_id
+	where categoryLevel=1 and isDelete=0
+	order by orderNumber
+	</select>
+	
+	<!-- 一级类型关联的子数据集合 -->
+	<select id="typeChildrensAll" parameterType="String" resultType="com.op.entity.pointService.PointServiceType">
+	select 
+	pst.id,pst.categoryId ,pst.categoryName ,pst.categoryLevel ,pst.parentId ,pst.oneTypeId ,pst.updateTime
+	,pst.updateUserId ,pst.orderNumber ,pst.isLock
+	,u.uName updateUserName
+	from pointServiceType pst
+ 	left join users u on pst.UPDATEUSERID = u.u_id
+	where categoryLevel != 1 and oneTypeId=#{oneTypeId} and isDelete=0
+	order by orderNumber
+	</select>
+	
+	<!-- 根据类型ID查询类型数据 -->
+	<select id="findPointServiceTypeById" parameterType="String" resultMap="PointServiceTypeReturnMap">
+		select <include refid="Base_Column_List"/>
+		from pointServiceType
+		where categoryId = #{id}
+	</select>
+	
+	<!-- 根据最终类型查询父类型与一级类型 -->
+	<select id="findPointTypeDTO" parameterType="String" resultType="com.op.dto.pointService.update.point.PointTypeDTO">
+		select
+		oneTypeId one ,parentId two ,categoryId three ,categorylevel
+		from pointServiceType
+		where categoryId = #{ps_type}
+	</select>
+	
+</mapper>

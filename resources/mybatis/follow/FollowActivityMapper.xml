@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="followActivityMapper">
+	<sql id="Base_Column_List">
+    fa_id,userId ,activity_id 
+    </sql>
+
+    <resultMap type="com.op.entity.follow.FollowActivity" id="FollowActivityReturnMap">
+      <id column="fa_id" property="fa_id"/>
+      <result column="userId" property="userId"/>
+      <result column="activity_id" property="activity_id"/>
+    </resultMap>
+    
+
+	<!-- 个人中心	→	我的管家	→	我的收藏	→	收藏活动	通过用户ID查询收藏活动 	start-->
+    <resultMap type="com.op.dto.usercenter.keeper.MyActiveInfoDTO" id="selectFollowActiveByUserIdReturnMap">
+      <id column="id" property="id"/>
+      <result column="title" property="title"/>
+      <result column="price" property="price"/>
+      <result column="a_active_img" property="a_active_img"/>
+      
+      <!-- 景点 -->
+	  <collection property="jds" ofType="java.lang.String" column="id" select="activeScenicMapper.findNameByActiveId"></collection>
+    </resultMap>
+    
+    
+    <select id="myFollowActivePage" parameterType="Page" resultMap="selectFollowActiveByUserIdReturnMap">
+		SELECT activity_id id,
+		  av.title,
+		  av.price,
+		  av.a_active_img
+		FROM followActivity fa
+		INNER JOIN activity av ON fa.activity_id = av.id
+		WHERE fa.userId = #{t}
+    </select>
+   <!-- 个人中心	→	我的管家	→	我的收藏	→	收藏活动	通过用户ID查询收藏活动 	end-->
+   
+   
+   
+   
+
+	<!-- 通过id获取数据 -->
+	<select id="findByFollowActivity" parameterType="com.op.dto.activity.update.UpdateActiveDTO" resultType="java.lang.Integer">
+		select count(fa_id)
+		from followActivity
+		where 
+       	userId =  #{userId} and activity_id =  #{activityId} 
+	</select>
+	
+	<!-- 通过id获取数据 -->
+	<select id="findByFollowActivityForMap" parameterType="java.util.HashMap" resultType="java.lang.Integer">
+		select count(fa_id)
+		from followActivity
+		where 
+       	userId =  #{userId} and activity_id =  #{activityId} 
+	</select>
+	 
+	<!-- 删除-->
+	<delete id="deleteFollowActivityById" parameterType="java.util.HashMap">
+		delete from FollowActivity
+		where 
+       	userId =  #{userId} and activity_id =  #{activityId} 
+	</delete>
+	
+	<!-- 新增 -->
+	<insert id="saveFollowActivity" parameterType="java.util.HashMap">
+		insert into FollowActivity (userId,activity_id) 
+		values (
+			#{userId},#{activityId}	
+	 	)
+	</insert> 
+		
+	
+</mapper>

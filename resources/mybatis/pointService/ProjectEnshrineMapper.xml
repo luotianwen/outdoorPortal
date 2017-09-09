@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+	<!-- 项目收藏(projectEnshrine)Mapper -->
+<mapper namespace="projectEnshrineMapper">
+    <!--mybatis ehcache缓存配置 -->
+    <!-- 以下两个<cache>标签二选一,第一个可以输出日志,第二个不输出日志 不使用缓存加入useCache="false" -->
+    <!-- <cache type="org.mybatis.caches.ehcache.LoggingEhcache" /> -->
+    <!-- <cache type="org.mybatis.caches.ehcache.EhcacheCache"/>  -->
+
+	<sql id="Base_Column_List">
+    pe_id,pe_project_id ,pe_user_id 
+    </sql>
+
+    <resultMap type="com.op.entity.pointService.project.ProjectEnshrine" id="ProjectEnshrineReturnMap">
+		<!-- id -->
+      <id column="pe_id" property="pe_id"/>
+		<!-- 项目ID -->
+      <result column="pe_project_id" property="pe_project_id"/>
+		<!-- 用户ID -->
+      <result column="pe_user_id" property="pe_user_id"/>
+   </resultMap>
+   
+	<!-- 项目收藏数量 -->
+	<select id="projectCollection" parameterType="String" resultType="String">
+		select count(pe_id) from ProjectEnshrine
+		where pe_project_id = #{id}
+	</select>
+	
+	<!-- 添加收藏 -->
+	<insert id="addConllection" parameterType="java.util.Map">
+		insert into ProjectEnshrine
+		(
+			 pe_project_id ,pe_user_id
+		)
+		values
+		(
+			 ${id },${userId}
+		)
+	</insert>
+	
+	<!-- 用户取消收藏 -->
+	<delete id="cancelCollection" parameterType="java.util.Map">
+		delete from ProjectEnshrine
+		where pe_project_id = ${id } and pe_user_id = ${userId}
+	</delete>
+	
+	<!-- 是否收藏 -->
+	<select id="isCollection" parameterType="java.util.Map" resultType="int">
+		select count(pe_id) from ProjectEnshrine
+		where pe_project_id = ${id } and pe_user_id = ${userId}
+	</select>
+	
+</mapper>

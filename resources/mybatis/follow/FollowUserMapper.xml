@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="followUserMapper">
+	<sql id="Base_Column_List">
+    fu_id,userId ,fUserId 
+    </sql>
+
+    <resultMap type="com.op.entity.follow.FollowUser" id="FollowUserReturnMap">
+      <id column="fu_id" property="fu_id"/>
+      <result column="userId" property="userId"/>
+      <result column="fUserId" property="fUserId"/>
+   </resultMap>
+   
+ 
+	<!-- 通过id获取数据 -->
+	<select id="findByFollowUser" parameterType="java.util.HashMap" resultType="java.lang.Integer">
+		select fu_id
+		from followUser
+		where 
+       	userId =  #{userId} and fUserId =  #{fUserId} 
+	</select>
+	 
+	<!-- 删除-->
+	<delete id="deleteFollowUserById" parameterType="java.lang.Integer">
+		delete from followUser
+		where 
+       	fu_id =  #{fu_id} 
+	</delete>
+	
+	<!-- 新增 -->
+	<insert id="saveFollowUser" parameterType="java.util.HashMap">
+		insert into followUser (userId,fUserId) 
+		values (
+			#{userId},#{fUserId}
+	 	)
+	</insert> 
+		
+  
+	
+</mapper>

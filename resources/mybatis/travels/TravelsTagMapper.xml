@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="travelsTagMapper">
+	<sql id="Base_Column_List">
+    tt_id,tt_travels_id ,tt_type ,tt_type_id ,tt_create_time ,tt_create_user 
+    </sql>
+
+    <resultMap type="com.op.entity.travels.TravelsTag" id="TravelsTagReturnMap">
+      <id column="tt_id" property="tt_id"/>
+      <result column="tt_travels_id" property="tt_travels_id"/>
+      <result column="tt_type" property="tt_type"/>
+      <result column="tt_type_id" property="tt_type_id"/>
+      <result column="tt_create_time" property="tt_create_time"/>
+      <result column="tt_create_user" property="tt_create_user"/>
+      <result column="tt_scenic_type" property="scenicType"/>
+   </resultMap>
+	
+	<!-- 添加标签 -->
+	<insert id="insertByTravelsId" parameterType="com.op.entity.travels.TravelsTag" useGeneratedKeys="true" keyColumn="tt_id" keyProperty="tt_id" >
+	insert into travelsTag( tt_travels_id ,tt_type ,tt_type_id ,tt_create_time ,tt_create_user ,tt_scenic_type)
+	values ( #{tt_travels_id},#{tt_type},#{tt_type_id},now(),#{tt_create_user},#{scenicType})
+	</insert>
+	
+	<!-- 删除标签 -->
+	<delete id="deleteByIdAndUserId" parameterType="java.util.Map" >
+	delete from travelsTag where tt_id=#{tt_id} and tt_create_user=#{userId}
+	</delete>
+	
+	<!-- 根据游记ID查询标签集合 -->
+	<select id="selectTagsByTravelsId" parameterType="java.util.Map" resultType="com.op.entity.travels.TravelsTag">
+ 	select 
+		tt_id,tt_travels_id ,tt_type ,tt_type_id ,tt_create_time ,tt_create_user 
+		,if(if(ss.zh_name is null,dt.zh_name,ss.zh_name) is null,ct.zh_name,if(ss.zh_name is null,dt.zh_name,ss.zh_name)) fj,tt_scenic_type scenicType
+	from travelsTag  tt
+	left join scenicSpot ss on tt.tt_type_id = ss.id and tt.tt_type=3 and tt.TT_SCENIC_TYPE = 'scenic'
+  	left join destination dt on tt.tt_type_id = dt.id and tt.tt_type=3 and tt.TT_SCENIC_TYPE = 'city'
+	left join country ct on tt.tt_type_id = ct.id and tt.tt_type=3 and tt.TT_SCENIC_TYPE = 'country'
+	where tt_travels_id=#{tt_travels_id} and tt_create_user=#{tt_create_user}
+		
+		<!-- 暂时只有风景的表结构，餐厅和酒店后期添加 -->
+		<!-- 
+		,ct.name ct
+		,jd.name jd
+		left join ct on tt.tag_id = ss.id and tt.tt_type=1
+		left join jd on tt.tag_id = ss.id and tt.tt_type=2
+		-->
+	</select>
+</mapper>

@@ -1,0 +1,98 @@
+@CHARSET "utf-8";
+
+.bottom-main{
+	width: 100%;
+	background-color: #EBEBEB;
+	overflow: hidden;
+}
+.bottom-main .bottom{
+	width: 1190px;
+	height:278px;
+	margin: 0 auto;
+	padding-top: 40px;
+}
+.bottom .footer-link{
+    float: left;
+    width: 560px;
+}
+.bottom .footer-link dl {
+    float: left;
+    width: 102px;
+    display: inline;
+}
+.bottom .footer-link dl dt{
+    font-size: 14px;
+    font-weight: bold;
+    color: #333;
+}
+.bottom .footer-link dl,dt,dd {
+    line-height: 24px;
+}
+.bottom .concern-cont{
+	width: 240px;
+	overflow: hidden;
+	float: left;
+}
+.concern-cont .concern-info{
+	overflow: hidden;
+}
+.bottom h2{
+    font-size: 14px;
+    font-weight: bold;
+    color: #333;
+    margin-top: 0px;
+    padding-top: 5px;
+}
+.bottom .concern-cont .concern-info .weibo {
+    background-position: 0 0;
+}
+.bottom .concern-cont .concern-info .weixin {
+    background-position: -42px 0;
+}
+.bottom .concern-cont .concern-info a {
+    display: block;
+    float: left;
+    width: 40px;
+    height: 40px;
+    margin: 6px 14px 0 0;
+    background: url(../../img/home/footer-icons.png) no-repeat;
+    text-indent: -500px;
+    overflow: hidden;
+}
+.bottom .input-email .email-cont .email-btn{
+	width: 50px;
+	line-height: 30px;
+	height: 30px;
+	background-color: #FF6600;
+	color: white;
+	border:1px solid #FF6600;
+	vertical-align: top;
+}
+.bottom .input-email .email-cont .email-ipt{
+	width: 118px;
+	height: 30px;
+	vertical-align: top;
+}
+.bottom .download-app{
+	float: left;
+	overflow: hidden;
+	width: 190px;
+}
+.bottom .download-app .app-info {
+    width: 120px;
+    height: 120px;
+    padding: 10px;
+    background-color: #fff;
+}
+.bottom .service-hotline .number-box {
+    font-family: Tahoma;
+    font-size: 23px;
+}
+.bottom .service-hotline{
+    color: #f60;
+    float: right;
+}
+.bottom .service-hotline p {
+    color: #333;
+    font-size: 12px;
+}

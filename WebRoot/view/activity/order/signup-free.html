@@ -1,0 +1,71 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<base href="/" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>玩嘛</title>
+
+<#include "/view/base.css.html">
+
+<link rel="stylesheet" type="text/css" href="static/css/hw_css/form.css" />
+<style>
+body {
+	background: #f1f1f1;
+}
+#bank img{
+background-image: url(static/css/bank/bank-logo.png);
+width: 125px;height: 28px;
+background-repeat: no-repeat;
+}
+</style>
+</head>
+<body>
+	<!-- header -->
+	<#include "/view/header.html">
+	<div class="boxw buy-progress clearfix" id="navigation">
+		<ul>
+			<li><a class="cs"><span>1.填写报名信息</span></a></li>
+			<li><a class="cs"><span>2.确认报名信息</span></a></li>
+			<li><a class="selected cs"><span>3.报名成功</span></a></li>
+		</ul>
+	</div>
+	<div class="boxw clearfix" id="success">
+		<div class="buy-success-form">
+			<i class="success-img"></i>
+			<div class="success-info">
+				<div class="price">
+					<p>
+						活动费用：<span class="font-yuan" id="zf_allprice">${queryActivity.price}元</span>
+					</p>
+					<p>
+						其中包括预约费<span class="c1" id="zf_allreserveprice">${queryActivity.a_reserve_price}元</span>
+					</p>
+				</div>
+				<h1>报名成功！</h1><h3>该活动为免费活动，无需付款！</h3>
+			</div>
+			<div class="event-info">
+				<div class="activity-title">${queryActivity.title}</div>
+				<div class="activity-content" id="activeinfo">
+					<ul>
+						<li>出发地：${queryActivity.a_start_location!""}</li>
+						<li>目的地：${queryActivity.a_end_location!""}</li>
+						<li>出发日期：${queryActivity.activityTimeStr!""}</li>
+						<li>结束日期：${queryActivity.endTimeStr!""}</li>
+						<li>活动类型：<#list queryActivity.activeTypes as list><#if list_index!=0>、</#if>${list.cl_name}</#list></li>
+						<li>活动等级：${queryActivity.adt_description!""}</li>
+						<li>适合人群：${queryActivity.sc_name!""}</li>
+						<li>联系电话：${queryActivity.a_phone!""}</li>
+						<li>活动景点：<#list queryActivity.activeScenic as list><#if list_index!=0>、</#if>${list.as_name}</#list></li>
+						<li>交通方式：<#list queryActivity.activeTraffic as list><#if list_index!=0>+</#if>${list.trafficName}</#list></li>
+						<li>集合时间：${queryActivity.gatherTimeStr!""}</li>
+						<li>集合地点：${queryActivity.a_gather_location!""}</li>
+					</ul>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	<#include "/view/base.js.html">
+<script type="text/javascript" src="static/js/activesignup/order.js"></script>
+</body>
+</html>

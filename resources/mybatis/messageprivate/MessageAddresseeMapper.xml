@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="MessageAddresseeMapper">
+	<sql id="Base_Column_List">
+    mar_id,mp_id ,mar_readStatus ,mar_type ,mar_readTime ,mar_addRessee ,mar_isaddresseedelete 
+    </sql>
+
+    <resultMap type="com.op.entity.messageprivate.MessageAddressee" id="MessageAddresseeReturnMap">
+      <id column="mar_id" property="mar_id"/>
+      <result column="mp_id" property="mp_id"/>
+      <result column="mar_readStatus" property="mar_readStatus"/>
+      <result column="mar_type" property="mar_type"/>
+      <result column="mar_readTime" property="mar_readTime"/>
+      <result column="mar_addRessee" property="mar_addRessee"/>
+      <result column="mar_isaddresseedelete" property="mar_isaddresseedelete"/>
+      
+      <association property="messagePrivate" javaType="com.op.entity.messageprivate.MessagePrivate" column="mp_id" select="MessagePrivateMapper.findForMessagePrivateById"></association>
+      <association property="user" javaType="com.op.entity.users.Users" column="mar_addRessee" select="UsersMapper.findUserById"></association>
+      
+   </resultMap>
+   
+   	<!-- 新增 -->
+	<insert id="saveMessageAddressee" parameterType="com.op.entity.messageprivate.MessageAddressee" useGeneratedKeys="true" keyProperty="mar_id">
+		insert into MessageAddressee 
+		(
+			mp_id,mar_readStatus,mar_type,mar_readTime,mar_addRessee,mar_isaddresseedelete
+		) 
+		values 
+		(
+			#{mp_id},#{mar_readStatus},#{mar_type},#{mar_readTime},#{mar_addRessee},#{mar_isaddresseedelete}	
+		)
+	</insert>
+	
+	<!-- 根据ID查询信息 -->
+	<select id="findForMessageAddresseeById" parameterType="java.lang.String" resultMap="MessageAddresseeReturnMap">
+		select <include refid="Base_Column_List"/> from MessageAddressee
+		where mar_id = #{id}
+	</select>
+	
+	<!-- 查询收信箱信息 -->
+   	<select id="getMessagePageListReceive" parameterType="page" resultMap="MessageAddresseeReturnMap">
+   		select mar_id,mar.mp_id ,mar_readStatus ,mar_type ,mar_readTime ,mar_addRessee ,mar_isaddresseedelete from MessagePrivate mp
+   		left join MessageAddressee mar on mp.mp_id = mar.mp_id
+   		where mar_addRessee = #{t.id} 
+   		<!-- 信息类型 -->
+   		<if test="t.type!=null and t.type!=''">
+   			and mar_type = #{t.type}
+   		</if>
+   		and mar_isaddresseedelete = 0
+   		order by mp.mp_sendTime desc
+   	</select>
+	
+	<!-- 未读信息 -->
+	<select id="messageCount" parameterType="java.lang.String" resultType="java.util.Map">
+		select MAR_TYPE,count(MAR_ID) NUM from messageAddressee
+		where mar_readStatus = 0 and mar_isaddresseedelete = 0 and MAR_ADDRESSEE = #{userId}
+		group by mar_type
+	</select>
+	
+	<!-- 彻底删除接收人信息 -->
+	<delete id="messageShiftDelete"  parameterType="java.util.Map">
+		DELETE FROM MESSAGEADDRESSEE WHERE mar_type = #{type} and mar_addRessee = #{addRessee} and mar_isaddresseedelete = #{isaddresseedelete}
+	</delete>
+	
+	<!-- 系统消息删除，接收人全部删除 -->
+	<delete id="messageAllDelete"  parameterType="java.util.Map">
+		DELETE FROM MESSAGEADDRESSEE WHERE mp_id = #{id}
+	</delete>
+	
+	
+	
+	
+	<!-- 删除站内信 -->
+	<update id="updateDelState" parameterType="java.util.Map" >
+		update MessageAddressee set
+			mar_isaddresseedelete = 1
+		where mar_id = #{mar_id} and MAR_ADDRESSEE = #{usersId}
+	</update>
+	
+	<!-- 修改阅读状态站内信 -->
+	<update id="updateReadState" parameterType="java.util.Map" >
+		update MessageAddressee set
+			mar_readStatus = 1,
+			mar_readTime = now()
+		where mar_type = #{type} and MAR_ADDRESSEE = #{usersId}
+   </update>
+	
+	
+	
+	
+</mapper>

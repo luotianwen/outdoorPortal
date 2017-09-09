@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<base href="/" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>玩嘛</title> 
+<#include "/view/base.css.html">
+
+<link rel="stylesheet" type="text/css" href="static/css/hw_css/venue.css" />
+</head>
+<body>
+	<#include "/view/header.html">
+	
+	<div class="boxw clearfix">
+		<div class="venue-item clearfix">
+			<div class="item-img fl" id="pointImg"></div>
+			<div class="item-message fl">
+				<h1>${pointServiceShowDTO.ps_zh_name}</h1>
+				<dl class="clearfix">
+					<dt>地 址：</dt>
+					<dd>${pointServiceShowDTO.ps_zh_name?if_exists}${pointServiceShowDTO.ps_province_id?if_exists}${pointServiceShowDTO.ps_city_id?if_exists}${pointServiceShowDTO.ps_countys_id?if_exists}${pointServiceShowDTO.ps_address?if_exists}</dd>
+				</dl>
+				<dl class="clearfix">
+					<dt>联系电话：</dt>
+					<dd><#list pointServiceShowDTO.pointServiceContactList as item>${item.psc_number}<#if (item_has_next)>、</#if></#list></dd>
+				</dl>
+				<dl class="clearfix">
+					<dt>类 型：</dt>
+					<dd>${pointServiceShowDTO.ps_type}</dd>
+				</dl>
+				<dl class="clearfix">
+					<dt>营业时间：</dt>
+					<dd><#list pointServiceShowDTO.businessTimeDTOList as item><#list item.businessDaysList as dayitem>${dayitem.psbd_day}<#if (dayitem_has_next)>、</#if></#list> ${item.psabd_start_date}-${item.psabd_end_date}<#if (item_has_next)>&nbsp;&nbsp;&nbsp;</#if></#list></dd>
+				</dl>
+				<dl class="clearfix">
+					<dt>标 签：</dt>
+					<dd>
+						<#list pointServiceShowDTO.pointServiceFeatureList as item>
+							<span class="tags">${item.psf_name}</span>
+						</#list>
+					</dd>
+				</dl>
+			</div>
+			<div class="item-qt fl">
+				<div class="act-area">
+					<a class="star<#if isCollection> selected</#if>" id="conllection"><i></i>收藏</a>
+					<!--<a class="star selected"><i></i>收藏</a>-->
+					<span></span>
+					<a class="share"><i></i>分享</a>
+				</div>
+				<ul>
+					<li>商家资质：<span class="rz"><i></i>已经认证</span></li>
+					<li>${pointServiceShowDTO.purchaseNumber}人已购买</li>
+					<li><span id="commentNumber"></span>人评论</li>
+					<li class="pf">
+						评分:
+						
+						<#list 1..avgPoint?number as index>
+							<img src="static/images/hw_img/star3.png">
+						</#list>
+						<#list avgPoint?number..4 as count>
+							<img src="static/images/hw_img/star4.png">
+						</#list>
+						
+					</li>
+				</ul>
+				<div class="btns-area">
+					<a href="pointService/pointEvaluate.html?id=${pointServiceShowDTO.ps_id}" target="_blank" class="venue-btn">写评论</a>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="boxw clearfix">
+		<div class="venue-item-list clearfix">
+			<div class="tit">套餐内容</div>
+			<table>
+				<#list pointServiceShowDTO.pointServiceProjectDTOList as item>
+					<tr>
+						<td width="270">
+							<img src="${item.pointProjectsImg}" class="item-img" />
+						</td>
+						<td>
+							<h2>${item.psp_item_name}</h2>
+							<p class="p1">${item.purchaseNumber!"0"}人已购买</p>
+							<P class="p1">${item.commentNumber!"0"}人评论</P>
+						</td>
+						<td width="250">
+							<p>${item.psp_validity_date_start?string('yyyy-MM-dd')} 至 ${item.psp_validity_date_end?string('yyyy-MM-dd')}</p>
+						</td>
+						<td width="150">
+							<div class="item-price">
+								<strong>${item.psp_discount_price}</strong><span>元</span>
+								<del style="display:block">原价 ${item.psp_item_price}元</del>
+							</div>
+						</td>
+						<td width="130">
+							<a href="pointServiceProjects/detail/${item.psp_id}.html" target="_blank" class="venue-btn">立即前往</a>
+						</td>
+					</tr>
+				</#list>
+			</table>
+		</div>
+	</div>
+	<!--main begin -->
+	<div class="venue-main boxw clearfix">
+		<div class="venue-content fl">
+
+			<div class="comment-list">
+				<div class="comment-order-title">
+					<div class="left-title">
+						<h3 class="comment-name">热门评价</h3>
+					</div>
+					<div class="right-title" id="imgComment">
+						<i class="iconsfont">√</i>只显示带图评价 
+						<a href="pointService/pointEvaluate.html?id=${pointServiceShowDTO.ps_id}" target="_blank" class="venue-btn" style="margin-left:5px;">写评论</a>
+					</div>
+				</div>
+				<ul class="comment-box-list" id="projectComment">
+				</ul>
+				<div style="margin-top: 50px;border-top: 1px solid #e0e0e0;"></div>
+				<div id="projectCommentPage" style="margin-top: 30px;text-align: center;height: 50px;"></div>
+				<!-- <div class="comment-more">
+					<a href="#">查看更多评论</a>
+				</div> -->
+			</div>
+		</div>
+		<div class="venue-right fl"></div>
+
+	</div>
+	<!--main end -->
+</body>
+<#include "/view/base.js.html">
+<script>
+var psId = ${pointServiceShowDTO.ps_id};
+</script>
+
+
+<script type="text/javascript" src="static/js/plugins/layer/laypage/laypage.js"></script>
+<script type="text/javascript" src="static/js/pointService/zhanshi/pointServiceShow.js"></script>
+
+</html>

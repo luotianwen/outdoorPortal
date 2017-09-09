@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="pointServiceImgMapper">
+	<sql id="Base_Column_List">
+    psi_id,psi_url ,psi_upload_time ,psi_upload_user_id ,psi_point_service_id 
+    </sql>
+
+    <resultMap type="com.op.dto.pointService.insert.ruzhu.PointServiceImg" id="PointServiceImgReturnMap">
+      <id column="psi_id" property="psi_id"/>
+      <result column="psi_url" property="psi_url"/>
+      <result column="psi_upload_time" property="psi_upload_time"/>
+      <result column="psi_upload_user_id" property="psi_upload_user_id"/>
+      <result column="psi_point_service_id" property="psi_point_service_id"/>
+   </resultMap>
+	
+	<insert id="insert" parameterType="java.util.List" useGeneratedKeys="false">
+	insert into pointServiceImgDeputy
+	( psi_url ,psi_upload_time ,psi_upload_user_id ,psi_point_service_id )
+	  
+    values
+    <foreach collection="list" item="item" separator=",">
+        (
+	     #{item.psi_url},
+	     #{item.psi_upload_time},
+	     #{item.psi_upload_user_id},
+	     #{item.psi_point_service_id}
+        )
+    </foreach>
+
+	
+	</insert>
+	
+	
+	<!-- 场馆图片 -->
+	<select id="findPointServiceImg" parameterType="String" resultType="com.op.dto.pointService.show.PointServiceImgDTO">
+		select psi_id pid,psi_url src,psi_point_service_id  from pointServiceImg
+		
+		where psi_point_service_id = #{id}
+	</select>
+	
+	
+	
+	
+</mapper>

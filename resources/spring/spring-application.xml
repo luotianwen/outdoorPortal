@@ -1,0 +1,207 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:tx="http://www.springframework.org/schema/tx" xmlns:task="http://www.springframework.org/schema/task"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:websocket="http://www.springframework.org/schema/websocket"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+    http://www.springframework.org/schema/beans/spring-beans.xsd
+    http://www.springframework.org/schema/context
+    http://www.springframework.org/schema/context/spring-context.xsd
+    http://www.springframework.org/schema/tx
+    http://www.springframework.org/schema/tx/spring-tx.xsd
+    http://www.springframework.org/schema/task
+    http://www.springframework.org/schema/task/spring-task.xsd
+    http://www.springframework.org/schema/aop
+    http://www.springframework.org/schema/aop/spring-aop.xsd
+    http://www.springframework.org/schema/websocket
+    http://www.springframework.org/schema/websocket/spring-websocket.xsd"
+     default-lazy-init="false"> 
+	<!-- 启动组件扫描，排除@Controller组件，该组件由SpringMVC配置文件扫描 -->
+	<context:component-scan base-package="com.op">
+		<context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller" />
+	</context:component-scan>
+	
+	<!-- 标注类型 的事务配置 如果使用注解事务。-->
+ 	<tx:annotation-driven />
+	<!-- 启用注解 -->
+	<context:annotation-config />
+	<!--定时器开关 -->
+	<!-- <task:annotation-driven/> -->
+	<task:executor id="myExecutor" pool-size="5"/>  
+	<task:annotation-driven executor="myExecutor"/>  
+	
+	<bean name="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">   
+    	<property name="dataSource" ref="dataSource"></property>
+ 	</bean>
+	
+	<!-- 导入properties文件 -->
+	<import resource="spring-properties.xml"/>
+	
+	<!-- 阿里 druid数据库连接池 -->
+	<bean id="dataSource" class="com.alibaba.druid.pool.DruidDataSource" destroy-method="close">  
+         <!-- 数据库基本信息配置 -->
+         <property name="url" value="${url}" />  
+         <property name="username" value="${username}" />  
+         <property name="password" value="${password}" />  
+         <property name="driverClassName" value="${driverClassName}" />  
+         <property name="filters" value="${filters}" />  
+   		 <!-- 最大并发连接数 -->
+         <property name="maxActive" value="${maxActive}" />
+         <!-- 初始化连接数量 -->
+         <property name="initialSize" value="${initialSize}" />
+         <!-- 配置获取连接等待超时的时间 -->
+         <property name="maxWait" value="${maxWait}" />
+         <!-- 最小空闲连接数 -->
+         <property name="minIdle" value="${minIdle}" />  
+   		 <!-- 配置间隔多久才进行一次检测，检测需要关闭的空闲连接，单位是毫秒 -->
+         <property name="timeBetweenEvictionRunsMillis" value="${timeBetweenEvictionRunsMillis}" />
+         <!-- 配置一个连接在池中最小生存的时间，单位是毫秒 -->
+         <property name="minEvictableIdleTimeMillis" value="${minEvictableIdleTimeMillis}" />  
+         <property name="validationQuery" value="${validationQuery}" />  
+         <property name="testWhileIdle" value="${testWhileIdle}" />  
+         <property name="testOnBorrow" value="${testOnBorrow}" />  
+         <property name="testOnReturn" value="${testOnReturn}" />  
+         <property name="maxOpenPreparedStatements" value="${maxOpenPreparedStatements}" />
+         <!-- 打开removeAbandoned功能 -->
+         <property name="removeAbandoned" value="${removeAbandoned}" />
+         <!-- 1800秒，也就是30分钟 -->
+         <property name="removeAbandonedTimeout" value="${removeAbandonedTimeout}" />
+         <!-- 关闭abanded连接时输出错误日志 -->   
+         <property name="logAbandoned" value="${logAbandoned}" />
+         <!-- 解密数据库密码 -->   
+         <property name="connectionProperties" value="config.decrypt=true" />
+	</bean>  
+	
+	<tx:advice id="txAdvice" transaction-manager="transactionManager">
+		<tx:attributes>
+			<tx:method name="delete*" propagation="REQUIRED" read-only="false" 
+			           rollback-for="java.lang.Exception"/>
+			<tx:method name="insert*" propagation="REQUIRED" read-only="false" 
+			           rollback-for="java.lang.Exception" />
+			<tx:method name="update*" propagation="REQUIRED" read-only="false" 
+			           rollback-for="java.lang.Exception" />
+			<tx:method name="save*" propagation="REQUIRED" read-only="false" 
+			           rollback-for="java.lang.Exception" />
+			<tx:method name="add*" propagation="REQUIRED" read-only="false" 
+			           rollback-for="java.lang.Exception" />
+			<tx:method name="cancel*" propagation="REQUIRED" read-only="false" 
+			           rollback-for="java.lang.Exception" />
+			<tx:method name="confirm*" propagation="REQUIRED" read-only="false" 
+			           rollback-for="java.lang.Exception" />
+		</tx:attributes>
+	</tx:advice>
+	
+	<aop:aspectj-autoproxy proxy-target-class="true"/>
+	<!-- 事物处理 -->
+	<aop:config>
+		<aop:pointcut id="pc" expression="execution(* com.op.*.service..*(..))" />
+		<aop:advisor pointcut-ref="pc" advice-ref="txAdvice" />
+	</aop:config>
+
+	
+	
+	<!-- 配置分页插件 -->
+     <bean id="pagePlugin" class="com.op.plugin.page.PagePlugin">
+		<property name="properties">
+			<props>
+				<prop key="dialect">mysql</prop>
+				<prop key="pageSqlId">.*Page.*</prop>
+			</props>
+		</property>
+	 </bean>
+
+
+
+ 
+ 
+ 
+
+	
+	
+	
+	
+	<!-- 配置mybatis -->
+	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+    	<property name="dataSource" ref="dataSource" />
+    	<property name="configLocation" value="classpath:mybatis/mybatis-config.xml"></property>
+        <!-- mapper扫描 -->
+        <property name="mapperLocations" value="classpath:mybatis/*/*Mapper.xml" />
+        <!-- 注入分页插件 -->
+        <property name="plugins">
+			<array>
+				<ref bean="pagePlugin" />
+			</array>
+		</property>
+    </bean>
+    
+    <bean id="sqlSessionTemplate" class="org.mybatis.spring.SqlSessionTemplate">
+		<constructor-arg ref="sqlSessionFactory" />
+	</bean>
+   <!--
+  	<bean id="sqlSessionCache" class="com.op.task.impl.SqlSessionCacheImpl"
+		init-method="refreshMapper">
+		&lt;!&ndash; 扫描的映射mapper.xml的文件路径  &ndash;&gt;
+		<property name="packageSearchPath" value="classpath:mybatis/*/*Mapper.xml"></property>
+		<property name="sqlSessionFactory" ref="sqlSessionFactory"></property>
+	</bean>-->
+
+	<!-- 数据初始化 -->
+	<!-- <bean class="com.op.init.DataInit"/>   -->
+    
+    <!-- WebSocket 创建处理类-->
+    <bean id="customerHandshakeHandler" class="com.op.controller.socket.SystemWebSocketHandler"/>
+      
+    <!-- 配置webSocket映射关系和拦截器 -->
+  	<websocket:handlers>
+  		<websocket:mapping path="/webSocketServer" handler="customerHandshakeHandler"></websocket:mapping>
+  		
+  		<!-- websocket拦截器，用户存取该长连接用户的属性，进行指定用户推送 -->
+  		<websocket:handshake-interceptors>
+  			<bean class="com.op.controller.socket.WebSocketHandshakeInterceptor"></bean>
+  		</websocket:handshake-interceptors>
+  	</websocket:handlers>
+    
+	<!-- 初始化权限资源配置 -->  
+    <bean id="filterChainDefinitionsService"
+        class="com.op.service.synQx.impl.LoadingDBChainDefinitions" init-method="intiPermission" >  
+        <property name="definitions">  
+            <value>  
+            	/static/** = anon
+            </value>  
+        </property>  
+    </bean>
+    
+    <!-- 储存权限对象,用作远程调用[获取shiro缓存对象] -->
+    <bean id="classReposi" class="com.op.plugin.hession.impl.ClassRepository">  
+        <property name="loadingDBChainDefinitions" ref="filterChainDefinitionsService" />  
+    </bean>
+    
+    
+    <!-- freemarker配置 -->
+	<bean id="freemarkerConfig" class="org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer">
+	    <property name="templateLoaderPath" value="/" /> 
+		<property name="freemarkerSettings"> 
+			<props> 
+				<!-- 设置检查模板是否被更新的时间 -->
+				<prop key="template_update_delay">1</prop> 
+				<prop key="defaultEncoding">UTF-8</prop> 
+				<prop key="url_escaping_charset">UTF-8</prop> 
+				<prop key="locale">zh_CN</prop> 
+				<prop key="boolean_format">true,false</prop> 
+				<prop key="datetime_format">yyyy-MM-dd HH:mm:ss</prop> 
+				<prop key="date_format">yyyy-MM-dd</prop> 
+				<prop key="time_format">HH:mm:ss</prop> 
+				<prop key="number_format">0.######</prop> 
+				<prop key="whitespace_stripping">true</prop> 
+				<!-- 开启默认容错，既null时，默认使用""代替 -->
+				<prop key="classic_compatible">true</prop>
+			</props> 
+		</property> 
+ 	</bean>
+  
+  
+	<import resource="spring-constant.xml"/>
+  	<import resource="spring-solr.xml"/>
+</beans>
+

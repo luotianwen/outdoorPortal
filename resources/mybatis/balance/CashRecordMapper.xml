@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+	<!-- 账户资金明细表(cashRecord)Mapper -->
+<mapper namespace="cashRecordMapper">
+    <!--mybatis ehcache缓存配置 -->
+    <!-- 以下两个<cache>标签二选一,第一个可以输出日志,第二个不输出日志 不使用缓存加入useCache="false" -->
+    <!-- <cache type="org.mybatis.caches.ehcache.LoggingEhcache" /> -->
+    <!-- <cache type="org.mybatis.caches.ehcache.EhcacheCache"/>  -->
+
+	<sql id="Base_Column_List">
+    id,balance_id ,before_money ,after_money ,this_money ,frozen_money ,behavior_type ,frozen_type ,account_type ,relation_id ,remarks ,create_time 
+    </sql>
+
+    <resultMap type="com.op.entity.balance.CashRecord" id="CashRecordReturnMap">
+		<!-- ID -->
+      <id column="id" property="id"/>
+		<!-- 账户ID -->
+      <result column="balance_id" property="balance_id"/>
+		<!-- 之前金额（上次账户余额） -->
+      <result column="before_money" property="before_money"/>
+		<!-- 之后金额（本次账户余额） -->
+      <result column="after_money" property="after_money"/>
+		<!-- 本次金额（充值、提现或使用的金额） -->
+      <result column="this_money" property="this_money"/>
+		<!-- 冻结金额 -->
+      <result column="frozen_money" property="frozen_money"/>
+		<!-- 收入/支出  （1：收入；2：支出） -->
+      <result column="behavior_type" property="behavior_type"/>
+		<!-- 冻结金额收入/支出  （1：收入；2：支出） -->
+      <result column="frozen_type" property="frozen_type"/>
+		<!-- 账目类型（1：提现；2：订单） -->
+      <result column="account_type" property="account_type"/>
+		<!-- 账目关联id -->
+      <result column="relation_id" property="relation_id"/>
+		<!-- 原因备注（收入或支出动作导致的结果） -->
+      <result column="remarks" property="remarks"/>
+		<!-- 记录时间 -->
+      <result column="create_time" property="create_time"/>
+   </resultMap>
+   
+  	<!-- 新增账户提现支出明细 -->
+   <insert id="insertCashRecord" parameterType="java.util.HashMap" useGeneratedKeys="false" >
+	   	 insert into cashRecord (balance_id ,before_money ,after_money ,this_money ,behavior_type ,account_type ,relation_id ,remarks ,create_time )
+		 select b.ID,b.available_money,b.available_money-#{cw_cash}-#{fee_cash},#{cw_cash}+#{fee_cash},#{behavior_type} ,#{account_type},#{id},#{remarks},now()
+	     from  balance b
+	     where b.user_id = #{user_id}
+   </insert>
+	
+	<!-- 新增用户付款成功发布者资金增加明细 -->
+	<insert id="saveCashRecordByActiveSignup" parameterType="java.util.Map" useGeneratedKeys="false">
+		insert into cashRecord (balance_id ,before_money ,after_money ,this_money ,frozen_money ,behavior_type ,frozen_type,account_type ,relation_id ,remarks ,create_time )
+			select 
+			b.id,b.available_money+b.frozen_money,b.available_money+b.frozen_money+#{allprice},#{this_money},#{frozen_money},#{behavior_type},#{frozen_type},#{account_type},#{IDrelation_id},#{remarks},now()
+			from balance b
+			where b.user_id = #{userId}
+	</insert>
+		
+	<!-- 获取列表 -->
+	<select id="getCashRecordListPageByBalanceId" parameterType="Page" resultType="com.op.dto.balance.CashRecordDTO" useCache="false">
+		SELECT
+		 before_money ,after_money ,this_money money ,frozen_money,frozen_type AS frozen_behavior ,behavior_type AS behavior,account_type ,relation_id ,remarks ,create_time time
+		from cashRecord
+		where 
+		balance_id = #{t.balanceId}  
+		order by create_time desc
+	</select>
+	
+</mapper>
